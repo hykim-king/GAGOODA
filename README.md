@@ -1,3 +1,4 @@
+![](https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png)
 # 0. 목차
 # 1. GAGOODA 프로젝트 개요
 
