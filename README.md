@@ -11,6 +11,7 @@
 
 # 2. 프로젝트 기획
 ### 2.1 개발 환경
+![개발환경](https://github.com/hykim-king/GAGOODA/blob/main/doc/%E1%84%80%E1%85%A2%E1%84%87%E1%85%A1%E1%86%AF%E1%84%92%E1%85%AA%E1%86%AB%E1%84%80%E1%85%A7%E1%86%BC.png "개발환경")
 ### 2.2 WBS
 ![WBS 사진](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png "WBS 사진")
 
