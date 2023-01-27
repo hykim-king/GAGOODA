@@ -12,9 +12,12 @@
 # 2. 프로젝트 기획
 ### 2.1 개발 환경
 ### 2.2 WBS
+![WBS 사진](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png "WBS 사진")
 
 # 3. 프로젝트 설계
 ### 3.1 요구사항 정의
+[요구사항_정의서.xlm](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%EC%A0%95%EC%9D%98%EC%84%9C.xlsx "요구사항 정의서 파일")
 ### 3.2 데이터 베이스 설계 (ERD)
+[데이터_베이스_설계서.xlm]()
 
 # 4. 기능 시현
