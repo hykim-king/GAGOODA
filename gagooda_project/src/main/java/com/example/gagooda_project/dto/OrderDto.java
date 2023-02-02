@@ -1,5 +1,5 @@
 package com.example.gagooda_project.dto;
-import lombok.Data
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
