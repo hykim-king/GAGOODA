@@ -10,7 +10,7 @@ import csv
 def compact_data():
     dir = "C:/Users/hamin/Desktop/data/"
     # name_list = ['chm', 'chy', 'ckl', 'kdh', 'kdy', 'khs', 'osh1', 'osh2', 'osh3', 'yhb', 'yhn']
-    name_list = ['chm', 'chy']
+    name_list = ['chm', 'ckl']
     file_list = ['connection.csv', 'image.csv', 'option_product.csv', 'product.csv']
 
     new_dir = 'C:/Users/hamin/Desktop/data/new/csv/'
