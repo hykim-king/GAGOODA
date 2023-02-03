@@ -4,12 +4,15 @@ import lombok.Data;
 
 @Data
 
-public class Comm_imgDto {
-//    이미지 코드 사용되는 게시테이블의 이미지 코드(참조하는 테이블 연결 코드)
-//    , 테이블 타입, 이미지 경로,
-    private String product_img;         // 상품 이미지
-    private String review_img;          // 상품 후기 이미지
-    private String refund_img;          // 환불 이미지
-    private String event_img;           // 이벤트 이미지
-    private String inquiry_img;         // 문의 이미지
+public class ImageDto {
+//    상품 product - img_code
+//    상품후기 review - img_code
+//    환불 refund - img_code
+//    이벤트 event - img_code
+//    문의 inquiry - img_code
+
+//    커뮤니티 이미지 comm_ing - img_path
+
+    private String img_path;        // 이미지 경로 PK NN (COMMENT '이미지 경로', -- 이미지 경로) 오름차순(ASC)
+    private String img_code;        // 이미지 코드 PK NN (COMMENT '이미지 코드' -- 이미지 코드)
 }
