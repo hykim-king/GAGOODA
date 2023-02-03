@@ -132,6 +132,7 @@ def img_save(img_path, content):
 class Crawler:
     def __init__(self):
         # 크롤링을 시작 할 페이지
+<<<<<<< HEAD
         self.start_url = "https://www.iloom.com/product/item.do?categoryNo=13"
         self.visited_list = set()
         self.to_visit = set()
