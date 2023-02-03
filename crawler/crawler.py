@@ -132,15 +132,15 @@ def img_save(img_path, content):
 class Crawler:
     def __init__(self):
         # 크롤링을 시작 할 페이지
-        self.start_url = "https://www.iloom.com/product/item.do?categoryNo=13"
+        self.start_url = "https://www.iloom.com/product/item.do?categoryNo=19"
         self.visited_list = set()
         self.to_visit = set()
         # 상품과 연결될 카테고리
-        self.category = ['거실', '소파']
+        self.category = ['키즈룸', '침대']
         # csv 파일이 저장될 경로
-        self.csv_path = "C:/Users/hamin/Desktop/cd/csv/"
+        self.csv_path = "/Users/koodoyoon/Desktop/csv_doyoon/"
         # 이미지 파일이 저장될 경로
-        self.img_path = 'C:/Users/hamin/Desktop/cd/img/'
+        self.img_path = '/Users/koodoyoon/Desktop/img_doyoon/'
 
     def parse_html(self, url):
         soup = None
