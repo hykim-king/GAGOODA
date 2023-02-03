@@ -2,14 +2,16 @@ package com.example.gagooda_project.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class CategoryDto {
-    private int categoryId;
+    private int categoryId;         // 카테고리 ID
 
-    private int higherLevelId;
+    private List<CategoryDto> higherLevelId;      // 상위 카테고리 ID
 
-    private String name;
+    private String name;            // 카테고리 이름
 
-    private String lvl;
+    private String lvl;             // 카테고리 층
 
 }
