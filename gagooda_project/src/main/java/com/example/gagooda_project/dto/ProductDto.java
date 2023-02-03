@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class ProductDto {
     String productId; // product_id PK NN
-    String pMst; // p_mst FK NN (COMMON_CODE : PRODUCT) 1 : N option에?
-    String pDet; // p_det FK NN (COMMON_CODE : PRODUCT) 1 : N option에?
+    String pMst; // p_mst FK NN (COMMON_CODE : PRODUCT) 1 : N
+    String pDet; // p_det FK NN (COMMON_CODE : PRODUCT) 1 : N
     String name; // NN
     String place; //NN?
     int views; //NN? DEFAULT 0?

@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class UserDto {
     int userId;  // PK user_id NN
-    String userEmail; // user_email NN
-    String userPw; // user_pw NN
-    String userName;  // user_name NN
-    String userNickname;  // user_nickname
-    String userPhone;  // user_phone NN
-    byte userEmailcheck; // user_emailcheck
-    Date userRegDate; // user_reg_date NN
-    Date userRedId; // user_reg_id NN
+    String email; // email NN
+    String pw; // pw NN
+    String name;  // name NN
+    String nickname;  // nickname NN
+    String phone;  // phone NN
+    byte emailcheck; // emailcheck NN DEFAULT 0
+    Date regDate; // reg_date NN
+    Date redId; // reg_id NN
     Date modifyDate;  // modify_date NN
     String modifyId; // modify_id NN?
     String cardName;  // card_name
