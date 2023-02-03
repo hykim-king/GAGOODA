@@ -8,7 +8,7 @@ import java.util.List;
 public class CategoryConnDto {
     private int categoryConnId;     // 상품 카테고리 연결 ID
 
-    private List<CategoryDto> categoryId;         // 카테고리 ID
+    private int categoryId;         // 카테고리 ID
 
     private int productId;          // 상품 ID
 }

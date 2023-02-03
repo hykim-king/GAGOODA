@@ -8,7 +8,7 @@ import java.util.List;
 public class CategoryDto {
     private int categoryId;         // 카테고리 ID
 
-    private List<CategoryDto> higherLevelId;      // 상위 카테고리 ID
+    private int higherLevelId;      // 상위 카테고리 ID
 
     private String name;            // 카테고리 이름
 
