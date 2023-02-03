@@ -12,6 +12,6 @@ public class CategoryDto {
 
     private String name;            // 카테고리 이름
 
-    private int lvl;             // 카테고리 층
+    private int level;             // 카테고리 층
 
 }
