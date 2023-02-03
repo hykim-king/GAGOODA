@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 
-public class common_imageDto {
+public class Comm_imgDto {
 //    이미지 코드 사용되는 게시테이블의 이미지 코드(참조하는 테이블 연결 코드)
 //    , 테이블 타입, 이미지 경로,
     private String product_img;         // 상품 이미지
