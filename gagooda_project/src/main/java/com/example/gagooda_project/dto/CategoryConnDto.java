@@ -8,5 +8,5 @@ import java.util.List;
 public class CategoryConnDto {
     private int categoryId; // category_id PK&FK (CATEGORY:CATEGORY_CONN) 1:N  NN 카테고리 ID
 
-    private int productId;  // product_id PK&FK (PRODUCT:CATEGORY_CONN) 1:N  NN
+    private String productCode;  // product_code PK&FK (PRODUCT:CATEGORY_CONN) 1:N  NN
 }
