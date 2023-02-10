@@ -6,12 +6,10 @@ import java.util.List;
 
 @Data
 class OptionProductDto {
-    private int optionId; //옵션상품 ID
-    private String productId; //상품 ID
-    private int addition; //추가 상춤 여부 플래그
-    private String name; //옵션 상품 이름
-    private int price; //상품 가격
-    private int stock; //총 수량
-    private List<OptionProductDto> refundList;
+    private String optionId; // option_id PK NN 옵션상품 ID AUTO_INCREMENT
+    private String productId; //product_id PK&FK (PRODUCT:OPTION_PRODUCT) 1:N NN 상품 ID
+    private String name; //name NN 옵션 상품 이름
+    private int price; //price NN 상품 가격
+    private int stock; //stock NN 총 수량 DEFAULT 0
 }
 

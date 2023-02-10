@@ -12,7 +12,7 @@ public class UserDto {
     private String name;        // name NN 사용자 이름
     private String nickname;    // nickname NN 사용자 닉네임
     private String phone;       // phone NN 사용자 전화번호
-    private Boolean emailCheck; // email_check NN DEFAULT 0 이메일 수신 여부 플래그
+    private boolean emailCheck; // email_check NN DEFAULT 0 이메일 수신 여부 플래그
     private Date regDate;       // reg_date NN 사용자 등록일
     private Date modDate;       // mod_date NN 사용자 수정일
     private String cardName;    // card_name 카드사

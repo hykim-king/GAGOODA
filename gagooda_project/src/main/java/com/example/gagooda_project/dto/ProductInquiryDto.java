@@ -7,10 +7,10 @@ import java.util.Date;
 @Data
 public class ProductInquiryDto {
     private String piDet;
-    private String status;
+    private boolean status;
     private Date regDate;
     private String content;
-    private String secret;
+    private boolean secret;
     private String optionId;
     private String productId;
     private int pInquiryId;
