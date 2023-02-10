@@ -14,5 +14,5 @@ public class AddressDto {
     private String receiverName;  // receiver_name | 수령자 이름 | NN
     private String receiverPhone; // receiver_phone | 수령자 전화번호(11자 제한)
     private boolean elevator;     // elevator | 엘레베이터 유무 | tinyint
-    private boolean primary;      // primary | 기본 배송지 유무 | tinyint
+    private boolean primary;      // primary | 기본 배송지 여부 | tinyint
 }
