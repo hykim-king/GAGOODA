@@ -132,7 +132,6 @@ def img_save(img_path, content):
 class Crawler:
     def __init__(self):
         # 크롤링을 시작 할 페이지
-
         self.start_url = ""
         self.visited_list = set()
         self.to_visit = set()
