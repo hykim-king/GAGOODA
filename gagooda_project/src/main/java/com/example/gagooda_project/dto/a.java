@@ -1,21 +1,22 @@
 package com.example.gagooda_project.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class OptionProductDto {
+class OptionProductDto {
     private int oprionId; //옵션상품 ID
     private String productId; //상품 ID
     private int addition; //추가 상춤 여부 플래그
     private String name; //옵션 상품 이름
     private int price; //상품 가격
     private int stock; //총 수량
-
     private List<OptionProductDto> refundList;
 }
 @Data
-public class CommonCodeDto {
+class CommonCodeDto {
     private String mstCode; //마스터 코드
     private String detCode; //상세코드
     private String mstName; //마스터코드명
