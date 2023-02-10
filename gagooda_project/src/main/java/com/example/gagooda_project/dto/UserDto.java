@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 
-@Datag
+@Data
 public class UserDto {
     private int userId;//user_id NN 사용자ID
     private String email;// email NN 사용자 이메일
