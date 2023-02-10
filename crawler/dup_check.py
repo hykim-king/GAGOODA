@@ -29,7 +29,7 @@ def dup_check(csv_file_path):
 
 
 def main():
-    file_dir = "C:/Users/hamin/Desktop/data/new/csv/"
+    file_dir = ""
     file_list = ["connection.csv", "image.csv", "option_product.csv", "product.csv"]
     for file_name in file_list:
         file_path = file_dir+file_name
