@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class CartDto {
-    private int cart_id;        // 장바구니 ID
-    private String option_id;      // 옵션상품 ID
-    private String
-    private int count;       // 장바구니 상품 갯수
-    private int user_id;        // 사용자 ID
+    private int cartId;    // 카트 아이디 cart_id PK NN
+    private int count;     // 수량 count NN
+    private String optionId; // 옵션 상품 아이디 option_id FK NN ( CART : OPTION_PRODUCT ) N:1
+    private String productId; // 상품 아이디 product_id FK NN ( CART : PRODUCT ) N:1
+    private int userId;        // 유저 아이디 user_id FK NN ( CART : USER ) N:1
 }
