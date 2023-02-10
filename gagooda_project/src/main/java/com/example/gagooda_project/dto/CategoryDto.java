@@ -6,12 +6,10 @@ import java.util.List;
 
 @Data
 public class CategoryDto {
-    private int categoryId;     //category_id PK NN 카테고리 ID
+    private int categoryId;         // category_id (카테고리 ID) , PK , NN , Autoincrement
 
-    private int parentId;       // parent_id FK (CATEGORY:PARENT) N:1 NN 상위 카테고리 ID
+    private int higherLevelId;      // higher_level_id (상위 카테고리 ID) , FK
 
-    private String name;        // name NN 카테고리 이름
-
-    private int level;          // leve NN 카테고리 층
-
+    private String name;            // name (카테고리 이름) , NN
+    private int level;             // level (카테고리 층) , NN
 }
