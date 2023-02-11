@@ -1,4 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.AddressMapper">
+    <resultMap id="addressMap" type="addressDto" autoMapping="true">
+        <id column="address_id" property="addressId"/>
+        <result column="user_id" property="userId"/>
+        <result column="post_code" property="postCode"/>
+        <result column="address_detail" property="addressDetail"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+    </resultMap>
+
+    <!--  List<AddressDto> listByUserId(int id);  -->
+    <select id="listByUserId" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{id}
+    </select>
+
+    <!--  int insertOne(AddressDto dto);  -->
+    <insert id="insertOne" parameterType="addressDto" useGeneratedKeys="true" keyProperty="addressId">
+        INSERT INTO address (user_id, name, primary, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
+        VALUES (#{userId}, #{name}, #{primary}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
+    </insert>
+
+    <!--  AddressDto findById(int id);  -->
+    <select id="findById" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE address_id = #{id}
+    </select>
+
+    <!--  int updateOne(AddressDto dto);  -->
+    <update id="updateOne" parameterType="addressDto">
+        UPDATE address SET (user_id=#{userId}, name=#{name}, primary=#{primary}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator})
+                       WHERE address_id = #{addressId}
+    </update>
+
+    <!--  List<AddressDto> findByUserIdAndNotPrimary(int id);  -->
+    <select id="findByUserIdAndNotPrimary" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{id} AND primary = 0
+    </select>
+
+    <!--  AddressDto findByUserIdAndPrimary(int id);  -->
+    <select id="findByUserIdAndPrimary" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{id} AND primary = 1
+    </select>
+
+    <!--  int deleteByAddressId(int id);  -->
+    <delete id="deleteByAddressId" parameterType="int">
+        DELETE FROM address WHERE address_id = #{id}
+    </delete>
+
+    <!--  int findPrimaryYes(int id);  -->
+    <select id="findPrimaryYes" resultType="int" parameterType="int">
+        SELECT COUNT(*) FROM address WHERE user_id = #{id} AND primary = 1
+    </select>
+
+    <!--  int updatePrimary(int id);  -->
+    <update id="updatePrimary" parameterType="int">
+        UPDATE address SET primary = 0 WHERE user_id = #{id} AND primary = 1
+    </update>
 </mapper>

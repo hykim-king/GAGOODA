@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.OrderDetailMapper">
+    <resultMap id="orderDetailMap" type="orderDetailDto" autoMapping="true">
+        <id column="order_detail_id" property="orderDetailId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="product_code" property="productCode"/>
+        <result column="option_code" property="optionCode"/>
+        <result column="total_price" property="totalPrice"/>
+        <result column="option_name" property="optionName"/>
+    </resultMap>
+
+    <!--  List<OrderDetailDto> findByOrderId(int id);  -->
+    <select id="findByOrderId" resultMap="orderDetailMap" parameterType="int">
+        SELECT * FROM order_detail WHERE order_id = #{id}
+    </select>
+
+    <!--  OrderDetailDto findByOrderDetailId(int id);  -->
+    <select id="findByOrderDetailId" resultMap="orderDetailMap" parameterType="int">
+        SELECT * FROM order_detail WHERE order_detail_id = #{id}
+    </select>
+
+    <!--  int countByOrderId(int id);  -->
+    <select id="countByOrderId" resultMap="orderDetailMap" parameterType="int">
+        SELECT COUNT(*) FROM order_detail WHERE order_id = #{id}
+    </select>
+
+    <!--  int insertOne(OrderDetailDto dto);  -->
+    <insert id="insertOne" parameterType="orderDetailDto" useGeneratedKeys="true" keyProperty="orderDetailId">
+        INSERT INTO order_detail (order_id, product_code, option_code, count, price, total_price, option_name)
+        VALUES (#{orderId}, #{productCode}, #{optionCode}, #{count}, #{price}, #{totalPrice}, #{optionName})
+    </insert>
 </mapper>
