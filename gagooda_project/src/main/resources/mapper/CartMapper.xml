@@ -4,7 +4,7 @@
     <resultMap id="cartMap" type="cartDto" autoMapping="true">
         <id column="cart_id" property="cartId"/>
         <result column="product_code" property="productCode"/>
-        <result column="option_id" property="optionCode"/>
+        <result column="option_code" property="optionCode"/>
         <result column="user_id" property="userId"/>
     </resultMap>
 
@@ -18,7 +18,7 @@
     <delete id="deleteById">
         DELETE FROM cart WHERE cart_id=#{id}
     </delete>
-    <delete id="deleteUserId">
+    <delete id="deleteByUserId">
         DELETE FROM cart WHERE user_id=#{userId}
     </delete>
     <select id="listByUserId" resultMap="cartMap">
