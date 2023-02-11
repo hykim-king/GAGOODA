@@ -9,7 +9,7 @@ import java.util.List;
 public interface CartMapper {
     int insertOne(CartDto dto);
     int deleteById(int id);  // cart_id
-    int deleteUserId(int userId);   // user_id
+    int deleteByUserId(int userId);   // user_id
     int countByUserId(int userId);
     List<CartDto> listByUserId(int userId);
 
