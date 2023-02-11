@@ -14,10 +14,12 @@ class CategoryMapperTest {
 
     @Test
     void findById() {
+        categoryMapper.findById(1);
     }
 
     @Test
     void listByParentId() {
+        categoryMapper.listByParentId(1);
     }
 
     @Test
