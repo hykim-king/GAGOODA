@@ -17,4 +17,7 @@ public class ProductInquiryDto {
     private Date regDate; // NN
     private Date modDate; // NN
     private String piDet; // NN
+
+    private UserDto user;
+    private OptionProductDto optionProductDto;
 }
