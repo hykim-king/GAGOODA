@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.ExchangeMapper">
+    <insert id = "insertOne">
+        INSERT INTO exchange (order_id, order_detail_id, address_id, count, reason, post_code, address, address_detail, receiver_name,
+                             receiver_phone, elevator, img_code, rfr_det, date)
+        VALUES (#{orderId}, #{orderDetailId}, #{addressId}, #{count}, #{reason}, #{postCode}, #{address}, #{addressDetail}, #{receiverName},
+                #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet}, #{date})
+    </insert>
+    <update id="updateOne">
+        UPDATE exchange SET (comment=#{comment}, mod_date=#{modDate}, ex_det=#{exDet}) WHERE exchange_id=#{exchangeId}
+    </update>
+    <selcte id = "pageByUserIdAndDate" rsultType="com.example.gagooda_project.dto.ExchangeDto">
+        SELECT * FROM exchange WHERE user_id = ${userId}
+            AND reg_date BETWEEN DATE_ADD(#{curr} AND #{endDate}
+            ORDER BY ${field} ${direction} LIMIT #{startRow}, #{rows}
+
+
+    </selcte>
+    <selcte id = "findById">
+        SELECT * FROM exchange WHERE exchange_id= #{id}
+    </selcte>
+    <selcte id = "pageAll">
+        <!-- SELECT * FROM refund WHERE ${conditionField} = #{condition} AND ${date} BETWEEN #{startDate} AND #{endDate} ORDER BY ${orderField} ${direction} LIMIT #{startRow},#{rows} -->
+
+
+    </selcte>
 </mapper>
+
+
+
+
