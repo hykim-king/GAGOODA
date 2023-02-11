@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.OptionProductMapper">
+    <resultMap id="optionProductMap" type="OptionProductDto" autoMapping="true">
+        <result property="optionCode" column="option_code" />
+        <result property="productCode" column="product_code" />
+    </resultMap>
+
+    <select id="listByProductCode" resultMap="optionProductMap" parameterType="Integer">
+        SELECT * FROM option_product WHERE option_code=#{productCode}
+    </select>
+
+    <insert id="insertOne" parameterType="OptionProductDto">
+        INSERT INTO option_product (option_code, product_code, name, price, stock) VALUES (#{optionCode},
+        #{productCode}, #{name}, #{price}, #{stock})
+    </insert>
+
+    <delete id="deleteByProductCode" parameterType="Integer">
+        DELETE FROM option_product WHERE product_code=#{productCode}
+    </delete>
+
+    <select id="findById" resultMap="optionProductMap" parameterType="Integer">
+        SELECT * FROM option_product WHERE option_code=#{optionCode}
+    </select>
+
 </mapper>

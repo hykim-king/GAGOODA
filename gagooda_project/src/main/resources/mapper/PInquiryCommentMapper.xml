@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.PInquiryCommentMapper">
+    <resultMap id="PInquiryCommentMap" type="PInquiryCommentDto" autoMapping="true">
+        <result property="pInquiryId" column="p_inquiry_id" />
+<!--        <result property="content" column="content" />-->
+        <result property="regDate" column="reg_date" />
+        <result property="regId" column="reg_id" />
+        <result property="modDate" column="mod_date" />
+        <result property="modId" column="mod_id" />
+    </resultMap>
+
+    <select id="findByInquiryId" resultMap="PInquiryCommentMap" parameterType="Integer">
+        SELECT * FROM p_inquiry_comment WHERE p_inquiry_id=#{pInquiryId}
+    </select>
+
+    <insert id="insertOne" parameterType="PInquiryCommentDto">
+        INSERT INTO p_inquiry_comment VALUES ()
+    </insert>
+
+    <update id="updateOne" parameterType="PInquiryCommentDto">
+        UPDATE p_inquiry_comment SET () WHERE p_comment=#{}
+    </update>
+
+    <delete id="deleteOne" parameterType="Integer">
+        DELETE FROM p_inquiry_comment WHERE p_comment=#{}
+    </delete>
+
+
 </mapper>
