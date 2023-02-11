@@ -12,7 +12,7 @@ public class RefundDto {
     private String email;           // 유저 이메일, user.email, NN
     private String phone;           // 유저 전화번호, user.phone, NN
     private int orderDetailId;      // 주문상세 ID, order_detail_id, !FK, NN, ( REFUND : ORDER_DTEAIL ) 1:1
-    private int orderId;            // 주문 ID, order_id, !FK, NN ( REFUND : ORDER ) 1:1
+    private String orderId;            // 주문 ID, order_id, !FK, NN ( REFUND : ORDER ) 1:1
     private int addressId;          // 배송지 ID, address_id, !FK, NN ( REFUND : ADDRESS ) 1:1
     private int cancelAmount;       // 취소 요청 금액, cancel_amount
     private String reason;          // 환불사유, reason, NN

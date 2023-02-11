@@ -19,31 +19,27 @@
         <result column="rfr_det" property="rfrDet"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
-        INSERT INTO refund (order_detail_id, order_id, address_id, cancel_amount, reason,
+        INSERT INTO refund (user_id, name, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
                             post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
-            VALUES (#{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
-                    #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet}))
+            VALUES (#{userId}, #{name}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
+                    #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <update id="updateOne">
-        UPDATE refund SET (comment=#{comment}, mod_date=#{modDate}, rf_def=#{rfDet}) WHERE refund_id = #{refundId}
+        UPDATE refund SET comment=#{comment}, mod_date=#{modDate}, rf_det=#{rfDet} WHERE refund_id = #{refundId}
     </update>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
-            AND reg_date BETWEEN DATE_ADD(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}
-            ORDER BY reg_date DESC LIMIT 10,1
+            AND reg_date BETWEEN DATE_SUB(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}
+            ORDER BY reg_date DESC LIMIT 0,10
     </select>
     <select id="findById" resultMap="refundMap">
         SELECT * FROM refund WHERE refund_id = #{id}
     </select>
     <select id="pageAll" resultMap="refundMap">
-        SELECT * FROM refund WHERE ${conditionColumn} LIKE #{condition}
-           <choose>
-                <when test="">reg_date BETWEEN DATE_ADD(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}</when>
-                <otherwise>AND ${dateType} BETWEEN #{startDate} AND #{endDate}</otherwise>
-           </choose>
-        <if test="commonCodeList != null">
-            AND rfr_det IN(<foreach collection="commonCodeList" item="rf">#{rf}</foreach>)
-        </if>
-        ORDER BY reg_date DESC LIMIT 10,1
+        SELECT * FROM refund
+<!--        <if test="commonCodeList != null">-->
+<!--            rf_det IN <foreach collection="commonCodeList" item="rf" separator="," open="(" close=")">#{rf}</foreach>-->
+<!--        </if>-->
+        ORDER BY reg_date DESC LIMIT 0,10
     </select>
 </mapper>
