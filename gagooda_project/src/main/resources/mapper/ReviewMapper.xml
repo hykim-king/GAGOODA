@@ -11,7 +11,7 @@
          <result column="img_code" property="imgCode" />
     </resultMap>
 
-    <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="pInquiryId">
+    <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
         INSERT INTO
             review ( user_id, option_code, product_code, rate, reg_date, content, img_code)
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{regDate}, #{content}, #{imgCode})
