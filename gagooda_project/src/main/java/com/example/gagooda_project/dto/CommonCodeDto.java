@@ -6,8 +6,8 @@ import java.util.Date;
 
 @Data
 public class CommonCodeDto {
-    private String mstCode; // mst_code | 마스터 코드 | NN
-    private String detCode; // det_code | 상세코드 | NN
+    private String mstCode; // mst_code | 마스터 코드 | NN | PK
+    private String detCode; // det_code | 상세코드 | NN | PK
     private String mstName; // mst_name | 마스터코드명 | NN
     private String detName; // det_name | 상세코드명 | NN
     private int seq;        // 순서
