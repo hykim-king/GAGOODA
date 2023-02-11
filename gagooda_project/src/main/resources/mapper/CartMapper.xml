@@ -3,25 +3,25 @@
 <mapper namespace="com.example.gagooda_project.mapper.CartMapper">
     <resultMap id="cartMap" type="cartDto" autoMapping="true">
         <id column="cart_id" property="cartId"/>
-        <result column="product_id" property="productCode"/>
+        <result column="product_code" property="productCode"/>
         <result column="option_id" property="optionCode"/>
         <result column="user_id" property="userId"/>
     </resultMap>
 
     <insert id="insertOne" parameterType="cartDto" useGeneratedKeys="true" keyProperty="cartId">
-        INSERT INTO cart (count, product_code, option_code, user_id) VALUE (#{count},#{productCode},#{optionCode},#{userId})
+        INSERT INTO cart (count, product_code, option_code, user_id) VALUES (#{count},#{productCode},#{optionCode},#{userId})
     </insert>
 
-    <select id="countByUserId" resultMap="cartMap">
-        SELECT COUNT(*) FROM cart WHERE user_id=#{id}
+    <select id="countByUserId" resultType="Integer">
+        SELECT COUNT(*) FROM cart WHERE user_id=#{userId}
     </select>
     <delete id="deleteById">
         DELETE FROM cart WHERE cart_id=#{id}
     </delete>
-    <delete id="deleteAll">
-        DELETE FROM cart WHERE user_id=#{id}
+    <delete id="deleteUserId">
+        DELETE FROM cart WHERE user_id=#{userId}
     </delete>
     <select id="listByUserId" resultMap="cartMap">
-        SELECT * FROM cart WHERE user_id=#{id}
+        SELECT * FROM cart WHERE user_id=#{userId}
     </select>
 </mapper>
