@@ -18,7 +18,11 @@
     <delete id="deleteById">
         DELETE FROM cart WHERE cart_id=#{id}
     </delete>
+<<<<<<< HEAD
     <delete id="deleteByUserId">
+=======
+    <delete id="deleteUserId">
+>>>>>>> 845acff873f8df271bf53a54f9468fa08da30989
         DELETE FROM cart WHERE user_id=#{userId}
     </delete>
     <select id="listByUserId" resultMap="cartMap">
