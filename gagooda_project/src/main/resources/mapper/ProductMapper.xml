@@ -34,9 +34,13 @@
                        WHERE
                            product_code=#{productCode}
     </update>
-    <delete id="deleteById"></delete>
+    <delete id="deleteById">
+        DELETE FROM product WHERE product_code=#{productCode}
+    </delete>
     <select id="findById" resultMap="productMap">
         SELECT * FROM product WHERE product_code=#{productCode}
     </select>
-    <select id="listAll" resultType="com.example.gagooda_project.dto.ProductDto"></select>
+    <select id="listAll" resultMap="productMap">
+        SELECT * FROM product
+    </select>
 </mapper>
