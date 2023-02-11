@@ -7,9 +7,9 @@ import java.util.Date;
 @Data
 public class ExchangeDto {
     private int exchangeId;// exchange_id 교환 ID, PK, NN
-    private int orderId;// order_id 주문 ID FK
+    private int orderId;// order_id 주문 ID FK NN
     private int orderDetailId;// 주문 상세 ID, FK, NN exchange:order_detail = 1:1
-    private int addressId; // 배송지 ID FK
+    private int addressId; // 배송지 ID FK MM
     private int count; // 교환 수량 NN
     private String reason; // 교환 사유, NN
     private String comment; // 교환 응답 사유

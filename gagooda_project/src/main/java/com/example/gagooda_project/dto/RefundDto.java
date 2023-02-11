@@ -10,7 +10,7 @@ public class RefundDto {
     private int orderDetailId;      // 주문상세 ID, order_detail_id, !FK, NN, ( REFUND : ORDER_DTEAIL ) 1:1
     private int orderId;            // 주문 ID, order_id, !FK, NN ( REFUND : ORDER ) 1:1
     private int addressId;          // 배송지 ID, address_id, !FK, NN ( REFUND : ADDRESS ) 1:1
-    private int cancelAmount;       // 취소 요청 금액, cancel_amount
+    private Integer cancelAmount;   // 취소 요청 금액, cancel_amount
     private String reason;          // 환불사유, reason, NN
     private String comment;         // 환불 답변 사유, comment, NN
     private Date regdate;           // 환불 요청 일자, reg_date, NN

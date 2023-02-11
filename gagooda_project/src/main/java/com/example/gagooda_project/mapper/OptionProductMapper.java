@@ -12,5 +12,4 @@ public interface OptionProductMapper {
     int insertOne(OptionProductDto optionProduct);
     int deleteByProductCode(String productCode);
     int findById(String id);
-
 }
