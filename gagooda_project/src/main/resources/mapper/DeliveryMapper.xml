@@ -9,13 +9,16 @@
         <result column="d_det" property="dDet"/>
     </resultMap>
 
-
-
     <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
-        INSERT INTO delivery (invoice, request, d_det, order_id) VALUE (#{invoice},#{request},#{d_det},#{order_id})
+        INSERT INTO delivery (invoice, request, d_det, order_id) VALUES (#{invoice},#{request},#{dDet},#{orderId})
     </insert>
     <insert id="updateOne" parameterType="DeliveryDto">
-        UPDATE delivery SET invoice=#{invoice},start_date=#{startDate},end_date=#{endDate},request=#{request},d_det=#{dDet},order_id=#{orderId} WHERE delivery_id=#{deliveryId}
+        UPDATE delivery SET invoice=#{invoice},
+                            start_date=#{startDate},
+                            end_date=#{endDate},
+                            request=#{request},
+                            d_det=#{dDet},
+                            order_id=#{orderId} WHERE delivery_id=#{deliveryId}
     </insert>
     <select id="findById" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE delivery_id = #{id}
