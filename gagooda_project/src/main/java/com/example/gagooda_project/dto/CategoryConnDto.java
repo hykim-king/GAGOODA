@@ -6,9 +6,7 @@ import java.util.List;
 
 @Data
 public class CategoryConnDto {
-    private int categoryConnId;     // 상품 카테고리 연결 ID
+    private int categoryId; // category_id PK&FK (CATEGORY:CATEGORY_CONN) 1:N  NN 카테고리 ID
 
-    private int categoryId;         // 카테고리 ID
-
-    private int productId;          // 상품 ID
+    private String productCode;  // product_code PK&FK (PRODUCT:CATEGORY_CONN) 1:N  NN
 }

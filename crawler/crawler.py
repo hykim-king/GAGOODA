@@ -133,6 +133,7 @@ class Crawler:
     def __init__(self):
         # 크롤링을 시작 할 페이지
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.start_url = "https://www.iloom.com/product/item.do?categoryNo=26"
         self.visited_list = set()
         self.to_visit = set()
@@ -144,15 +145,22 @@ class Crawler:
         self.img_path = 'C:/Users/Hanbi/Gagooda/yhb/crawling_img/'
 =======
         self.start_url = "https://www.iloom.com/product/item.do?categoryNo=17"
+=======
+        self.start_url = ""
+>>>>>>> 696d8c15f0d021891cc1f0688d013b736e9ec7ff
         self.visited_list = set()
         self.to_visit = set()
         # 상품과 연결될 카테고리
-        self.category = ['주방', '식탁']
+        self.category = ['학생방', '책상']
         # csv 파일이 저장될 경로
-        self.csv_path = "/Users/yanghanna/Documents/BIG_AI0102/csv_path/"
+        self.csv_path = ""
         # 이미지 파일이 저장될 경로
+<<<<<<< HEAD
         self.img_path = '/Users/yanghanna/Documents/BIG_AI0102/img_path/'
 >>>>>>> 14b72b16e296291c42ec6ee0c19a73762751dd15
+=======
+        self.img_path = ''
+>>>>>>> 696d8c15f0d021891cc1f0688d013b736e9ec7ff
 
     def parse_html(self, url):
         soup = None
