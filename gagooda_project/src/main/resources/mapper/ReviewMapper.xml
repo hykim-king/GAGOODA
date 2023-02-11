@@ -16,7 +16,7 @@
             review ( user_id, option_code, product_code, rate, reg_date, content, img_code)
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{regDate}, #{content}, #{imgCode})
     </insert>
-    <select id="listByProductId" parameterType="String" resultMap="reviewMap">
+    <select id="listByProductCode" parameterType="String" resultMap="reviewMap">
         SELECT * FROM review WHERE product_code= #{productCode}
     </select>
 <!--    <select id="pageByProductId" parameterType="String" resultMap="reviewMap">-->
@@ -28,7 +28,7 @@
 <!--    <select id="pageAll" resultMap="reviewMap">-->
 <!--        SELECT * FROM review ORDER BY #{regDate} DESC-->
 <!--    </select>-->
-    <select id="findById" parameterType="integer" resultMap="reviewMap">
+    <select id="findById" parameterType="Integer" resultMap="reviewMap">
         SELECT * FROM review WHERE review_id=#{reviewId}
     </select>
 </mapper>

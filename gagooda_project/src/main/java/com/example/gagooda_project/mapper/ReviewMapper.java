@@ -8,9 +8,9 @@ import java.util.List;
 @Mapper
 public interface ReviewMapper {
 
-    List<ReviewDto> listByProductId (String productId);
+    List<ReviewDto> listByProductCode (String productCode);
 
-//    List<ReviewDto> pageByProductId (String productId);
+//    List<ReviewDto> pageByProductCode (String productCode);
 
     List<ReviewDto> listAll();
 
