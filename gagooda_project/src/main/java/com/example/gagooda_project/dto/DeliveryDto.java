@@ -14,5 +14,4 @@ public class DeliveryDto {
     private Date end_date; // 배송 완료일
     private String request; // 배송 요청사항
     private String d_det; // 배송 상태 상세 코드(공통 코드) NN
-
 }
