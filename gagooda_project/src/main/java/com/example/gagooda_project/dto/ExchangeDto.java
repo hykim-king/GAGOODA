@@ -6,10 +6,14 @@ import java.util.Date;
 
 @Data
 public class ExchangeDto {
-    private int exchangeId;// exchange_id 교환 ID, PK, NN
-    private int orderId;// order_id 주문 ID FK
-    private int orderDetailId;// 주문 상세 ID, FK, NN exchange:order_detail = 1:1
-    private int addressId; // 배송지 ID FK
+    private int exchangeId;         // exchange_id 교환 ID, PK, NN
+    private int userId;             //  유저 ID, user_id, !FK, NN, ( EXCHANGE : USER ) 1 : N
+    private String name;            // 유저 이름, user.name NN
+    private String email;           // 유저 이메일, user.email, NN
+    private String phone;           // 유저 전화번호, user.phone, NN
+    private int orderId;            // order_id 주문 ID FK
+    private int orderDetailId;      // 주문 상세 ID, FK, NN exchange:order_detail = 1:1
+    private int addressId;          // 배송지 ID FK
     private int count; // 교환 수량 NN
     private String reason; // 교환 사유, NN
     private String comment; // 교환 응답 사유
