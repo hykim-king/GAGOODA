@@ -7,9 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface ImageMapper {
-    int insertOne(ImageDto dto);
+    int insertOne(ImageDto image);
 
-    int deleteByCode(String imgCode);
+    int deleteByImgCode(String imgCode);
 
     ImageDto findByImgCodeAndSeq(String imgCode, int seq);
 

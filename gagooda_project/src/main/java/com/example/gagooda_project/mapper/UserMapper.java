@@ -7,17 +7,17 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    int insertOne(UserDto dto);
+    int insertOne(UserDto user);
 
-    int deleteById(int userId);
+    int deleteById(int id);
 
-    int updateOne(UserDto dto);
+    int updateOne(UserDto user);
 
     UserDto findByEmailAndPw(String email, String pw);
 
     UserDto findByEmailAndName(String email, String name);
 
-    int updatePw(String pw);
+    int updatePw(String pw, int id);
 
     List<UserDto> listAll();
 
