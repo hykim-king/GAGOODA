@@ -40,5 +40,4 @@
             AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
             ORDER BY reg_date DESC LIMIT 0,10
     </select>
-
 </mapper>
