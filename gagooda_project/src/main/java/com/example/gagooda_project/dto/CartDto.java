@@ -8,5 +8,5 @@ public class CartDto {
     private String optionCode; // 옵션 상품 아이디 option_code FK NN ( CART : OPTION_PRODUCT ) N:1
     private String productCode; // 상품 아이디 product_code FK NN ( CART : PRODUCT ) N:1
     private int userId;        // 유저 아이디 user_id FK NN ( CART : USER ) N:1
-    private int count;     // 수량 count NN
+    private int cnt;     // 수량 count NN
 }

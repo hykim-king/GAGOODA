@@ -32,7 +32,7 @@ class ExchangeMapperTest {
         exchange.setOrderId("2222");
         exchange.setUserId(1);
         exchange.setAddressId(1);
-        exchange.setCount(1);
+        exchange.setCnt(1);
         exchange.setReason("그냥22");
         exchange.setPostCode("22222");
         exchange.setAddress("경기도22");

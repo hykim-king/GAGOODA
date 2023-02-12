@@ -16,12 +16,12 @@
     </resultMap>
     <insert id="insertOne" parameterType="productDto">
         INSERT INTO product
-            (product_code, name, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
+            (product_code, pname, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
         VALUES
-            (#{productCode}, #{name}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode}, #{regId}, #{modId})
+            (#{productCode}, #{pname}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode}, #{regId}, #{modId})
     </insert>
     <update id="updateOne" parameterType="productDto">
-        UPDATE product SET name=#{name},
+        UPDATE product SET pname=#{pname},
                            place=#{place},
                            delivery_pc=#{deliveryPc},
                            supply_pc=#{supplyPc},

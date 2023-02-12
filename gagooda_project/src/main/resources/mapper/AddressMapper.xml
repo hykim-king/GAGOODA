@@ -17,8 +17,8 @@
 
     <!--  int insertOne(AddressDto dto);  -->
     <insert id="insertOne" parameterType="addressDto" useGeneratedKeys="true" keyProperty="addressId">
-        INSERT INTO address (user_id, name, primary, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
-        VALUES (#{userId}, #{name}, #{primary}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
+        INSERT INTO address (user_id, aname, home, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
+        VALUES (#{userId}, #{aname}, #{home}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
     </insert>
 
     <!--  AddressDto findById(int id);  -->
@@ -33,13 +33,13 @@
     </update>
 
     <!--  List<AddressDto> findByUserIdAndNotPrimary(int id);  -->
-    <select id="findByUserIdAndNotPrimary" resultMap="addressMap" parameterType="int">
-        SELECT * FROM address WHERE user_id = #{userId} AND primary = 0
+    <select id="findByUserIdAndNotHome" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{userId} AND home = 0
     </select>
 
     <!--  AddressDto findByUserIdAndPrimary(int id);  -->
-    <select id="findByUserIdAndPrimary" resultMap="addressMap" parameterType="int">
-        SELECT * FROM address WHERE user_id = #{userId} AND primary = 1
+    <select id="findByUserIdAndHome" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{userId} AND home = 1
     </select>
 
     <!--  int deleteByAddressId(int id);  -->
@@ -48,12 +48,12 @@
     </delete>
 
     <!--  int findPrimaryYes(int id);  -->
-    <select id="countPrimary" resultType="int" parameterType="int">
-        SELECT COUNT(*) FROM address WHERE user_id = #{userId} AND primary = 1
+    <select id="countHome" resultType="int" parameterType="int">
+        SELECT COUNT(*) FROM address WHERE user_id = #{userId} AND home = 1
     </select>
 
     <!--  int updatePrimary(int id);  -->
-    <update id="updatePrimary" parameterType="int">
-        UPDATE address SET primary = 0 WHERE user_id = #{userId} AND primary = 1
+    <update id="updateHome" parameterType="int">
+        UPDATE address SET primary = 0 WHERE user_id = #{userId} AND home = 1
     </update>
 </mapper>

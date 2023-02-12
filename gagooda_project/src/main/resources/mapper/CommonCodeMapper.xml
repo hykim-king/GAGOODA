@@ -16,7 +16,7 @@
         INSERT INTO common_code (mst_code, det_code, mst_name, det_name, seq, user_yn, reg_id, mod_id)
             VALUES (#{mstCode}, #{detCode}, #{mstName},#{detName},#{seq},#{userYn},#{regId},#{modId})
     </insert>
-    <update id="modifyOne">
+    <update id="updateOne">
         UPDATE common_code SET user_yn = #{userYn},
                                mod_dt = #{modDt},
                                mod_id = #{modId},

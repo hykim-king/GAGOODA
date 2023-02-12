@@ -8,7 +8,7 @@ import java.util.Date;
 public class RefundDto {
     private int refundId;           // 환불 ID, refund_id, PK, NN
     private int userId;             //  유저 ID, user_id, !FK, NN, ( REFUND : USER ) 1 : N
-    private String name;            // 유저 이름, user.name NN
+    private String uname;            // 유저 이름, user.name NN
     private String email;           // 유저 이메일, user.email, NN
     private String phone;           // 유저 전화번호, user.phone, NN
     private int orderDetailId;      // 주문상세 ID, order_detail_id, !FK, NN, ( REFUND : ORDER_DTEAIL ) 1:1
@@ -16,7 +16,7 @@ public class RefundDto {
     private int addressId;          // 배송지 ID, address_id, !FK, NN ( REFUND : ADDRESS ) 1:1
     private Integer cancelAmount;   // 취소 요청 금액, cancel_amount
     private String reason;          // 환불사유, reason, NN
-    private String comment;         // 환불 답변 사유, comment, NN
+    private String reply;         // 환불 답변 사유, comment, NN
     private Date regDate;           // 환불 요청 일자, reg_date, NN
     private Date modDate;           // 환불 상태 변경 일자, mod_date, NN
     private String postCode; // post_code NN
