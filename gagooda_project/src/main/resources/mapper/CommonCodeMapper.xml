@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.CommonCodeMapper">
+    <resultMap id="commonCodeMap" type="CommonCodeDto" autoMapping="true">
+        <id column="mst_code" property="mstCode"/>
+        <result column="det_code" property="detCode"/>
+        <result column="mst_name" property="mstName"/>
+        <result column="det_name" property="detName"/>
+        <result column="user_yn" property="userYn"/>
+        <result column="reg_dt" property="regDt"/>
+        <result column="reg_id" property="regId"/>
+        <result column="mod_dt" property="modDt"/>
+        <result column="mod_id" property="modId"/>
+    </resultMap>
+    <insert id="insertOne" >
+        INSERT INTO common_code (mst_code, det_code, mst_name, det_name, seq, user_yn, reg_id, mod_id)
+            VALUES (#{mstCode}, #{detCode}, #{mstName},#{detName},#{seq},#{userYn},#{regId},#{modId})
+    </insert>
+    <update id="modifyOne">
+        UPDATE common_code SET user_yn = #{userYn},
+                               mod_dt = #{modDt},
+                               mod_id = #{modId},
+                               mst_name=#{mstName},
+                               det_name=#{detName}
+                           WHERE mst_code = #{mstCode} AND det_code = #{detCode}
+    </update>
+    <select id="listByMstCode" resultMap="commonCodeMap" >
+        SELECT * FROM common_code WHERE mst_code = #{mstCode}
+    </select>
 </mapper>
