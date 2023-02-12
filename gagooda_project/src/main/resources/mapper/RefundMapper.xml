@@ -20,8 +20,8 @@
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
         INSERT INTO refund (user_id, name, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
-                            post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
-            VALUES (#{userId}, #{name}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
+                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
+                VALUES (#{userId}, #{name}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
                     #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <update id="updateOne">
@@ -29,7 +29,7 @@
     </update>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
-            AND reg_date BETWEEN DATE_SUB(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
             ORDER BY reg_date DESC LIMIT 0,10
     </select>
     <select id="findById" resultMap="refundMap">

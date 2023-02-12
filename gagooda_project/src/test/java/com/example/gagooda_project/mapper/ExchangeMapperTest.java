@@ -15,7 +15,7 @@ class ExchangeMapperTest {
     ExchangeMapper exchangeMapper;
     @Test
     void pageByUserAndDate() {
-        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserAndDate(1,new Date(), 30);
+        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserAndDate(1, 30);
         System.out.println(exchangeList);
     }
 

@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.PInquiryCommentMapper">
+    <resultMap id="pInquiryCommentMap" type="PInquiryCommentDto" autoMapping="true">
+        <result property="pInquiryId" column="p_inquiry_id" />
+        <result property="regDate" column="reg_date" />
+        <result property="regId" column="reg_id" />
+        <result property="modDate" column="mod_date" />
+        <result property="modId" column="mod_id" />
+    </resultMap>
+
+    <select id="findById" resultMap="pInquiryCommentMap" parameterType="Integer">
+        SELECT * FROM p_inquiry_comment WHERE p_inquiry_id=#{id}
+    </select>
+
+    <insert id="insertOne" parameterType="PInquiryCommentDto">
+        INSERT INTO p_inquiry_comment (p_inquiry_id, content, reg_date, reg_id, mod_date, mod_id)
+        VALUES (#{pInquiryId}, #{content}, #{regDate}, #{regId}, #{modDate}, #{modId})
+    </insert>
+
+    <update id="updateOne" parameterType="PInquiryCommentDto">
+        UPDATE p_inquiry_comment SET content=#{content},
+                                     mod_date=#{modDate},
+                                     mod_id=#{modId}
+                                 WHERE p_inquiry_id=#{pInquiryId}
+    </update>
+
+    <delete id="deleteOne" parameterType="Integer">
+        DELETE FROM p_inquiry_comment WHERE p_inquiry_id=#{id}
+    </delete>
+
+
 </mapper>

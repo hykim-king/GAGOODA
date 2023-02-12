@@ -1,7 +1,10 @@
 package com.example.gagooda_project.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class ProductDto {
     private String productCode; // 상품 ID product_code PK NN
     private String name; // 상품명 NN

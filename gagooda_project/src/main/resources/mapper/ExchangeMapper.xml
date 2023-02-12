@@ -37,8 +37,7 @@
     </select>
     <select id="pageByUserAndDate" resultMap="exchangeMap">
         SELECT * FROM exchange WHERE user_id = #{userId}
-            AND reg_date BETWEEN DATE_SUB(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
             ORDER BY reg_date DESC LIMIT 0,10
     </select>
-
 </mapper>

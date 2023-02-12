@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.ProductInquiryMapper">
+    <resultMap id="productInquiryMap" type="ProductInquiryDto" autoMapping="true">
+        <result column="p_inquiry_id" property="pInquiryId" />
+        <result column="user_id" property="userId" />
+        <result column="option_code" property="optionCode" />
+        <result column="product_code" property="productCode" />
+        <result column="reg_date" property="regDate" />
+        <result column="mod_date" property="modDate" />
+        <result column="pi_det" property="piDet" />
+    </resultMap>
+
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="pInquiryId">
+        INSERT INTO
+            product_inquiry ( user_id, option_code, product_code, title, content, secret, status, reg_date, mod_date, pi_det)
+            VALUES ( #{userId}, #{optionCode}, #{productCode}, #{title}, #{content}, #{secret}, #{status}, #{regDate}, #{modDate}, #{piDet})
+    </insert>
+    <select id="listByProductCode" resultMap="productInquiryMap">
+        SELECT * FROM product_inquiry WHERE product_code=#{productCode}
+    </select>
+    <select id="listAll" resultMap="productInquiryMap">
+        SELECT * FROM product_inquiry
+    </select>
+    <select id="findById" resultMap="productInquiryMap">
+        SELECT * FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
+    </select>
+<!--    <select id="pageAll" resultType="ProductInquiryDto">-->
+<!--        SELECT * FROM product_inquiry ORDER BY -->
+<!--    </select>-->
 </mapper>

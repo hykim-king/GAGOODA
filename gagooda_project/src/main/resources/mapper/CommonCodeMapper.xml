@@ -17,7 +17,11 @@
             VALUES (#{mstCode}, #{detCode}, #{mstName},#{detName},#{seq},#{userYn},#{regId},#{modId})
     </insert>
     <update id="modifyOne">
-        UPDATE common_code SET user_yn = #{userYn}, mod_dt = #{modDt}, mod_id = #{modId}
+        UPDATE common_code SET user_yn = #{userYn},
+                               mod_dt = #{modDt},
+                               mod_id = #{modId},
+                               mst_name=#{mstName},
+                               det_name=#{detName}
                            WHERE mst_code = #{mstCode} AND det_code = #{detCode}
     </update>
     <select id="listByMstCode" resultMap="commonCodeMap" >

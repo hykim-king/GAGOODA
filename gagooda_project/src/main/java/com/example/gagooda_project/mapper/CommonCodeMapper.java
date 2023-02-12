@@ -9,7 +9,7 @@ import java.util.List;
 public interface CommonCodeMapper {
     List<CommonCodeDto> listByMstCode(String mstCode);
     int insertOne(CommonCodeDto commonCode);
-    int modifyOne(CommonCodeDto commonCode);
+    int updateOne(CommonCodeDto commonCode);
 //    int deleteOne(String mstCode);
 //
 }

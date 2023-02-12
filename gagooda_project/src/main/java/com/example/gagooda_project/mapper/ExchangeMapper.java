@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface ExchangeMapper {
-    List<ExchangeDto> pageByUserAndDate(int userId, Date currentDate, int period);
+    List<ExchangeDto> pageByUserAndDate(int userId, int period);
     List<ExchangeDto> pageAll();
     int insertOne(ExchangeDto exchange);
     ExchangeDto findById(int id);
