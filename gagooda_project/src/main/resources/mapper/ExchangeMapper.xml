@@ -35,7 +35,7 @@
     <select id="countByUserIdAndOrderDetailId" resultType="int">
         SELECT COUNT(*) FROM exchange WHERE user_id = #{userId} AND order_detail_id = #{orderDetailId}
     </select>
-        <select id="pageByUserAndDate" resultMap="exchangeMap">
+    <select id="pageByUserAndDate" resultMap="exchangeMap">
         SELECT * FROM exchange WHERE user_id = #{userId}
             AND reg_date BETWEEN DATE_SUB(#{currentDate}, INTERVAL #{period} DAY) AND #{currentDate}
             ORDER BY reg_date DESC LIMIT 0,10
