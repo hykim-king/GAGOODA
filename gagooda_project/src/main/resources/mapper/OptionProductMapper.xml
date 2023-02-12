@@ -11,8 +11,8 @@
     </select>
 
     <insert id="insertOne" parameterType="OptionProductDto">
-        INSERT INTO option_product (option_code, product_code, name, price, stock)
-        VALUES (#{optionCode}, #{productCode}, #{name}, #{price}, #{stock})
+        INSERT INTO option_product (option_code, product_code, opname, price, stock)
+        VALUES (#{optionCode}, #{productCode}, #{opname}, #{price}, #{stock})
     </insert>
 
     <delete id="deleteByProductCode" parameterType="Integer">

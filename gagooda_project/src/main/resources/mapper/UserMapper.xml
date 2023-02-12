@@ -14,11 +14,11 @@
         <result property="modDate" column="mod_date"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO user (email, name, nickname, pw, phone)
-        VALUES (#{email},#{name},#{nickname},#{pw},#{phone})
+        INSERT INTO user (email, uname, nickname, pw, phone)
+        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone})
     </insert>
     <update id="updateOne">
-        UPDATE user SET name=#{name},
+        UPDATE user SET uname=#{uname},
                         nickname=#{nickname},
                         phone=#{phone},
                         emailcheck=#{emailCheck}
@@ -34,7 +34,7 @@
         SELECT * FROM user WHERE email=#{email} AND pw=#{pw}
     </select>
     <select id="findByEmailAndName" resultMap="userMap">
-        SELECT * FROM user WHERE email=#{email} AND name=#{name}
+        SELECT * FROM user WHERE email=#{email} AND uname=#{uname}
     </select>
     <select id="listAll" resultMap="userMap">
         SELECT * FROM user

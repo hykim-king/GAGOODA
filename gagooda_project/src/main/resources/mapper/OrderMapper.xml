@@ -6,6 +6,7 @@
         <result column="user_id" property="userId"/>
         <result column="address_id" property="addressId"/>
         <result column="total_price" property="totalPrice"/>
+        <result column="reg_date" property="regDate"/>
         <result column="user_name" property="userName"/>
         <result column="user_email" property="userEmail"/>
         <result column="user_phone" property="userPhone"/>
@@ -27,7 +28,7 @@
 
     </select>
     <select id="listByUserIdAndDate" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE user_id=#{userId} AND date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
+        SELECT * FROM ORDER_DB WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
     </select>
     <select id="countByUserId" resultType="int">
         SELECT COUNT(*) FROM ORDER_DB WHERE user_id=#{userId}
@@ -40,7 +41,7 @@
         SELECT * FROM ORDER_DB WHERE o_det=#{oDet}
     </select>
     <select id="listByDate" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL #{dates} DAY) AND NOW();
+        SELECT * FROM ORDER_DB WHERE reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{dates} DAY) AND NOW();
     </select>
     <select id="countByUserIdAndStatus" resultMap="oDetMap">
         SELECT o_det, count(o_det) cnt FROM ORDER_DB WHERE user_id=#{userId} GROUP BY o_det
@@ -50,7 +51,7 @@
     </select>
     <insert id="insertOne">
         INSERT INTO ORDER_DB (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path, o_det)
-        VALUES (order_id=#{orderId}, user_id=#{userId},address_id=#{addressId}, total_price=#{totalPrice}, user_name=#{userName}, user_email=#{userEmail}, user_phone=#{userPhone},post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator}, img_path=#{imgPath}, o_det=#{oDet})
+        VALUES (#{orderId}, #{userId}, #{addressId}, #{totalPrice}, #{userName}, #{userEmail}, #{userPhone}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgPath}, #{oDet})
     </insert>
     <update id="updateStatus">
         UPDATE ORDER_DB SET o_det=#{oDet} WHERE order_id=#{id}

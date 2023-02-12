@@ -8,15 +8,15 @@ import java.util.Date;
 public class ExchangeDto {
     private int exchangeId;         // exchange_id 교환 ID, PK, NN
     private int userId;             //  유저 ID, user_id, !FK, NN, ( EXCHANGE : USER ) 1 : N
-    private String name;            // 유저 이름, user.name NN
+    private String uname;            // 유저 이름, user.name NN
     private String email;           // 유저 이메일, user.email, NN
     private String phone;           // 유저 전화번호, user.phone, NN
     private String orderId;            // order_id 주문 ID FK
     private int orderDetailId;      // 주문 상세 ID, !FK, NN exchange:order_detail = 1:1
     private int addressId;          // 배송지 ID FK
-    private int count;              // 교환 수량 NN
+    private int cnt;              // 교환 수량 NN
     private String reason;          // 교환 사유, NN
-    private String comment;         // 교환 응답 사유
+    private String reply;         // 교환 응답 사유
     private Date regDate;           // 교환 요청 일자 TIMESTAMP NN
     private Date modDate;           // 교환 상태 변경 일자 TIMESTAMP
     private String postCode;        // post_code 우편주소 NN

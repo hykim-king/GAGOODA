@@ -19,13 +19,13 @@
         <result column="rfr_det" property="rfrDet"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
-        INSERT INTO refund (user_id, name, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
+        INSERT INTO refund (user_id, uname, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
                     post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
-                VALUES (#{userId}, #{name}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
+                VALUES (#{userId}, #{uname}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
                     #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <update id="updateOne">
-        UPDATE refund SET comment=#{comment}, mod_date=#{modDate}, rf_det=#{rfDet} WHERE refund_id = #{refundId}
+        UPDATE refund SET reply=#{reply}, mod_date=#{modDate}, rf_det=#{rfDet} WHERE refund_id = #{refundId}
     </update>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}

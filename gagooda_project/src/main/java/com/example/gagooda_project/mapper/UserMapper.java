@@ -15,7 +15,7 @@ public interface UserMapper {
 
     UserDto findByEmailAndPw(String email, String pw);
 
-    UserDto findByEmailAndName(String email, String name);
+    UserDto findByEmailAndName(String email, String uname);
 
     int updatePw(String pw, int id);
 

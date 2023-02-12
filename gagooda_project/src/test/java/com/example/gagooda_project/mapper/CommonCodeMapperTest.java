@@ -38,7 +38,7 @@ class CommonCodeMapperTest {
         commonCode.setModId("테슷흐");
         commonCode.setModDt(new Date());
         commonCode.setUserYn(true);
-        commonCodeMapper.modifyOne(commonCode);
+        commonCodeMapper.updateOne(commonCode);
         System.out.println(commonCodeMapper.listByMstCode("t"));
     }
 }

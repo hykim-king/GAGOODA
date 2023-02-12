@@ -7,10 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface CartMapper {
-    int insertOne(CartDto dto);
+    int insertOne(CartDto cart);
     int deleteById(int id);  // cart_id
     int deleteByUserId(int userId);   // user_id
     int countByUserId(int userId);
     List<CartDto> listByUserId(int userId);
-
+    int updateOne(CartDto cart);
+    CartDto findByUserIdAndOptionCode(int userId, String optionCode);
 }

@@ -9,9 +9,12 @@
     </resultMap>
 
     <insert id="insertOne" parameterType="cartDto" useGeneratedKeys="true" keyProperty="cartId">
-        INSERT INTO cart (count, product_code, option_code, user_id) VALUES (#{count},#{productCode},#{optionCode},#{userId})
+        INSERT INTO cart (cnt, product_code, option_code, user_id)
+        VALUES (#{cnt},#{productCode},#{optionCode},#{userId})
     </insert>
-
+    <update id="updateOne">
+        UPDATE cart SET cnt = #{cnt} WHERE option_code=#{optionCode} AND user_id=#{userId}
+    </update>
     <select id="countByUserId" resultType="Integer">
         SELECT COUNT(*) FROM cart WHERE user_id=#{userId}
     </select>
@@ -23,5 +26,8 @@
     </delete>
     <select id="listByUserId" resultMap="cartMap">
         SELECT * FROM cart WHERE user_id=#{userId}
+    </select>
+    <select id="findByUserIdAndOptionCode" resultMap="cartMap">
+        SELECT * FROM cart WHERE user_id=#{userId} AND option_code=#{optionCode}
     </select>
 </mapper>

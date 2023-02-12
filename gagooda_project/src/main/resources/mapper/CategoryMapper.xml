@@ -8,7 +8,8 @@
     </resultMap>
 
     <insert id="insertOne" parameterType="CategoryDto">
-        INSERT INTO category (category_id, parent_id, name, level) VALUES (#{categoryId}, #{parentId}, #{name}, #{level})
+        INSERT INTO category (category_id, parent_id, cname, lvl)
+        VALUES (#{categoryId}, #{parentId}, #{cname}, #{lvl})
     </insert>
     <select id="findById" resultMap="categoryMap">
         SELECT * FROM category WHERE category_id=#{categoryId}

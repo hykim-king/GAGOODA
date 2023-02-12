@@ -10,7 +10,7 @@ public class OrderDto {
     private String orderId; // order_id PK NN 주문 아이디 AUTO_INCREMENT
     private int userId; // user_id (USER:ORDER)1:N NN 사용자 ID
     private int addressId; // address_id 배송지 아이디
-    private Date date;  // 주문일자 NN
+    private Date regDate;  // reg_date 주문일자 NN
     private int totalPrice; // total_price 총 가격 NN
     private String userName; // user_name NN
     private String userEmail; // user_email NN
