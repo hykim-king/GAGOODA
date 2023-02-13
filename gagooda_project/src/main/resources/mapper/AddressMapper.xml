@@ -52,6 +52,6 @@
 
     <!--  int updatePrimary(int id);  -->
     <update id="updateHome" parameterType="int">
-        UPDATE address SET primary = 0 WHERE user_id = #{userId} AND home = 1
+        UPDATE address SET home = 0 WHERE user_id = #{userId} AND home = 1
     </update>
 </mapper>
