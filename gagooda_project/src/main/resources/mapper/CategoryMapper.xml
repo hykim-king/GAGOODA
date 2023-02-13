@@ -8,10 +8,10 @@
     </resultMap>
 
     <insert id="insertOne" parameterType="categoryDto">
-        INSERT INTO category (category_id, parent_id, name, level) VALUES (#{categoryId}, #{parentId}, #{name}, #{level})
+        INSERT INTO category (category_id, parent_id, cname, lvl) VALUES (#{categoryId}, #{parentId}, #{name}, #{level})
     </insert>
     <select id="findById" resultMap="categoryMap">
-        SELECT category_id,parent_id,name,level FROM category WHERE category_id=#{categoryId}
+        SELECT * FROM category WHERE category_id=#{categoryId}
     </select>
     <select id="listByParentId" parameterType="integer" resultMap="categoryMap">
         select * FROM category WHERE parent_id=#{parentId}

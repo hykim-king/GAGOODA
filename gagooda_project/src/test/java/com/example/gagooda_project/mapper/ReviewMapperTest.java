@@ -20,7 +20,7 @@ class ReviewMapperTest {
     }
 
     @Test
-    void pageByProductId() {
+    void listByProductCode() {
     }
 
     @Test
@@ -38,14 +38,13 @@ class ReviewMapperTest {
     @Test
     void insertOne(){
         ReviewDto review = new ReviewDto();
-        review.setReviewId(1);
         review.setUserId(1);
-        review.setOptionCode("1");
-        review.setProductCode("1");
+        review.setOptionCode("PDT001_001");
+        review.setProductCode("PDT001");
         review.setRate(4.5);
         review.setContent("test");
         review.setRegDate(new Date());
-        review.setImgCode("1.png");
+        review.setImgCode("REVIEW_1.png");
         reviewMapper.insertOne(review);
     }
 }
