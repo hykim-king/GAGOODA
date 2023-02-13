@@ -17,8 +17,8 @@
 
     <!--  int insertOne(AddressDto dto);  -->
     <insert id="insertOne" parameterType="addressDto" useGeneratedKeys="true" keyProperty="addressId">
-        INSERT INTO address (user_id, name, primary, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
-        VALUES (#{userId}, #{name}, #{primary}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
+        INSERT INTO address (user_id, aname, home, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
+        VALUES (#{userId}, #{aname}, #{home}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
     </insert>
 
     <!--  AddressDto findById(int id);  -->
@@ -28,18 +28,18 @@
 
     <!--  int updateOne(AddressDto dto);  -->
     <update id="updateOne" parameterType="addressDto">
-        UPDATE address SET (user_id=#{userId}, name=#{name}, primary=#{primary}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator})
+        UPDATE address SET user_id=#{userId}, aname=#{aname}, home=#{home}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator}
                        WHERE address_id = #{addressId}
     </update>
 
-    <!--  List<AddressDto> findByUserIdAndNotPrimary(int id);  -->
-    <select id="findByUserIdAndNotPrimary" resultMap="addressMap" parameterType="int">
-        SELECT * FROM address WHERE user_id = #{id} AND primary = 0
+    <!--  List<AddressDto> findByUserIdAndNotHome(int id);  -->
+    <select id="findByUserIdAndNotHome" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{id} AND home = 0
     </select>
 
-    <!--  AddressDto findByUserIdAndPrimary(int id);  -->
-    <select id="findByUserIdAndPrimary" resultMap="addressMap" parameterType="int">
-        SELECT * FROM address WHERE user_id = #{id} AND primary = 1
+    <!--  AddressDto findByUserIdAndHome(int id);  -->
+    <select id="findByUserIdAndHome" resultMap="addressMap" parameterType="int">
+        SELECT * FROM address WHERE user_id = #{id} AND home = 1
     </select>
 
     <!--  int deleteByAddressId(int id);  -->
@@ -47,13 +47,13 @@
         DELETE FROM address WHERE address_id = #{id}
     </delete>
 
-    <!--  int findPrimaryYes(int id);  -->
-    <select id="findPrimaryYes" resultType="int" parameterType="int">
-        SELECT COUNT(*) FROM address WHERE user_id = #{id} AND primary = 1
+    <!--  int findHomeYes(int id);  -->
+    <select id="findHomeYes" resultType="int" parameterType="int">
+        SELECT COUNT(*) FROM address WHERE user_id = #{id} AND home = 1
     </select>
 
-    <!--  int updatePrimary(int id);  -->
-    <update id="updatePrimary" parameterType="int">
-        UPDATE address SET primary = 0 WHERE user_id = #{id} AND primary = 1
+    <!--  int updateHome(int id);  -->
+    <update id="updateHome" parameterType="int">
+        UPDATE address SET home = 0 WHERE user_id = #{id} AND home = 1
     </update>
 </mapper>

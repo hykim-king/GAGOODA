@@ -27,7 +27,7 @@
 
     <!--  int insertOne(OrderDetailDto dto);  -->
     <insert id="insertOne" parameterType="orderDetailDto" useGeneratedKeys="true" keyProperty="orderDetailId">
-        INSERT INTO order_detail (order_id, product_code, option_code, count, price, total_price, option_name)
-        VALUES (#{orderId}, #{productCode}, #{optionCode}, #{count}, #{price}, #{totalPrice}, #{optionName})
+        INSERT INTO order_detail (order_id, product_code, option_code, cnt, price, total_price, option_name)
+        VALUES (#{orderId}, #{productCode}, #{optionCode}, #{cnt}, #{price}, #{totalPrice}, #{optionName})
     </insert>
 </mapper>

@@ -11,9 +11,9 @@ public interface AddressMapper {
     int insertOne(AddressDto dto);
     AddressDto findById(int id);  // address_id
     int updateOne(AddressDto dto);
-    List<AddressDto> findByUserIdAndNotPrimary(int id);
-    AddressDto findByUserIdAndPrimary(int id);
+    List<AddressDto> findByUserIdAndNotHome(int id);
+    AddressDto findByUserIdAndHome(int id);
     int deleteByAddressId(int id);
-    int findPrimaryYes(int id);  // user_id
-    int updatePrimary(int id);  // user_id
+    int findHomeYes(int id);  // user_id
+    int updateHome(int id);  // user_id
 }
