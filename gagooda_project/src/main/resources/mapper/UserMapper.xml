@@ -15,7 +15,7 @@
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO user (email, uname, nickname, pw, phone, emailcheck, g_det)
-        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone},#{emailcheck}, #{gDet})
+        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone},#{emailCheck}, #{gDet})
     </insert>
     <update id="updateOne">
         UPDATE user SET uname=#{uname},
@@ -41,6 +41,9 @@
     </select>
     <select id="pageAll" resultMap="userMap">
 
+    </select>
+    <select id="findById" resultMap="userMap">
+        SELECT * FROM user WHERE user_id=#{id}
     </select>
 </mapper>
 <!--
