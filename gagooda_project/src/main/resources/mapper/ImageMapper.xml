@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.ImageMapper">
+    <resultMap id="imageMap" type="imageDto" autoMapping="true">
+        <id property="imgCode" column="img_code"/>
+        <result property="imgPath" column="img_path"/>
+    </resultMap>
+    <insert id="insertOne">
+        INSERT INTO image (seq, img_code, img_path) VALUES (#{seq},#{imgCode},#{imgPath})
+    </insert>
+    <delete id="deleteByImgCode">
+        DELETE FROM image WHERE img_code=#{imgCode}
+    </delete>
+    <select id="findByImgCodeAndSeq" resultMap="imageMap">
+        SELECT * FROM image WHERE img_code=#{imgCode} AND seq=#{seq}
+    </select>
+    <select id="listByImgCode" resultMap="imageMap">
+        SELECT * FROM image WHERE img_code=#{imgCode}
+    </select>
 </mapper>

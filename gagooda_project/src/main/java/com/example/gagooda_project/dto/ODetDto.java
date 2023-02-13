@@ -3,6 +3,6 @@ import lombok.Data;
 
 @Data
 public class ODetDto { //OrderMappr의 countByUserIdAndStatus를 위한 Dto
-    private String oDet;
-    private int count;
+    private String oDet;  // NN
+    private int count;  // NN
 }
