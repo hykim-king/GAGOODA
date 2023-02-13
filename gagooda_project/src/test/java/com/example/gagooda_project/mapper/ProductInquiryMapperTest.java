@@ -1,0 +1,58 @@
+package com.example.gagooda_project.mapper;
+
+import com.example.gagooda_project.dto.ProductInquiryDto;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Date;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class ProductInquiryMapperTest {
+    @Autowired
+    ProductInquiryMapper productInquiryMapper;
+
+    @Test
+    void listByProductCode() {
+        productInquiryMapper.listByProductCode("PDT001");
+    }
+
+    @Test
+    void insertOne() {
+        ProductInquiryDto pid = new ProductInquiryDto();
+        pid.setUserId(1);
+        pid.setOptionCode("PDT001_001");
+        pid.setProductCode("PDT001");
+        pid.setTitle("test");
+        pid.setContent("test입니다");
+        pid.setSecret(true);
+        pid.setRegDate(new Date());
+        pid.setPiDet("pi0");
+        productInquiryMapper.insertOne(pid);
+    }
+
+    @Test
+    void listAll() {
+        productInquiryMapper.listAll();
+    }
+
+    @Test
+    void findById() {
+        productInquiryMapper.findById(1);
+    }
+
+    @Test
+    void updateReplyInTable() {
+    }
+
+    @Test
+    void deleteById() {
+        productInquiryMapper.deleteById(1);
+    }
+
+    @Test
+    void pageAll() {
+    }
+}

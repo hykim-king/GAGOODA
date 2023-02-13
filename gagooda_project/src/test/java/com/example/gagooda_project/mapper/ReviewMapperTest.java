@@ -15,16 +15,13 @@ class ReviewMapperTest {
     private ReviewMapper reviewMapper;
 
     @Test
-    void listByProductId() {
-//        reviewMapper.listByProductId("1");
-    }
-
-    @Test
-    void pageByProductId() {
+    void listByProductCode() {
+        reviewMapper.listByProductCode("PDT001");
     }
 
     @Test
     void listAll() {
+        reviewMapper.listAll();
     }
 
     @Test
@@ -33,6 +30,7 @@ class ReviewMapperTest {
 
     @Test
     void findById() {
+        reviewMapper.findById(1);
     }
 
     @Test
@@ -47,4 +45,18 @@ class ReviewMapperTest {
         review.setImgCode("review_1");
         reviewMapper.insertOne(review);
     }
+
+    @Test
+    void updateOne() {
+        ReviewDto review = reviewMapper.findById(1);
+        review.setRate(0.1);
+        review.setContent("bad");
+        reviewMapper.updateOne(review);
+    }
+
+    @Test
+    void deleteById() {
+
+    }
+
 }
