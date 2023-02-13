@@ -17,12 +17,10 @@ public interface OrderMapper {
     List<OrderDto> listOrderByDate(Date searchDate);
     OrderDto findById(String id); //orderId
     int insertOne(OrderDto dto);
-    int updateStatus(String id, String det);//NOT NULL이면 Integer
+    int updateStatus(String id, String det);//NULL이면 Integer
     int countByUserId(int id); //userId
     int countOrderByNotStatus(int id); //userId
     List<ODetDto> countByUserIdAndStatus(int id); //userId
-
-
 
 
 }
