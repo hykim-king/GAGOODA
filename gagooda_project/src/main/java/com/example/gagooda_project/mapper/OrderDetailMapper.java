@@ -7,11 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface OrderDetailMapper {
-    List<OrderDetailDto> findByOrderId(int orderId);
+    List<OrderDetailDto> findByOrderId(String orderId);
     // id -> orderId
     OrderDetailDto findById(int id);
     // findByOrderDetailId -> findById
-    int countByOrderId(int orderId);
+    int countByOrderId(String orderId);
     // id -> orderId
     int insertOne(OrderDetailDto orderDetail);
     // dto -> orderDetail
