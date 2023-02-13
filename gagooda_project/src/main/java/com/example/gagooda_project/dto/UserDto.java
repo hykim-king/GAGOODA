@@ -12,7 +12,7 @@ public class UserDto {
     private String uname;        // uname NN 사용자 이름
     private String nickname;    // nickname NN 사용자 닉네임
     private String phone;       // phone NN 사용자 전화번호
-    private boolean emailcheck; // emailcheck NN DEFAULT 0 이메일 수신 여부 플래그
+    private boolean emailCheck; // emailcheck NN DEFAULT 0 이메일 수신 여부 플래그
     private String cardName;    // card_name 카드사
     private String cardNum;        // card_num  카드번호
     private String cvc;            // cvc CVC
