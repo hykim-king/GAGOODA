@@ -14,8 +14,8 @@
         <result property="modDate" column="mod_date"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO user (email, uname, nickname, pw, phone)
-        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone})
+        INSERT INTO user (email, uname, nickname, pw, phone, emailcheck, g_det)
+        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone},#{emailcheck}, #{gDet})
     </insert>
     <update id="updateOne">
         UPDATE user SET uname=#{uname},

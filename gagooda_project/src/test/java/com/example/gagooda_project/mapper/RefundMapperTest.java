@@ -24,7 +24,7 @@ class RefundMapperTest {
     void insertOne() {
         RefundDto refund = new RefundDto();
         refund.setUserId(1);
-        refund.setName("김김김");
+        refund.setReceiverName("김김김");
         refund.setEmail("ddd@dddd.ddd");
         refund.setPhone("01011111111");
         refund.setOrderDetailId(1);
@@ -57,7 +57,7 @@ class RefundMapperTest {
     @Test
     void updateOne() {
         RefundDto findRefund = refundMapper.findById(1);
-        findRefund.setComment("코멘트 남깁니다~");
+        findRefund.setReply("코멘트 남깁니다~");
         findRefund.setModDate(new Date());
         findRefund.setRfDet("rf1");
         refundMapper.updateOne(findRefund);
