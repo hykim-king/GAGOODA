@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.CategoryConnMapper">
+    <resultMap id="categoryConnMap" type="CategoryConnDto">
+        <id column="category_id" property="categoryId"/>
+        <result column="product_code" property="productCode"/>
+    </resultMap>
+    <insert id="insertOne" parameterType="CategoryConnDto">
+        INSERT INTO category_conn (category_id, product_code) VALUES (#{categoryId}, #{productCode})
+    </insert>
+    <delete id="deleteByProductCode">
+        DELETE FROM category_conn WHERE product_code=#{productCode}
+    </delete>
+    <select id="listByCategoryId" resultMap="categoryConnMap">
+        SELECT * FROM category_conn WHERE category_id=#{categoryId}
+    </select>
+    <select id="listByProductCode" resultMap="categoryConnMap">
+        SELECT * FROM category_conn WHERE product_code=#{productCode}
+    </select>
 </mapper>

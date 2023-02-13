@@ -7,13 +7,24 @@ import java.util.List;
 
 @Mapper
 public interface AddressMapper {
-    List<AddressDto> listByUserId(int id);
-    int insertOne(AddressDto dto);
+    List<AddressDto> listByUserId(int userId);
+    // int id -> userId
+    int insertOne(AddressDto address);
     AddressDto findById(int id);  // address_id
-    int updateOne(AddressDto dto);
-    List<AddressDto> findByUserIdAndNotHome(int id);
-    AddressDto findByUserIdAndHome(int id);
-    int deleteByAddressId(int id);
-    int findHomeYes(int id);  // user_id
-    int updateHome(int id);  // user_id
+    int updateOne(AddressDto address);
+    List<AddressDto> findByUserIdAndNotHome(int userId);
+    AddressDto findByUserIdAndHome(int userId);
+    int deleteById(int id);
+    // deleteByAddressId -> deleteById
+    int countHome(int userId);  // user_id
+    //findPrimaryYes -> countPrimary
+    // 용도가..? user에게 primary address가 있는지 확인하기 위해서..?
+    // 만약 그렇다면 그냥 findByUserIdAndPrimary만 있어도 될거 같아요
+    // 저걸 돌리면 null로 들어올거고 그러면 지정한 user에게 primary address는
+    // 없다는 뜻이 됩니다.
+    int updateHome(int userId);  // user_id
+    // 용도가...?
+    // primary 해제용이면 dismissHome(int userId) query는 updateHome랑 같게,
+    // 설정용이면 setHome(int userId, int id) //address_id
+    // 추천합니당
 }

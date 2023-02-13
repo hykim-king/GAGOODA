@@ -12,9 +12,12 @@ public class ProductInquiryDto {
     private String productCode; // product_code FK NN (PRODUCT:PRODUCT_INQUIRY) 1:N
     private String title; // NN
     private String content; // NN
+    private String reply;
     private boolean secret; // NN
-    private boolean status; // NN
     private Date regDate; // NN
-    private Date modDate; // NN
+    private Date replyDate; // NN
+    private int replyId; // NN
     private String piDet; // NN
+    private UserDto user;
+    private OptionProductDto optionProductDto;
 }

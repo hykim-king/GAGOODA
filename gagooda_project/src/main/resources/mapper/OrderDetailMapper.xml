@@ -12,17 +12,17 @@
 
     <!--  List<OrderDetailDto> findByOrderId(int id);  -->
     <select id="findByOrderId" resultMap="orderDetailMap" parameterType="int">
-        SELECT * FROM order_detail WHERE order_id = #{id}
+        SELECT * FROM order_detail WHERE order_id = #{orderId}
     </select>
 
     <!--  OrderDetailDto findByOrderDetailId(int id);  -->
-    <select id="findByOrderDetailId" resultMap="orderDetailMap" parameterType="int">
+    <select id="findById" resultMap="orderDetailMap" parameterType="int">
         SELECT * FROM order_detail WHERE order_detail_id = #{id}
     </select>
 
     <!--  int countByOrderId(int id);  -->
     <select id="countByOrderId" resultMap="orderDetailMap" parameterType="int">
-        SELECT COUNT(*) FROM order_detail WHERE order_id = #{id}
+        SELECT COUNT(*) FROM order_detail WHERE order_id = #{orderId}
     </select>
 
     <!--  int insertOne(OrderDetailDto dto);  -->

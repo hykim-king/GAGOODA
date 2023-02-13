@@ -3,6 +3,7 @@ package com.example.gagooda_project.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ReviewDto {
@@ -14,4 +15,8 @@ public class ReviewDto {
     private String content;     // 후기 내용, content, NULL
     private Date regDate;       // 등록일, reg_date, NN
     private String imgCode;     // 이미지 코드, img_code, NULL
+
+    private UserDto user;
+    private OptionProductDto optionProduct;
+    private List<ImageDto> imglist;
 }
