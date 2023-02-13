@@ -26,8 +26,8 @@ class CategoryMapperTest {
     void insertOne() {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setCategoryId(11);
-        categoryDto.setName("침대");
-        categoryDto.setLevel(2);
+        categoryDto.setCname("침대");
+        categoryDto.setLvl(2);
         categoryMapper.insertOne(categoryDto);
     }
 }

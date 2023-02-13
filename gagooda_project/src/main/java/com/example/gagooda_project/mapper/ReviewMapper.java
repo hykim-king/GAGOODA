@@ -10,7 +10,7 @@ public interface ReviewMapper {
 
     List<ReviewDto> listByProductCode (String productCode);
 
-//    List<ReviewDto> pageByProductId (String productId);
+//    List<ReviewDto> pageByProductCode (String productCode);
 
     List<ReviewDto> listAll();
 
