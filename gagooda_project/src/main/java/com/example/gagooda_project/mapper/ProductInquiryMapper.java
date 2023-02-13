@@ -16,7 +16,7 @@ public interface ProductInquiryMapper {
 
     ProductInquiryDto findById(int id);
 
-    int updateReplyInTable(int id, String reply, int replyId);
+    int updateReplyInTable(ProductInquiryDto productInquiry);
 
     int deleteById(int id);
 

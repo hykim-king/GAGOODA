@@ -13,7 +13,5 @@ public class CommonCodeDto {
     private int seq;        // 순서 NN
     private boolean userYn; // user_yn | 사용여부 NN
     private Date regDt;     // reg_dt | 등록일 | NN | current timestamp
-    private String regId;   // reg_id | 등록자 | NN
     private Date modDt;     // mod_dt | 수정일 | NN | current timestamp
-    private String modId;   // mod_id | 수정자 | NN
 }

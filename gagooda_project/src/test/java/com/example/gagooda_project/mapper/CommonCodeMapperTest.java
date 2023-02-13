@@ -25,8 +25,6 @@ class CommonCodeMapperTest {
         commonCode.setDetCode("t01");
         commonCode.setMstName("테스트");
         commonCode.setDetName("테스트01");
-        commonCode.setRegId("김김김");
-        commonCode.setModId("김김김");
         commonCodeMapper.insertOne(commonCode);
     }
 
@@ -35,7 +33,6 @@ class CommonCodeMapperTest {
         CommonCodeDto commonCode = new CommonCodeDto();
         commonCode.setMstCode("t");
         commonCode.setDetCode("t01");
-        commonCode.setModId("테슷흐");
         commonCode.setModDt(new Date());
         commonCode.setUserYn(true);
         commonCodeMapper.updateOne(commonCode);

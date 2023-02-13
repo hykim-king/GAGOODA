@@ -17,8 +17,8 @@
             product_inquiry ( user_id, option_code, product_code, title, content, secret, reg_date, pi_det)
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{title}, #{content}, #{secret}, #{regDate}, #{piDet})
     </insert>
-    <update id="updateReplyInTable">
-
+    <update id="updateReplyInTable" parameterType="ProductInquiryDto">
+        UPDATE product_inquiry SET reply=#{reply}, reply_date=NOW(), reply_id=#{replyId} WHERE p_inquiry_id=#{pInquiryId}
     </update>
     <delete id="deleteById">
         DELETE FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}

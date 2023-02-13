@@ -45,6 +45,10 @@ class ProductInquiryMapperTest {
 
     @Test
     void updateReplyInTable() {
+        ProductInquiryDto pInquiry = productInquiryMapper.findById(1);
+        pInquiry.setReply("이것은 답변입니다");
+        pInquiry.setReplyId(9);
+        productInquiryMapper.updateReplyInTable(pInquiry);
     }
 
     @Test
