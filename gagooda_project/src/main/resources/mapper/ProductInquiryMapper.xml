@@ -14,9 +14,15 @@
 
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="pInquiryId">
         INSERT INTO
-            product_inquiry ( user_id, option_code, product_code, title, content, reply, secret, reg_date, reply_date, pi_det)
-            VALUES ( #{userId}, #{optionCode}, #{productCode}, #{title}, #{content}, #{reply}, #{secret}, #{regDate}, #{replyDate}, #{piDet})
+            product_inquiry ( user_id, option_code, product_code, title, content, secret, reg_date, pi_det)
+            VALUES ( #{userId}, #{optionCode}, #{productCode}, #{title}, #{content}, #{secret}, #{regDate}, #{piDet})
     </insert>
+    <update id="updateReplyInTable">
+
+    </update>
+    <delete id="deleteById">
+        DELETE FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
+    </delete>
     <select id="listByProductCode" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry WHERE product_code=#{productCode}
     </select>
@@ -27,6 +33,6 @@
         SELECT * FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </select>
 <!--    <select id="pageAll" resultType="ProductInquiryDto">-->
-<!--        SELECT * FROM product_inquiry ORDER BY -->
+<!--        SELECT * FROM product_inquiry ORDER BY-->
 <!--    </select>-->
 </mapper>
