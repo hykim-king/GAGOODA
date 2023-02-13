@@ -54,7 +54,7 @@ class ExchangeMapperTest {
         ExchangeDto exchange = new ExchangeDto();
         exchange.setExchangeId(1);
         exchange.setExDet("ex2");
-        exchange.setComment("답글");
+        exchange.setReply("답글");
         exchange.setModDate(new Date());
         exchangeMapper.updateOne(exchange);
         ExchangeDto check = exchangeMapper.findById(1);
