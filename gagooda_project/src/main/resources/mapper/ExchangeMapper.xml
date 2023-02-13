@@ -18,7 +18,7 @@
         <result column="rfr_det" property="rfrDet"/>
     </resultMap>
     <update id="updateOne">
-        UPDATE exchange SET reply=#{reply}, mod_date=#{modDate}, ex_det=#{exDet} WHERE exchange_id = #{exchangeId}
+        UPDATE exchange SET reply=#{reply}, mod_date=NOW(), ex_det=#{exDet} WHERE exchange_id = #{exchangeId}
     </update>
     <insert id="insertOne" keyProperty="exchangeId" useGeneratedKeys="true">
         INSERT INTO exchange (user_id, uname, email, phone, order_detail_id, order_id, address_id, cnt, reason,
@@ -27,7 +27,12 @@
                 #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <select id="pageAll" resultMap="exchangeMap">
-        SELECT * FROM exchange ORDER BY exchange_id DESC LIMIT 0,10
+        SELECT * FROM exchange
+             <if test="exDetList">
+                WHERE ex_det IN
+                 <foreach collection="exDetList" item="exDet" separator="," open="(" close=")">#{exDet}</foreach>
+             </if>
+             ORDER BY exchange_id DESC LIMIT 0,10
     </select>
     <select id="findById" resultMap="exchangeMap">
         SELECT * FROM exchange WHERE exchange_id = #{id}

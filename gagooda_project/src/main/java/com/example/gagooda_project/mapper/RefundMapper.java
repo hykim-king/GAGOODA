@@ -1,5 +1,6 @@
 package com.example.gagooda_project.mapper;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.RefundDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,13 +11,13 @@ import java.util.List;
 public interface RefundMapper {
 //  currentDate 는 현재 시간을 넘겨주며, period는 음수로 변환한 기간(defaul로 -7의 값)을 넘겨야 한다.
 //  pagingDto가 생성되면 pagingDto를 넘겨준다.(02.11- 현재는 넘겨줄 수 없으므로 mapper.xml에서 임의로 값을 넣어줬음.
-    List<RefundDto> pageByUserIdAndDate(int userId, Date currentDate, int period);
+    List<RefundDto> pageByUserIdAndDate(int userId, int period);
 
     int insertOne(RefundDto refund);
 
     RefundDto findById(int id);
 
-    List<RefundDto> pageAll();
+    List<RefundDto> pageAll(List<String> rfCodeList);
 
     int updateOne(RefundDto refund);
 

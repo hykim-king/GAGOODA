@@ -28,7 +28,7 @@
 
     <!--  int updateOne(AddressDto dto);  -->
     <update id="updateOne" parameterType="addressDto">
-        UPDATE address SET (user_id=#{userId}, name=#{name}, primary=#{primary}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator})
+        UPDATE address SET (user_id=#{userId}, name=#{name}, home=#{home}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator})
                        WHERE address_id = #{addressId}
     </update>
 

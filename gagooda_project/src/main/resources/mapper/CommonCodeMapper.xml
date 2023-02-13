@@ -18,7 +18,7 @@
     </insert>
     <update id="updateOne">
         UPDATE common_code SET user_yn = #{userYn},
-                               mod_dt = #{modDt},
+                               mod_dt = NOW(),
                                mod_id = #{modId},
                                mst_name=#{mstName},
                                det_name=#{detName}

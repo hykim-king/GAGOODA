@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,29 +16,35 @@ class ExchangeMapperTest {
     ExchangeMapper exchangeMapper;
     @Test
     void pageByUserAndDate() {
-        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserAndDate(1, 30);
+        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserAndDate(1, 7);
         System.out.println(exchangeList);
     }
 
     @Test
     void pageAll() {
-        List<ExchangeDto> exchangeList = exchangeMapper.pageAll();
+        List<String> exDetList = new ArrayList<>();
+        exDetList.add("ex0");
+        exDetList.add("ex2");
+        List<ExchangeDto> exchangeList = exchangeMapper.pageAll(exDetList);
         System.out.println(exchangeList);
     }
 
     @Test
     void insertOne() {
         ExchangeDto exchange = new ExchangeDto();
-        exchange.setOrderDetailId(2);
-        exchange.setOrderId("2222");
+        exchange.setOrderDetailId(1);
+        exchange.setOrderId("1111");
         exchange.setUserId(1);
+        exchange.setUname("김111");
+        exchange.setEmail("test@test.com");
+        exchange.setPhone("01011111111");
         exchange.setAddressId(1);
-        exchange.setCnt(1);
-        exchange.setReason("그냥22");
-        exchange.setPostCode("22222");
-        exchange.setAddress("경기도22");
-        exchange.setAddressDetail("상세주소22");
-        exchange.setReceiverName("나나나22");
+        exchange.setCnt(11);
+        exchange.setReason("그냥11");
+        exchange.setPostCode("11111");
+        exchange.setAddress("경기도11");
+        exchange.setAddressDetail("상세주소11");
+        exchange.setReceiverName("나나나11");
         exchange.setReceiverPhone("11111111111");
         exchange.setRfrDet("rfr2");
         exchangeMapper.insertOne(exchange);
@@ -53,9 +60,8 @@ class ExchangeMapperTest {
     void updateOne() {
         ExchangeDto exchange = new ExchangeDto();
         exchange.setExchangeId(1);
-        exchange.setExDet("ex2");
+        exchange.setExDet("ex1");
         exchange.setReply("답글");
-        exchange.setModDate(new Date());
         exchangeMapper.updateOne(exchange);
         ExchangeDto check = exchangeMapper.findById(1);
         System.out.println(check);
@@ -63,6 +69,7 @@ class ExchangeMapperTest {
 
     @Test
     void countByUserIdAndOrderDetailId() {
-        exchangeMapper.countByUserIdAndOrderDetailId(1,1);
+        int cnt = exchangeMapper.countByUserIdAndOrderDetailId(1,1);
+        System.out.println(cnt);
     }
 }
