@@ -16,7 +16,7 @@
     </insert>
     <update id="updateOne">
         UPDATE common_code SET user_yn = #{userYn},
-                               mod_dt = #{modDt},
+                               mod_dt = NOW(),
                                mst_name=#{mstName},
                                det_name=#{detName}
                            WHERE mst_code = #{mstCode} AND det_code = #{detCode}

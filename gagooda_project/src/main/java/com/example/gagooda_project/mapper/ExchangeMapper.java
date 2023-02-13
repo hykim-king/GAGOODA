@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface ExchangeMapper {
     List<ExchangeDto> pageByUserAndDate(int userId, int period);
-    List<ExchangeDto> pageAll();
+    List<ExchangeDto> pageAll(List<String> exDetList);
     int insertOne(ExchangeDto exchange);
     ExchangeDto findById(int id);
     int updateOne(ExchangeDto exchange);
