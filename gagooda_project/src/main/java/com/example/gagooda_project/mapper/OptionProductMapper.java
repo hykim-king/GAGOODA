@@ -11,5 +11,5 @@ public interface OptionProductMapper {
     List<OptionProductDto> listByProductCode(String productCode);
     int insertOne(OptionProductDto optionProduct);
     int deleteByProductCode(String productCode);
-    int findById(String id);
+    OptionProductDto findById(String id);
 }

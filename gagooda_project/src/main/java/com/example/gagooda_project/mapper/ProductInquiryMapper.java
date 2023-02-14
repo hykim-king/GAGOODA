@@ -15,7 +15,9 @@ public interface ProductInquiryMapper {
     List<ProductInquiryDto> listAll();
 
     ProductInquiryDto findById(int id);
-    int updateReplyInTable(int id, String reply, int replyId);
+
+    int updateReplyInTable(ProductInquiryDto productInquiry);
+
     int deleteById(int id);
 
 //    List<ProductInquiryDto> pageAll();

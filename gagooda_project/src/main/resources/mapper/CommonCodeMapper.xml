@@ -8,18 +8,15 @@
         <result column="det_name" property="detName"/>
         <result column="user_yn" property="userYn"/>
         <result column="reg_dt" property="regDt"/>
-        <result column="reg_id" property="regId"/>
         <result column="mod_dt" property="modDt"/>
-        <result column="mod_id" property="modId"/>
     </resultMap>
     <insert id="insertOne" >
-        INSERT INTO common_code (mst_code, det_code, mst_name, det_name, seq, user_yn, reg_id, mod_id)
-            VALUES (#{mstCode}, #{detCode}, #{mstName},#{detName},#{seq},#{userYn},#{regId},#{modId})
+        INSERT INTO common_code (mst_code, det_code, mst_name, det_name, seq, user_yn)
+            VALUES (#{mstCode}, #{detCode}, #{mstName},#{detName},#{seq},#{userYn})
     </insert>
     <update id="updateOne">
         UPDATE common_code SET user_yn = #{userYn},
-                               mod_dt = #{modDt},
-                               mod_id = #{modId},
+                               mod_dt = NOW(),
                                mst_name=#{mstName},
                                det_name=#{detName}
                            WHERE mst_code = #{mstCode} AND det_code = #{detCode}

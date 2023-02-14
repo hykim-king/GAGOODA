@@ -15,18 +15,16 @@ class CommonCodeMapperTest {
     CommonCodeMapper commonCodeMapper;
     @Test
     void listByMstCode() {
-        List<CommonCodeDto> commonCodeList = commonCodeMapper.listByMstCode("t");
+        List<CommonCodeDto> commonCodeList = commonCodeMapper.listByMstCode("rf");
     }
 
     @Test
     void insertOne() {
         CommonCodeDto commonCode = new CommonCodeDto();
-        commonCode.setMstCode("t");
-        commonCode.setDetCode("t01");
-        commonCode.setMstName("테스트");
-        commonCode.setDetName("테스트01");
-        commonCode.setRegId("김김김");
-        commonCode.setModId("김김김");
+        commonCode.setMstCode("rf");
+        commonCode.setDetCode("rf3");
+        commonCode.setMstName("환불처리상태");
+        commonCode.setDetName("반품 요청 확인");
         commonCodeMapper.insertOne(commonCode);
     }
 
@@ -35,10 +33,9 @@ class CommonCodeMapperTest {
         CommonCodeDto commonCode = new CommonCodeDto();
         commonCode.setMstCode("t");
         commonCode.setDetCode("t01");
-        commonCode.setModId("테슷흐");
         commonCode.setModDt(new Date());
         commonCode.setUserYn(true);
         commonCodeMapper.updateOne(commonCode);
-        System.out.println(commonCodeMapper.listByMstCode("t"));
+        System.out.println(commonCodeMapper.listByMstCode("rf"));
     }
 }

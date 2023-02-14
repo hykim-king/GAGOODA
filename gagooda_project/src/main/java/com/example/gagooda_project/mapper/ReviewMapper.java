@@ -16,7 +16,11 @@ public interface ReviewMapper {
 
 //    List<ReviewDto> pageAll();
 
-    ReviewDto findById(int reviewId);
+    ReviewDto findById(int id);
 
     int insertOne(ReviewDto review);
+
+    int updateOne(ReviewDto review);
+
+    int deleteById(int id);
 }
