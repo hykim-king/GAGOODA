@@ -16,7 +16,6 @@ public class UserMapperTest {
     @Test
     void insertOne() {
         UserDto user = new UserDto();
-        user.setUserId(22);
         user.setEmail("kjjjk@ajjsd.com");
         user.setPw("1234");
         user.setUname("이창국");
@@ -35,7 +34,7 @@ public class UserMapperTest {
     }
     @Test
     void deleteById() {
-        int deleteUser = userMapper.deleteById(22);
+        int deleteUser = userMapper.deleteById(19);
     }
     @Test
     void findById() {
