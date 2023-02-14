@@ -14,13 +14,13 @@
         <result column="mod_date" property="modDate"/>
         <result column="mod_id" property="modId"/>
     </resultMap>
-    <insert id="insertOne" parameterType="productDto">
+    <insert id="insertOne" parameterType="ProductDto">
         INSERT INTO product
             (product_code, pname, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
         VALUES
             (#{productCode}, #{pname}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode}, #{regId}, #{modId})
     </insert>
-    <update id="updateOne" parameterType="productDto">
+    <update id="updateOne" parameterType="ProductDto">
         UPDATE product SET pname=#{pname},
                            place=#{place},
                            delivery_pc=#{deliveryPc},
