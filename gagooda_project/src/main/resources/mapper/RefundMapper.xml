@@ -25,7 +25,7 @@
                     #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <update id="updateOne">
-        UPDATE refund SET reply=#{reply}, mod_date=#{modDate}, rf_det=#{rfDet} WHERE refund_id = #{refundId}
+        UPDATE refund SET reply=#{reply}, mod_date=NOW(), rf_det=#{rfDet} WHERE refund_id = #{refundId}
     </update>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
@@ -37,9 +37,9 @@
     </select>
     <select id="pageAll" resultMap="refundMap">
         SELECT * FROM refund
-<!--        <if test="commonCodeList != null">-->
-<!--            rf_det IN <foreach collection="commonCodeList" item="rf" separator="," open="(" close=")">#{rf}</foreach>-->
-<!--        </if>-->
+        <if test="rfDetList != null">
+            WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet}</foreach>
+        </if>
         ORDER BY reg_date DESC LIMIT 0,10
     </select>
 </mapper>

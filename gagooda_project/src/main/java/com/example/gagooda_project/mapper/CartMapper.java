@@ -13,5 +13,6 @@ public interface CartMapper {
     int countByUserId(int userId);
     List<CartDto> listByUserId(int userId);
     int updateOne(CartDto cart);
+//    int updateOne(int cnt, int userId, String optionCode);
     CartDto findByUserIdAndOptionCode(int userId, String optionCode);
 }

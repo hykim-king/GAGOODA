@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.CartMapper">
-    <resultMap id="cartMap" type="cartDto" autoMapping="true">
+    <resultMap id="cartMap" type="CartDto" autoMapping="true">
         <id column="cart_id" property="cartId"/>
         <result column="product_code" property="productCode"/>
         <result column="option_code" property="optionCode"/>
         <result column="user_id" property="userId"/>
     </resultMap>
 
-    <insert id="insertOne" parameterType="cartDto" useGeneratedKeys="true" keyProperty="cartId">
+    <insert id="insertOne" parameterType="CartDto" useGeneratedKeys="true" keyProperty="cartId">
         INSERT INTO cart (cnt, product_code, option_code, user_id)
         VALUES (#{cnt},#{productCode},#{optionCode},#{userId})
     </insert>

@@ -16,6 +16,12 @@
             review ( user_id, option_code, product_code, rate, reg_date, content, img_code)
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{regDate}, #{content}, #{imgCode})
     </insert>
+    <update id="updateOne" parameterType="ReviewDto">
+        UPDATE review SET rate=#{rate}, content=#{content} WHERE review_id=#{reviewId}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM review WHERE review_id=#{id}
+    </delete>
     <select id="listByProductCode" parameterType="String" resultMap="reviewMap">
         SELECT * FROM review WHERE product_code= #{productCode}
     </select>
@@ -29,6 +35,6 @@
 <!--        SELECT * FROM review ORDER BY #{regDate} DESC-->
 <!--    </select>-->
     <select id="findById" parameterType="Integer" resultMap="reviewMap">
-        SELECT * FROM review WHERE review_id=#{reviewId}
+        SELECT * FROM review WHERE review_id=#{id}
     </select>
 </mapper>

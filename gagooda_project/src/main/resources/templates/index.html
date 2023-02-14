@@ -6,7 +6,13 @@
 </head>
 <body>
 <h1>GAGOODA 쇼핑몰 파이팅!</h1>
-
-
+<th:block th:if="${session.loginUser != null}">
+    <h2 th:text="${session.loginUser.uname}"></h2>
+</th:block>
+<a href="/user/signup.do">회원가입</a>
+<br>
+<a href="/user/login.do">로그인</a>
+<br>
+<a href="/user/findpw.do">비밀번호 찾기</a>
 </body>
 </html>

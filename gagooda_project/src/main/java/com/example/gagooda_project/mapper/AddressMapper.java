@@ -17,7 +17,7 @@ public interface AddressMapper {
     int deleteById(int id);
     // deleteByAddressId -> deleteById
     int countHome(int userId);  // user_id
-    //findPrimaryYes -> countPrimary
+    // findPrimaryYes -> countPrimary
     // 용도가..? user에게 primary address가 있는지 확인하기 위해서..?
     // 만약 그렇다면 그냥 findByUserIdAndPrimary만 있어도 될거 같아요
     // 저걸 돌리면 null로 들어올거고 그러면 지정한 user에게 primary address는

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.AddressMapper">
-    <resultMap id="addressMap" type="addressDto" autoMapping="true">
+    <resultMap id="addressMap" type="AddressDto" autoMapping="true">
         <id column="address_id" property="addressId"/>
         <result column="user_id" property="userId"/>
         <result column="post_code" property="postCode"/>
@@ -27,8 +27,16 @@
     </select>
 
     <!--  int updateOne(AddressDto dto);  -->
-    <update id="updateOne" parameterType="addressDto">
-        UPDATE address SET user_id=#{userId}, aname=#{aname}, home=#{home}, post_code=#{postCode}, address=#{address}, address_detail=#{addressDetail}, receiver_name=#{receiverName}, receiver_phone=#{receiverPhone}, elevator=#{elevator}
+    <update id="updateOne" parameterType="AddressDto">
+        UPDATE address SET user_id=#{userId},
+                           aname=#{aname},
+                           home=#{home},
+                           post_code=#{postCode},
+                           address=#{address},
+                           address_detail=#{addressDetail},
+                           receiver_name=#{receiverName},
+                           receiver_phone=#{receiverPhone},
+                           elevator=#{elevator}
                        WHERE address_id = #{addressId}
     </update>
     <!--  List<AddressDto> findByUserIdAndNotPrimary(int id);  -->
