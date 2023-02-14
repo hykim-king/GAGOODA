@@ -79,14 +79,11 @@ class AddressMapperTest {
         System.out.println(check);
     }
 
-    @Test
-    void countHome() {
-        addressMapper.countHome(1);
-    }
+
 
     @Test
     void updateHome() {
-        addressMapper.updateHome(1);
-        addressMapper.countHome(1);
+        addressMapper.dissmissHome(1);
+
     }
 }
