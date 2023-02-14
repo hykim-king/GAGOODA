@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>장바구니 목록</title>
+</head>
+<body>
+    <div>
+        <h1>장바구니 목록</h1>
+        <div>
+            <table>
+                <tr>
+                    <th>전체</th>
+                    <th>선택칸</th>
+                    <th>상품정보</th>
+                    <th>수량</th>
+                    <th>주문금액</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>선택칸</td>
+                    <td>의자</td>
+                    <td>2</td>
+                    <td>50000</td>
+                </tr>
+            </table>
+        </div>
+
+        <a th:href="@{'deleteOne.do'(cart_id=${cart.getCartId()})}">선택삭제</a>
+        <a th:href="@{'deleteAll.do'(user_id=${cart.getUserId()})}">전체삭제</a>
+    </div>
+</body>
+</html>
