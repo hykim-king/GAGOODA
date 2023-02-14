@@ -54,10 +54,6 @@ public class UserMapperTest {
         System.out.println(findEmailName);
     }
     @Test
-    void updatePw() {
-        userMapper.updatePw("4321",1);
-    }
-    @Test
     void updateOne() {
         UserDto updateUser = userMapper.findById(1);
         updateUser.setUname("김현섭");

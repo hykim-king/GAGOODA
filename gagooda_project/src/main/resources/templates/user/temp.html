@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>temp</title>
+</head>
+<body>
+<a th:href="@{'/user/{userId}/modify.do'(userId=${session.loginUser.userId})}">수정</a>
+<a th:href="@{'/user/{userId}/remove.do'(userId=${session.loginUser.userId})}">삭제</a>
+</body>
+</html>

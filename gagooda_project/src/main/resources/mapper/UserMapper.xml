@@ -17,15 +17,21 @@
         INSERT INTO user (email, uname, nickname, pw, phone, emailcheck, g_det)
         VALUES (#{email},#{uname},#{nickname},#{pw},#{phone},#{emailCheck}, #{gDet})
     </insert>
-    <update id="updateOne">
+    <update id="updateOne" parameterType="UserDto">
         UPDATE user SET uname=#{uname},
                         nickname=#{nickname},
                         phone=#{phone},
-                        emailcheck=#{emailCheck}
+                        emailcheck=#{emailCheck},
+                        pw=#{pw},
+                        mod_date=NOW(),
+                        card_name=#{cardName},
+                        card_month=#{cardMonth},
+                        card_year=#{cardYear},
+                        card_num=#{cardNum},
+                        cvc = #{cvc},
+                        ms_det=#{msDet},
+                        mdr_det=#{mdrDet}
                     WHERE user_id=#{userId};
-    </update>
-    <update id="updatePw">
-        UPDATE user SET pw=#{pw} WHERE user_id=#{id};
     </update>
     <delete id="deleteById">
         DELETE FROM user WHERE user_id=#{id};

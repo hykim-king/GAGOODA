@@ -3,6 +3,7 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +20,25 @@ public class UserController {
     }
 
     @GetMapping("/signup.do")
-    public String signup() {
+    public String signup(
+            @SessionAttribute(required = false) String errMsg,
+            HttpSession session
+    ) {
+        if (errMsg != null) {
+            session.removeAttribute("errMsg");
+            System.out.println(errMsg);
+        }
         return "/user/signup";
     }
 
     @PostMapping("/signup.do")
-    public String signup(UserDto user) {
+    public String signup(
+            UserDto user,
+            HttpSession session
+    ) {
         int signup = 0;
         try {
+            user.setGDet("g0");
             signup = userService.register(user);
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,7 +47,8 @@ public class UserController {
         if (signup > 0) {
             return "redirect:/user/login.do";
         } else {
-            return "redirect:/user/register.do";
+            session.setAttribute("errMsg", "회원가입 중 오류가 있었습니다.");
+            return "redirect:/user/signup.do";
         }
     }
 
@@ -65,6 +78,7 @@ public class UserController {
             return "redirect:/user/login.do";
         } else {
             session.setAttribute("loginUser", user);
+            session.removeAttribute("redirectUri");
             return (redirectUri != null) ? "redirect:" + redirectUri : "redirect:/";
         }
     }
@@ -75,6 +89,7 @@ public class UserController {
             HttpSession session
     ) {
         if (errMsg != null) {
+            System.out.println(errMsg);
             session.removeAttribute("errMsg");
         }
         return "/user/find_pw";
@@ -101,23 +116,120 @@ public class UserController {
         }
     }
 
-    @GetMapping("/password_reset.do/{code}")
+    @GetMapping("/{userId}/password_reset.do")
     public String resetPw(
             Model model,
-            @PathVariable(required = true) String code
+            @PathVariable(required = true, name = "userId") int userId,
+            @SessionAttribute(required = false) String errMsg,
+            HttpSession session
     ) {
-        model.addAttribute("code", code);
+        if (errMsg != null) {
+            System.out.println(errMsg);
+            session.removeAttribute("errMsg");
+        }
+        System.out.println("userId: " + userId);
+        model.addAttribute("userId", userId);
         return "/user/password_reset";
     }
 
-    @PostMapping("/password_reset.do/{code}")
+    @PostMapping("/password_reset.do")
     public String resetPw(
             String pw,
-            @PathVariable(required = true) String code
-    ){
-        char[] numbers = {'B','Z','E','G','Y','H','J','C','A','M'};
-        System.out.println("code "+code.substring(20, code.length()-15));
-        return "redirect:/";
+            int userId,
+            HttpSession session
+    ) {
+        int reset = 0;
+        try {
+            UserDto user = userService.selectOne(userId);
+            user.setPw(pw);
+            reset = userService.modifyOne(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (reset > 0) {
+            return "redirect:/user/login.do";
+        } else {
+            session.setAttribute("errMsg", "비밀번호 재설정에 실패했습니다.");
+            return "redirect:/user/" + userId + "/password_reset.do";
+        }
     }
 
+    @GetMapping("/double_check.do")
+    public String doubleCheck(
+            @SessionAttribute(required = true) UserDto loginUser,
+            @SessionAttribute(required = false) String errMsg,
+            HttpSession session
+    ) {
+        if (errMsg != null) {
+            session.removeAttribute(errMsg);
+            System.out.println(errMsg);
+        }
+        return "/user/double_check";
+    }
+
+    @PostMapping("/double_check.do")
+    public String doubleCheck(
+            @SessionAttribute(required = true) UserDto loginUser,
+            String pw
+    ) {
+        UserDto user = null;
+        try {
+            user = userService.doubleCheck(loginUser.getEmail(), pw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (user != null) {
+            return "redirect:/user/temp.do";
+        } else {
+            return "redirect:/user/double_check.do";
+        }
+    }
+
+    /*임시적인 경로*/
+    @GetMapping("/temp.do")
+    public String temp(
+            @SessionAttribute(required = true) UserDto loginUser,
+            @SessionAttribute(required = false) String errMsg,
+            HttpSession session
+    ) {
+        if (errMsg != null) {
+            session.removeAttribute("errMsg");
+            System.out.println(errMsg);
+        }
+        return "/user/temp";
+    }
+
+    @GetMapping("/{userId}/remove.do")
+    public String remove(
+            @SessionAttribute(required = true) UserDto loginUser,
+            HttpSession session
+    ) {
+        int delete = 0;
+        try {
+            delete = userService.delete(loginUser.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (delete > 0) {
+            session.removeAttribute("loginUser");
+            return "redirect:/";
+        } else {
+            session.setAttribute("errMsg", "삭제 중 오류가 생겼습니다. 다시 시도해 주세요.");
+            return "redirect:/user/temp.do";
+        }
+    }
+
+    @GetMapping("/{userId}/modify.do")
+    public String modify(
+            @SessionAttribute(required = true) UserDto loginUser,
+            HttpSession session
+    ) {
+        int modify = 0;
+        try {
+            System.out.println("modify");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/";
+    }
 }

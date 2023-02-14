@@ -6,13 +6,16 @@
 </head>
 <body>
 <h1>GAGOODA 쇼핑몰 파이팅!</h1>
+
+<h2>천하민</h2>
 <th:block th:if="${session.loginUser != null}">
-    <h2 th:text="${session.loginUser.uname}"></h2>
+    <h5 th:text="${session.loginUser.uname}"></h5>
 </th:block>
-<a href="/user/signup.do">회원가입</a>
-<br>
-<a href="/user/login.do">로그인</a>
-<br>
-<a href="/user/findpw.do">비밀번호 찾기</a>
+<ul>
+    <li><a href="/user/signup.do">회원가입</a></li>
+    <li><a href="/user/login.do">로그인</a></li>
+    <li><a href="/user/findpw.do">비밀번호 찾기</a></li>
+    <li><a href="/user/temp.do">회원 정보 수정 및 삭제</a></li>
+</ul>
 </body>
 </html>

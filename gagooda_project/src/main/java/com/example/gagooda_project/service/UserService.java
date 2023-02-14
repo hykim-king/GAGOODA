@@ -84,29 +84,32 @@ public class UserService {
     }
     public UserDto findpw(String email, String name) {
         UserDto user = userMapper.findByEmailAndName(email, name);
-        char[] numbers = {'B','Z','E','G','Y','H','J','C','A','M'};
         if(user != null) {
-            String prefix = convertSecret(numbers, 25);
-            String suffix= convertSecret(numbers, 20);
-            int userId = user.getUserId();
-            StringBuilder userSecretBuild=new StringBuilder();
-            email = "hamin081234@gmail.com";
-            while (userId > 0) {
-                int num = userId%10;
-                userId = userId/10;
-                userSecretBuild.append(numbers[num]);
-            }
-            String userSecret = userSecretBuild.toString();
-            String code = prefix+userSecret+suffix;
             try {
                 String title = "GAGOODA 쇼핑몰 계정 비밀번호 재설정";
-                String content = "http://127.0.0.1:8888/user/password_reset.do/"+code;
+                String content = "http://127.0.0.1:8888/user/"+user.getUserId()+"/password_reset.do";
                 sendMail(email, title, content);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return user;
+    }
+
+    public int modifyOne(UserDto user) {
+        return userMapper.updateOne(user);
+    }
+
+    public UserDto selectOne(int userId) {
+        return userMapper.findById(userId);
+    }
+
+    public UserDto doubleCheck(String email, String pw) {
+        return userMapper.findByEmailAndPw(email, pw);
+    }
+
+    public int delete(int userId) {
+        return userMapper.deleteById(userId);
     }
 
 }
