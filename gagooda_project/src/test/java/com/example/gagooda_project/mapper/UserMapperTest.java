@@ -1,7 +1,9 @@
 package com.example.gagooda_project.mapper;
 
 import com.example.gagooda_project.dto.UserDto;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,7 +18,6 @@ public class UserMapperTest {
     @Test
     void insertOne() {
         UserDto user = new UserDto();
-        user.setUserId(22);
         user.setEmail("kjjjk@ajjsd.com");
         user.setPw("1234");
         user.setUname("이창국");
@@ -38,7 +39,7 @@ public class UserMapperTest {
         int deleteUser = userMapper.deleteById(22);
     }
     @Test
-    void findById() {
+    void findById(){
         UserDto findUser = userMapper.findById(2);
         System.out.println(findUser);
     }
