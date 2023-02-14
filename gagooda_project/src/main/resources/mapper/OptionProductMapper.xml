@@ -6,8 +6,8 @@
         <result property="productCode" column="product_code" />
     </resultMap>
 
-    <select id="listByProductCode" resultMap="optionProductMap" parameterType="Integer">
-        SELECT * FROM option_product WHERE option_code=#{productCode}
+    <select id="listByProductCode" resultMap="optionProductMap">
+        SELECT * FROM option_product WHERE product_code=#{productCode}
     </select>
 
     <insert id="insertOne" parameterType="OptionProductDto">
@@ -15,11 +15,11 @@
         VALUES (#{optionCode}, #{productCode}, #{opname}, #{price}, #{stock})
     </insert>
 
-    <delete id="deleteByProductCode" parameterType="Integer">
+    <delete id="deleteByProductCode">
         DELETE FROM option_product WHERE product_code=#{productCode}
     </delete>
 
-    <select id="findById" resultMap="optionProductMap" parameterType="Integer">
+    <select id="findById" resultMap="optionProductMap">
         SELECT * FROM option_product WHERE option_code=#{id}
     </select>
 

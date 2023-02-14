@@ -13,6 +13,8 @@ public interface UserMapper {
 
     int updateOne(UserDto user);
 
+    UserDto findById(int id);
+
     UserDto findByEmailAndPw(String email, String pw);
 
     UserDto findByEmailAndName(String email, String uname);
