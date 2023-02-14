@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>hi</h2>
+<!-- a 태그의 userId는 추후 session에서 가져온 유저의 아이디값을 넣을 것임 -->
+<a th:href="@{ '' (userId=10, period=7) }">최근 7일 기록 보기</a>
+<a th:href="@{ '' (userId=10, period=15) }">최근 15일 기록 보기</a>
+<a th:href="@{ '' (userId=10, period=30) }">최근 30일 기록 보기</a>
+<p th:text="${refundList}"></p>
+<div th:each="refund:${refundList}">
+    <span th:text="${refund.refundId}"></span>
+    <span th:text="${refund.orderId}"></span>
+    <span th:text="${refund.orderDetailId}"></span>
+    <span th:text="${refund.userId}"></span>
+    <span th:text="${refund.uname}"></span>
+    <span th:text="${refund.email}"></span>
+    <span th:text="${refund.phone}"></span>
+    <span th:text="${refund.postCode}"></span>
+    <span th:text="${refund.address}"></span>
+    <span th:text="${refund.addressDetail}"></span>
+    <span th:text="${refund.cancelAmount}"></span>
+    <span th:text="${refund.reason}"></span>
+    <span th:text="${refund.reply}"></span>
+    <span th:text="${refund.receiverName}"></span>
+    <span th:text="${refund.receiverPhone}"></span>
+</div>
+</body>
+</html>
