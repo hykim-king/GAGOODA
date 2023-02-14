@@ -12,4 +12,8 @@ public interface ProductInquiryService {
 
     ProductInquiryDto showDetail (int productInquiryId);
 
+    List<ProductInquiryDto> showProductInquiries();
+
+    int removeOne(int productInquiryId);
+
 }

@@ -28,4 +28,14 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
         return productInquiryMapper.findById(productInquiryId);
     }
 
+    @Override
+    public List<ProductInquiryDto> showProductInquiries() {
+        return productInquiryMapper.listAll();
+    }
+
+    @Override
+    public int removeOne(int productInquiryId) {
+        return productInquiryMapper.deleteById(productInquiryId);
+    }
+
 }
