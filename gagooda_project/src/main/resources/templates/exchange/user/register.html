@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <th:block>
+
+    </th:block>
+    주문자 : <p th:text="${session.loginUser.uname}"></p>
+    <hr>
+    <form action="/exchange/register.do" method="post">
+        <div>
+            교환 대상 상품
+            <select name="orderDetailId" id="orderDetailId">
+
+            </select>
+            <select name="cnt" id="cnt">
+
+            </select>
+        </div>
+        <div>
+            첨부사진
+            <input type="file">
+        </div>
+        <div>
+            교환사유
+            <input type="radio">오배송
+            <input type="radio">불량
+            <input type="radio">기타
+            <br>
+            <textarea name="reason" id="reason" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            수령인
+            <input type="text" id="receiverName" name="receiverName">
+            연락처
+            <input type="text" id="receiverPhone" name="receiverPhone">
+            <div>
+                <h5>주소</h5>
+                <div>
+                    <select name="aname" id="aname">
+                        <option value=""></option>
+                    </select>
+                    <input type="buttom" value="새 배송지 작성">
+                </div>
+                우편번호<input type="text" id="postCode" name="">
+                도로명주소<input type="text" id="address" name="address">
+                상세주소<input type="text" id="addressDetail" name="addressDetail">
+            </div>
+        </div>
+        <button type="submit">신청하기</button>
+        <button type="reset">취소하기</button>
+    </form>
+</body>
+</html>

@@ -1,17 +1,17 @@
 package com.example.gagooda_project.service;
 
-import com.example.gagooda_project.dto.ExchangeDto;
+import com.example.gagooda_project.dto.*;
 
 import java.util.List;
 
 public interface ExchangeService {
-    List<ExchangeDto> pageAll(List<String> exDetList);
+    List<ExchangeDto> list(List<String> exDetList);
 
-    List<ExchangeDto> pageByUserAndDate(int userId, int period);
+    List<ExchangeDto> orderInDate(int userId, int period);
 
-    int insertOne(ExchangeDto exchange);
+    int register(ExchangeDto exchange);
 
-    int updateOne(ExchangeDto exchange);
+    int modify(ExchangeDto exchange);
 
     int countByUserIdAndOrderDetailId(int userId, int orderDetailId);
 
