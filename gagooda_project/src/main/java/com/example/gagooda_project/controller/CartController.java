@@ -3,7 +3,6 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.CartDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.CartService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,38 +19,46 @@ public class CartController {
     }
 
     @GetMapping("/list.do")
-    public String list(Model model,
-                       @RequestParam(name = "userId", required = false) int userId,
-                       @RequestParam(name = "optionCode", required = false) String optionCode) {
-        List<CartDto> cartList = cartService.cartList(userId);
-        CartDto cart = cartService.selectOne(userId, optionCode);
+    public String list(@RequestParam(name = "optionCode", required = false) String optionCode,
+                       Model model,
+                       @SessionAttribute UserDto loginUser) throws Exception {
+        CartDto cart = cartService.selectOne(loginUser.getUserId(), optionCode);
+        List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
         int cnt = 0;
-        cnt += cartService.countCartItems(userId);
-        model.addAttribute("cartList", cartList);
+        cnt += cartService.countCartItems(loginUser.getUserId());
         model.addAttribute("cart", cart);
-        model.addAttribute("cnt", cnt);
+        model.addAttribute("cartList", cartList);
         return "/cart/list";
     }
 
     @GetMapping("/deleteOne.do")
-    public String deleteOne(@RequestParam(name = "cartId") int cartId) {
+    public String deleteOne(CartDto cart,
+                            @SessionAttribute UserDto loginUser) throws Exception {
         int delete = 0;
         try {
-            delete = cartService.removeOne(cartId);
+            delete = cartService.removeOne(cart.getCartId());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "redirect:/cart/list.do";
+        if (delete > 0) {
+            return "redirect:/cart/list.do";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/deleteAll.do")
-    public String deleteAll(@RequestParam(name = "userId") int userId) {
+    public String deleteAll(@SessionAttribute UserDto loginUser) throws Exception {
         int delete = 0;
         try {
-            delete = cartService.removeAll(userId);
+            delete = cartService.removeAll(loginUser.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "redirect:/cart/list.do";
+        if (delete > 0) {
+            return "redirect:/cart/list.do";
+        } else {
+            return "redirect:/";
+        }
     }
 }

@@ -9,25 +9,71 @@
         <h1>장바구니 목록</h1>
         <div>
             <table>
-                <tr>
-                    <th>전체</th>
-                    <th>선택칸</th>
-                    <th>상품정보</th>
-                    <th>수량</th>
-                    <th>주문금액</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>선택칸</td>
-                    <td>의자</td>
-                    <td>2</td>
-                    <td>50000</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>전체 <span th:text="${cartList.size()}"></span>개</th>
+                        <th>
+                            <div class="checkAll">
+                                <input type="checkbox" name="checkAll" id="checkAll">
+                                <label for="checkAll"></label>
+                                <script>
+                                    $("checkAll").click(function () {
+                                        var check = $("#checkAll").prop("checked");
+                                        if (check) {
+                                            $(".chBox").prop("checked", true);
+                                        } else {
+                                            $(".chBox").prop("checked", false);
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </th>
+                        <th>상품정보</th>
+                        <th>수량</th>
+                        <th>주문금액</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cart:${cartList}">
+                        <td>1</td>
+                        <td>
+                            <div class="checkBox">
+                                <input type="checkbox" name="chBox" class="chBox" data-cartId="${cart.cartId}">
+                                <script>
+                                    $(".chBox").click(function () {
+                                        $("#checkAll").prop("checked", false);
+                                    });
+                                </script>
+                            </div>
+                        </td>
+                        <td th:text="${cart.optionCode}"></td>
+                        <td th:text="${cart.cnt}"></td>
+                        <td>가격은 어떻게...</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
-        <a th:href="@{'deleteOne.do'(cart_id=${cart.getCartId()})}">선택삭제</a>
-        <a th:href="@{'deleteAll.do'(user_id=${cart.getUserId()})}">전체삭제</a>
+        <div>
+            <div class="delOneBtn">
+                <button type="button" class="deleteOne_btn">선택삭제</button>
+                <script>
+                    $(".deleteOne_btn").click(function () {
+                        var confirm_val = confirm("정말 삭제하시겠습니까?");
+                        if (confirm_val) {
+                            var checkArr = new Array();
+                            $("input[class='chBox']:checked").each(function () {
+                                checkArr.push($(this).attr("data-cartId"));
+                            });
+
+                        }
+                    })
+                </script>
+            </div>
+            <div class="delAllBtn">
+                <button type="button" class="deleteAll_btn">전체삭제</button>
+            </div>
+        </div>
     </div>
 </body>
 </html>
