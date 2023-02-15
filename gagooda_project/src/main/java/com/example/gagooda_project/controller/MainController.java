@@ -30,6 +30,7 @@ public class MainController {
             model.addAttribute("msg", msg);
         }
 
+        // 카테고리 나열
         List<CategoryDto> firstCategories = null;
         try {
             firstCategories = categoryService.showCategoriesAt(1);

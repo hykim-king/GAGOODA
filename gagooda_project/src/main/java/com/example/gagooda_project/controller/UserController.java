@@ -17,17 +17,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/signup.do")
+    @GetMapping("/{gDet}/signup.do")
     public String signup(
             @SessionAttribute(required = false) String msg,
             HttpSession session,
-            Model model
+            Model model,
+            @PathVariable String gDet
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
             System.out.println(msg);
         }
         model.addAttribute("msg", msg);
+        if (gDet != null) {
+            model.addAttribute("gDet", gDet);
+        }
         return "/user/signup";
     }
 
@@ -38,7 +42,6 @@ public class UserController {
     ) {
         int signup = 0;
         try {
-            user.setGDet("g0");
             signup = userService.register(user);
         } catch (Exception e) {
             e.printStackTrace();

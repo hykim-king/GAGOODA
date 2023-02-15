@@ -6,6 +6,7 @@
 </head>
 <body>
 <form action="/user/signup.do" method="post">
+    <input type="hidden" th:value="${gDet}" name="gDet">
     <div>
         <label for="email">이메일</label>
         <input type="email" name="email" id="email" required>
