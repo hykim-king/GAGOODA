@@ -1,7 +1,6 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.RefundDto;
-import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.RefundServiceImp;
 import org.apache.catalina.User;
 import org.springframework.stereotype.Controller;
@@ -31,8 +30,15 @@ public class RefundController {
     }
 
     @GetMapping("/register.do")
-    public String register(/*@SessionAttribute(required = true) UserDto loginUser*/){
-
+    public String register(@SessionAttribute(required = true) UserDto loginUser,
+                            @RequestParam(name = "orderId") String orderId,
+                            Model model){
+        OrderDto order = refundServiceImp.selectOrder(orderId);
+        List<OrderDetailDto> orderDetailList = refundServiceImp.showOrderDetailListByOrderId(orderId);
+        List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+        model.addAttribute("order", order);
+        model.addAttribute("orderDetailList", orderDetailList);
+        model.addAttribute("addressList", addressList);
         return "refund/user/register";
     }
 //    @PostMapping("/register.do")
