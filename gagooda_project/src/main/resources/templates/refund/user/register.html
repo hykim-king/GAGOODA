@@ -1,101 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<form action="/mypage/refund/register.do" method="post">
-    <div>
-        <label for="userId">유저 ID</label>
-        <input type="text" id="userId" name="userId" th:value="${session.loginUser.userId}">
-    </div>
-    <div>
-        <label for="uname">유저 이름</label>
-        <input type="text" id="uname" name="uname" th:value="${session.loginUser.uname}">
-    </div>
-    <div>
-        <label for="email">유저 이메일</label>
-        <input type="text" id="email" name="email" th:value="${session.loginUser.email}">
-    </div>
-    <div>
-        <label for="phone">유저 전화번호</label>
-        <input type="text" id="phone" name="phone" th:value="${session.loginUser.phone}">
-    </div>
-    <div>
-        <label for="orderId">주문 번호</label>
-        <input type="text" id="orderId" name="orderId" th:value="${order.orderId}">
-    </div>
-    <div>
-        <label for="orderDetailId">환불 대상 상품</label>
-        <select name="orderDetailId" id="orderDetailId" >
-            <option value="all"> 전체 환불 </option>
-            <th:block th:each="orderDetail : ${orderDetailList}">
-            <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}" th:value="${orderDetail.orderDetailId}"></option>
-            </th:block>
-        </select>
-    </div>
-    <div>
-        <label for="cancelAmount">환불 금액</label>
-        <input type="text" id="cancelAmount" name="cancelAmount">
-        <script th:inline="javascript">
-            cancelAmount = document.querySelector("#cancelAmount");
-            selectList = document.querySelectorAll("option");
-            console.log(selectList)
-            cancelAmount.value = 10000;
-        </script>
-    </div>
+<h2>환불 반품 신청</h2>
+<h3>주문 정보</h3>
+<div>주문인: <span th:text="${order.userName}"></span></div>
+<div>주문날짜: <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span></div>
+<div>주문번호: <span th:text="${order.orderId}"></span></div>
+<div>주문 상품명: <span th:text="${orderDetailList[0].optionName}+' 외 '+ ${orderDetailList.size()-1} + '건'"></span></div>
+<div>주문 총 금액: <span th:text="${orderSumPrice}"></span></div>
 
-    <div>
-        <label for="reason">상세 환불 사유</label>
-        <textarea id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
-    </div>
-    <div>
-        <label for="addressId">배송지 번호</label>
-        <input type="text" id="addressId" name="addressId" th:value="${order.addressId}">
-    </div>
-    <div>
-        <label for="postCode">우편 번호</label>
-        <input type="text" id="postCode" name="postCode" value="">
-    </div>
-    <div>
-        <label for="address">주소</label>
-        <input type="text" id="address" name="address" value="">
-    </div>
-    <div>
-        <label for="addressDetail">상세 주소</label>
-        <input type="text" id="addressDetail" name="addressDetail" value="">
-    </div>
-    <div>
-        <label for="receiverName">수령인 이름</label>
-        <input type="text" id="receiverName" name="receiverName" value="">
-    </div>
-    <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input type="text" id="receiverPhone" name="receiverPhone" value="">
-    </div>
-    <div>
-        <label for="elevator">엘리베이터 유무</label>
-        <input type="text" id="elevator" name="elevator" value="">
-    </div>
-    <div>
-        <label for="imgCode">첨부 이미지</label>
-        <input type="file" id="imgCode" name="imgCode" value="">
-    </div>
-    <div>
-        <label for="rfrDet">환불 사유 카테고리</label>
-        <select name="rfrDet" id="rfrDet">
-            <option value="rfr0">단순 변심</option>
-            <option value="rfr1">상품 문제</option>
-            <option value="rfr2">배송 문제</option>
-            <option value="rfr3">기타</option>
-        </select>
-    </div>
+
+<form action="/mypage/refund/register.do" method="post">
+    <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
+    <input type="hidden" id="uname" name="uname" th:value="${session.loginUser.uname}">
+    <input type="hidden" id="email" name="email" th:value="${session.loginUser.email}">
+    <input type="hidden" id="phone" name="phone" th:value="${session.loginUser.phone}">
+    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
+    <fieldset>
+        <legend>환불 정보</legend>
+        <div>
+            <label for="orderDetailId">환불 대상 상품</label>
+            <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()">
+                <option value="" selected disabled>환불 대상을 선택해주세요.</option>
+                <option value="all" th:text="'전체 환불'+'( 환불 금액:' + ${orderSumPrice} + ')'"></option>
+                <th:block th:each="orderDetail : ${orderDetailList}">
+                <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}" th:value="${orderDetail.orderDetailId}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div>
+            <label for="cancelAmount">환불 금액</label>
+            <input type="text" id="cancelAmount" name="cancelAmount">
+        </div>
+        <div>
+            <label for="imgCode">첨부 이미지</label>
+            <input type="file" id="imgCode" name="imgCode">
+        </div>
+        <div>
+            <label for="rfrDet">환불 사유 카테고리</label>
+            <select name="rfrDet" id="rfrDet">
+                <option value="rfr0">단순 변심</option>
+                <option value="rfr1">상품 문제</option>
+                <option value="rfr2">배송 문제</option>
+                <option value="rfr3">기타</option>
+            </select>
+        </div>
+        <div>
+            <label for="reason">상세 환불 사유</label>
+            <textarea id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>환불 물품 수거지 주소</legend>
+        <div>
+            <label for="myAddressList"></label>
+            <select name="myAddressList" id="myAddressList" onchange="changeAdd()">
+                <option value="" disabled selected>내 배송지 목록</option>
+                <th:block th:each="address:${addressList}">
+                    <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+                </th:block>
+            </select>
+        </div>
+        <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
+        <div>
+            <label for="postCode">우편 번호</label>
+            <input type="text" id="postCode" name="postCode" class="add" th:value="${orderAddress.postCode}">
+        </div>
+        <div>
+            <label for="address">주소</label>
+            <input type="text" id="address" name="address" class="add" th:value="${orderAddress.address}">
+        </div>
+        <div>
+            <label for="addressDetail">상세 주소</label>
+            <input type="text" id="addressDetail" name="addressDetail" class="add" th:value="${orderAddress.addressDetail}">
+        </div>
+        <div>
+            <label for="receiverName">수령인 이름</label>
+            <input type="text" id="receiverName" name="receiverName" class="add" th:value="${orderAddress.receiverName}">
+        </div>
+        <div>
+            <label for="receiverPhone">수령인 전화번호</label>
+            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${orderAddress.receiverPhone}">
+        </div>
+        <div>
+            <label for="elevator">엘리베이터 유무</label>
+            <input type="text" id="elevator" name="elevator" class="add" th:value="${orderAddress.elevator}">
+        </div>
+        <script th:inline="javascript">
+            let cancelAmount = document.querySelector("#cancelAmount");
+            function changeOpt(){
+                console.log(document.getElementById("orderDetailId"));
+                let changeSelect = document.getElementById("orderDetailId");
+                let optVal = changeSelect.options[changeSelect.selectedIndex].value;
+                console.log("opt:"+optVal);
+                let optTxt = changeSelect.options[changeSelect.selectedIndex].text;
+                console.log("option:"+optTxt);
+                cancelAmount.value = optTxt.split(":")[1].split(")")[0];
+            }
+
+            const currentAddressList = document.querySelectorAll(".add");
+            function changeAdd(){
+                let addressSlt = document.getElementById("myAddressList");
+                document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+                console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
+                let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
+                let addressMap = new Map();
+                for (let add of address){
+                    let splitAdd = add.split("=");
+                    console.log(splitAdd);
+                    addressMap.set(splitAdd[0],splitAdd[1]);
+                }
+                console.log(addressMap);
+            }
+        </script>
+    </fieldset>
+
+
 </form>
-<!--
-user_id(session), uname(session), email(session), phone(session), order_detail_id, order_id, address_id, cancel_amount, reason,
-                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det
--->
 
 </body>
 </html>

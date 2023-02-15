@@ -28,11 +28,7 @@ public class RefundServiceImp implements RefundService{
     }
 
     public List<RefundDto> showUserRefundList(int id, int period){
-        if (period == 0){
-            return refundMapper.pageByUserIdAndDate(id, 7);
-        } else{
-            return refundMapper.pageByUserIdAndDate(id, period);
-        }
+        return refundMapper.pageByUserIdAndDate(id, period);
     }
 
     public List<RefundDto> showRefundList(List<String> rfDetList){ return refundMapper.pageAll(rfDetList); }
@@ -46,6 +42,10 @@ public class RefundServiceImp implements RefundService{
     }
     public List<OrderDetailDto> showOrderDetailListByOrderId(String orderId){
         return orderDetailMapper.findByOrderId(orderId);
+    }
+
+    public AddressDto selectAddress(int addressId){
+        return addressMapper.findById(addressId);
     }
 
     public OrderDto selectOrder(String orderId){
