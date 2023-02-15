@@ -29,9 +29,10 @@
     <div>
         <label for="orderDetailId">환불 대상 상품</label>
         <select name="orderDetailId" id="orderDetailId" >
-            <option value="all"> 전체 환불 </option>
+            <option value="all" selected="selected"> 전체 환불 </option>
             <th:block th:each="orderDetail : ${orderDetailList}">
-            <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}" th:value="${orderDetail.orderDetailId}"></option>
+            <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}"
+                    th:value="${orderDetail.orderDetailId}" ></option>
             </th:block>
         </select>
     </div>
@@ -41,7 +42,13 @@
         <script th:inline="javascript">
             cancelAmount = document.querySelector("#cancelAmount");
             selectList = document.querySelectorAll("option");
-            console.log(selectList)
+            selectList.forEach((option)=>{
+                console.log(option);
+                option.addEventListener('select',()=>{
+                    console.log(option);
+                })
+            })
+
             cancelAmount.value = 10000;
         </script>
     </div>
@@ -51,36 +58,39 @@
         <textarea id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
     </div>
     <div>
+
+    </div>
+    <div>
         <label for="addressId">배송지 번호</label>
         <input type="text" id="addressId" name="addressId" th:value="${order.addressId}">
     </div>
     <div>
         <label for="postCode">우편 번호</label>
-        <input type="text" id="postCode" name="postCode" value="">
+        <input type="text" id="postCode" name="postCode" th:value="${orderAddress.postCode}">
     </div>
     <div>
         <label for="address">주소</label>
-        <input type="text" id="address" name="address" value="">
+        <input type="text" id="address" name="address" th:value="${orderAddress.address}">
     </div>
     <div>
         <label for="addressDetail">상세 주소</label>
-        <input type="text" id="addressDetail" name="addressDetail" value="">
+        <input type="text" id="addressDetail" name="addressDetail" th:value="${orderAddress.addressDetail}">
     </div>
     <div>
         <label for="receiverName">수령인 이름</label>
-        <input type="text" id="receiverName" name="receiverName" value="">
+        <input type="text" id="receiverName" name="receiverName" th:value="${orderAddress.receiverName}">
     </div>
     <div>
         <label for="receiverPhone">수령인 전화번호</label>
-        <input type="text" id="receiverPhone" name="receiverPhone" value="">
+        <input type="text" id="receiverPhone" name="receiverPhone" th:value="${orderAddress.receiverPhone}">
     </div>
     <div>
         <label for="elevator">엘리베이터 유무</label>
-        <input type="text" id="elevator" name="elevator" value="">
+        <input type="text" id="elevator" name="elevator" th:value="${orderAddress.elevator}">
     </div>
     <div>
         <label for="imgCode">첨부 이미지</label>
-        <input type="file" id="imgCode" name="imgCode" value="">
+        <input type="file" id="imgCode" name="imgCode">
     </div>
     <div>
         <label for="rfrDet">환불 사유 카테고리</label>
@@ -92,10 +102,6 @@
         </select>
     </div>
 </form>
-<!--
-user_id(session), uname(session), email(session), phone(session), order_detail_id, order_id, address_id, cancel_amount, reason,
-                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det
--->
 
 </body>
 </html>

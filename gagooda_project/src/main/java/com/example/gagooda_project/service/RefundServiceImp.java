@@ -48,6 +48,10 @@ public class RefundServiceImp implements RefundService{
         return orderDetailMapper.findByOrderId(orderId);
     }
 
+    public AddressDto selectAddress(int addressId){
+        return addressMapper.findById(addressId);
+    }
+
     public OrderDto selectOrder(String orderId){
         return orderMapper.findById(orderId);
     }

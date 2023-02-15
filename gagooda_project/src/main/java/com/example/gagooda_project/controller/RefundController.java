@@ -36,7 +36,9 @@ public class RefundController {
         OrderDto order = refundServiceImp.selectOrder(orderId);
         List<OrderDetailDto> orderDetailList = refundServiceImp.showOrderDetailListByOrderId(orderId);
         List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+        AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
         model.addAttribute("order", order);
+        model.addAttribute("orderAddress", orderAddress);
         model.addAttribute("orderDetailList", orderDetailList);
         model.addAttribute("addressList", addressList);
         return "refund/user/register";
