@@ -40,12 +40,25 @@
     <label for="imgCode">이미지코드:</label>
     <input type="hidden" id="imgCode" name="imgCode">
     <br>
+    <input type="number" name="option_num">
+    <button type="button">옵션제작</button>
     <div class="option-products">
-        <fieldset class="option">
-            <legend>옵션 1</legend>
-            <label for="optionProductCode">옵션 코드:</label>
-            <input type="text" id="optionProductCode" name="optionProductList[0].optionCode">
-            <br>
+        <fieldset class="option" id="option">
+            <legend>옵션</legend>
+            <input type="hidden" name="optionProductList.productCode" class="productCode">
+            <input type="hidden" name="optionProductList.price" class="optionPrice">
+            <div>
+                <label for="optionProductCode">옵션 코드:</label>
+                <input type="text" id="optionProductCode" name="optionProductList.optionCode" class="optionCode" required>
+            </div>
+            <div>
+                <label for="optionName">옵션 상품명:</label>
+                <input type="text" name="optionProductList.opname" id="optionName" class="optionName" readonly required>
+            </div>
+            <div>
+                <label for="optionStock">옵션 상품 제고:</label>
+                <input type="number" name="optionProductList.stock" id="optionStock" class="optionStock" required>
+            </div>
         </fieldset>
     </div>
     <br>
@@ -84,25 +97,27 @@
     const optionProducts = productForm.querySelector(".option-products");
     let i=1;
     moreOptBtn.onclick=(e)=>{
-        let option = document.createElement("fieldset");
-        option.className = "option";
-
-        let legend = document.createElement("legend");
-        legend.innerText=`옵션 ${i+1}`
-        option.append(legend);
-
-        let label = document.createElement("label");
-        label.innerText = "옵션 코드:"
-        label.htmlFor = "optionProductCode"
-        option.append(label);
-
-        let input = document.createElement("input");
-        input.type = "text";
-        input.id = "optionProductCode";
-        input.name = `optionProductList[${i}].optionCode`;
-        option.append(input);
-
-        optionProducts.append(option);
+        let html = `
+        <fieldset class="option" id="option${i}">
+            <legend>옵션</legend>
+            <input type="hidden" name="optionProductList.productCode" class="productCode">
+            <input type="hidden" name="optionProductList.price" class="optionPrice">
+            <div>
+                <label for="optionProductCode">옵션 코드:</label>
+                <input type="text" id="optionProductCode" class="optionCode">
+            </div>
+            <div>
+                <label for="optionName">옵션 상품명:</label>
+                <input type="text" id="optionName" class="optionName" readonly>
+            </div>
+            <div>
+                <label for="optionStock">옵션 상품 제고:</label>
+                <input type="number" id="optionStock" class="optionStock">
+            </div>
+            <button type="button" onclick="document.getElementById('option'+${i}).remove()">삭제</button>
+        </fieldset>
+        `
+        optionProducts.innerHTML += html;
         i++;
     }
 
@@ -121,6 +136,18 @@
                 alert(`최소 한개의 ${fieldset.dataset.name}를 선택해야 합니다.`);
             }
         });
+
+        const options = productForm.querySelectorAll(".option");
+        let j = 0;
+        for (let option in options) {
+            const productCode = option.querySelector(".productCode");
+            const optionPrice = option.querySelector(".optionPrice");
+            const optionCode = option.querySelector(".optionCode");
+            const optionName = option.querySelector(".optionName");
+            const optionStock = option.querySelector(".optionStock");
+            productCode.value = optionProducts["productCode"].value;
+            j++;
+        }
     }
 
 </script>
