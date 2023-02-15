@@ -6,11 +6,12 @@
 <head>
     <meta charset="UTF-8">
     <title>상품문의</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <div layout:fragment="content">
     <div class="container" >
     <h2>상품 문의</h2>
-        <form action="/product_inquiry/admin/list.do">
+        <form action="/product_inquiry/admin/list.do" method="post">
             <table class="table table-striped table-hover table-bordered table-sm">
             <thead>
             <tr>
@@ -26,14 +27,14 @@
             </thead>
             <tbody>
 
-            <tr th:each="p:${adminList}" th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]">
-                <td th:text="${p.getPInquiryId()}"></td>
-                <td th:text="${p.getUserId()}"></td>
-                <td th:text="${p.getPiDet()}"></td>
-                <td th:text="${p.getProductCode()}"></td>
-                <td th:text="${p.getTitle()}"></td>
-                <td th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>
-                <td>
+            <tr th:each="p:${adminList}" >
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getPInquiryId()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getUserId()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getPiDet()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getProductCode()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getTitle()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]">
                     <th:block th:if="${p.isSecret()}">
                         <p>비공개</p>
                     </th:block>
@@ -51,21 +52,44 @@
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" th:text="${p.getContent()}"></div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                        <button type="button" class="btn btn-primary">등록</button>
+
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <input id="pInquiryId" type="hidden" name="pInquiryId" th:value="${p.PInquiryId}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" th:text="${p.getContent()}"></div>
+                                        <div class="modal-body">
+                                            <textarea name="reply" id="reply" class="form-control mx-lg-auto" rows="5" placeholder="답변"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                            <button type="submit" class="reply_register btn btn-primary" > 등록</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+<!--                        <script>-->
+<!--                            $(function(){-->
+<!--                               $('.reply_register').on('submit', function (e){-->
+<!--                                   e.preventDefault()-->
+<!--                                   var pInquiryId = $('#pInquiryId').val();-->
+<!--                                   var reply = $('#reply').val();-->
+<!--                                   $.ajax({-->
+<!--                                       url: "/product_inquiry/admin/register.do",-->
+<!--                                       method: "POST",-->
+<!--                                       data: {pInquiryId,reply},-->
+<!--                                       success: function(data){-->
+<!--                                           alert("Successfully submitted.")-->
+<!--                                       }-->
+<!--                                   });-->
+<!--                               });-->
+<!--                            });-->
+<!--                        </script>-->
                     </th:block>
                     <th:block th:if="${p.getReply() != null}">
                         <p>답변</p>

@@ -117,10 +117,29 @@ public class ProductInquiryController {
         return "/product_inquiry/admin/detail";
     }
 
-    @PostMapping("/admin/register.do")
-    public String adminregister(@SessionAttribute UserDto loginUser,
-                                @RequestParam(name="pInquiryId") int pInquiryId
+
+    @PostMapping ("/admin/list.do")
+    public String adminUpdate(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply
     ){
-        return "/index";
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "/product_inquiry/admin/list";
+        }
+
     }
 }
