@@ -7,9 +7,9 @@
 <body>
 <h2>hi</h2>
 <!-- a 태그의 userId는 추후 session에서 가져온 유저의 아이디값을 넣을 것임 -->
-<a th:href="@{ '' (userId=10, period=7) }">최근 7일 기록 보기</a>
-<a th:href="@{ '' (userId=10, period=15) }">최근 15일 기록 보기</a>
-<a th:href="@{ '' (userId=10, period=30) }">최근 30일 기록 보기</a>
+<a th:href="@{ '' (period=7) }">최근 7일 기록 보기</a>
+<a th:href="@{ '' (period=15) }">최근 15일 기록 보기</a>
+<a th:href="@{ '' (period=30) }">최근 30일 기록 보기</a>
 <p th:text="${refundList}"></p>
 <div th:each="refund:${refundList}">
     <span th:text="${refund.refundId}"></span>

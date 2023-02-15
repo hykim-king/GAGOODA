@@ -28,11 +28,7 @@ public class RefundServiceImp implements RefundService{
     }
 
     public List<RefundDto> showUserRefundList(int id, int period){
-        if (period == 0){
-            return refundMapper.pageByUserIdAndDate(id, 7);
-        } else{
-            return refundMapper.pageByUserIdAndDate(id, period);
-        }
+        return refundMapper.pageByUserIdAndDate(id, period);
     }
 
     public List<RefundDto> showRefundList(List<String> rfDetList){ return refundMapper.pageAll(rfDetList); }

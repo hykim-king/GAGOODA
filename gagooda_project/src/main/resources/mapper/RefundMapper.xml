@@ -17,6 +17,10 @@
         <result column="img_code" property="imgCode"/>
         <result column="rf_det" property="rfDet"/>
         <result column="rfr_det" property="rfrDet"/>
+        <association property="orderDto"
+                     column="order_id"
+                     select="com.example.gagooda_project.mapper.OrderMapper.findById"
+                     fetchType="lazy"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
         INSERT INTO refund (user_id, uname, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,

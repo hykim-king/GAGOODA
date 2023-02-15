@@ -28,4 +28,5 @@ public class RefundDto {
     private String imgCode;         // 이미지 코드, img_code, NN
     private String rfDet;           // 환불처리상태_DET, FK, NN, ( REFUND : COMMON_CODE ) N:1
     private String rfrDet;          // 환불/ 교환사유_DET, rfr_det, FK, NN, ( REFUND : COMMON_CODE ) N:1
+    private OrderDto orderDto;  // 주문 DTO
 }

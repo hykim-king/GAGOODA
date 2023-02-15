@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/mypage/refund")
+@RequestMapping("/refund")
 public class RefundController {
 
     RefundServiceImp refundServiceImp;
@@ -19,27 +19,33 @@ public class RefundController {
         this.refundServiceImp = refundServiceImp;
     }
 
-    @GetMapping("/list.do")
-    public String list(/*@SessionAttribute(required = true) UserDto loginUser,*/
-                       @RequestParam(name= "userId") int userId,
+    @GetMapping("user_yes/mypage/list.do")
+    public String list(@SessionAttribute UserDto loginUser,
                        @RequestParam(name = "period", defaultValue = "7", required = false) int period,
                        Model model){
-        List<RefundDto> refundList = refundServiceImp.showUserRefundList(/*loginUser.getUserId()*/userId, period);
+        List<RefundDto> refundList = refundServiceImp.showUserRefundList(loginUser.getUserId(), period);
         model.addAttribute("refundList", refundList);
         return "refund/user/list";
     }
 
-    @GetMapping("/register.do")
+    @GetMapping("user_yes/mypage/register.do")
     public String register(@SessionAttribute(required = true) UserDto loginUser,
                             @RequestParam(name = "orderId") String orderId,
                             Model model){
+
         OrderDto order = refundServiceImp.selectOrder(orderId);
         List<OrderDetailDto> orderDetailList = refundServiceImp.showOrderDetailListByOrderId(orderId);
+        int orderSumPrice = 0;
+        for (OrderDetailDto orderDetailDto : orderDetailList) {
+            orderSumPrice += orderDetailDto.getPrice();
+        }
         List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
         AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
+
         model.addAttribute("order", order);
         model.addAttribute("orderAddress", orderAddress);
         model.addAttribute("orderDetailList", orderDetailList);
+        model.addAttribute("orderSumPrice", orderSumPrice);
         model.addAttribute("addressList", addressList);
         return "refund/user/register";
     }
