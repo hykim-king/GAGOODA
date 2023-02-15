@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/product_inquiry/register.do" method="post">
+        <div>
+            <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
+        </div>
+        <div>
+            <label for="optionCode">상품 옵션</label>
+            <input type="text" name="optionCode" id="optionCode" value="HA10C15EE_1M2">
+        </div>
+        <div>
+            <label for="productCode">상품</label>
+            <input type="text" name="productCode" id="productCode" value="HA10C15EE">
+        </div>
+        <div>
+            <label for="title">제목</label>
+            <input type="text" name="title" id="title">
+        </div>
+        <div>
+            <label for="content">내용</label>
+            <input type="text" name="content" id="content">
+        </div>
+        <div>
+            <label for="secret">비밀글</label>
+            <input type="text" name="secret" id="secret">
+        </div>
+        <div>
+            <label for="piDet">문의유형</label>
+            <input type="text" name="piDet" id="piDet" value="fi0">
+        </div>
+        <button type="submit">등록</button>
+    </form>
+</body>
+</html>

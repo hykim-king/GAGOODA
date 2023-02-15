@@ -19,8 +19,6 @@ public interface UserMapper {
 
     UserDto findByEmailAndName(String email, String uname);
 
-    int updatePw(String pw, int id);
-
     List<UserDto> listAll();
 
 //    List<UserDto> pageAll();  // PagingDto paging 필요

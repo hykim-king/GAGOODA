@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>배송지 리스트 테스트 페이지</title>
+</head>
+<body>
+<h2>배송지 리스트 테스트</h2>
+
+<table>
+  <thead>
+    <th>address_id</th>
+    <th>user_id</th>
+    <th>aname</th>
+    <th>home</th>
+    <th>post_code</th>
+    <th>address</th>
+    <th>address_detail</th>
+    <th>receiver_name</th>
+    <th>receiver_phone</th>
+    <th>elevator</th>
+  </thead>
+  <tbody>
+    <tr th:each="a:${alist}" style="cursor: pointer">
+      <td th:text="${a.addressId}"> </td>
+      <td th:text="${a.userId}"> </td>
+      <td th:text="${a.aname}"> </td>
+      <td th:text="${a.home}"> </td>
+      <td th:text="${a.postCode}"> </td>
+      <td th:text="${a.address}"> </td>
+      <td th:text="${a.addressDetail}"> </td>
+      <td th:text="${a.receiverName}"> </td>
+      <td th:text="${a.receiverPhone}"> </td>
+      <td th:text="${a.elevator}"> </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+</body>
+</html>
