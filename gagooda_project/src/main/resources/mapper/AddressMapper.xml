@@ -10,12 +10,12 @@
         <result column="receiver_phone" property="receiverPhone"/>
     </resultMap>
 
-    <!--  List<AddressDto> listByUserId(int id);  -->
+    <!--  List<AddressDto> listByUserId(int id);  완료-->
     <select id="listByUserId" resultMap="addressMap" parameterType="int">
         SELECT * FROM address WHERE user_id = #{userId}
     </select>
 
-    <!--  int insertOne(AddressDto dto);  -->
+    <!--  int insertOne(AddressDto dto);  완료-->
     <insert id="insertOne" parameterType="addressDto" useGeneratedKeys="true" keyProperty="addressId">
         INSERT INTO address (user_id, aname, home, post_code, address, address_detail, receiver_name, receiver_phone, elevator)
         VALUES (#{userId}, #{aname}, #{home}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator})
@@ -39,7 +39,7 @@
                            elevator=#{elevator}
                        WHERE address_id = #{addressId}
     </update>
-    <!--  List<AddressDto> findByUserIdAndNotPrimary(int id);  -->
+    <!--  List<AddressDto> findByUserIdAndNotPrimary(int id); 완료 -->
     <select id="findByUserIdAndNotHome" resultMap="addressMap" parameterType="int">
         SELECT * FROM address WHERE user_id = #{userId} AND home = 0
     </select>
@@ -53,13 +53,9 @@
     <delete id="deleteById" parameterType="int">
         DELETE FROM address WHERE address_id = #{id}
     </delete>
-    <!--  int findPrimaryYes(int id);  -->
-    <select id="countHome" resultType="int" parameterType="int">
-        SELECT COUNT(*) FROM address WHERE user_id = #{userId} AND home = 1
-    </select>
 
     <!--  int updatePrimary(int id);  -->
-    <update id="updateHome" parameterType="int">
+    <update id="dismissHome" parameterType="int">
         UPDATE address SET home = 0 WHERE user_id = #{userId} AND home = 1
     </update>
 </mapper>

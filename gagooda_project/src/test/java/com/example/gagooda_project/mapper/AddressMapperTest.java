@@ -80,13 +80,7 @@ class AddressMapperTest {
     }
 
     @Test
-    void countHome() {
-        addressMapper.countHome(1);
-    }
-
-    @Test
-    void updateHome() {
-        addressMapper.updateHome(1);
-        addressMapper.countHome(1);
+    void dismissHome() {
+        addressMapper.dismissHome(1);
     }
 }

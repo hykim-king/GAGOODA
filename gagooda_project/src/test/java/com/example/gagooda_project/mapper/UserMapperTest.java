@@ -36,7 +36,7 @@ public class UserMapperTest {
     }
     @Test
     void deleteById() {
-        int deleteUser = userMapper.deleteById(22);
+        int deleteUser = userMapper.deleteById(19);
     }
     @Test
     void findById(){
@@ -52,10 +52,6 @@ public class UserMapperTest {
     void findByEmailAndName() {
         UserDto findEmailName = userMapper.findByEmailAndName("kkk@asdfasd.com","1234");
         System.out.println(findEmailName);
-    }
-    @Test
-    void updatePw() {
-        userMapper.updatePw("4321",1);
     }
     @Test
     void updateOne() {

@@ -27,7 +27,7 @@ class CartMapperTest {
 
     @Test
     void deleteById() {
-        log.info(cartMapper.deleteById(1)+"");
+        log.info(cartMapper.deleteById(3)+"");
     }
 
     @Test

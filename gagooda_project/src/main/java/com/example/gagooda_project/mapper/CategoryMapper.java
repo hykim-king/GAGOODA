@@ -13,4 +13,6 @@ public interface CategoryMapper {
     List<CategoryDto> listByParentId(int parentId);
 
     int insertOne(CategoryDto categoryDto);
+
+    List<CategoryDto> listByLevel(int lvl);
 }
