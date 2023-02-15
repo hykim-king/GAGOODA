@@ -2,10 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>사용자 배송지 입력</title>
+  <title>사용자 배송지 수정</title>
 </head>
 <body>
-<form action="/mypage/address/register.do" method="post">
+<h2>사용자 배송지 수정</h2>
+<form action="/address/modify.do" method="post"  enctype="multipart/form-data">
+  <div>
+    <label for="userId" th:text="${session.loginUser.userId}"></label>
+    <input type="text" name="userId" id="userId" required>
+  </div>
   <div>
     <label for="aname">주소지 이름</label>
     <input type="text" name="aname" id="aname" required>
@@ -34,12 +39,12 @@
 
   <div>
     <label for="home">기본 배송지 설정 여부</label>
-    <input type="checkbox" name="" id="home" required>
+    <input type="checkbox" name="" id="home">
   </div>
-  div>
+  div&gt;
   <label for="elevator">엘레베이터 유무 여부</label>
-  <input type="checkbox" name="" id="elevator" required>
-  </div>
+  <input type="checkbox" name="" id="elevator">
+
 
   <button type="submit">저장하기</button>
   <a href="#">취소하기</a>

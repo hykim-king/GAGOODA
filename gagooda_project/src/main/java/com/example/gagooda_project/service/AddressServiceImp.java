@@ -20,13 +20,11 @@ public class AddressServiceImp implements AddressService{
 
     @Override
     public AddressDto selectOne(int addressId) {
-        return null;
+        return addressMapper.findById(addressId);
     }
 
     @Override
-    public int modifyOne(AddressDto address) {
-        return 0;
-    }
+    public int modifyOne(AddressDto address) { return addressMapper.updateOne(address); }
 
     @Override
     public AddressDto defaultAddress(int addressId) {
@@ -34,8 +32,8 @@ public class AddressServiceImp implements AddressService{
     }
 
     @Override
-    public List<AddressDto> addressList(int addressId) {
-        return null;
+    public List<AddressDto> addressList(int userId) {
+        return addressMapper.listByUserId(userId);
     }
 
     @Override
