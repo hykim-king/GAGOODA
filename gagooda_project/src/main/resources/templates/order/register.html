@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 등록</title>
+</head>
+<div layout:fragment="content">
+  <h2>주문 등록</h2>
+
+  <!--주문 form -->
+  <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post">
+    <!--배송지 입력란-->
+    <fieldset>
+      <legend>배송지 입력란</legend>
+      <div>
+        <label for="receiverName">수령인 이름</label>
+        <input type="text" name="receiverName" id="receiverName" required>
+      </div>
+      <div>
+        <label for="receiverPhone">수령인 전화번호</label>
+        <input type="text" name="receiverPhone" id="receiverPhone" required>
+      </div>
+      <div>
+        <label for="postCode">우편번호</label>
+        <input type="text" name="postCode" id="postCode" required>
+      </div>
+      <div>
+        <label for="address">주소</label>
+        <input type="text" name="address" id="address" required>
+      </div>
+      <div>
+        <label for="addressDetail">상세주소</label>
+        <input type="text" name="addressDetail" id="addressDetail" required>
+      </div>
+      <div>
+        <label for="elevator">엘레베이터</label>
+        <input type="text" name="elevator" id="elevator" required>
+      </div>
+      <div>
+        <label for="addressId">주소 ID</label>
+        <input type="text" name="addressId" id="addressId" required>
+      </div>
+      <button>새로운 배송지입력</button>
+      <button>다른 배송지 입력</button>
+    </fieldset>
+    <!--배송지 입력란 end-->
+    <!--주문할 상품 정보들-->
+    <fieldset>
+      <legend>카트 정보들</legend>
+      <table>
+        <thead>
+          <th>카트아이디</th>
+          <th>상품 정보</th>
+          <th>수량</th>
+          <th>주문금액</th>
+        </thead>
+        <tbody>
+          <td>1</td>
+          <td>
+            <input type="hidden" name="imgPath" id="imgPath" required>
+          </td>
+
+        </tbody>
+      </table>
+    </fieldset>
+    <!--주문할 상품 정보들 end--------->
+  </form>
+  <!--주문 form end---------------->
+
+
+</div>
+</html>
