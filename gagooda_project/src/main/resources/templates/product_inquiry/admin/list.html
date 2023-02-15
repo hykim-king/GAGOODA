@@ -26,53 +26,51 @@
             </thead>
             <tbody>
 
-            <tr th:each="p:${adminList}">
-                <a href="">
-                    <td th:text="${p.getPInquiryId()}"></td>
-                    <td th:text="${p.getUserId()}"></td>
-                    <td th:text="${p.getPiDet()}"></td>
-                    <td th:text="${p.getProductCode()}"></td>
-                    <td th:text="${p.getTitle()}"></td>
-                    <td th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>
-                    <td>
-                        <th:block th:if="${p.isSecret()}">
-                            <p>비공개</p>
-                        </th:block>
-                        <th:block th:if="${!p.isSecret()}">
-                            <p>공개</p>
-                        </th:block>
-                    </td>
-                    <td>
-                        <th:block th:if="${p.getReply() == null}">
-                            <p>미답변</p>
+            <tr th:each="p:${adminList}" th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]">
+                <td th:text="${p.getPInquiryId()}"></td>
+                <td th:text="${p.getUserId()}"></td>
+                <td th:text="${p.getPiDet()}"></td>
+                <td th:text="${p.getProductCode()}"></td>
+                <td th:text="${p.getTitle()}"></td>
+                <td th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                <td>
+                    <th:block th:if="${p.isSecret()}">
+                        <p>비공개</p>
+                    </th:block>
+                    <th:block th:if="${!p.isSecret()}">
+                        <p>공개</p>
+                    </th:block>
+                </td>
+                <td>
+                    <th:block th:if="${p.getReply() == null}">
+                        <p>미답변</p>
 <!--                            <a th:href="@{'/product_inquiry/admin/register.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">답변등록</a>-->
-                                <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                답변등록
-                            </button>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            답변등록
+                        </button>
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" th:text="${p.getContent()}"></div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                            <button type="button" class="btn btn-primary">등록</button>
-                                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" th:text="${p.getContent()}"></div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                                        <button type="button" class="btn btn-primary">등록</button>
                                     </div>
                                 </div>
                             </div>
-                        </th:block>
-                        <th:block th:if="${p.getReply() != null}">
-                            <p>답변</p>
-                        </th:block>
-                    </td>
-                </a>
+                        </div>
+                    </th:block>
+                    <th:block th:if="${p.getReply() != null}">
+                        <p>답변</p>
+                    </th:block>
+                </td>
             </tr>
             </tbody>
             </table>

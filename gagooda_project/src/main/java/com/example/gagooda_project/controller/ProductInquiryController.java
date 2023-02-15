@@ -108,9 +108,13 @@ public class ProductInquiryController {
         }
     }
 
-    @GetMapping("/admin/register.do")
-    public String adminregister(){
-        return "/index";
+    @GetMapping("/admin/{pInquiryId}/detail.do")
+    public String adminDetail(@PathVariable int pInquiryId,
+                              Model model){
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        System.out.println(productInquiry);
+        model.addAttribute("productInquiry",productInquiry);
+        return "/product_inquiry/admin/detail";
     }
 
     @PostMapping("/admin/register.do")
