@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/exchange")
+@RequestMapping("/user/exchange")
 public class ExchangeController {
     private ExchangeService exchangeService;
     public ExchangeController(ExchangeService exchangeService) {
         this.exchangeService = exchangeService;
     }
 
-    @GetMapping("/list.do")
+    @GetMapping("/user/list.do")
     /* /exchange/list.do?userId=?&period=? */
     public String list(
             @SessionAttribute UserDto loginUser,
@@ -28,12 +28,12 @@ public class ExchangeController {
         model.addAttribute("exchangeList", exchangeList);
         return "/exchange/user/list";
     }
-    @GetMapping("/register.do")
+    @GetMapping("/user/register.do")
     /* /exchange/register.do?orderId=?&userId=? */
     public String register(@SessionAttribute UserDto loginUser) {
-        return "/exchange/register";
+        return "/exchange/user/register";
     }
-    @PostMapping("/register.do")
+    @PostMapping("/user/register.do")
     public String register(
             @SessionAttribute UserDto loginUser,
             ExchangeDto exchange,

@@ -1,7 +1,10 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.ExchangeDto;
+import com.example.gagooda_project.mapper.AddressMapper;
 import com.example.gagooda_project.mapper.ExchangeMapper;
+import com.example.gagooda_project.mapper.OrderDetailMapper;
+import com.example.gagooda_project.mapper.OrderMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +12,9 @@ import java.util.List;
 @Service
 public class ExchangeServiceImp implements ExchangeService {
     private ExchangeMapper exchangeMapper;
+    private AddressMapper addressMapper;
+    private OrderMapper orderMapper;
+    private OrderDetailMapper orderDetailMapper;
 
     public ExchangeServiceImp(ExchangeMapper exchangeMapper) {
         this.exchangeMapper = exchangeMapper;
