@@ -4,11 +4,12 @@ import lombok.Data;
 
 import java.util.Map;
 
+@Data
 public class PagingDto {
 
     private int page=1;
 
-    private int rows=10;
+    private int rows=2;
     private int startRow;
 
     private String orderField;
