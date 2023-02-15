@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>상품문의</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-    <script src="/static/js/bootstrap.min.js"></script>
-
 </head>
-<body>
+<div layout:fragment="content">
     <div class="container" >
     <h2>상품 문의</h2>
         <form action="/product_inquiry/admin/list.do">
@@ -78,5 +78,5 @@
             </table>
         </form>
     </div>
-</body>
+</div>
 </html>
