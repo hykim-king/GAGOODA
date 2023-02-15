@@ -1,50 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>회원 정보 수정</title>
 </head>
-<body>
-<form action="/user/modify.do" method="post">
-    <input type="hidden" name="userId" th:value="${userId}">
-    <div>
-        <label for="email">이메일</label>
-        <input type="email" name="email" id="email" th:value="${session.loginUser.email}" required>
-    </div>
-    <div>
-        <label for="uname">이름</label>
-        <input type="text" name="uname" id="uname"
-               th:value="${session.loginUser.uname}" required>
-    </div>
-    <div>
-        <label for="nickname">닉네임</label>
-        <input type="text" name="nickname" id="nickname"
-               th:value="${session.loginUser.nickname}" required>
-    </div>
-    <fieldset>
-        <label for="phone">전화번호</label>
-        <input type="text" id="phone" name="phone"
-               th:value="${session.loginUser.phone}" required>
-        <button type="button">인증번호 받기</button>
-    </fieldset>
+<div layout:fragment="content">
+    <form action="/user/modify.do" method="post">
+        <input type="hidden" name="userId" th:value="${userId}">
+        <div>
+            <label for="email">이메일</label>
+            <input type="email" name="email" id="email" th:value="${session.loginUser.email}" required>
+        </div>
+        <div>
+            <label for="uname">이름</label>
+            <input type="text" name="uname" id="uname"
+                   th:value="${session.loginUser.uname}" required>
+        </div>
+        <div>
+            <label for="nickname">닉네임</label>
+            <input type="text" name="nickname" id="nickname"
+                   th:value="${session.loginUser.nickname}" required>
+        </div>
+        <fieldset>
+            <label for="phone">전화번호</label>
+            <input type="text" id="phone" name="phone"
+                   th:value="${session.loginUser.phone}" required>
+            <button type="button">인증번호 받기</button>
+        </fieldset>
 
-    <div>
-        <label for="varify">인증번호 입력</label>
-        <input type="text" id="varify" required>
-    </div>
+        <div>
+            <label for="varify">인증번호 입력</label>
+            <input type="text" id="varify" required>
+        </div>
 
-    <div>
-        <label for="emailcheck">광고 및 업데이트 관련 이메일 수신 동의</label>
-        <th:block th:if="${session.loginUser.emailCheck}">
-            <input type="checkbox" name="emailcheck" id="emailcheckChecked" checked>
-        </th:block>
-        <th:block th:if="${!session.loginUser.emailCheck}">
-            <input type="checkbox" name="emailcheck" id="emailcheck">
-        </th:block>
-    </div>
+        <div>
+            <label for="emailcheck">광고 및 업데이트 관련 이메일 수신 동의</label>
+            <th:block th:if="${session.loginUser.emailCheck}">
+                <input type="checkbox" name="emailcheck" id="emailcheckChecked" checked>
+            </th:block>
+            <th:block th:if="${!session.loginUser.emailCheck}">
+                <input type="checkbox" name="emailcheck" id="emailcheck">
+            </th:block>
+        </div>
 
-    <button type="submit">수정하기</button>
-    <a href="/">취소하기</a>
-</form>
-</body>
+        <button type="submit">수정하기</button>
+        <a href="/">취소하기</a>
+    </form>
+</div>
 </html>

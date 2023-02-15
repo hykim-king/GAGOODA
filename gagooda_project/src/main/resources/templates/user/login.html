@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>사용자 로그인</title>
 </head>
-<body>
-<form action="/user/login.do" method="post">
-    <div>
-        <label for="email">이메일</label>
-        <input type="text" id="email" name="email">
-    </div>
+<div layout:fragment="content">
+    <body>
+    <form action="/user/login.do" method="post">
+        <div>
+            <label for="email">이메일</label>
+            <input type="text" id="email" name="email">
+        </div>
 
-    <div>
-        <label for="pw">비밀번호</label>
-        <input type="password" id="pw" name="pw">
-    </div>
+        <div>
+            <label for="pw">비밀번호</label>
+            <input type="password" id="pw" name="pw">
+        </div>
 
-    <button type="submit">로그인</button>
-</form>
-</body>
+        <button type="submit">로그인</button>
+    </form>
+    </body>
+</div>
 </html>
