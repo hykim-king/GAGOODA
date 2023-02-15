@@ -55,8 +55,9 @@ public class AddressController {
                             Model model) {
         AddressDto address = addressService.selectOne(addressId);
         model.addAttribute("address",address);
-        return "/address/modify";
+        return "redirect:/address/"+address.getAddressId()+"/modify";
     }
+//    redirect:/exchange/"+exchange.getExchangeId()+"/detail.do"
 
     @PostMapping("/modify.do")
     public String modifyOne(AddressDto address,
