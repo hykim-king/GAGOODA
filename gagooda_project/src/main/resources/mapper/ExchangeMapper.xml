@@ -1,4 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.ExchangeMapper">
+    <resultMap id="exchangeMap" type="ExchangeDto" autoMapping="true">
+        <id column="exchange_id" property="exchangeId"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_detail_id" property="orderDetailId"/>
+        <result column="address_id" property="addressId"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="mod_date" property="modDate"/>
+        <result column="post_code" property="postCode"/>
+        <result column="address_detail" property="addressDetail"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="img_code" property="imgCode"/>
+        <result column="ex_det" property="exDet"/>
+        <result column="rfr_det" property="rfrDet"/>
+    </resultMap>
+    <update id="updateOne">
+        UPDATE exchange SET reply=#{reply}, mod_date=NOW(), ex_det=#{exDet} WHERE exchange_id = #{exchangeId}
+    </update>
+    <insert id="insertOne" keyProperty="exchangeId" useGeneratedKeys="true">
+        INSERT INTO exchange (user_id, uname, email, phone, order_detail_id, order_id, address_id, cnt, reason,
+                              post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
+        VALUES (#{userId},#{uname},#{email},#{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cnt}, #{reason}, #{postCode},
+                #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
+    </insert>
+    <select id="pageAll" resultMap="exchangeMap">
+        SELECT * FROM exchange
+             <if test="exDetList">
+                WHERE ex_det IN
+                 <foreach collection="exDetList" item="exDet" separator="," open="(" close=")">#{exDet}</foreach>
+             </if>
+             ORDER BY exchange_id DESC LIMIT 0,10
+    </select>
+    <select id="findById" resultMap="exchangeMap">
+        SELECT * FROM exchange WHERE exchange_id = #{id}
+    </select>
+    <select id="countByUserIdAndOrderDetailId" resultType="int">
+        SELECT COUNT(*) FROM exchange WHERE user_id = #{userId} AND order_detail_id = #{orderDetailId}
+    </select>
+    <select id="pageByUserAndDate" resultMap="exchangeMap">
+        SELECT * FROM exchange WHERE user_id = #{userId}
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+            ORDER BY reg_date DESC LIMIT 0,10
+    </select>
 </mapper>

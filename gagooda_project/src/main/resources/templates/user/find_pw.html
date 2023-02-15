@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>비밀번호 찾기</title>
+</head>
+<div layout:fragment="content">
+    <body>
+    <form action="/user/findpw.do" method="post">
+        <div>
+            <label for="uname">이름</label>
+            <input type="text" name="uname" id="uname" required>
+        </div>
+        <div>
+            <label for="email">이메일</label>
+            <input type="text" name="email" id="email" required>
+        </div>
+        <button type="submit">비밀번호 찾기</button>
+    </form>
+    </body>
+</div>
+</html>

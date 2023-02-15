@@ -1,4 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.UserMapper">
+    <resultMap id="userMap" type="userDto" autoMapping="true">
+        <id property="userId" column="user_id"/>
+        <result property="cardName" column="card_name"/>
+        <result property="cardNum" column="card_num"/>
+        <result property="cardYear" column="card_year"/>
+        <result property="cardMonth" column="card_month"/>
+        <result property="gDet" column="g_det"/>
+        <result property="msDet" column="ms_det"/>
+        <result property="mdrDet" column="mdr_det"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="modDate" column="mod_date"/>
+    </resultMap>
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO user (email, uname, nickname, pw, phone, emailcheck, g_det)
+        VALUES (#{email},#{uname},#{nickname},#{pw},#{phone},#{emailCheck}, #{gDet})
+    </insert>
+    <update id="updateOne" parameterType="UserDto">
+        UPDATE user SET uname=#{uname},
+                        nickname=#{nickname},
+                        phone=#{phone},
+                        emailcheck=#{emailCheck},
+                        pw=#{pw},
+                        mod_date=NOW(),
+                        card_name=#{cardName},
+                        card_month=#{cardMonth},
+                        card_year=#{cardYear},
+                        card_num=#{cardNum},
+                        cvc = #{cvc},
+                        ms_det=#{msDet},
+                        mdr_det=#{mdrDet}
+                    WHERE user_id=#{userId};
+    </update>
+    <delete id="deleteById">
+        DELETE FROM user WHERE user_id=#{id};
+    </delete>
+    <select id="findByEmailAndPw" resultMap="userMap">
+        SELECT * FROM user WHERE email=#{email} AND pw=#{pw}
+    </select>
+    <select id="findByEmailAndName" resultMap="userMap">
+        SELECT * FROM user WHERE email=#{email} AND uname=#{uname}
+    </select>
+    <select id="listAll" resultMap="userMap">
+        SELECT * FROM user
+    </select>
+    <select id="pageAll" resultMap="userMap">
+
+    </select>
+    <select id="findById" resultMap="userMap">
+        SELECT * FROM user WHERE user_id=#{id}
+    </select>
 </mapper>
+<!--
+
+-->

@@ -1,4 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.RefundMapper">
+    <resultMap id="refundMap" type="RefundDto" autoMapping="true">
+        <id column="refund_id" property="refundId"/>
+        <result column="user_id" property="userId"/>
+        <result column="order_detail_id" property="orderDetailId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="address_id" property="addressId"/>
+        <result column="cancel_amount" property="cancelAmount"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="mod_date" property="modDate"/>
+        <result column="post_code" property="postCode"/>
+        <result column="address_detail" property="addressDetail"/>
+        <result column="receiver_name" property="receiverName"/>
+        <result column="receiver_phone" property="receiverPhone"/>
+        <result column="img_code" property="imgCode"/>
+        <result column="rf_det" property="rfDet"/>
+        <result column="rfr_det" property="rfrDet"/>
+    </resultMap>
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
+        INSERT INTO refund (user_id, uname, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
+                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
+                VALUES (#{userId}, #{uname}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
+                    #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
+    </insert>
+    <update id="updateOne">
+        UPDATE refund SET reply=#{reply}, mod_date=NOW(), rf_det=#{rfDet} WHERE refund_id = #{refundId}
+    </update>
+    <select id="pageByUserIdAndDate" resultMap="refundMap">
+        SELECT * FROM refund WHERE user_id = #{userId}
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+            ORDER BY reg_date DESC LIMIT 0,10
+    </select>
+    <select id="findById" resultMap="refundMap">
+        SELECT * FROM refund WHERE refund_id = #{id}
+    </select>
+    <select id="pageAll" resultMap="refundMap">
+        SELECT * FROM refund
+        <if test="rfDetList != null">
+            WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet}</foreach>
+        </if>
+        ORDER BY reg_date DESC LIMIT 0,10
+    </select>
 </mapper>

@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.CategoryMapper">
+
+    <resultMap id="categoryMap" type="CategoryDto" autoMapping="true">
+        <result column="category_id" property="categoryId" />
+        <result column="parent_id" property="parentId" />
+    </resultMap>
+
+    <insert id="insertOne" parameterType="CategoryDto">
+        INSERT INTO category (category_id, parent_id, cname, lvl)
+        VALUES (#{categoryId}, #{parentId}, #{cname}, #{lvl})
+    </insert>
+    <select id="findById" resultMap="categoryMap">
+        SELECT * FROM category WHERE category_id=#{categoryId}
+    </select>
+    <select id="listByParentId" parameterType="integer" resultMap="categoryMap">
+        select * FROM category WHERE parent_id=#{parentId}
+    </select>
+    <select id="listByLevel" resultMap="categoryMap">
+        SELECT * FROM category WHERE lvl=#{lvl}
+    </select>
 </mapper>

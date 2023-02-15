@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 회원가입</title>
+</head>
+<body>
+<form action="/user/signup.do" method="post">
+    <input type="hidden" th:value="${gDet}" name="gDet">
+    <div>
+        <label for="email">이메일</label>
+        <input type="email" name="email" id="email" required>
+    </div>
+    <div>
+        <label for="uname">이름</label>
+        <input type="text" name="uname" id="uname" required>
+    </div>
+    <div>
+        <label for="nickname">닉네임</label>
+        <input type="text" name="nickname" id="nickname" required>
+    </div>
+    <div>
+        <label for="pw">비밀번호</label>
+        <input type="password" name="pw" id="pw" required>
+    </div>
+    <div>
+        <label for="check">비밀번호 확인</label>
+        <input type="password" name="check" id="check" required>
+    </div>
+    <fieldset>
+        <label for="phone">전화번호</label>
+        <input type="text" id="phone" name="phone" required>
+        <button type="button">인증번호 받기</button>
+    </fieldset>
+
+    <div>
+        <label for="varify">인증번호 입력</label>
+        <input type="text" id="varify" required>
+    </div>
+
+    <div>
+        <label for="private-data">개인정보 수집 및 이용 동의</label>
+        <input type="checkbox" name="" id="private-data" required>
+    </div>
+
+    <div>
+        <label for="emailcheck">광고 및 업데이트 관련 이메일 수신 동의</label>
+        <input type="checkbox" name="emailcheck" id="emailcheck" value="true" checked>
+    </div>
+
+    <button type="submit">가입하기</button>
+    <a href="#">취소하기</a>
+</form>
+</body>
+</html>

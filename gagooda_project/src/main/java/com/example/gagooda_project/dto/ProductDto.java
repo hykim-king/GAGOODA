@@ -1,10 +1,14 @@
 package com.example.gagooda_project.dto;
 
-import java.util.Date;
+import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
+
+@Data
 public class ProductDto {
     private String productCode; // 상품 ID product_code PK NN
-    private String name; // 상품명 NN
+    private String pname; // 상품명 NN
     private String place; // 판매처 NN
     private int deliveryPc; // 배송비 delivery_pc NN
     private int supplyPc; // 공급가 supply_pc NN
@@ -18,4 +22,9 @@ public class ProductDto {
     private int regId; // 등록자 reg_id NN
     private Date modDate; // 수정일 mod_date NN
     private int modId; // 수정자 mod_id NN
+
+    private List<ImageDto> imageList;
+    private List<ImageDto> infoImageList;
+    private List<OptionProductDto> optionProductList;
+    private List<CategoryConnDto> categoryConnList;
 }

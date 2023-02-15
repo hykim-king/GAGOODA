@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.pname}+' 상세페이지'"></title>
+</head>
+<body>
+<h1 th:text="${product.pname}"></h1>
+<p th:text="${product.productCode}"></p>
+<p th:text="${product.salesPc}+원"></p>
+<th:block th:if="${product.imageList != null}">
+    <th:block th:each="img:${product.imageList}">
+        <img th:src="@{'/img/product/{file}'(file=${img.imgPath})}"
+             style="width: 400px; height: 400px; object-fit: cover;">
+    </th:block>
+</th:block>
+<th:block th:if="${product.infoImageList != null}">
+    <th:block th:each="img:${product.infoImageList}">
+        <img th:src="@{'/img/product/{file}'(file=${img.imgPath})}"
+             style="width: 400px; height: 400px; object-fit: cover;">
+    </th:block>
+</th:block>
+<form action="" name="product_choose">
+    <div>
+        <select name="optionCode" id="optionCode" required>
+            <option value="" selected>--선택--</option>
+            <th:block th:each="option:${product.optionProductList}">
+                <option th:value="${option.optionCode}"
+                        th:text="${option.opname}+' '+${option.price}+'원'"></option>
+            </th:block>
+        </select>
+    </div>
+    <div>
+        <!--존재하는 수량을 초과하지 않는지 확인 필요-->
+        <label for="cnt">수량: </label>
+        <input type="number" name="cnt" id="cnt" required>
+    </div>
+    <button type="button" name="to_cart">장바구니에 담기</button>
+    <button type="button" name="buy">구매하기</button>
+</form>
+<script>
+    const product_choose = document.forms["product_choose"];
+    const to_cart = product_choose["to_cart"];
+    const buy = product_choose["buy"];
+    to_cart.onclick=(e)=>{
+        if (product_choose["optionCode"].value!==""
+            && product_choose["cnt"].value !== ""
+            && product_choose["cnt"].value > 0
+        ) {
+            product_choose.action = "/cart/register.do";
+            product_choose.submit();
+        } else {
+            alert("상품을 선택하고, 수량을 적어주세요.");
+        }
+    }
+    buy.onclick=(e)=>{
+        if (
+            product_choose["optionCode"].value!==""
+            && product_choose["cnt"].value !== ""
+            && product_choose["cnt"].value > 0
+        ) {
+            product_choose.action = "/order/register.do";
+            product_choose.submit();
+        } else {
+            alert("상품을 선택하고, 수량을 적어주세요.");
+        }
+    }
+</script>
+</body>
+</html>

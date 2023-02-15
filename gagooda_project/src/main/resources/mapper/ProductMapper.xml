@@ -1,4 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.ProductMapper">
+    <resultMap id="productMap" type="ProductDto">
+        <id column="product_code" property="productCode"/>
+        <result column="delivery_pc" property="deliveryPc"/>
+        <result column="supply_pc" property="supplyPc"/>
+        <result column="sales_pc" property="salesPc"/>
+        <result column="img_code" property="imgCode"/>
+        <result column="info_img_code" property="infoImgCode"/>
+        <result column="p_det" property="pDet"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="reg_id" property="regId"/>
+        <result column="mod_date" property="modDate"/>
+        <result column="mod_id" property="modId"/>
+        <collection property="imageList"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    column="img_code"
+                    fetchType="lazy"/>
+        <collection property="infoImageList"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    column="info_img_code"
+                    fetchType="lazy"/>
+        <collection property="optionProductList"
+                    select="com.example.gagooda_project.mapper.OptionProductMapper.listByProductCode"
+                    column="product_code"
+                    fetchType="lazy"/>
+    </resultMap>
+    <insert id="insertOne" parameterType="ProductDto">
+        INSERT INTO product
+            (product_code, pname, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
+        VALUES
+            (#{productCode}, #{pname}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode}, #{regId}, #{modId})
+    </insert>
+    <update id="updateOne" parameterType="ProductDto">
+        UPDATE product SET pname=#{pname},
+                           place=#{place},
+                           delivery_pc=#{deliveryPc},
+                           supply_pc=#{supplyPc},
+                           sales_pc=#{salesPc},
+                           rot=#{rot},
+                           margin=#{margin},
+                           p_det=#{pDet},
+                           mod_date=#{modDate},
+                           mod_id=#{modId}
+                       WHERE
+                           product_code=#{productCode}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM product WHERE product_code=#{productCode}
+    </delete>
+    <select id="findById" resultMap="productMap">
+        SELECT * FROM product WHERE product_code=#{productCode}
+    </select>
+    <select id="listAll" resultMap="productMap">
+        SELECT * FROM product
+    </select>
+
 </mapper>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>두번 확인</title>
+</head>
+<div layout:fragment="content">
+    <form action="/user/double_check.do" method="post">
+        <div>
+            <label for="pw">비밀번호</label>
+            <input type="password" name="pw" id="pw">
+        </div>
+        <button type="submit">확인</button>
+        <a href="/">취소</a>
+    </form>
+</div>
+</html>
