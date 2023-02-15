@@ -1,11 +1,12 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.AddressDto;
 import com.example.gagooda_project.dto.RefundDto;
 
 import java.util.List;
 
 public interface RefundService {
-    public int registerOne(RefundDto refund);
+    public int registerOne(RefundDto refund, AddressDto address);
 
     public List<RefundDto> showUserRefundList(int id, int period);
 

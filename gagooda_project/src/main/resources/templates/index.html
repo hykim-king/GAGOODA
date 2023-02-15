@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>GAGOODA</title>
 </head>
-<body>
-<h1>GAGOODA 쇼핑몰 파이팅!</h1>
+<div layout:fragment="content">
+    <h1>GAGOODA 쇼핑몰 파이팅!</h1>
 
 <h2>천하민</h2>
 <th:block th:if="${session.loginUser != null}">
@@ -17,21 +20,27 @@
         <li><a href="/user/login.do">로그인</a></li>
         <li><a href="/user/findpw.do">비밀번호 찾기</a></li>
     </th:block>
-    <th:block th:unless="${session.loginUser == null}">
-        <li><a href="/mypage/main.do">마이페이지</a></li>
-        <li><a href="/user/logout.do">로그아웃</a></li>
-    </th:block>
-    <li><a href="/user/double_check.do">회원 정보 수정 및 삭제</a></li>
-    <li><a href="/product/admin/register.do">상품 등록</a></li>
-    <li><a href="/product/list.do">상품 첫 20개 리스트</a></li>
-    <ul style="border: #000 solid 3px;">
-        <th:block th:each="category:${categories}">
-            <li><a th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
-                   th:text="${category.cname}"></a></li>
+    <ul>
+        <th:block th:if="${session.loginUser == null}">
+            <li><a href="/user/g0/signup.do">회원가입</a></li>
+            <li><a href="/user/g1/signup.do">관리자 회원가입</a></li>
+            <li><a href="/user/login.do">로그인</a></li>
+            <li><a href="/user/findpw.do">비밀번호 찾기</a></li>
         </th:block>
+        <th:block th:if="${session.loginUser != null}">
+            <li><a href="/mypage/main.do">마이페이지</a></li>
+            <li><a href="/user/logout.do">로그아웃</a></li>
+        </th:block>
+        <li><a href="/user/double_check.do">회원 정보 수정 및 삭제</a></li>
+        <li><a href="/product/admin/register.do">상품 등록</a></li>
+        <li><a href="/product/list.do">상품 첫 20개 리스트</a></li>
+        <ul style="border: #000 solid 3px;">
+            <th:block th:each="category:${categories}">
+                <li><a th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
+                       th:text="${category.cname}"></a></li>
+            </th:block>
+        </ul>
     </ul>
-</ul>
-
 <h2>주문/배송 팀</h2>
 <h4>주소지 관련 페이지(Address)</h4>
 <ul>
@@ -57,5 +66,7 @@
         </ul>
     </li>
 </ul>
+</ul>
+</div>
 </body>
 </html>
