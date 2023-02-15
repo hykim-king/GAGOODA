@@ -1,7 +1,6 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.ExchangeDto;
-import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.ExchangeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user/exchange")
+@RequestMapping("/exchange")
 public class ExchangeController {
-    private ExchangeService exchangeService;
+    ExchangeService exchangeService;
     public ExchangeController(ExchangeService exchangeService) {
         this.exchangeService = exchangeService;
     }
@@ -21,7 +20,7 @@ public class ExchangeController {
     /* /exchange/list.do?userId=?&period=? */
     public String list(
             @SessionAttribute UserDto loginUser,
-            @RequestParam int period,
+            @RequestParam(name = "period", defaultValue = "7", required = false) int period,
             Model model
     ) {
         List<ExchangeDto> exchangeList = exchangeService.orderInDate(loginUser.getUserId(), period);
@@ -30,7 +29,10 @@ public class ExchangeController {
     }
     @GetMapping("/user/register.do")
     /* /exchange/register.do?orderId=?&userId=? */
-    public String register(@SessionAttribute UserDto loginUser) {
+    public String register(@SessionAttribute UserDto loginUser,
+                           @RequestParam(name = "orderId", required = false) String orderId,
+                           Model model
+                           ) {
         return "/exchange/user/register";
     }
     @PostMapping("/user/register.do")
@@ -49,7 +51,7 @@ public class ExchangeController {
 
     @GetMapping("/detail.do")
     public String detail() {
-        return "/exchange/detail";
+        return "/exchange/user/detail";
     }
 
     @GetMapping("/{exchangeId}/modify.do")
