@@ -4,17 +4,34 @@
     <resultMap id="categoryConnMap" type="CategoryConnDto">
         <id column="category_id" property="categoryId"/>
         <result column="product_code" property="productCode"/>
+        <association property="product"
+                     column="product_code"
+                     select="com.example.gagooda_project.mapper.ProductMapper.findById"
+                     fetchType="lazy"
+                     autoMapping="true"/>
+        <association property="category"
+                     column="category_id"
+                     select="com.example.gagooda_project.mapper.CategoryMapper.findById"
+                     fetchType="lazy"
+                     autoMapping="true"/>
     </resultMap>
     <insert id="insertOne" parameterType="CategoryConnDto">
-        INSERT INTO category_conn (category_id, product_code) VALUES (#{categoryId}, #{productCode})
+        INSERT INTO category_conn (category_id, product_code)
+        VALUES (#{categoryId}, #{productCode})
     </insert>
     <delete id="deleteByProductCode">
-        DELETE FROM category_conn WHERE product_code=#{productCode}
+        DELETE
+        FROM category_conn
+        WHERE product_code = #{productCode}
     </delete>
     <select id="listByCategoryId" resultMap="categoryConnMap">
-        SELECT * FROM category_conn WHERE category_id=#{categoryId}
+        SELECT *
+        FROM category_conn
+        WHERE category_id = #{categoryId}
     </select>
     <select id="listByProductCode" resultMap="categoryConnMap">
-        SELECT * FROM category_conn WHERE product_code=#{productCode}
+        SELECT *
+        FROM category_conn
+        WHERE product_code = #{productCode}
     </select>
 </mapper>

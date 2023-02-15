@@ -78,15 +78,4 @@ class AddressMapperTest {
         AddressDto check = addressMapper.findById(91);
         System.out.println(check);
     }
-
-    @Test
-    void countHome() {
-        addressMapper.countHome(1);
-    }
-
-    @Test
-    void updateHome() {
-        addressMapper.updateHome(1);
-        addressMapper.countHome(1);
-    }
 }

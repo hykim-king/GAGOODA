@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>temp</title>
 </head>
 <body>
-<a th:href="@{'/user/{userId}/modify.do'(userId=${session.loginUser.userId})}">수정</a>
-<a th:href="@{'/user/{userId}/remove.do'(userId=${session.loginUser.userId})}">삭제</a>
+<ul>
+    <li><a th:href="@{'/user/{userId}/modify.do'(userId=${session.loginUser.userId})}">수정</a></li>
+    <li><a th:href="@{'/user/{userId}/password_reset.do'(userId=${session.loginUser.userId})}">비밀번호 재설정</a></li>
+    <li><a th:href="@{'/user/{userId}/remove.do'(userId=${session.loginUser.userId})}">삭제</a></li>
+</ul>
 </body>
 </html>

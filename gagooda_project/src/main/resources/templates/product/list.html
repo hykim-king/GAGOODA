@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:each="product:${productList}">
+    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}">
+        <div>
+            <img th:src="@{'/img/product/{file}'(file=${product.getImgCode()+'_0.png'})}"
+                 style="width: 200px; height: 200px; object-fit: cover;">
+        </div>
+        <p th:text="${product.getProductCode()}"></p>
+        <p th:text="${product.getPname()}"></p>
+        <p th:text="${product.getSalesPc()}"></p>
+    </a>
+</th:block>
+</body>
+</html>
