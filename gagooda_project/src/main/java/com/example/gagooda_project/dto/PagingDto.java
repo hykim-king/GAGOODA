@@ -5,12 +5,9 @@ import lombok.Data;
 import java.util.Map;
 
 public class PagingDto {
-
     private int page=1;
-
     private int rows=10;
     private int startRow;
-
     private String orderField;
     private String direct="DESC";
     private int totalRows; //레코드 전체 수
@@ -23,10 +20,8 @@ public class PagingDto {
     private  int startPage; //화면에 보일 페이지 수에서 가장 앞 페이지 숫자
     private int endPage; // 화면에 보일 페이지 수에서 가장 마지막 페이지 숫자
     private String queryString;
-
     public PagingDto() { //dto를 컨트롤러의 파라터로 사용할때 생성에 정의된 필드가 required=true 로 정의된다.
     }
-
     public PagingDto(int page, int rows) {
         this.page=page;
         this.rows = rows;
@@ -52,7 +47,8 @@ public class PagingDto {
                     and="&";
                 }
             }
-        } //rows=10&order=user_id&
+        }
+        //rows=10&order=user_id&
         //th:href=@{'url'(name=1,name2=3) } => url?name=1&name2
         //list.do ->  th:href=@{''(page=${i})}  => list.do?paeg=3
         //list.do ->  th:href=@{('?'+'rows=10&order=user_id&')(page=${i})}  => list.do?rows=10&order=user_id&&paeg=3

@@ -11,21 +11,8 @@
     <h1>GAGOODA 쇼핑몰 파이팅!</h1>
 
     <h2>천하민</h2>
-    <th:block th:if="${session.loginUser != null}">
-        <h5 th:text="${session.loginUser.uname}"></h5>
-    </th:block>
     <ul>
-        <th:block th:if="${session.loginUser == null}">
-            <li><a href="/user/g0/signup.do">회원가입</a></li>
-            <li><a href="/user/g1/signup.do">관리자 회원가입</a></li>
-            <li><a href="/user/login.do">로그인</a></li>
-            <li><a href="/user/findpw.do">비밀번호 찾기</a></li>
-        </th:block>
-        <th:block th:if="${session.loginUser != null}">
-            <li><a href="/mypage/main.do">마이페이지</a></li>
-            <li><a href="/user/logout.do">로그아웃</a></li>
-        </th:block>
-        <li><a href="/user/double_check.do">회원 정보 수정 및 삭제</a></li>
+        <li><a href="/user/user_yes/double_check.do">회원 정보 수정 및 삭제</a></li>
         <li><a href="/product/admin/register.do">상품 등록</a></li>
         <li><a href="/product/list.do">상품 첫 20개 리스트</a></li>
         <ul style="border: #000 solid 3px;">
