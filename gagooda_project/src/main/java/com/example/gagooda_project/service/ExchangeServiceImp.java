@@ -15,35 +15,32 @@ public class ExchangeServiceImp implements ExchangeService {
     }
 
     @Override
-    public List<ExchangeDto> pageAll(List<String> exDetList) {
-        exchangeMapper.pageAll(exDetList);
-        return null;
+    public List<ExchangeDto> list(List<String> exDetList) {
+        return exchangeMapper.pageAll(exDetList);
     }
 
     @Override
-    public List<ExchangeDto> pageByUserAndDate(int userId, int period) {
-        return null;
+    public List<ExchangeDto> orderInDate(int userId, int period) {
+        return exchangeMapper.pageByUserAndDate(userId, period);
     }
 
     @Override
-    public int insertOne(ExchangeDto exchange) {
-        int insert = 0;
-        insert += exchangeMapper.insertOne(exchange);
-        return 0;
+    public int register(ExchangeDto exchange) {
+        return exchangeMapper.insertOne(exchange);
     }
 
     @Override
-    public int updateOne(ExchangeDto exchange) {
-        return 0;
+    public int modify(ExchangeDto exchange) {
+        return exchangeMapper.updateOne(exchange);
     }
 
     @Override
     public int countByUserIdAndOrderDetailId(int userId, int orderDetailId) {
-        return 0;
+        return exchangeMapper.countByUserIdAndOrderDetailId(userId, orderDetailId);
     }
 
     @Override
     public ExchangeDto findById(int id) {
-        return null;
+        return exchangeMapper.findById(id);
     }
 }
