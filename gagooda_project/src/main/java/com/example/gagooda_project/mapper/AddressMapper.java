@@ -16,7 +16,6 @@ public interface AddressMapper {
     AddressDto findByUserIdAndHome(int userId);
     int deleteById(int id);
     // deleteByAddressId -> deleteById
-
     int dismissHome(int userId);  // user_id
     // 용도가...?
     // primary 해제용이면 dismissHome(int userId) query는 updateHome랑 같게,

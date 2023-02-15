@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/product_inquiry/admin/list.do">
+        <ul>
+            <li th:each="p:${adminList}">
+                <p th:text="${p.getPInquiryId()}"></p>
+                <p th:text="${p.getUserId()}"></p>
+                <p th:text="${p.getPiDet()}"></p>
+                <p th:text="${p.getProductCode()}"></p>
+                <p th:text="${p.getTitle()}"></p>
+                <p th:text="${p.getRegDate()}"></p>
+                <th:block th:if="${p.isSecret()}">
+                    <p>비공개</p>
+                </th:block>
+                <th:block th:if="${!p.isSecret()}">
+                    <p>공개</p>
+                </th:block>
+                <th:block th:if="${p.getReply() == null}">
+                    <p>미답변</p>
+                    <a href=""></a>
+                </th:block>
+                <th:block th:if="${p.getReply() != null}">
+                    <p>답변</p>
+                </th:block>
+            </li>
+        </ul>
+    </form>
+</body>
+</html>

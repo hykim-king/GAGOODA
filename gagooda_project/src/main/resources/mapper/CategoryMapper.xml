@@ -17,4 +17,7 @@
     <select id="listByParentId" parameterType="integer" resultMap="categoryMap">
         select * FROM category WHERE parent_id=#{parentId}
     </select>
+    <select id="listByLevel" resultMap="categoryMap">
+        SELECT * FROM category WHERE lvl=#{lvl}
+    </select>
 </mapper>

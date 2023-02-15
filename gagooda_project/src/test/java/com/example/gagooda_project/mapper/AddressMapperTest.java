@@ -79,10 +79,8 @@ class AddressMapperTest {
         System.out.println(check);
     }
 
-
     @Test
     void dismissHome() {
         addressMapper.dismissHome(1);
-
     }
 }

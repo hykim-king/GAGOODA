@@ -36,7 +36,7 @@ public class UserMapperTest {
     }
     @Test
     void deleteById() {
-        int deleteUser = userMapper.deleteById(22);
+        int deleteUser = userMapper.deleteById(19);
     }
     @Test
     void findById(){

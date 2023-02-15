@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form action="/product_inquiry/list.do">
+        <h2 th:text="${succMsg}"></h2>
+        <ul>
+            <li th:each="p:${plist}">
+                <p th:text="${p.getPiDet()}"></p>
+                <p th:text="${p.getPInquiryId()}"></p>
+<!--                <span th:text="${p.getUser().getUname()}"></span>-->
+                <p th:text="${p.getRegDate()}"></p>
+                <p th:text="${p.getTitle()}"></p>
+                <p th:text="${p.getContent()}"></p>
+                <p th:text="${p.getRegDate()}"></p>
+                <a th:href="@{'/product_inquiry/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">삭제</a>
+            </li>
+        </ul>
+    </form>
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.example.gagooda_project.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ProductDto {
@@ -21,4 +22,9 @@ public class ProductDto {
     private int regId; // 등록자 reg_id NN
     private Date modDate; // 수정일 mod_date NN
     private int modId; // 수정자 mod_id NN
+
+    private List<ImageDto> imageList;
+    private List<ImageDto> infoImageList;
+    private List<OptionProductDto> optionProductList;
+    private List<CategoryConnDto> categoryConnList;
 }
