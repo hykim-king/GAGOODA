@@ -44,29 +44,86 @@
         <input type="text" name="addressId" id="addressId" required>
       </div>
       <button>새로운 배송지입력</button>
-      <button>다른 배송지 입력</button>
+      <label for="otherAddresses">다른 배송지</label>
+      <select id="otherAddresses">
+        <option></option>
+      </select>
+
     </fieldset>
     <!--배송지 입력란 end-->
-    <!--주문할 상품 정보들-->
-    <fieldset>
-      <legend>카트 정보들</legend>
-      <table>
-        <thead>
+    <div class="orderDetail">
+      <!--주문할 상품 정보들-->
+      <fieldset>
+        <legend>카트 정보들</legend>
+        <table>
+          <thead>
           <th>카트아이디</th>
           <th>상품 정보</th>
           <th>수량</th>
           <th>주문금액</th>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           <td>1</td>
           <td>
-            <input type="hidden" name="imgPath" id="imgPath" required>
+            <input type="hidden" name="imgPath" id="imgPath"  placeholder="imgPath" required>
+            <input type="text" name="productCode" id="productCode" placeholder="productCode" required>
+            <input type="text" name="optionCode" id="optionCode" placeholder="optionCode" required>
+            <input type="text" name="optionName" id="optionName" placeholder="optionName" required>
           </td>
-
-        </tbody>
-      </table>
-    </fieldset>
-    <!--주문할 상품 정보들 end--------->
+          <td><input type="text" name="cnt" id="cnt" required></td>
+          <td>
+            <input type="text" name="price" id="price">
+            <input type="text" name="totalPrice" id="totalPrice">
+          </td>
+          </tbody>
+        </table>
+      </fieldset>
+      <!--주문할 상품 정보들 end--------->
+      <!--총 결제 정보-->
+      <fieldset>
+        <legend>총 결제 정보</legend>
+        <div>
+          <label for="totalCnt">상품 총 수량</label>
+          <input type="text" name="totalCnt" id="totalCnt" required>
+        </div>
+        <div>
+          <label for="orderTotalPrice">상품 총 가격</label>
+          <input type="text" name="orderTotalPrice" id="orderTotalPrice" required>
+        </div>
+      </fieldset>
+      <!--총 결제 정보 end-->
+    </div>
+    <!--주문자 정보-->
+    <div class="user">
+      <fieldset>
+        <legend>주문자 정보</legend>
+        <div>
+          <label for="uname"></label>
+          <input type="text" name="uname" id="uname" required>
+        </div>
+        <div>
+          <label for="phone"></label>
+          <input type="text" name="phone" id="phone" required>
+        </div>
+        <div>
+          <label for="email"></label>
+          <input type="text" name="email" id="email" required>
+        </div>
+      </fieldset>
+    </div>
+    <!--주문자 정보 end---------->
+    <!--배송 정보(배송요청)-->
+    <div class="delivery">
+      <fieldset>
+        <legend>배송지 정보</legend>
+        <div>
+          <label for="request"></label>
+          <textarea rows="5" cols="30" name="request" id="request"></textarea>
+        </div>
+      </fieldset>
+    </div>
+    <!--배송 정보(배송요청) end-->
+    <button type="submit">제출</button>
   </form>
   <!--주문 form end---------------->
 
