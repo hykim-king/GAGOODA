@@ -25,6 +25,7 @@ public class OrderServiceImp implements OrderService {
     }
 
     @Override
+    public OrderDto selectOne(String orderId) { return orderMapper.findById(orderId); }
     public int register(OrderDto order, DeliveryDto delivery) {
         int register =0;
         for(OrderDetailDto orderDetail: order.getOrderDetailList()){

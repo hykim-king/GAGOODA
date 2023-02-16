@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface OrderService {
     List<OrderDto> orderList(PagingDto paging, int userId);
+    OrderDto selectOne(String orderId);
     int register(OrderDto order, DeliveryDto delivery);
 
 }

@@ -20,6 +20,7 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
     private CategoryConnService categoryConnService;
+
     public ProductController(ProductService productService,
                              CategoryConnService categoryConnService) {
         this.productService = productService;
@@ -83,7 +84,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productCode}/detail.do")
-    public String detail (
+    public String detail(
             @PathVariable String productCode,
             HttpSession session,
             Model model
@@ -122,20 +123,39 @@ public class ProductController {
             @SessionAttribute UserDto loginUser,
             HttpSession session,
             ProductDto product,
-            @RequestParam(name = "categoryId") List<Integer> categoryIdList
+            @RequestParam(name = "categoryId") List<Integer> categoryIdList,
+            @RequestParam(name = "imageFile") List<MultipartFile> imageFileList,
+            @RequestParam(name = "infoImageFile") List<MultipartFile> infoImageFileList
     ) {
-        System.out.println(product);
-        for (int categoryId : categoryIdList) {
-            CategoryConnDto categoryConn = new CategoryConnDto();
-            categoryConn.setCategoryId(categoryId);
-            categoryConn.setProductCode(product.getProductCode());
-            System.out.println(categoryConn);
+        int insert = 0;
+        try {
+            // imgCode, infoImgCode 설정
+            product.setImgCode(product.getProductCode());
+            product.setInfoImgCode(product.getProductCode()+"_INFO");
+
+            // categoryConnList 생성 및 product 에 설정
+            List<CategoryConnDto> categoryConnList = new ArrayList<>();
+            for (int categoryId : categoryIdList) {
+
+            }
+
+            insert = productService.insert(product);
+
+        } catch (Exception e) {
+
         }
-        System.out.println(product.getImageList());
-        System.out.println(product.getInfoImgCode());
-        System.out.println(product.getCategoryConnList());
-        System.out.println(product.getOptionProductList());
         return "redirect:/";
     }
+
+    /*
+ProductDto(productCode=PDTPDT, pname=null, place=가구다, deliveryPc=20, supplyPc=100, salesPc=1000, rot=0.1, margin=0.1, imgCode=null, infoImgCode=null, pDet=p1, regDate=null, regId=0, modDate=null, modId=0, imageList=null, infoImageList=null, optionProductList=[OptionProductDto(optionCode=ABCD, productCode=PDTPDT, opname=가구_B14D, price=1000, stock=20), OptionProductDto(optionCode=ABCE, productCode=PDTPDT, opname=가구_ADDD, price=1000, stock=3), OptionProductDto(optionCode=ABCF, productCode=PDTPDT, opname=가구_B14A, price=1000, stock=4)], categoryConnList=null)
+CategoryConnDto(categoryId=1, productCode=PDTPDT, category=null, product=null)
+CategoryConnDto(categoryId=11, productCode=PDTPDT, category=null, product=null)
+CategoryConnDto(categoryId=12, productCode=PDTPDT, category=null, product=null)
+[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@67ef3680, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@5a0a0963, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@7bdde4df]
+[org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@429636be, org.springframework.web.multipart.support.StandardMultipartHttpServletRequest$StandardMultipartFile@5cd3435a]
+null
+[OptionProductDto(optionCode=ABCD, productCode=PDTPDT, opname=가구_B14D, price=1000, stock=20), OptionProductDto(optionCode=ABCE, productCode=PDTPDT, opname=가구_ADDD, price=1000, stock=3), OptionProductDto(optionCode=ABCF, productCode=PDTPDT, opname=가구_B14A, price=1000, stock=4)]
+    * */
 
 }

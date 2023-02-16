@@ -1,10 +1,7 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.mapper.AddressMapper;
-import com.example.gagooda_project.mapper.OrderDetailMapper;
-import com.example.gagooda_project.mapper.OrderMapper;
-import com.example.gagooda_project.mapper.RefundMapper;
+import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,26 +10,20 @@ import java.util.List;
 public class RefundServiceImp implements RefundService{
     RefundMapper refundMapper;
     AddressMapper addressMapper;
-    OrderDetailMapper orderDetailMapper;
-    OrderMapper orderMapper;
+    CommonCodeMapper commonCodeMapper;
 
-    public RefundServiceImp(RefundMapper refundMapper, AddressMapper addressMapper, OrderDetailMapper orderDetailMapper, OrderMapper orderMapper) {
+    public RefundServiceImp(RefundMapper refundMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper) {
         this.refundMapper = refundMapper;
         this.addressMapper = addressMapper;
-        this.orderDetailMapper = orderDetailMapper;
-        this.orderMapper = orderMapper;
+        this.commonCodeMapper = commonCodeMapper;
     }
 
-    public int registerOne(RefundDto refund, AddressDto address){
+    public int registerOne(RefundDto refund){
         return refundMapper.insertOne(refund);
     }
 
-    public List<RefundDto> showUserRefundList(int id, int period){
-        if (period == 0){
-            return refundMapper.pageByUserIdAndDate(id, 7);
-        } else{
-            return refundMapper.pageByUserIdAndDate(id, period);
-        }
+    public List<RefundDto> showUserRefundList(int id, int period, String startDate, String endDate, String detCode){
+        return refundMapper.pageByUserIdAndDate(id, period, startDate, endDate, detCode);
     }
 
     public List<RefundDto> showRefundList(List<String> rfDetList){ return refundMapper.pageAll(rfDetList); }
@@ -44,12 +35,11 @@ public class RefundServiceImp implements RefundService{
     public List<AddressDto> showAddressListByUserId(int userId){
         return addressMapper.listByUserId(userId);
     }
-    public List<OrderDetailDto> showOrderDetailListByOrderId(String orderId){
-        return orderDetailMapper.findByOrderId(orderId);
+
+    public AddressDto selectAddress(int addressId){
+        return addressMapper.findById(addressId);
     }
 
-    public OrderDto selectOrder(String orderId){
-        return orderMapper.findById(orderId);
-    }
+    public List<CommonCodeDto> showDetCodeList(String mstCode){ return commonCodeMapper.listByMstCode(mstCode); }
 
 }

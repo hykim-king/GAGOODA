@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <th:block>
+
+    </th:block>
+    주문자 : <span th:text="${order.userName}"></span><br>
+    주문 날짜 : <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span><br>
+    주문 번호 : <span th:text="${order.orderId}"></span><br>
+    상품명 : <span th:text="${orderDetailList[0].optionName}+ ' 외 ' + ${orderDetailList.size()-1} + '건'"></span><br>
+    총 상품 금액 : <span th:text="${order.totalPrice}"></span>
+    <hr>
+    <form action="/mypage/exchange/register.do" method="post">
+        <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
+        <input type="hidden" id="uname" name="uname" th:value="${session.loginUser.uname}">
+        <input type="hidden" id="email" name="email" th:value="${session.loginUser.email}">
+        <input type="hidden" id="phone" name="phone" th:value="${session.loginUser.phone}">
+        <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
+        <fieldset>
+            <legend>교환 정보</legend>
+            <div>
+                <label for="orderDetailId">교환 대상 상품</label>
+                <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()">
+                    <option value="" selected disabled>교환 대상을 선택해주세요.</option>
+                    <th:block th:each="orderDetail : ${orderDetailList}">
+                        <option th:text="${orderDetail.optionName} +' 수량 : ' +${orderDetail.cnt}" th:value="${orderDetail.orderDetailId}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div>
+                <label for="cnt">교환 수량</label>
+                <input type="number" id="cnt" name="cnt">
+            </div>
+            <div>
+                <label for="imgCode">첨부 이미지</label>
+                <input type="file" id="imgCode" name="imgCode">
+            </div>
+            <div>
+                <label for="rfrDet">교환 사유 카테고리</label>
+                <select name="rfrDet" id="rfrDet">
+                    <option value="rfr1">상품 문제</option>
+                    <option value="rfr2">배송 문제</option>
+                    <option value="rfr3">기타</option>
+                </select>
+            </div>
+            <div>
+                <label for="reason">상세 교환 사유</label>
+                <textarea id="reason" name="reason" placeholder="교환 사유를 작성해주세요."></textarea>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>교환 물품 수거지 주소</legend>
+            <div>
+                <label for="myAddressList"></label>
+                <select name="myAddressList" id="myAddressList" onchange="changeAdd()">
+                    <option value="" disabled selected>내 배송지 목록</option>
+                    <th:block th:each="address:${addressList}">
+                        <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
+            <div>
+                <label for="postCode">우편 번호</label>
+                <input type="text" id="postCode" name="postCode" class="add" th:value="${orderAddress.postCode}">
+            </div>
+            <div>
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" class="add" th:value="${orderAddress.address}">
+            </div>
+            <div>
+                <label for="addressDetail">상세 주소</label>
+                <input type="text" id="addressDetail" name="addressDetail" class="add" th:value="${orderAddress.addressDetail}">
+            </div>
+            <div>
+                <label for="receiverName">수령인 이름</label>
+                <input type="text" id="receiverName" name="receiverName" class="add" th:value="${orderAddress.receiverName}">
+            </div>
+            <div>
+                <label for="receiverPhone">수령인 전화번호</label>
+                <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${orderAddress.receiverPhone}">
+            </div>
+            <div>
+                <label for="elevator">엘리베이터 유무</label>
+                <input type="text" id="elevator" name="elevator" class="add" th:value="${orderAddress.elevator}">
+            </div>
+            <script th:inline="javascript">
+                let cnt = document.querySelector("#cnt");
+                function changeOpt(){
+                    console.log(document.getElementById("orderDetailId"));
+                    let changeSelect = document.getElementById("orderDetailId");
+                    let optVal = changeSelect.options[changeSelect.selectedIndex].value;
+                    console.log("opt:"+optVal);
+                    let optTxt = changeSelect.options[changeSelect.selectedIndex].text;
+                    console.log("option:"+optTxt);
+                    cnt.value = Number(optTxt.split(":")[1]);
+                }
+
+                const currentAddressList = document.querySelectorAll(".add");
+                function changeAdd(){
+                    let addressSlt = document.getElementById("myAddressList");
+                    document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+                    console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
+                    let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
+                    let addressMap = new Map();
+                    for (let add of address){
+                        let splitAdd = add.split("=");
+                        console.log(splitAdd);
+                        addressMap.set(splitAdd[0],splitAdd[1]);
+                    }
+                    console.log(addressMap);
+                }
+            </script>
+        </fieldset>
+        <button type="submit">신청하기</button>
+        <button type="reset">취소하기</button>
+    </form>
+</body>
+</html>
