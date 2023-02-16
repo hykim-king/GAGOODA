@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>사용자 배송지 수정</h2>
-<form action="/address/modify.do" method="post"  enctype="multipart/form-data">
+<form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data">
   <div>
     <div th:text="${session.loginUser.userId}" th:readonly="true"></div>
   </div>
@@ -35,14 +35,32 @@
     <input type="text" id="receiverPhone" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
   </div>
 
-  <div>
-    <label for="home">기본 배송지 설정 여부</label>
-    <input type="checkbox" name="" id="home" th:value="${address.isHome}">
-  </div>
-  <div>
-    <label for="elevator">엘레베이터 유무 여부</label>
-    <input type="checkbox" name="" id="elevator" th:value="${address.isElevator}">
-  </div>
+    <fieldset>
+      <legend>기본 배송지 설정 여부</legend>
+      <div>
+        <label for="homeTrue">맞음</label>
+        <input type="radio" name="home" id="homeTrue" value="1">
+      </div>
+      <div>
+        <label for="homeFalse">아님</label>
+        <input type="radio" name="home" id="homeFalse" value="0">
+      </div>
+    </fieldset>
+
+
+
+
+  <fieldset>
+    <legend>엘레베이터 유무 여부</legend>
+    <div>
+      <label for="elevatorTrue">있음</label>
+      <input type="radio" name="elevator" id="elevatorTrue" value="1">
+    </div>
+    <div>
+      <label for="elevatorFalse">없음</label>
+      <input type="radio" name="elevator" id="elevatorFalse" value="0">
+    </div>
+  </fieldset>
 
   <input type="hidden" name="addressId" th:value="${address.addressId}">
   <input type="hidden" name="userId" th:value="${address.userId}">
