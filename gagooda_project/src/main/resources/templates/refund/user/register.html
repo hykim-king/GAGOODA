@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<div layout:fragment="content">
+<div>
+    <h1>환불 반품 신청서</h1>
+    <a href="#">엑스(주문 상세 페이지로 이동)</a>
+</div>
+<div th:text="${session.refundMsg}">
+</div>
+
 <h2>환불 반품 신청</h2>
 <h3>주문 정보</h3>
 <div>주문인: <span th:text="${order.userName}"></span></div>
 <div>주문날짜: <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span></div>
 <div>주문번호: <span th:text="${order.orderId}"></span></div>
-<div>주문 상품명: <span th:text="${orderDetailList[0].optionName}+' 외 '+ ${orderDetailList.size()-1} + '건'"></span></div>
-<div>주문 총 금액: <span th:text="${orderSumPrice}"></span></div>
+<div>주문 상품명: <span th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></span></div>
+<div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form action="/mypage/refund/register.do" method="post">
+<form th:action="@{'' (orderId = ${order.orderId})}" method="post">
     <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
     <input type="hidden" id="uname" name="uname" th:value="${session.loginUser.uname}">
     <input type="hidden" id="email" name="email" th:value="${session.loginUser.email}">
     <input type="hidden" id="phone" name="phone" th:value="${session.loginUser.phone}">
-    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
+<!--    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
     <fieldset>
         <legend>환불 정보</legend>
         <div>
             <label for="orderDetailId">환불 대상 상품</label>
-            <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()">
+            <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
                 <option value="" selected disabled>환불 대상을 선택해주세요.</option>
-                <option value="all" th:text="'전체 환불'+'( 환불 금액:' + ${orderSumPrice} + ')'"></option>
-                <th:block th:each="orderDetail : ${orderDetailList}">
+                <option value="-1" th:text="'전체 환불'+'( 환불 금액:' + ${order.totalPrice} + ')'"></option>
+                <th:block th:each="orderDetail : ${order.orderDetailList}">
                 <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}" th:value="${orderDetail.orderDetailId}"></option>
                 </th:block>
             </select>
@@ -42,7 +52,8 @@
         </div>
         <div>
             <label for="rfrDet">환불 사유 카테고리</label>
-            <select name="rfrDet" id="rfrDet">
+            <select name="rfrDet" id="rfrDet" required>
+                <option value="" selected disabled>요청 유형을 선택해주세요.</option>
                 <option value="rfr0">단순 변심</option>
                 <option value="rfr1">상품 문제</option>
                 <option value="rfr2">배송 문제</option>
@@ -58,15 +69,19 @@
     <fieldset>
         <legend>환불 물품 수거지 주소</legend>
         <div>
-            <label for="myAddressList"></label>
-            <select name="myAddressList" id="myAddressList" onchange="changeAdd()">
-                <option value="" disabled selected>내 배송지 목록</option>
-                <th:block th:each="address:${addressList}">
-                    <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
-                </th:block>
-            </select>
+            <div>
+                <select id="myAddressList" onchange="changeAdd()">
+                    <option value="" disabled selected>내 배송지 목록</option>
+                    <th:block th:each="address:${addressList}">
+                        <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+                    </th:block>
+                </select>
+            </div>
+            <div>
+                <a href="#">새 배송지 입력</a>
+            </div>
         </div>
-        <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
+        <input type="hidden" id="addressId" name="addressId" class="add" th:value="${orderAddress.addressId}">
         <div>
             <label for="postCode">우편 번호</label>
             <input type="text" id="postCode" name="postCode" class="add" th:value="${orderAddress.postCode}">
@@ -85,7 +100,7 @@
         </div>
         <div>
             <label for="receiverPhone">수령인 전화번호</label>
-            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${orderAddress.receiverPhone}">
+            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${orderAddress.receiverPhone}" >
         </div>
         <div>
             <label for="elevator">엘리베이터 유무</label>
@@ -106,22 +121,30 @@
             const currentAddressList = document.querySelectorAll(".add");
             function changeAdd(){
                 let addressSlt = document.getElementById("myAddressList");
-                document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+                // document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
                 console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
                 let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
                 let addressMap = new Map();
                 for (let add of address){
                     let splitAdd = add.split("=");
                     console.log(splitAdd);
-                    addressMap.set(splitAdd[0],splitAdd[1]);
+                    addressMap.set(splitAdd[0].trim(),splitAdd[1]);
                 }
                 console.log(addressMap);
+                console.log(addressMap.get("addressId"));
+                currentAddressList[0].value = addressMap.get("addressId");
+                currentAddressList[1].value = addressMap.get("postCode");
+                currentAddressList[2].value = addressMap.get("address");
+                currentAddressList[3].value = addressMap.get("addressDetail");
+                currentAddressList[4].value = addressMap.get("receiverName");
+                currentAddressList[5].value = addressMap.get("receiverPhone");
+                currentAddressList[6].value = addressMap.get("elevator");
             }
         </script>
     </fieldset>
-
-
+    <button type="submit">신청하기</button>
+    <button type="reset">초기화</button>
 </form>
 
-</body>
+</div>
 </html>

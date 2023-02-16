@@ -62,8 +62,9 @@
     </ul>
     <h2>김현섭</h2>
     <ul>
-        <li><a href="refund/user_yes/mypage/list.do">유저 환불 목록</a></li>
+        <li><a href="/refund/user_yes/mypage/list.do">유저 환불 목록(로그인!!!)</a></li>
         <li><a th:href="@{ 'refund/user_yes/mypage/register.do' (orderId='00010') }">유저 환불 등록폼(로그인 후 가능!)</a></li>
+        <li><a th:href="@{ 'refund/user_yes/mypage/detail.do' (refundId=11) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
     </ul>
 </div>
 </body>
