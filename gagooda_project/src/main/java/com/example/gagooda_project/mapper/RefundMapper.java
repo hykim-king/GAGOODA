@@ -10,7 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface RefundMapper {
-    List<RefundDto> pageByUserIdAndDate(int userId, int period);
+    List<RefundDto> pageByUserIdAndDate(int userId, int period, String startDate, String endDate, String detCode);
 
     int insertOne(RefundDto refund);
 

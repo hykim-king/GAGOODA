@@ -22,7 +22,7 @@ class RefundMapperTest {
 
     @Test
     void pageByUserIdAndDate() {
-        refundMapper.pageByUserIdAndDate(1,15);
+        refundMapper.pageByUserIdAndDate(1,15, "2023-02-01", "2023-02-16", "rf1");
     }
 
     @Test

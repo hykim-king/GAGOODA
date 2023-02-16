@@ -21,5 +21,8 @@ public class OrderServiceImp implements OrderService {
         return orderMapper.pageAll(paging);
     }
 
+    @Override
+    public OrderDto selectOne(String orderId) { return orderMapper.findById(orderId); }
+
 
 }
