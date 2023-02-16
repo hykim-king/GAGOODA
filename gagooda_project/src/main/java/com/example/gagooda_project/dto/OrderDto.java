@@ -24,4 +24,5 @@ public class OrderDto {
     private String imgPath; // img_path NN
     private String oDet; // o_det NN
     private List<OrderDetailDto> orderDetailList;   // 1:N 주문 상세 테이블 연결
+
 }

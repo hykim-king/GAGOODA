@@ -13,6 +13,9 @@ public class CartService {
     public CartService(CartMapper cartMapper) {
         this.cartMapper = cartMapper;
     }
+    public CartDto selectByCartId(int cartId){
+        return cartMapper.findById(cartId);
+    }
 
     public List<CartDto> cartList(int userId) {
         return cartMapper.listByUserId(userId);

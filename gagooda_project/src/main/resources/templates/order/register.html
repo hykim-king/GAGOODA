@@ -8,68 +8,173 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
-  <h2>주문 등록</h2>
+    <h2>주문 등록</h2>
 
-  <!--주문 form -->
-  <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post">
-    <!--배송지 입력란-->
-    <fieldset>
-      <legend>배송지 입력란</legend>
-      <div>
-        <label for="receiverName">수령인 이름</label>
-        <input type="text" name="receiverName" id="receiverName" required>
-      </div>
-      <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input type="text" name="receiverPhone" id="receiverPhone" required>
-      </div>
-      <div>
-        <label for="postCode">우편번호</label>
-        <input type="text" name="postCode" id="postCode" required>
-      </div>
-      <div>
-        <label for="address">주소</label>
-        <input type="text" name="address" id="address" required>
-      </div>
-      <div>
-        <label for="addressDetail">상세주소</label>
-        <input type="text" name="addressDetail" id="addressDetail" required>
-      </div>
-      <div>
-        <label for="elevator">엘레베이터</label>
-        <input type="text" name="elevator" id="elevator" required>
-      </div>
-      <div>
-        <label for="addressId">주소 ID</label>
-        <input type="text" name="addressId" id="addressId" required>
-      </div>
-      <button>새로운 배송지입력</button>
-      <button>다른 배송지 입력</button>
-    </fieldset>
-    <!--배송지 입력란 end-->
-    <!--주문할 상품 정보들-->
-    <fieldset>
-      <legend>카트 정보들</legend>
-      <table>
-        <thead>
-          <th>카트아이디</th>
-          <th>상품 정보</th>
-          <th>수량</th>
-          <th>주문금액</th>
-        </thead>
-        <tbody>
-          <td>1</td>
-          <td>
-            <input type="hidden" name="imgPath" id="imgPath" required>
-          </td>
+    <!--주문 form -->
+    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post">
+        <!--주문 번호 생성-->
+        <div>
+            <label for="order.orderId"></label>
+            <input type="text" id="order.orderId" name="order.orderId"
+                   th:with="today=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}" th:value="${today}">
+        </div>
+        <!--배송지 입력란-->
+        <fieldset>
+            <legend>배송지 입력란</legend>
+            <button type="button" name="setAddressBtn">새로운 배송지입력</button>
+            <label for="otherAddressList">다른 배송지</label>
+            <select id="otherAddressList" name="otherAddressList" th:onchange="selectAddress(this.value)">
+                <option th:text="'----선택-----'"></option>
+                <th:block th:each="address:${addressList}">
+                    <th:block th:if="${address.home == true}">
+                        <option th:value="${address.addressId}" th:text="'기본:' + ${address}"
+                                selected="selected"></option>
+                    </th:block>
+                    <th:block th:unless="${address.home == true}">
+                        <option th:value="${address.addressId}" th:text="${address}"></option>
+                    </th:block>
+                </th:block>
+            </select>
+            <input type="number" name="selectedAddressId" id="selectedAddressId">
 
-        </tbody>
-      </table>
-    </fieldset>
-    <!--주문할 상품 정보들 end--------->
-  </form>
-  <!--주문 form end---------------->
+            <div>
+                <label for="order.receiverName">수령인 이름</label>
+                <input type="text" name="order.receiverName" id="order.receiverName">
+            </div>
+            <div>
+                <label for="order.receiverPhone">수령인 전화번호</label>
+                <input type="text" name="order.receiverPhone" id="order.receiverPhone">
+            </div>
+            <div>
+                <label for="order.postCode">우편번호</label>
+                <input type="text" name="order.postCode" id="order.postCode">
+            </div>
+            <div>
+                <label for="order.address">주소</label>
+                <input type="text" name="order.address" id="order.address">
+            </div>
+            <div>
+                <label for="order.addressDetail">상세주소</label>
+                <input type="text" name="order.addressDetail" id="order.addressDetail">
+            </div>
+            <div>
+                <label for="order.elevator">엘레베이터</label>
+                <input type="text" name="order.elevator" id="order.elevator">
+            </div>
+            <div>
+                <label for="order.addressId">주소 ID</label>
+                <input type="text" name="order.addressId" id="order.addressId">
+            </div>
 
+
+        </fieldset>
+        <!--배송지 입력란 end-->
+        <div class="orderDetail">
+            <!--주문할 상품 정보들-->
+            <th:block th:each="cartItem:${cartList}">
+                <input type="hidden" th:value="${cartItem.cartId}" name="cartItem">
+            </th:block>
+            <fieldset>
+                <legend>카트 정보들</legend>
+                <table>
+                    <thead>
+                    <th>카트아이디</th>
+                    <th>상품 정보</th>
+                    <th>수량</th>
+                    <th>주문금액</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="cart, stat :${cartList}">
+                        <td th:text="|${stat.count}|"></td>
+                        <td>
+                            <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
+                                 style="width: 50px; height:50px; object-fit: cover">
+                            <input type="text" th:value="${cart.imageList[0].imgPath}" name="order.imgPath"
+                                   id="order.imgPath" placeholder="imgPath" readonly>
+
+                            <input type="text" th:value="${cart.productCode}" name="orderDetail.productCode"
+                                   id="orderDetail.productCode" placeholder="productCode" readonly>
+                            <input type="text" th:value="${cart.optionCode}" name="orderDetail.optionCode"
+                                   id="orderDetail.optionCode" placeholder="optionCode" readonly>
+                            <input type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionName"
+                                   id="orderDetail.optionName" placeholder="optionName" readonly>
+                        </td>
+                        <td><input type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
+                                   readonly></td>
+                        <td>
+                            <input type="text" th:value="${cart.optionProduct.price}" name="orderDetail.price"
+                                   id="orderDetail.price">
+                            <input type="text" th:value="${cart.optionProduct.price * cart.cnt}"
+                                   name="orderDetail.totalPrice" id="orderDetail.totalPrice">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <!--주문할 상품 정보들 end--------->
+            <!--총 결제 정보-->
+            <fieldset>
+                <legend>총 결제 정보</legend>
+                <div>
+                    <label for="totalCnt">상품 총 수량</label>
+                    <input th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
+                           required>
+                </div>
+                <div>
+                    <label for="orderTotalPrice">상품 총 가격</label>
+                    <input type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
+                           name="orderTotalPrice" id="orderTotalPrice" required>
+                </div>
+            </fieldset>
+            <!--총 결제 정보 end-->
+        </div>
+        <!--주문자 정보-->
+        <div class="user">
+            <fieldset>
+                <legend>주문자 정보</legend>
+                <div>
+                    <label for="order.userName">주문자 이름</label>
+                    <input type="text" th:value="${loginUser.uname}" name="userName" id="order.userName" readonly>
+                    <input type="text" th:value="${loginUser.userId}" name="userId" id="order.userId">
+                </div>
+                <div>
+                    <label for="order.userPhone">주문자 전화번호</label>
+                    <input type="text" th:value="${loginUser.phone}" name="order.userPhone" id="order.userPhone"
+                           required>
+                </div>
+                <div>
+                    <label for="order.userEmail">주문자 이메일</label>
+                    <input type="text" th:value="${loginUser.email}" name="order.userEmail" id="order.userEmail"
+                           required>
+                </div>
+            </fieldset>
+        </div>
+        <!--주문자 정보 end---------->
+        <!--배송 정보(배송요청)-->
+        <div class="delivery">
+            <fieldset>
+                <legend>배송지 정보</legend>
+                <div>
+                    <label for="delivery.request"></label>
+                    <textarea rows="5" cols="30" name="delivery.request" id="delivery.request"
+                              placeholder="ex) 문앞에 두고 가주세요~!"></textarea>
+                </div>
+            </fieldset>
+        </div>
+        <!--배송 정보(배송요청) end-->
+        <button type="submit">제출</button>
+    </form>
+    <!--주문 form end---------------->
+    <script th:inline="javascript">
+        const orderRegisterForm = document.forms["orderRegisterForm"];
+
+        function selectAddress(addressId) {
+            orderRegisterForm.selectedAddressId.value = addressId;
+            console.log("addressID: " + addressId);
+
+        }
+    </script>
 
 </div>
+
 </html>

@@ -136,7 +136,7 @@ public class ProductController {
             // categoryConnList 생성 및 product 에 설정
             List<CategoryConnDto> categoryConnList = new ArrayList<>();
             for (int categoryId : categoryIdList) {
-
+                
             }
 
             insert = productService.insert(product);
