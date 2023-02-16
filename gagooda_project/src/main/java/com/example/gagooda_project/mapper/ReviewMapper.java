@@ -10,11 +10,7 @@ public interface ReviewMapper {
 
     List<ReviewDto> listByProductCode (String productCode);
 
-//    List<ReviewDto> pageByProductCode (String productCode);
-
     List<ReviewDto> listAll();
-
-//    List<ReviewDto> pageAll();
 
     ReviewDto findById(int id);
 
@@ -22,5 +18,5 @@ public interface ReviewMapper {
 
     int updateOne(ReviewDto review);
 
-    int deleteById(int id);
+    int deleteById(int reviewId);
 }
