@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
   <meta charset="UTF-8">
   <title>사용자 배송지 입력</title>
 </head>
-<body>
+<div layout:fragment="myPageContent">
 <h2>사용자 배송지 입력</h2>
 <form action="/address/user_yes/mypage/register.do" method="post"  enctype="multipart/form-data">
   <div>
@@ -50,5 +53,5 @@
   <button type="submit">저장하기</button>
   <a href="#">취소하기</a>
 </form>
-</body>
+</div>
 </html>

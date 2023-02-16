@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
   <meta charset="UTF-8">
-  <title>배송지 리스트 테스트 페이지</title>
+  <title>배송지 리스트</title>
 </head>
-<body>
-<h2>배송지 리스트 테스트</h2>
+<div layout:fragment="myPageContent">
+<h2>배송지 리스트</h2>
 
 <table>
   <thead>
@@ -39,5 +42,5 @@
 
 
 
-</body>
+</div>
 </html>
