@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>상품디테일</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container" >
+        <h2>
+            <span th:text="${pInquiryId}"></span>.번 문의 상세 페이지
+        </h2>
+        <div class="mb-3 row">
+            <label for="pInquiryId" class="col-sm-2 col-form-label">문의ID</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="pInquiryId" th:value="${pInquiryId}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="userId" class="col-sm-2 col-form-label">사용자ID</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="userId" th:value="${productInquiry.getUserId()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="piDet" class="col-sm-2 col-form-label">문의유형</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="piDet" th:value="${productInquiry.getPiDet()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="productCode" class="col-sm-2 col-form-label">상품CODE</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="productCode" th:value="${productInquiry.getProductCode()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="title" class="col-sm-2 col-form-label">제목</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="title" th:value="${productInquiry.getTitle()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="content" class="col-sm-2 col-form-label">내용</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="content" th:value="${productInquiry.getContent()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="regDate" class="col-sm-2 col-form-label">작성일</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="regDate" th:value="${#dates.format(productInquiry.getRegDate(), 'yyyy-MM-dd HH:mm')}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="secret" class="col-sm-2 col-form-label">공개여부</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="secret" th:value="${productInquiry.isSecret()}">
+            </div>
+        </div>
+        <th:block th:if="${productInquiry.getReply() == null}">
+            <div class="mb-3 row">
+<!--                <label for="replyregister" class="col-sm-2 col-form-label">답변</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                    <input type="text" readonly class="form-control-plaintext" id="replyregister" th:value="${productInquiry.setReply()}">-->
+<!--                </div>-->
+<!--                <textarea name="reply" class="form-control mx-lg-auto" rows="5" placeholder="답변"></textarea>-->
+<!--                <a type="submit" th:href="@{'/product_inquiry/admin/{pInquiryId}/detail.do'(pInquiryId=${productInquiry.getPInquiryId()})}" th:method="POST">-->
+<!--                    등록-->
+<!--                </a>-->
+                <form th:action="@{'/product_inquiry/admin/detail.do'(pInquiryId=${pInquiryId})}" method="post">
+                    <textarea name="reply" class="form-control mx-lg-auto" rows="5" placeholder="답변"></textarea>
+                    <button type="submit" class="reply_register btn btn-primary">등록</button>
+                </form>
+<!--                    <button type="submit" class="reply_register btn btn-primary">등록</button>-->
+            </div>
+        </th:block>
+        <th:block th:if="${productInquiry.getReply() != null}">
+            <div class="mb-3 row">
+                <label for="reply" class="col-sm-2 col-form-label">답변</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="reply" th:value="${productInquiry.getReply()}">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="replyDate" class="col-sm-2 col-form-label">답변 작성일</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="replyDate" th:value="${#dates.format(productInquiry.getReplyDate(), 'yyyy-MM-dd HH:mm')}">
+                </div>
+            </div>
+        </th:block>
+
+    </div>
+</div>
+</body>
+</html>

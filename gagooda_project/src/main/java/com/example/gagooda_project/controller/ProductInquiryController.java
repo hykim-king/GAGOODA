@@ -108,15 +108,66 @@ public class ProductInquiryController {
         }
     }
 
-    @GetMapping("/admin/register.do")
-    public String adminregister(){
-        return "/index";
+    @GetMapping("/admin/{pInquiryId}/detail.do")
+    public String adminDetail(@PathVariable int pInquiryId,
+                              Model model){
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        System.out.println(productInquiry);
+        model.addAttribute("productInquiry",productInquiry);
+        return "/product_inquiry/admin/detail";
     }
 
-    @PostMapping("/admin/register.do")
-    public String adminregister(@SessionAttribute UserDto loginUser,
-                                @RequestParam(name="pInquiryId") int pInquiryId
+    @GetMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser){
+        return "/product_inquiry/admin/detail";
+    }
+
+    @PostMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply){
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "redirect:/product_inquiry/admin/"+pInquiryId+"/detail.do";
+        }
+    }
+
+
+    @PostMapping ("/admin/list.do")
+    public String adminUpdate(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply
     ){
-        return "/index";
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "/product_inquiry/admin/list";
+        }
+
     }
 }
