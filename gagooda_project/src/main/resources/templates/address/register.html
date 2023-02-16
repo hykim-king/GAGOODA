@@ -9,7 +9,7 @@
 <form action="/address/user_yes/mypage/register.do" method="post"  enctype="multipart/form-data">
   <div>
     <label for="userId" th:text="${session.loginUser.userId}"></label>
-    <input type="text" name="userId" id="userId" required>
+    <input type="text" name="userId" id="userId" th:value="${session.loginUser.userId}" readonly>
   </div>
   <div>
     <label for="aname">주소지 이름</label>

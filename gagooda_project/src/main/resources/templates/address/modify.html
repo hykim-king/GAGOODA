@@ -35,30 +35,26 @@
     <input type="text" id="receiverPhone" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
   </div>
 
-    <fieldset>
-      <legend>기본 배송지 설정 여부</legend>
-      <div>
-        <label for="homeTrue">맞음</label>
-        <input type="radio" name="home" id="homeTrue" value="1">
-      </div>
-      <div>
-        <label for="homeFalse">아님</label>
-        <input type="radio" name="home" id="homeFalse" value="0">
-      </div>
-    </fieldset>
-
-
-
-
+  <fieldset>
+    <legend>기본 배송지 설정 여부</legend>
+    <div>
+      <label for="homeTrue">맞음</label>
+      <input type="radio" name="home" id="homeTrue" value="1" th:checked="${address.home==true}">
+    </div>
+    <div>
+      <label for="homeFalse">아님</label>
+      <input type="radio" name="home" id="homeFalse" value="0" th:checked="${address.home==false}">
+    </div>
+  </fieldset>
   <fieldset>
     <legend>엘레베이터 유무 여부</legend>
     <div>
       <label for="elevatorTrue">있음</label>
-      <input type="radio" name="elevator" id="elevatorTrue" value="1">
+      <input type="radio" name="elevator" id="elevatorTrue" value="1" th:checked="${address.elevator==true}">
     </div>
     <div>
       <label for="elevatorFalse">없음</label>
-      <input type="radio" name="elevator" id="elevatorFalse" value="0">
+      <input type="radio" name="elevator" id="elevatorFalse" value="0"  th:checked="${address.elevator==false}">
     </div>
   </fieldset>
 

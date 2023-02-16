@@ -12,12 +12,12 @@
     <th>address_id</th>
     <th>user_id</th>
     <th>aname</th>
-    <th>home</th>
     <th>post_code</th>
     <th>address</th>
     <th>address_detail</th>
     <th>receiver_name</th>
     <th>receiver_phone</th>
+    <th>home</th>
     <th>elevator</th>
   </thead>
   <tbody>
@@ -25,13 +25,14 @@
       <td th:text="${a.addressId}"> </td>
       <td th:text="${a.userId}"> </td>
       <td th:text="${a.aname}"> </td>
-      <td th:text="${a.home}"> </td>
       <td th:text="${a.postCode}"> </td>
       <td th:text="${a.address}"> </td>
       <td th:text="${a.addressDetail}"> </td>
       <td th:text="${a.receiverName}"> </td>
       <td th:text="${a.receiverPhone}"> </td>
+      <td th:text="${a.home}"></td>
       <td th:text="${a.elevator}"> </td>
+      <td><button type="button" th:onclick="|location.href='@{/address/user_yes/mypage/modify.do (addressId=${a.addressId})}'|">수정하기</button></td>
     </tr>
   </tbody>
 </table>

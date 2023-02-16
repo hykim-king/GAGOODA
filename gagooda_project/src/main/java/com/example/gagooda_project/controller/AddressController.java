@@ -19,7 +19,6 @@ public class AddressController {
 
     @GetMapping("/user_yes/mypage/register.do")
     public String register(@SessionAttribute(required = true) UserDto loginUser) {
-
         return "/address/register";
     }
 
@@ -28,7 +27,17 @@ public class AddressController {
                            @SessionAttribute(required = true) UserDto loginUser) {
         int register = 0;
         try {
-            register = addressService.register(address);
+            if(addressService.defaultAddress(address.getUserId())==null) {
+                register = addressService.register(address);
+            } else {
+                if(addressService.defaultAddress(address.getUserId()).getAddressId()!=address.getAddressId() &&
+                        address.isHome()==true) {
+                    addressService.modifyDefault(address.getUserId());
+                    register = addressService.register(address);
+                } else {
+                    register = addressService.register(address);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,14 +75,12 @@ public class AddressController {
                                 AddressDto address) {
         int modify=0;
         if(loginUser.getUserId() == address.getUserId()) {
-
             try {
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         return "";
     }
 
