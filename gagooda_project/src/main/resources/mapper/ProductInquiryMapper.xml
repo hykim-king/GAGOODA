@@ -10,6 +10,14 @@
         <result column="reply_date" property="replyDate" />
         <result column="reply_id" property="replyId" />
         <result column="pi_det" property="piDet" />
+        <association property="user"
+                     column="user_id"
+                     select="com.example.gagooda_project.mapper.UserMapper.findById"
+                     fetchType="lazy"/>
+        <association property="optionProductDto"
+                     column="option_code"
+                     select="com.example.gagooda_project.mapper.OptionProductMapper.findById"
+                     fetchType="lazy"/>
     </resultMap>
 
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="pInquiryId">

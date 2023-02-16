@@ -47,13 +47,13 @@
                         <p>미답변</p>
 <!--                            <a th:href="@{'/product_inquiry/admin/register.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">답변등록</a>-->
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">
                             답변등록
                         </button>
 
                         <!-- Modal -->
 
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" th:id="${'exampleModal'+p.PInquiryId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <input id="pInquiryId" type="hidden" name="pInquiryId" th:value="${p.PInquiryId}">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
