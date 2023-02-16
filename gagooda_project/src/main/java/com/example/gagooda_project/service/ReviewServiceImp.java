@@ -20,17 +20,23 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
+    public ReviewDto selectOne(int reviewId) {
+        return reviewMapper.findById(reviewId);
+    }
+
+    @Override
     public int insertOne(ReviewDto reviewDto) {
         return reviewMapper.insertOne(reviewDto);
     }
 
     @Override
-    public List<ReviewDto> ListAll() { return reviewMapper.listAll(); }
-
-    @Override
-    public void updateOne(ReviewDto dto) {
-
+    public int updateOne(ReviewDto dto) {
+        return 0;
     }
+
     @Override
-    public int deleteById(int reviewId) { return reviewMapper.deleteById(reviewId); }
+    public int remove(int reviewId) {
+        return reviewMapper.deleteOne(reviewId);
+    }
+
 }
