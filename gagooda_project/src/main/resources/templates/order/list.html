@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             <tr th:each="order:${orderList}">
-                <td th:text="${order.orderId}"></td>
+                <td th:text="${order.orderId}" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
                 <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
                 <td>
                     <img th:src="@{'/img/product/{file}'(file=${order.imgPath})}"
