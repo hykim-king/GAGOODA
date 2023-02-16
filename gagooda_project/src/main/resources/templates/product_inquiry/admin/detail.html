@@ -28,7 +28,7 @@
         <div class="mb-3 row">
             <label for="piDet" class="col-sm-2 col-form-label">문의유형</label>
             <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="piDet" th:value="${productInquiry.getPiDet()}">
+                <input type="text" readonly class="form-control-plaintext" id="piDet" th:value="${productInquiry.getCommonCodeDto().getDetName()}">
             </div>
         </div>
         <div class="mb-3 row">

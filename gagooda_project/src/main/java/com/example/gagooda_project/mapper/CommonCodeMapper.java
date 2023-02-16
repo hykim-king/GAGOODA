@@ -10,6 +10,7 @@ public interface CommonCodeMapper {
     List<CommonCodeDto> listByMstCode(String mstCode);
     int insertOne(CommonCodeDto commonCode);
     int updateOne(CommonCodeDto commonCode);
+    CommonCodeDto finbByDetCode(String detCode);
 //    int deleteOne(String mstCode);
 //
 }

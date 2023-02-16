@@ -30,7 +30,7 @@
             <tr th:each="p:${adminList}" >
                 <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getPInquiryId()}"></td>
                 <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getUserId()}"></td>
-                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getPiDet()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getCommonCodeDto().getDetName()}"></td>
                 <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getProductCode()}"></td>
                 <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getTitle()}"></td>
                 <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>

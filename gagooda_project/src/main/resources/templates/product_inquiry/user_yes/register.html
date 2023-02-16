@@ -1,39 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <form action="/product_inquiry/user_yes/register.do" method="post">
-        <div>
-            <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<div layout:fragment="content">
+    <form th:action="@{'/product_inquiry/user_yes/{productCode}/register.do'(productCode=${productCode})}" method="post">
+        <h2 class="text-center mb-5">상품 문의하기</h2>
+        <div class="mx-auto" style="width: 50%">
+            <div>
+                <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
+            </div>
+            <div>
+                <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
+            </div>
+            <div class="mb-3">
+                <select name="piDet" id="piDet" class="form-select" required aria-label="select example">
+                    <option value="">문의 유형</option>
+                        <th:block th:each="commonCode:${commonCodeList}">
+                            <option th:value="${commonCode.getDetCode()}" th:text="${commonCode.getDetName()}"></option>
+                        </th:block>
+                </select>
+                <div class="invalid-feedback">Example invalid select feedback</div>
+            </div>
+            <div class="mb-3">
+                <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
+                    <option value="">상품 옵션</option>
+                        <th:block th:each="optionProduct:${optionProductList}">
+                            <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
+                        </th:block>
+                </select>
+                <div class="invalid-feedback">Example invalid select feedback</div>
+            </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" name="title" id="title">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" name="content" id="content" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <input class="form-check-input me-1" type="radio" name="secret" value="" id="secret" checked>
+                <label class="form-check-label" for="secret">비밀글</label>
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">등록</button>
+            </div>
+
         </div>
-        <div>
-            <label for="optionCode">상품 옵션</label>
-            <input type="text" name="optionCode" id="optionCode" value="HA10C15EE_1M2">
-        </div>
-        <div>
-            <label for="productCode">상품</label>
-            <input type="text" name="productCode" id="productCode" value="HA10C15EE">
-        </div>
-        <div>
-            <label for="title">제목</label>
-            <input type="text" name="title" id="title">
-        </div>
-        <div>
-            <label for="content">내용</label>
-            <input type="text" name="content" id="content">
-        </div>
-        <div>
-            <label for="secret">비밀글</label>
-            <input type="text" name="secret" id="secret">
-        </div>
-        <div>
-            <label for="piDet">문의유형</label>
-            <input type="text" name="piDet" id="piDet" value="fi0">
-        </div>
-        <button type="submit">등록</button>
     </form>
-</body>
+</div>
 </html>
