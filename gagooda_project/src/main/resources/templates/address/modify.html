@@ -8,46 +8,48 @@
 <h2>사용자 배송지 수정</h2>
 <form action="/address/modify.do" method="post"  enctype="multipart/form-data">
   <div>
-    <label for="userId" th:text="${session.loginUser.userId}"></label>
-    <input type="text" name="userId" id="userId" required>
+    <div th:text="${session.loginUser.userId}" th:readonly="true"></div>
   </div>
   <div>
     <label for="aname">주소지 이름</label>
-    <input type="text" name="aname" id="aname" required>
+    <input type="text" name="aname" id="aname" th:value="${address.getAname}" required>
   </div>
   <div>
     <label for="postCode">우편번호</label>
-    <input type="text" name="postCode" id="postCode" required>
+    <input type="text" name="postCode" id="postCode" th:value="${address.getPostCode}" required>
   </div>
   <div>
     <label for="address">주소</label>
-    <input type="text" name="address" id="address" required>
+    <input type="text" name="address" id="address" th:value="${address.getAddress}" required>
   </div>
   <div>
     <label for="addressDetail">상세주소</label>
-    <input type="text" name="addressDetail" id="addressDetail" required>
+    <input type="text" name="addressDetail" id="addressDetail" th:value="${address.getAddressDetail}" required>
   </div>
   <div>
     <label for="receiverName">수령인 이름</label>
-    <input type="text" name="receiverName" id="receiverName" required>
+    <input type="text" name="receiverName" id="receiverName" th:value="${address.getReceiverName}" required>
   </div>
-  <fieldset>
+  <div>
     <label for="receiverPhone">수령인 전화번호</label>
-    <input type="text" id="receiverPhone" name="receiverPhone" required>
-    <button type="button">인증번호 받기</button>
-  </fieldset>
+    <input type="text" id="receiverPhone" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
+  </div>
 
   <div>
     <label for="home">기본 배송지 설정 여부</label>
-    <input type="checkbox" name="" id="home">
+    <input type="checkbox" name="" id="home" th:value="${address.isHome}">
   </div>
-  div&gt;
-  <label for="elevator">엘레베이터 유무 여부</label>
-  <input type="checkbox" name="" id="elevator">
+  <div>
+    <label for="elevator">엘레베이터 유무 여부</label>
+    <input type="checkbox" name="" id="elevator" th:value="${address.isElevator}">
+  </div>
 
-
-  <button type="submit">저장하기</button>
-  <a href="#">취소하기</a>
+  <input type="hidden" name="addressId" th:value="${address.addressId}">
+  <input type="hidden" name="userId" th:value="${address.userId}">
+  <div>
+    <button type="submit">저장하기</button>
+    <a th:href="@{'delete.do' (address_id=${address.addressId}) }" >삭제하기</a>
+  </div>
 </form>
 </body>
 </html>

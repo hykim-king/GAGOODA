@@ -27,8 +27,8 @@ public class AddressServiceImp implements AddressService{
     public int modifyOne(AddressDto address) { return addressMapper.updateOne(address); }
 
     @Override
-    public AddressDto defaultAddress(int addressId) {
-        return null;
+    public AddressDto defaultAddress(int userId) {
+        return addressMapper.findByUserIdAndHome(userId);
     }
 
     @Override
@@ -37,12 +37,12 @@ public class AddressServiceImp implements AddressService{
     }
 
     @Override
-    public int modifyDefault(int addressId) {
-        return 0;
+    public int modifyDefault(int userId) {
+        return addressMapper.dismissHome(userId);
     }
 
     @Override
     public int removeOne(int addressId) {
-        return 0;
+        return addressMapper.deleteById(addressId);
     }
 }
