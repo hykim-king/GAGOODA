@@ -7,7 +7,7 @@ import java.util.List;
 public interface ExchangeService {
     List<ExchangeDto> list(List<String> exDetList);
 
-    List<ExchangeDto> orderInDate(int userId, int period);
+    List<ExchangeDto> orderInDate(int id, int period);
 
     int register(ExchangeDto exchange);
 
@@ -16,4 +16,12 @@ public interface ExchangeService {
     int countByUserIdAndOrderDetailId(int userId, int orderDetailId);
 
     ExchangeDto findById(int id);
+
+    AddressDto selectAddress(int addressId);
+
+    OrderDto selectOrder(String orderId);
+
+    List<OrderDetailDto> showOrderDetailListByUserId(String orderId);
+
+    List<AddressDto> showAddressListByUserId(int userId);
 }

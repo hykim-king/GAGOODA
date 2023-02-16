@@ -12,11 +12,12 @@ import java.util.List;
 @RequestMapping("/exchange")
 public class ExchangeController {
     ExchangeService exchangeService;
+
     public ExchangeController(ExchangeService exchangeService) {
         this.exchangeService = exchangeService;
     }
 
-    @GetMapping("/user/list.do")
+    @GetMapping("user_yes/mypage/list.do")
     /* /exchange/list.do?userId=?&period=? */
     public String list(
             @SessionAttribute UserDto loginUser,
@@ -25,16 +26,31 @@ public class ExchangeController {
     ) {
         List<ExchangeDto> exchangeList = exchangeService.orderInDate(loginUser.getUserId(), period);
         model.addAttribute("exchangeList", exchangeList);
-        return "/exchange/user/list";
+        return "exchange/user/list";
     }
-    @GetMapping("/user/register.do")
+
+    @GetMapping("user_yes/mypage/register.do")
     /* /exchange/register.do?orderId=?&userId=? */
     public String register(@SessionAttribute UserDto loginUser,
-                           @RequestParam(name = "orderId", required = false) String orderId,
+                           @RequestParam(name = "orderId") String orderId,
                            Model model
-                           ) {
-        return "/exchange/user/register";
+    ) {
+        OrderDto order = exchangeService.selectOrder(orderId);
+        List<OrderDetailDto> orderDetailList = exchangeService.showOrderDetailListByUserId(orderId);
+        int orderSumPrice = 0;
+        for (OrderDetailDto orderDetail : orderDetailList) {
+            orderSumPrice += orderDetail.getPrice();
+        }
+        List<AddressDto> addressList = exchangeService.showAddressListByUserId(loginUser.getUserId());
+        AddressDto orderAddress = exchangeService.selectAddress(order.getAddressId());
+        model.addAttribute("order", order);
+        model.addAttribute("orderAddress", orderAddress);
+        model.addAttribute("orderDetailList", orderDetailList);
+        model.addAttribute("orderSumPrice", orderSumPrice);
+        model.addAttribute("addressList", addressList);
+        return "exchange/user/register";
     }
+
     @PostMapping("/user/register.do")
     public String register(
             @SessionAttribute UserDto loginUser,
@@ -43,7 +59,7 @@ public class ExchangeController {
         int register = 0;
         register = exchangeService.register(exchange);
         if (register > 0) {
-            return "redirect:/exchange/user/detail.do?exchangeId="+exchange.getExchangeId();
+            return "redirect:/exchange/user/detail.do?exchangeId=" + exchange.getExchangeId();
         } else {
             return "redirect:/exchange/user/list.do";
         }
