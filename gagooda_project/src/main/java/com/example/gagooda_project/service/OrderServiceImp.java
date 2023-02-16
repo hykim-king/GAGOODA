@@ -1,9 +1,7 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.mapper.DeliveryMapper;
-import com.example.gagooda_project.mapper.OrderDetailMapper;
-import com.example.gagooda_project.mapper.OrderMapper;
+import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +11,15 @@ public class OrderServiceImp implements OrderService {
     private OrderMapper orderMapper;
     private OrderDetailMapper orderDetailMapper;
     private DeliveryMapper deliveryMapper;
-    private OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper, DeliveryMapper deliveryMapper){
+    private CartMapper cartMapper;
+    private AddressMapper addressMapper;
+    private OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper,
+                            DeliveryMapper deliveryMapper, CartMapper cartMapper, AddressMapper addressMapper){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.deliveryMapper = deliveryMapper;
+        this.cartMapper = cartMapper;
+        this.addressMapper = addressMapper;
     }
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId) {
@@ -48,6 +51,21 @@ public class OrderServiceImp implements OrderService {
     @Override
     public DeliveryDto selectDelivery(String orderId) {
         return deliveryMapper.findByOrderId(orderId);
+    }
+
+    @Override
+    public List<CartDto> userCartList(int userId) {
+        return cartMapper.listByUserId(userId);
+    }
+
+    @Override
+    public List<AddressDto> userAddressList(int userId) {
+        return addressMapper.listByUserId(userId);
+    }
+
+    @Override
+    public CartDto selectByCartId(int cartId) {
+        return cartMapper.findById(cartId);
     }
 
 

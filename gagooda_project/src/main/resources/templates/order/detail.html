@@ -36,8 +36,8 @@
                              style="width: 50px; height:50px; object-fit: cover">
                         <input type="text" th:value="${orderDetail.optionName}" id="optionName" name="optionName" readonly>
                     </td>
-                    <td th:value="${orderDetail.cnt}"></td>
-                    <td th:value="${orderDetail.price}"></td>
+                    <td th:text="${orderDetail.cnt}"></td>
+                    <td th:text="${orderDetail.totalPrice}"></td>
                 </tr>
             </tbody>
         </table>
@@ -60,8 +60,13 @@
             <input type="text" id="receiverPhone" name="receiverPhone" th:value="${order.receiverPhone}" readonly>
         </div>
         <div>
-            <label for="address">받는 주소: </label>
-            <input type="text" id="address" name="address" th:value="${order.address}" readonly>
+            <label>받는 주소: </label>
+            <div>
+                <span th:text="${order.postCode}"></span>
+            </div>
+            <span th:text="${order.address}"></span>
+            <span th:text="${order.addressDetail}"></span>
+
         </div>
 
         <div>

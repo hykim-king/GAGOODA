@@ -68,6 +68,10 @@ public class OrderController {
     public String complete(@SessionAttribute(required=true) UserDto loginUser,
                            @PathVariable String orderId,
                            Model model){
+        OrderDto order=orderService.selectOne(orderId);
+        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        model.addAttribute("totalPrice",order.getTotalPrice());
+        model.addAttribute("orderDetailList",orderDetailList);
         return "/order/complete";
     }
     @GetMapping("/user_yes/register.do")
@@ -77,12 +81,23 @@ public class OrderController {
                          Model model
 
     ){
-        List<AddressDto> addressList = addressService.addressList(loginUser.getUserId());
-        List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
-        model.addAttribute("addressList", addressList);
-        model.addAttribute("cartList",cartList);
-        model.addAttribute("loginUser",loginUser);
-        return "/order/register";
+        List<AddressDto> addressList = null;
+        List<CartDto> cartList = null;
+        System.out.println(loginUser.getUserId());
+        try {
+            cartList = orderService.userCartList(loginUser.getUserId());
+            addressList = orderService.userAddressList(loginUser.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (addressList != null && cartList != null) {
+            model.addAttribute("addressList", addressList);
+            model.addAttribute("cartList",cartList);
+            model.addAttribute("loginUser",loginUser);
+            return "/order/register";
+        } else {
+            return "redirect:/";
+        }
     }
     @PostMapping("/user_yes/register.do")
     public String register(
@@ -107,7 +122,7 @@ public class OrderController {
                 for(String cartIdStr:cartList){
                     log.info("2. cart forloop에 들어옴");
                     int cartId = Integer.parseInt(cartIdStr);
-                    CartDto cart = cartService.selectByCartId(cartId);
+                    CartDto cart = orderService.selectByCartId(cartId);
                     orderDetail = new OrderDetailDto();
                     orderDetail.setProductCode(cart.getProductCode());
                     orderDetail.setOptionCode(cart.getOptionCode());

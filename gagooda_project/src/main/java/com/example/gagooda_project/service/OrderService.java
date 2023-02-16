@@ -10,5 +10,8 @@ public interface OrderService {
     List<OrderDetailDto> orderDetailList(String orderId);
     int register(OrderDto order, DeliveryDto delivery);
     DeliveryDto selectDelivery(String orderId);
+    List<CartDto> userCartList(int userId);
+    List<AddressDto> userAddressList(int userId);
+    CartDto selectByCartId(int cartId);
 
 }
