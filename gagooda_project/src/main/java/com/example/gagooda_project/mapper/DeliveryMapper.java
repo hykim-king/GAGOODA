@@ -8,4 +8,5 @@ public interface DeliveryMapper {
     int insertOne(DeliveryDto dto);
     int updateOne(DeliveryDto dto);
     DeliveryDto findById(int id);
+    DeliveryDto findByOrderId(String orderId);
 }

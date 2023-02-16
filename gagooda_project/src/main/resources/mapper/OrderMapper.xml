@@ -20,6 +20,7 @@
                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findByOrderId"
                     column="order_id"
                     fetchType="lazy"/>
+
     </resultMap>
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
         <id column="o_det" property="oDet"/>

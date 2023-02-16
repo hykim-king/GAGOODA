@@ -7,6 +7,11 @@
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
+        <association property="order"
+                     select="com.example.gagooda_project.mapper.OrderMapper.findbyId"
+                     column="order_id"/>
+
+
     </resultMap>
 
     <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
@@ -22,6 +27,9 @@
     </insert>
     <select id="findById" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE delivery_id = #{id}
+    </select>
+    <select id="findByOrderId" resultMap="deliveryMap">
+        SELECT * FROM delivery WHERE order_id=#{orderId}
     </select>
 </mapper>
 
