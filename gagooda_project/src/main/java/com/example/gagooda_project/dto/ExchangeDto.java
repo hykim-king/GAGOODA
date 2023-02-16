@@ -28,4 +28,5 @@ public class ExchangeDto {
     private String imgCode;         // img_code 이미지 코드
     private String exDet;           // 교환처리상태_DET, !FK, NN, exchange:common_code = N:1
     private String rfrDet;          // 교환 사유_DET, !FK, NN, exchange:common_code = N:1
+    private OrderDto orderDto;
 }
