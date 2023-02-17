@@ -8,15 +8,14 @@
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
         <association property="order"
-                     select="com.example.gagooda_project.mapper.OrderMapper.findbyId"
+                     select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"/>
 
 
     </resultMap>
 
     <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
-        INSERT INTO delivery (invoice, request, d_det, order_id)
-        VALUES (#{invoice},#{request},#{dDet},#{orderId})
+        INSERT INTO delivery (invoice, request, order_id) VALUES (#{invoice},#{request},#{orderId})
     </insert>
     <insert id="updateOne" parameterType="DeliveryDto">
         UPDATE delivery SET invoice=#{invoice},

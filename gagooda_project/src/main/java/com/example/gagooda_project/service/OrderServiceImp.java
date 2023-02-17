@@ -1,9 +1,7 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.mapper.DeliveryMapper;
-import com.example.gagooda_project.mapper.OrderDetailMapper;
-import com.example.gagooda_project.mapper.OrderMapper;
+import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +11,15 @@ public class OrderServiceImp implements OrderService {
     private OrderMapper orderMapper;
     private OrderDetailMapper orderDetailMapper;
     private DeliveryMapper deliveryMapper;
-    private OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper){
+    private CartMapper cartMapper;
+    private AddressMapper addressMapper;
+    private OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper,
+                            DeliveryMapper deliveryMapper, CartMapper cartMapper, AddressMapper addressMapper){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.deliveryMapper = deliveryMapper;
+        this.cartMapper = cartMapper;
+        this.addressMapper = addressMapper;
     }
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId) {
@@ -26,13 +30,42 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public OrderDto selectOne(String orderId) { return orderMapper.findById(orderId); }
+
+    @Override
+    public List<OrderDetailDto> orderDetailList(String orderId) {
+        return orderDetailMapper.findByOrderId(orderId);
+    }
+
     public int register(OrderDto order, DeliveryDto delivery) {
-        int register =0;
+        int register = orderMapper.insertOne(order);
+        System.out.println(register);
         for(OrderDetailDto orderDetail: order.getOrderDetailList()){
             register += orderDetailMapper.insertOne(orderDetail);
         }
-        int deliveryRegister = deliveryMapper.insertOne(delivery);
-        return orderMapper.insertOne(order);
+        System.out.println(register);
+        register += deliveryMapper.insertOne(delivery);
+        System.out.println(register);
+        return register;
+    }
+
+    @Override
+    public DeliveryDto selectDelivery(String orderId) {
+        return deliveryMapper.findByOrderId(orderId);
+    }
+
+    @Override
+    public List<CartDto> userCartList(int userId) {
+        return cartMapper.listByUserId(userId);
+    }
+
+    @Override
+    public List<AddressDto> userAddressList(int userId) {
+        return addressMapper.listByUserId(userId);
+    }
+
+    @Override
+    public CartDto selectByCartId(int cartId) {
+        return cartMapper.findById(cartId);
     }
 
 

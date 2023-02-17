@@ -14,56 +14,51 @@
     <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post">
         <!--주문 번호 생성-->
         <div>
-            <label for="order.orderId"></label>
-            <input type="text" id="order.orderId" name="order.orderId"
+            <label for="orderId"></label>
+            <input type="text" id="orderId" name="orderId"
                    th:with="today=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}" th:value="${today}">
         </div>
         <!--배송지 입력란-->
         <fieldset>
             <legend>배송지 입력란</legend>
             <button type="button" name="setAddressBtn">새로운 배송지입력</button>
-            <label for="otherAddressList">다른 배송지</label>
-            <select id="otherAddressList" name="otherAddressList" th:onchange="selectAddress(this.value)">
-                <option th:text="'----선택-----'"></option>
+            <label for="myAddressList">다른 배송지</label>
+            <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
+                <option disabled selected="selected" th:text="'----선택-----'"></option>
                 <th:block th:each="address:${addressList}">
                     <th:block th:if="${address.home == true}">
                         <option th:value="${address.addressId}" th:text="'기본:' + ${address}"
-                                selected="selected"></option>
+                                th:data-address="${address}"></option>
                     </th:block>
                     <th:block th:unless="${address.home == true}">
-                        <option th:value="${address.addressId}" th:text="${address}"></option>
+                        <option th:value="${address.addressId}" th:text="${address}" th:data-address="${address}"></option>
                     </th:block>
                 </th:block>
             </select>
-            <input type="number" name="selectedAddressId" id="selectedAddressId">
-
+            <input type="hidden" id="addressId" name="addressId" class="add">
             <div>
-                <label for="order.receiverName">수령인 이름</label>
-                <input type="text" name="order.receiverName" id="order.receiverName">
+                <label for="postCode">우편 번호</label>
+                <input type="text" id="postCode" name="postCode" class="add" >
             </div>
             <div>
-                <label for="order.receiverPhone">수령인 전화번호</label>
-                <input type="text" name="order.receiverPhone" id="order.receiverPhone">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" class="add">
             </div>
             <div>
-                <label for="order.postCode">우편번호</label>
-                <input type="text" name="order.postCode" id="order.postCode">
+                <label for="addressDetail">상세 주소</label>
+                <input type="text" id="addressDetail" name="addressDetail" class="add" >
             </div>
             <div>
-                <label for="order.address">주소</label>
-                <input type="text" name="order.address" id="order.address">
+                <label for="receiverName">수령인 이름</label>
+                <input type="text" id="receiverName" name="receiverName" class="add" >
             </div>
             <div>
-                <label for="order.addressDetail">상세주소</label>
-                <input type="text" name="order.addressDetail" id="order.addressDetail">
+                <label for="receiverPhone">수령인 전화번호</label>
+                <input type="text" id="receiverPhone" name="receiverPhone" class="add"  >
             </div>
             <div>
-                <label for="order.elevator">엘레베이터</label>
-                <input type="text" name="order.elevator" id="order.elevator">
-            </div>
-            <div>
-                <label for="order.addressId">주소 ID</label>
-                <input type="text" name="order.addressId" id="order.addressId">
+                <label for="elevator">엘리베이터 유무</label>
+                <input type="text" id="elevator" name="elevator" class="add" >
             </div>
 
 
@@ -89,8 +84,6 @@
                         <td>
                             <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
                                  style="width: 50px; height:50px; object-fit: cover">
-                            <input type="text" th:value="${cart.imageList[0].imgPath}" name="order.imgPath"
-                                   id="order.imgPath" placeholder="imgPath" readonly>
 
                             <input type="text" th:value="${cart.productCode}" name="orderDetail.productCode"
                                    id="orderDetail.productCode" placeholder="productCode" readonly>
@@ -102,9 +95,9 @@
                         <td><input type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
                                    readonly></td>
                         <td>
-                            <input type="text" th:value="${cart.optionProduct.price}" name="orderDetail.price"
+                            <input type="number" th:value="${cart.optionProduct.price}" name="orderDetail.price"
                                    id="orderDetail.price">
-                            <input type="text" th:value="${cart.optionProduct.price * cart.cnt}"
+                            <input type="number" th:value="${cart.optionProduct.price * cart.cnt}"
                                    name="orderDetail.totalPrice" id="orderDetail.totalPrice">
                         </td>
                     </tr>
@@ -121,9 +114,9 @@
                            required>
                 </div>
                 <div>
-                    <label for="orderTotalPrice">상품 총 가격</label>
+                    <label for="totalPrice">상품 총 가격</label>
                     <input type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
-                           name="orderTotalPrice" id="orderTotalPrice" required>
+                           name="totalPrice" id="totalPrice" required>
                 </div>
             </fieldset>
             <!--총 결제 정보 end-->
@@ -133,18 +126,18 @@
             <fieldset>
                 <legend>주문자 정보</legend>
                 <div>
-                    <label for="order.userName">주문자 이름</label>
-                    <input type="text" th:value="${loginUser.uname}" name="userName" id="order.userName" readonly>
-                    <input type="text" th:value="${loginUser.userId}" name="userId" id="order.userId">
+                    <label for="userName">주문자 이름</label>
+                    <input type="text" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
+                    <input type="text" th:value="${loginUser.userId}" name="userId" id="userId">
                 </div>
                 <div>
-                    <label for="order.userPhone">주문자 전화번호</label>
-                    <input type="text" th:value="${loginUser.phone}" name="order.userPhone" id="order.userPhone"
+                    <label for="userPhone">주문자 전화번호</label>
+                    <input type="text" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
                            required>
                 </div>
                 <div>
-                    <label for="order.userEmail">주문자 이메일</label>
-                    <input type="text" th:value="${loginUser.email}" name="order.userEmail" id="order.userEmail"
+                    <label for="userEmail">주문자 이메일</label>
+                    <input type="text" th:value="${loginUser.email}" name="userEmail" id="userEmail"
                            required>
                 </div>
             </fieldset>
@@ -162,16 +155,35 @@
             </fieldset>
         </div>
         <!--배송 정보(배송요청) end-->
+        <!--대표 주문 사진 정하기-->
+        <input type="text" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
+               id="imgPath" placeholder="imgPath" readonly>
+        <!--대표 주문 사진 정하기 end----------------------------->
         <button type="submit">제출</button>
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
-        const orderRegisterForm = document.forms["orderRegisterForm"];
-
-        function selectAddress(addressId) {
-            orderRegisterForm.selectedAddressId.value = addressId;
-            console.log("addressID: " + addressId);
-
+        const currentAddressList = document.querySelectorAll(".add");
+        function selectedAddress(){
+            let addressSlt = document.getElementById("myAddressList");
+            // document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+            console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
+            let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
+            let addressMap = new Map();
+            for (let add of address){
+                let splitAdd = add.split("=");
+                console.log(splitAdd);
+                addressMap.set(splitAdd[0].trim(),splitAdd[1]);
+            }
+            console.log(addressMap);
+            console.log(addressMap.get("addressId"));
+            currentAddressList[0].value = addressMap.get("addressId");
+            currentAddressList[1].value = addressMap.get("postCode");
+            currentAddressList[2].value = addressMap.get("address");
+            currentAddressList[3].value = addressMap.get("addressDetail");
+            currentAddressList[4].value = addressMap.get("receiverName");
+            currentAddressList[5].value = addressMap.get("receiverPhone");
+            currentAddressList[6].value = addressMap.get("elevator");
         }
     </script>
 

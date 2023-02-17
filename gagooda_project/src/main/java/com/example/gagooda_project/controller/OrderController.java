@@ -52,6 +52,28 @@ public class OrderController {
         log.info(paging.toString());
         return "/order/list";
     }
+    @GetMapping("/user_yes/{orderId}/detail.do")
+    public String detail(@SessionAttribute(required = true) UserDto loginUser,
+                         @PathVariable String orderId,
+                         Model model){
+        OrderDto order = orderService.selectOne(orderId);
+        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        DeliveryDto delivery = orderService.selectDelivery(orderId);
+        model.addAttribute("order",order);
+        model.addAttribute("orderDetailList",orderDetailList);
+        model.addAttribute("delivery", delivery);
+        return "/order/detail";
+    }
+    @GetMapping("/user_yes/{orderId}/complete.do")
+    public String complete(@SessionAttribute(required=true) UserDto loginUser,
+                           @PathVariable String orderId,
+                           Model model){
+        OrderDto order=orderService.selectOne(orderId);
+        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        model.addAttribute("totalPrice",order.getTotalPrice());
+        model.addAttribute("orderDetailList",orderDetailList);
+        return "/order/complete";
+    }
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                          @SessionAttribute(required = false) String msg,
@@ -59,24 +81,28 @@ public class OrderController {
                          Model model
 
     ){
-        if (msg !=null){
-            model.addAttribute("msg", msg);
-            session.removeAttribute("msg");
+        List<AddressDto> addressList = null;
+        List<CartDto> cartList = null;
+        System.out.println(loginUser.getUserId());
+        try {
+            cartList = orderService.userCartList(loginUser.getUserId());
+            addressList = orderService.userAddressList(loginUser.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        model.addAttribute("msg", msg);
-
-        List<AddressDto> addressList = addressService.addressList(loginUser.getUserId());
-        List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
-        model.addAttribute("addressList", addressList);
-        model.addAttribute("cartList",cartList);
-        model.addAttribute("loginUser",loginUser);
-        return "/order/register";
+        if (addressList != null && cartList != null) {
+            model.addAttribute("addressList", addressList);
+            model.addAttribute("cartList",cartList);
+            model.addAttribute("loginUser",loginUser);
+            return "/order/register";
+        } else {
+            return "redirect:/";
+        }
     }
     @PostMapping("/user_yes/register.do")
     public String register(
             OrderDto order,
             @SessionAttribute UserDto loginUser,
-            @RequestParam(required = false, name="selectedAddressId") int addressId,
             @RequestParam(required = false, name="delivery.request") String request,
             @RequestParam(required = true, name="cartItem") List<String> cartList
             ){
@@ -96,42 +122,40 @@ public class OrderController {
                 for(String cartIdStr:cartList){
                     log.info("2. cart forloop에 들어옴");
                     int cartId = Integer.parseInt(cartIdStr);
-                    CartDto cart = cartService.selectByCartId(cartId);
+                    CartDto cart = orderService.selectByCartId(cartId);
                     orderDetail = new OrderDetailDto();
                     orderDetail.setProductCode(cart.getProductCode());
                     orderDetail.setOptionCode(cart.getOptionCode());
                     orderDetail.setOptionName(cart.getOptionProduct().getOpname());
                     orderDetail.setCnt(cart.getCnt());
                     orderDetail.setPrice(cart.getOptionProduct().getPrice());
-                    orderDetail.setTotalPrice(cart.getOptionProduct().getPrice()*cart.getCnt());
+                    int cartPrice = cart.getOptionProduct().getPrice();
+                    int cartCount = cart.getCnt();
+                    orderDetail.setTotalPrice(cartPrice * cartCount);
                     orderDetail.setOrderId(order.getOrderId());
                     orderDetailList.add(orderDetail);
                     log.info("3.orderdetail에 등록 성공");
 
                 }
-                address = addressService.selectOne(addressId);
+                delivery = new DeliveryDto();
                 delivery.setRequest(request);
                 delivery.setOrderId(order.getOrderId());
-                order.setAddressId(address.getAddressId());
-                order.setPostCode(address.getPostCode());
-                order.setAddress(address.getAddress());
-                order.setAddressDetail(address.getAddressDetail());
-                order.setReceiverName(address.getReceiverName());
-                order.setReceiverPhone(address.getReceiverPhone());
-                order.setElevator(address.isElevator());
                 order.setOrderDetailList(orderDetailList);
                 log.info("4.order에 address등록 완료");
                 register = orderService.register(order,delivery);
                 log.info("5.orderservice.register 완료");
             }catch(Exception e){
                 log.error(e.getMessage());
+                register = 0;
+                /*delete를 해주어야 저장하다 만 것들이 삭제됨*/
             }
 
 
         }
-        log.info("5.register 등록 여부 확인");
+        log.info("6.register 등록 여부 확인");
+        System.out.println("999.register: " + register);
         if(register>0){
-            return "redirect:/order/user_yes/list.do";
+            return "redirect:/order/user_yes/"+order.getOrderId()+"/complete.do";
         }else{
             return "redirect:/order/user_yes/register.do";
         }

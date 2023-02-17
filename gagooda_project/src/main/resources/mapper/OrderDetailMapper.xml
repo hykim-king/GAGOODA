@@ -8,6 +8,10 @@
         <result column="option_code" property="optionCode"/>
         <result column="total_price" property="totalPrice"/>
         <result column="option_name" property="optionName"/>
+        <association property="imageList"
+                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                     column="product_code"
+                     fetchType="lazy"/>
     </resultMap>
 
     <!--  List<OrderDetailDto> findByOrderId(int id);  -->
