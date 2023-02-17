@@ -25,6 +25,9 @@
                      column="address_id"
                      select="com.example.gagooda_project.mapper.AddressMapper.findById"
                      fetchType="lazy"/>
+        <association property="orderDetailDto"
+                     column="order_detail_Id"
+                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findById"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
         INSERT INTO refund (user_id, uname, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
@@ -33,21 +36,24 @@
                     #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
     <update id="updateOne">
-        UPDATE refund SET reply=#{reply}, mod_date=NOW(), rf_det=#{rfDet} WHERE refund_id = #{refundId}
+        UPDATE refund SET
+            <if test="auth.equals('admin')">reply=#{refund.reply}, mod_date=NOW(), rf_det=#{refund.rfDet} WHERE refund_id = #{refund.refundId}</if>
+            <if test="auth.equals('user')">rf_det = "rf1", mod_date=NOW() WHERE refund_id = #{refund.refundId}</if>
+
     </update>
+    <select id="countByOrderId" resultType="int">
+        SELECT COUNT(*) FROM refund WHERE order_id = #{orderId}
+    </select>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
         <choose>
             <when test=" startDate != null and endDate != null"> AND reg_date BETWEEN #{startDate} AND #{endDate} </when>
+            <when test="detCode != null and detCode.equals('end')"> AND rf_det IN ('rf1','rf7','rf8') </when>
+            <when test="detCode != null and detCode.equals('notEnd')"> AND rf_det NOT IN ('rf1','rf7','rf8') </when>
+            <when test="detCode != null and detCode.equals('all')"> </when>
             <otherwise> AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW() </otherwise>
         </choose>
-       <if test="detCode != null">
-            <choose>
-                <when test="detCode.equals('end')"> AND rf_det IN ('rf1','rf7','rf8') </when>
-                <otherwise> AND rf_det NOT IN ('rf1','rf7','rf8') </otherwise>
-            </choose>
-       </if>
-            ORDER BY reg_date DESC LIMIT 0,10
+            ORDER BY reg_date DESC
     </select>
     <select id="findById" resultMap="refundMap">
         SELECT * FROM refund WHERE refund_id = #{id}
@@ -57,6 +63,12 @@
         <if test="rfDetList != null">
             WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet}</foreach>
         </if>
-        ORDER BY reg_date DESC LIMIT 0,10
+        ORDER BY reg_date DESC
+    </select>
+    <select id="countByUserId" resultType="java.lang.Integer">
+        SELECT count(*) FROM refund WHERE user_id = #{userId}
+    </select>
+    <select id="findByOrderDetailId" resultMap="refundMap">
+        SELECT * FROM refund WHERE order_detail_id = #{orderDetailId}
     </select>
 </mapper>

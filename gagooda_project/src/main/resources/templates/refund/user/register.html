@@ -12,8 +12,15 @@
     <h1>환불 반품 신청서</h1>
     <a href="#">엑스(주문 상세 페이지로 이동)</a>
 </div>
-<div th:text="${session.refundMsg}">
-</div>
+    <th:block th:if="${refundMsg !=null}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong th:text="${session.loginUser.uname} + 님."></strong>
+            <p th:text="${refundMsg}"></p>
+            <p><span th:text="${order.orderId}"></span> 번 주문에 대한 환불 요청이 <strong th:text="${refundCount}"></strong> 건 진행 중입니다. </p>
+            <p>만약 해당 주문에 대한 환불 요청이 없는데도 불구하고 등록이 진행이 되지 않는다면, 고객센터에 문의해주십시오.</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </th:block>
 
 <h2>환불 반품 신청</h2>
 <h3>주문 정보</h3>
@@ -24,11 +31,11 @@
 <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form th:action="@{'' (orderId = ${order.orderId})}" method="post">
-    <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
-    <input type="hidden" id="uname" name="uname" th:value="${session.loginUser.uname}">
-    <input type="hidden" id="email" name="email" th:value="${session.loginUser.email}">
-    <input type="hidden" id="phone" name="phone" th:value="${session.loginUser.phone}">
+<form th:action="@{'{orderId}' (orderId = ${order.orderId})}" method="post">
+    <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
+    <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
+    <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
+    <input type="hidden" id="phone" name="phone" th:value="${order.userPhone}">
 <!--    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
     <fieldset>
         <legend>환불 정보</legend>
@@ -140,6 +147,7 @@
                 currentAddressList[5].value = addressMap.get("receiverPhone");
                 currentAddressList[6].value = addressMap.get("elevator");
             }
+
         </script>
     </fieldset>
     <button type="submit">신청하기</button>

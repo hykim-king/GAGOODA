@@ -14,5 +14,5 @@ public interface RefundService {
 
     public RefundDto selectOne(int id);
 
-    public int modifyOne(RefundDto refund);
+    public int modifyOne(RefundDto refund, String auth);
 }
