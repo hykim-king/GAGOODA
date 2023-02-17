@@ -32,14 +32,21 @@ public class ProductServiceImp implements ProductService{
         return productMapper.findById(productCode);
     }
 
-    public int insert(ProductDto product) {
+    public int register(ProductDto product) {
         int insert = productMapper.insertOne(product);
         for (CategoryConnDto categoryConn : product.getCategoryConnList()) {
             insert += categoryConnMapper.insertOne(categoryConn);
         }
         for (OptionProductDto option : product.getOptionProductList()) {
+            // 옵션 코드 재설정
+            option.setOptionCode(option.getProductCode()+"_"+option.getOptionCode());
             insert += optionProductMapper.insertOne(option);
         }
         return insert;
     }
+
+    public int remove(String productCode) {
+        return productMapper.deleteById(productCode);
+    }
 }
+

@@ -25,6 +25,10 @@ public class CartService {
         return cartMapper.findByUserIdAndOptionCode(userId, optionCode);
     }
 
+    public int modifyOne(CartDto cart) {
+        return cartMapper.updateOne(cart);
+    }
+
     public int countCartItems(int userId) {
         int cnt = 0;
         cnt += cartMapper.countByUserId(userId);
@@ -37,5 +41,8 @@ public class CartService {
 
     public int removeAll(int userId) {
         return cartMapper.deleteByUserId(userId);
+    }
+    public int registerOne(CartDto cart) {
+        return cartMapper.insertOne(cart);
     }
 }

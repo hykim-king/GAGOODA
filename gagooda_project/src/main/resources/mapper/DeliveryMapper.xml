@@ -15,7 +15,8 @@
     </resultMap>
 
     <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
-        INSERT INTO delivery (invoice, request, d_det, order_id) VALUES (#{invoice},#{request},#{dDet},#{orderId})
+        INSERT INTO delivery (invoice, request, d_det, order_id)
+        VALUES (#{invoice},#{request},#{dDet},#{orderId})
     </insert>
     <insert id="updateOne" parameterType="DeliveryDto">
         UPDATE delivery SET invoice=#{invoice},
