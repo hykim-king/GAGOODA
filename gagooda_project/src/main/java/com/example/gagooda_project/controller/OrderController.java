@@ -2,11 +2,10 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.AddressService;
-import com.example.gagooda_project.service.CartService;
+import com.example.gagooda_project.service.CartServiceImp;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.junit.jupiter.api.Order;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +23,13 @@ import java.util.List;
 public class OrderController {
     private OrderService orderService;
     private AddressService addressService;
-    private CartService cartService;
+    private CartServiceImp cartService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public OrderController(OrderService orderService,
                            AddressService addressService,
-                           CartService cartService){
+                           CartServiceImp cartService){
 
         this.orderService = orderService;
         this.addressService = addressService;
