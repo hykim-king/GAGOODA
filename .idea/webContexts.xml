@@ -3,7 +3,9 @@
   <component name="WebContextManager">
     <option name="state">
       <map>
+        <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/exchange/user/detail.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/exchange/user" />
         <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/index.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates" />
+        <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/mypage/main.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/mypage" />
       </map>
     </option>
   </component>
