@@ -28,7 +28,7 @@
         <div class="mb-3 row">
             <label for="piDet" class="col-sm-2 col-form-label">문의유형</label>
             <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="piDet" th:value="${productInquiry.getPiDet()}">
+                <input type="text" readonly class="form-control-plaintext" id="piDet" th:value="${productInquiry.getCommonCodeDto().getDetName()}">
             </div>
         </div>
         <div class="mb-3 row">
@@ -73,7 +73,8 @@
 <!--                </a>-->
                 <form th:action="@{'/product_inquiry/admin/detail.do'(pInquiryId=${pInquiryId})}" method="post">
                     <textarea name="reply" class="form-control mx-lg-auto" rows="5" placeholder="답변"></textarea>
-                    <button type="submit" class="reply_register btn btn-primary">등록</button>
+                    <button type="submit" class="reply_register btn btn-primary ">등록</button>
+                    <a class="btn btn-primary m-lg-2" th:href="@{'/product_inquiry/admin/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${pInquiryId})}" role="button">삭제</a>
                 </form>
 <!--                    <button type="submit" class="reply_register btn btn-primary">등록</button>-->
             </div>
@@ -91,6 +92,7 @@
                     <input type="text" readonly class="form-control-plaintext" id="replyDate" th:value="${#dates.format(productInquiry.getReplyDate(), 'yyyy-MM-dd HH:mm')}">
                 </div>
             </div>
+            <a class="btn btn-primary mt-2" th:href="@{'/product_inquiry/admin/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${pInquiryId})}" role="button">삭제</a>
         </th:block>
 
     </div>

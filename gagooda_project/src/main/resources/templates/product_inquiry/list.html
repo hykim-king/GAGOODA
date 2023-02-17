@@ -9,13 +9,20 @@
         <h2 th:text="${succMsg}"></h2>
         <ul>
             <li th:each="p:${plist}">
-                <p th:text="${p.getPiDet()}"></p>
-                <p th:text="${p.getPInquiryId()}"></p>
-<!--                <span th:text="${p.getUser().getUname()}"></span>-->
-                <p th:text="${p.getRegDate()}"></p>
-                <p th:text="${p.getTitle()}"></p>
-                <p th:text="${p.getContent()}"></p>
-                <p th:text="${p.getRegDate()}"></p>
+                <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
+                <p th:text="${p.getPInquiryId()}">문의ID</p>
+                <p th:text="${p.getUser().getUname()}">사용자이름</p>
+                <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
+                <p th:text="${p.getRegDate()}">문의작성일</p>
+                <p th:text="${p.getTitle()}">문의제목</p>
+                <p th:text="${p.getContent()}">문의내용</p>
+                <th:block th:if="${p.getReply() == null}">
+
+                </th:block>
+                <th:block th:if="${p.getReply() != null}">
+                    <p th:text="${p.getReply()}">답글</p>
+                    <p th:text="${p.getReplyDate()}">답글작성일</p>
+                </th:block>
                 <a th:href="@{'/product_inquiry/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">삭제</a>
             </li>
         </ul>

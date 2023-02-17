@@ -30,4 +30,5 @@ public class RefundDto {
     private String rfrDet;          // 환불/ 교환사유_DET, rfr_det, FK, NN, ( REFUND : COMMON_CODE ) N:1
     private OrderDto orderDto;  // 주문 DTO
     private AddressDto addressDto; // 주소 DTO
+    private OrderDetailDto orderDetailDto; // 주문 상세 DTO
 }

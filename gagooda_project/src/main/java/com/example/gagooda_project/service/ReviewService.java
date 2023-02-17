@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface ReviewService {
     List<ReviewDto> reviewList(String productCode);
-    List<ReviewDto> ListAll();
+    ReviewDto selectOne(int reviewId);
     int insertOne(ReviewDto dto);
-    void updateOne(ReviewDto dto);
-    int deleteById(int reviewId);
+    int updateOne(ReviewDto dto);
+    int remove(int reviewId);
 
 
 }

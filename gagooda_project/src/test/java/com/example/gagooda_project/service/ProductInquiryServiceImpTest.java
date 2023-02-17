@@ -16,7 +16,7 @@ class ProductInquiryServiceImpTest {
 
     @Test
     void showInquiries() {
-
+        System.out.println(productInquiryService.showInquiries("HA10C15EE"));
     }
 
     @Test

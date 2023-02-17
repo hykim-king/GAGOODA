@@ -3,10 +3,13 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.UserService;
 import com.example.gagooda_project.service.UserServiceImp;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
 
 @Controller
 @RequestMapping("/user")
@@ -26,6 +29,7 @@ public class UserController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("msg", msg);
@@ -62,6 +66,7 @@ public class UserController {
                         Model model) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("msg", msg);
@@ -73,7 +78,9 @@ public class UserController {
             HttpSession session,
             String email,
             String pw,
-            @SessionAttribute(required = false) String redirectUri
+            HttpServletRequest request,
+            @SessionAttribute(required = false) String getUri,
+            @SessionAttribute(required = false) String postUri
     ) {
         UserDto user = null;
         try {
@@ -86,19 +93,23 @@ public class UserController {
             return "redirect:/user/login.do";
         } else {
             session.setAttribute("loginUser", user);
-            session.removeAttribute("redirectUri");
-            return (redirectUri != null) ? "redirect:" + redirectUri : "redirect:/";
+            System.out.println(postUri);
+            session.removeAttribute("getUri");
+            if (getUri != null) return "redirect:"+getUri;
+            return "redirect:/";
         }
     }
 
     @GetMapping("/findpw.do")
     public String findPw(
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
         }
         return "/user/find_pw";
     }
@@ -132,8 +143,9 @@ public class UserController {
             HttpSession session
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
         }
         System.out.println("userId: " + userId);
         model.addAttribute("userId", userId);
@@ -167,10 +179,12 @@ public class UserController {
     public String doubleCheck(
             @SessionAttribute(required = true) UserDto loginUser,
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
-            session.removeAttribute(msg);
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         return "/user/double_check";
@@ -199,10 +213,12 @@ public class UserController {
     public String temp(
             @SessionAttribute(required = true) UserDto loginUser,
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         return "/user/temp";
@@ -238,6 +254,7 @@ public class UserController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("user", loginUser);

@@ -9,30 +9,33 @@
 </head>
 <div layout:fragment="content">
 <h2>유저 환불 목록</h2>
-<div th:text="${session.refundMsg}"></div>
 <h3>환불 내역</h3>
 <ul>
-    <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기</a></li>
+    <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기(기본)</a></li>
     <li><a class="afterParam" th:href="@{ '' (period=15) }">최근 15일 기록 보기</a></li>
     <li><a class="afterParam" th:href="@{ '' (period=30) }">최근 1개월 기록 보기</a></li>
     <li><a class="afterParam" th:href="@{ '' (period=90) }">최근 3개월 기록 보기</a></li>
     <li><a class="afterParam" th:href="@{ '' (period=365) }">최근 1년 기록 보기</a></li>
     <li>
         <form class="afterParam" th:action="@{''}" method="get">
-            <input type="date" name="startDate" id="startDate"> ~
-            <input type="date" name="endDate" id="endDate">
+            <input type="date" name="startDate" id="startDate" required> ~
+            <input type="date" name="endDate" id="endDate" required>
             <button type="submit">조회</button>
         </form>
     </li>
 </ul>
 <ul>
-    <li><a th:href="@{ '' }">전체 환불 내역</a></li>
+    <li><a th:href="@{ '' (detCode=all)}">전체 환불 내역</a></li>
     <li><a th:href="@{ '' (detCode=notEnd) }">환불 진행 내역</a></li>
     <li><a th:href="@{ '' (detCode=end) }">환불 완료 내역</a></li>
+    <li>(총 환불 신청 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
 </ul>
 
-<h3>환불 신청 내역 총 <th:block th:text="${refundList.size()}"></th:block> 건</h3>
 <table>
+    <th:block th:if="${refundMsg != null}">
+        <span id="msg" th:data-msg="${refundMsg}"></span>
+        <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
+    </th:block>
     <thead>
         <tr>
             <th>날짜</th>
@@ -40,28 +43,39 @@
             <th>상품명</th>
             <th>환불 금액</th>
             <th>처리 현황</th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-        <tr th:each="refund:${refundList}">
+        <tr th:each="refund:${refundList}" class="hrefRow" th:data-refund="${refund.refundId}">
             <td th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
             <td th:text="${refund.orderId}"></td>
-            <td th:text="${optionNameMap[refund.refundId]}"></td>
+            <td th:text="${refund.orderDetailDto.optionName}"></td>
             <td th:text="${refund.cancelAmount}"></td>
             <td th:text="${rfDetList[#strings.substring(refund.rfDet,2)].detName}"></td>
-            <td>
-                <th:block th:if="${refund.rfDet.equals('rf0')}">
-                    <a href="#" >환불 요청 취소</a>
-                </th:block>
-                <th:block th:unless="${refund.rfDet.equals('rf0')}">
-                    <a href="#" >환불 내역 확인</a>
-                </th:block>
-            </td>
         </tr>
     </tbody>
-
 </table>
+<th:block th:if="${userRefundCount == 0}">
+    <h3>환불 내역이 없습니다.</h3>
+</th:block>
 
+<script th:inline="javascript">
+    let hrefRows = document.querySelectorAll(".hrefRow");
+    hrefRows.forEach((row)=>{
+        row.addEventListener('click',()=>{
+            console.log(row)
+            let targetHref = "http://"+ document.location.host + "/refund/user_yes/mypage/detail.do/" + row.dataset.refund;
+            console.log(targetHref)
+            document.location.href =  targetHref;
+        })
+    })
+
+    // let msg = document.querySelector("#msg");
+    // if (msg){
+    //     console.log(msg)
+    //     console.log(msg.dataset.refundMsg);
+    //     alert(msg.dataset.refundMsg);
+    // }
+</script>
 </div>
 </html>

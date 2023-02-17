@@ -1,9 +1,12 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.CartDto;
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.UserDto;
-import com.example.gagooda_project.service.CartServiceImp;
-import com.example.gagooda_project.service.ProductServiceImp;
+import com.example.gagooda_project.service.CartService;
+import com.example.gagooda_project.service.OptionProductService;
+import com.example.gagooda_project.service.ProductService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,20 +16,24 @@ import java.util.List;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
-    CartServiceImp cartServiceImp;
-    ProductServiceImp productServiceImp;
+    CartService cartService;
+    OptionProductService optionProductService;
+    ProductService prductService;
 
-    public CartController(CartServiceImp cartServiceImp, ProductServiceImp productServiceImp) {
-        this.cartServiceImp = cartServiceImp;
-        this.productServiceImp = productServiceImp;
+    public CartController(CartService cartService,
+                          ProductService prductService,
+                          OptionProductService optionProductService) {
+        this.cartService = cartService;
+        this.prductService = prductService;
+        this.optionProductService = optionProductService;
     }
 
     @GetMapping("/list.do")
     public String list(@RequestParam(name = "optionCode", required = false) String optionCode,
                        Model model,
                        @SessionAttribute UserDto loginUser) throws Exception {
-        List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
-        CartDto cart = cartServiceImp.selectOne(loginUser.getUserId(), optionCode);
+        List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
+        CartDto cart = cartService.selectOne(loginUser.getUserId(), optionCode);
         int totalCnt = 0;
         int totalPrice = 0;
         for (CartDto cartDto : cartList) {
@@ -74,7 +81,7 @@ public class CartController {
         int delete = 0;
         for (int i=0; i<cartIds.size(); i++) {
             Long id = Long.valueOf(cartIds.get(i));
-            delete = cartServiceImp.removeOne(Math.toIntExact(id));
+            delete = cartService.removeOne(Math.toIntExact(id));
         }
         if (delete > 0) {
             return "redirect:/cart/list.do";
@@ -87,7 +94,7 @@ public class CartController {
     public String deleteAll(@SessionAttribute UserDto loginUser) throws Exception {
         int delete = 0;
         try {
-            delete = cartServiceImp.removeAll(loginUser.getUserId());
+            delete = cartService.removeAll(loginUser.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,5 +103,45 @@ public class CartController {
         } else {
             return "redirect:/";
         }
+    }
+
+    @PostMapping("/user_yes/register.do")
+    public String insertInto(
+            @SessionAttribute UserDto loginUser,
+            CartDto cart,
+            HttpSession session
+    ) {
+        System.out.println(loginUser);
+        System.out.println(cart);
+        int insert = 0;
+        if (loginUser.getUserId() == cart.getUserId()) {
+            try {
+                OptionProductDto optionProduct = optionProductService.selectOne(cart.getOptionCode());
+                if (cart.getCnt() > optionProduct.getStock()) {
+                    session.setAttribute("msg", "장바구니에 담는데 문제가 있었습니다.");
+                    return "redirect:/product/" + cart.getProductCode() + "/detail.do";
+                }
+                CartDto cartIn = cartService.selectOne(loginUser.getUserId(), cart.getOptionCode());
+                if (cartIn != null) {
+                    cartIn.setCnt(cartIn.getCnt() + cart.getCnt());
+                    System.out.println("cartIn " + cartIn);
+                    insert = cartService.modifyOne(cartIn);
+                } else {
+                    cart.setUserId(loginUser.getUserId());
+                    insert = cartService.registerOne(cart);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            System.out.println("insert cart: "+insert);
+            if (!(insert > 0)) {
+                session.setAttribute("msg", "장바구니에 담는데 문제가 있었습니다.");
+            } else {
+                session.setAttribute("msg", "장바구니에 성공적으로 담았습니다.");
+            }
+        } else {
+            session.setAttribute("msg", "본인 장바구니가 아닙니다.");
+        }
+        return "redirect:/product/" + cart.getProductCode() + "/detail.do";
     }
 }

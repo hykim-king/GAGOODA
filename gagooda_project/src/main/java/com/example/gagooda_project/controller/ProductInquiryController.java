@@ -1,8 +1,12 @@
 package com.example.gagooda_project.controller;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.service.ProductInquiryServiceImp;
+import com.example.gagooda_project.service.UserServiceImp;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,14 +43,21 @@ public class ProductInquiryController {
         return "/product_inquiry/list";
     }
 
-    @GetMapping("/user_yes/register.do")
-    public String register(
-            @SessionAttribute UserDto loginUser
+    @GetMapping("/user_yes/{productCode}/register.do")
+    public String register(@SessionAttribute UserDto loginUser,
+                           Model model,
+                           @PathVariable(required = true, name = "productCode") String productCode
     ) {
+        List<CommonCodeDto> commonCodeList = productInquiryService.showCommonCode("pi");
+        List<OptionProductDto> optionProductList = productInquiryService.showOptionProduct(productCode);
+        System.out.println(commonCodeList);
+        System.out.println(optionProductList);
+        model.addAttribute("commonCodeList", commonCodeList);
+        model.addAttribute("optionProductList", optionProductList);
         return "/product_inquiry/user_yes/register";
     }
 
-    @PostMapping("/user_yes/register.do")
+    @PostMapping("/user_yes/{productCode}/register.do")
     public String register(ProductInquiryDto productInquiry,
                            Model model,
                            @SessionAttribute UserDto loginUser,
@@ -57,7 +68,6 @@ public class ProductInquiryController {
                 String user = Integer.toString(loginUser.getUserId());
                 System.out.println(user);
                 model.addAttribute("user", loginUser.getUserId());
-//                System.out.println(productInquiry);
                 System.out.println(productInquiry.getProductCode());
                 register = productInquiryService.registerProductInquiry(productInquiry);
             } catch (Exception e) {
@@ -168,6 +178,23 @@ public class ProductInquiryController {
         } else {
             return "/product_inquiry/admin/list";
         }
+    }
 
+    @GetMapping("/admin/delete.do")
+    public String admindelete(@SessionAttribute UserDto loginUser,
+                         @RequestParam(name="pInquiryId") int pInquiryId
+                         ){
+        int delete = 0;
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        try{
+            delete = productInquiryService.removeOne(productInquiry.getPInquiryId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (delete > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "redirect:/product_inquiry/admin/"+pInquiryId+"/detail.do";
+        }
     }
 }

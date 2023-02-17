@@ -50,4 +50,9 @@ public class CartServiceImp implements CartService {
     public int modifyOne(CartDto cart) {
         return cartMapper.updateOne(cart);
     }
+
+    @Override
+    public int registerOne(CartDto cart) {
+        return cartMapper.insertOne(cart);
+    }
 }
