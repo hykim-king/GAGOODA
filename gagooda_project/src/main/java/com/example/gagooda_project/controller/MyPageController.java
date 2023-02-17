@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 public class MyPageController {
     MyPageService myPageService;
 
+    public MyPageController(MyPageService myPageService) {
+        this.myPageService = myPageService;
+    }
+
     @GetMapping("user_yes/main.do")
     public String myPageMain(@SessionAttribute UserDto loginUser) {
         return "mypage/main";
