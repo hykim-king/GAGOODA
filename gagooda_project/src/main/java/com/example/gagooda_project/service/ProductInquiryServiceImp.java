@@ -1,6 +1,10 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
+import com.example.gagooda_project.mapper.CommonCodeMapper;
+import com.example.gagooda_project.mapper.OptionProductMapper;
 import com.example.gagooda_project.mapper.ProductInquiryMapper;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +13,15 @@ import java.util.List;
 @Service
 public class ProductInquiryServiceImp implements ProductInquiryService{
     private ProductInquiryMapper productInquiryMapper;
+    private CommonCodeMapper commonCodeMapper;
+    private OptionProductMapper optionProductMapper;
 
-    public ProductInquiryServiceImp(ProductInquiryMapper productInquiryMapper) {
+    public ProductInquiryServiceImp(ProductInquiryMapper productInquiryMapper,
+                                    CommonCodeMapper commonCodeMapper,
+                                    OptionProductMapper optionProductMapper) {
         this.productInquiryMapper = productInquiryMapper;
+        this.commonCodeMapper = commonCodeMapper;
+        this.optionProductMapper = optionProductMapper;
     }
 
     public List<ProductInquiryDto> showInquiries(String productCode){
@@ -41,6 +51,16 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     @Override
     public int modifyOne(ProductInquiryDto productInquiryDto) {
         return productInquiryMapper.updateReplyInTable(productInquiryDto);
+    }
+
+    @Override
+    public List<CommonCodeDto> showCommonCode(String mstCode) {
+        return commonCodeMapper.listByMstCode(mstCode);
+    }
+
+    @Override
+    public List<OptionProductDto> showOptionProduct(String productCode) {
+        return optionProductMapper.listByProductCode(productCode);
     }
 
 }

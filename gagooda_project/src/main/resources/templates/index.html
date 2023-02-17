@@ -55,6 +55,17 @@
         <li><a th:href="@{ '/refund/user_yes/mypage/detail.do/{refundId}' (refundId=11) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
         <li><a href="/refund/admin/list.do">관리자 리스트(로그인)</a></li>
     </ul>
+
+    <h2>양한나</h2>
+    <ul>
+        <h4>사용자</h4>
+        <li><a th:href="@{'/product_inquiry/list.do' (productCode='HA10C15EE')}">상품 문의 리스트</a></li>
+        <li><a th:href="@{'/product_inquiry/user_yes/{productCode}/register.do'(productCode='HA10C15EE')}">상품 문의 등록</a></li>
+    </ul>
+    <ul>
+        <h4>관리자</h4>
+        <li><a href="/product_inquiry/admin/list.do">상품 문의 리스트</a></li>
+    </ul>
 </div>
 </body>
 </html>
