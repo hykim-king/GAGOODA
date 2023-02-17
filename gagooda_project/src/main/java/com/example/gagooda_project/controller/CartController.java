@@ -43,7 +43,17 @@ public class CartController {
     @PostMapping("/update.do")
     public String update(CartDto cart,
                          @SessionAttribute UserDto loginUser) throws Exception {
-        return "/cart/list";
+        int update = 0;
+        try {
+            update = cartServiceImp.modifyOne(cart);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (update > 0) {
+            return "redirect:/cart/list.do";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/deleteOne.do")

@@ -26,8 +26,8 @@
                         <td><input type="checkbox" class="check"></td>
                         <td th:text="${cart.getOptionProduct().getOpname()}"></td>
                         <td>
-                            <input th:value="${cart.cnt}" id="cntText">
-                            <button type="button" id="updateBtn">변경</button>
+                            <input th:value="${cart.cnt}" class="cntText" style="width: 20px">
+                            <button type="button" class="updateBtn">변경</button>
                         </td>
                         <td th:text="${cart.getOptionProduct().getPrice()*cart.cnt}"></td>
                     </tr>
@@ -40,7 +40,7 @@
             <div>총 주문수량: <strong th:text="${totalCnt}"></strong> 개</div>
             <button type="button" class="orderBtn">주문하기</button>
             <button type="button" class="delOneBtn">선택삭제</button>
-            <a class="btn btn-primary" role="button" th:href="@{'deleteAll.do'}" >전체삭제</a>
+            <button th:href="@{'deleteAll.do'}" class="delAllBtn">전체삭제</button>
         </div>
     </div>
 </body>
@@ -91,5 +91,11 @@
                 form.submit();
             }
         }
+    }
+
+    const updateBtn = document.querySelector(".updateBtn");
+    const cntText = document.querySelector(".cntText");
+    updateBtn.onclick = () => {
+
     }
 </script>
