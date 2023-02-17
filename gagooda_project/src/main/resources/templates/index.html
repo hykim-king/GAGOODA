@@ -11,40 +11,26 @@
 <div layout:fragment="content">
     <h1>GAGOODA 쇼핑몰 파이팅!</h1>
 
-
     <h2>천하민</h2>
     <ul>
         <li><a href="/user/double_check.do">회원 정보 수정 및 삭제</a></li>
         <li><a href="/product/admin/register.do">상품 등록</a></li>
         <li><a href="/product/list.do">상품 첫 20개 리스트</a></li>
+    </ul>
+    <ul style="border: #000 solid 3px;">
         <ul style="border: #000 solid 3px;">
-            <ul style="border: #000 solid 3px;">
-                <th:block th:each="category:${categories}">
-                    <li><a th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
-                           th:text="${category.cname}"></a></li>
-                </th:block>
-            </ul>
+            <th:block th:each="category:${categories}">
+                <li><a th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
+                       th:text="${category.cname}"></a></li>
+            </th:block>
         </ul>
-        <h2>주문/배송 팀</h2>
-        <h4>주소지 관련 페이지(Address)</h4>
-        <ul>
-            <li><a href="/address/register.do">주소지 등록</a></li>
-            <li><a href="/address/list.do">본인아이디에 저장된 주소 목록보기(로그인필요) </a></li>
-        </ul>
-        <h2>주문배송팀 유한비 cart</h2>
-        <ul>
-            <li><a href="/cart/list.do">장바구니 목록</a></li>
-        </ul>
+    </ul>
+    <h2>구도윤</h2>
+    <ul>
+        <li><a href="exchange/user_yes/mypage/list.do">유저 교환 목록</a></li>
+        <li><a th:href="@{ '/exchange/user_yes/mypage/register.do' (orderId='00010') }">교환신청서 작성</a></li>
+        <li><a th:href="@{ '/exchange/user_yes/mypage/detail.do' (exchangeId=11) }">교환 상세 페이지</a></li>
 
-        <h2>김현섭</h2>
-        <ul>
-            <li><a th:href="@{ '/mypage/refund/list.do' (userId=10) }">유저 환불 목록</a></li>
-        </ul>
-        <h2>구도윤</h2>
-        <ul>
-            <li><a th:href="@{ '/exchange/user_yes/mypage/register.do' (orderId='00010') }">교환신청서 작성</a></li>
-            <li><a href="exchange/user_yes/mypage/list.do">유저 교환 목록</a></li>
-        </ul>
     </ul>
     <h2>주문배송팀 이창국 Address</h2>
     <h4>주소지 관련 페이지(Address): 기본적으로 모든 서비스 로그인 필요</h4>

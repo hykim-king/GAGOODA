@@ -19,9 +19,9 @@ public interface ExchangeService {
 
     AddressDto selectAddress(int addressId);
 
-    OrderDto selectOrder(String orderId);
-
-    List<OrderDetailDto> showOrderDetailListByUserId(String orderId);
-
     List<AddressDto> showAddressListByUserId(int userId);
+
+    List<CommonCodeDto> detCodeList(String mstCode);
+
+    ExchangeDto selectOne(int Id);
 }
