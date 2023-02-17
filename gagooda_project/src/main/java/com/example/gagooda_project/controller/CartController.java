@@ -64,7 +64,7 @@ public class CartController {
     public String insertInto(
             @SessionAttribute UserDto loginUser,
             CartDto cart,
-            HttpSessionat session
+            HttpSession session
     ) {
         System.out.println(loginUser);
         System.out.println(cart);
