@@ -36,7 +36,7 @@ public class DeliveryServiceImp implements DeliveryService{
     }
 
     @Override
-    public List<DeliveryDto> deliveryList(String orderId) {
+    public DeliveryDto deliveryList(String orderId) {
         return deliveryMapper.findByOrderId(orderId);
     }
 }

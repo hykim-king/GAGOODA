@@ -10,5 +10,5 @@ public interface DeliveryService {
     int register(DeliveryDto delivery);
     DeliveryDto selectOne(int deliveryId);
     int modifyOne(DeliveryDto delivery);
-    List<DeliveryDto> deliveryList(String orderId);
+    DeliveryDto deliveryList(String orderId);
 }
