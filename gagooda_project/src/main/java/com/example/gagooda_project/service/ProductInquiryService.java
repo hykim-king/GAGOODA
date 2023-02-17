@@ -16,4 +16,6 @@ public interface ProductInquiryService {
 
     int removeOne(int productInquiryId);
 
+    int modifyOne(ProductInquiryDto productInquiryDto);
+
 }

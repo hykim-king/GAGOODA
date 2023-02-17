@@ -2,11 +2,8 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import com.example.gagooda_project.dto.UserDto;
-import com.example.gagooda_project.service.ProductInquiryService;
 import com.example.gagooda_project.service.ProductInquiryServiceImp;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -42,14 +39,14 @@ public class ProductInquiryController {
         return "/product_inquiry/list";
     }
 
-    @GetMapping("/register.do")
+    @GetMapping("/user_yes/register.do")
     public String register(
             @SessionAttribute UserDto loginUser
     ) {
-        return "/product_inquiry/register";
+        return "/product_inquiry/user_yes/register";
     }
 
-    @PostMapping("/register.do")
+    @PostMapping("/user_yes/register.do")
     public String register(ProductInquiryDto productInquiry,
                            Model model,
                            @SessionAttribute UserDto loginUser,
@@ -72,7 +69,7 @@ public class ProductInquiryController {
         if (register > 0) {
             return "redirect:/product_inquiry/list.do?productCode="+productInquiry.getProductCode();
         } else {
-            return "redirect:/product_inquiry/register.do";
+            return "redirect:/product_inquiry/user_yes/register.do";
         }
     }
 
@@ -109,5 +106,68 @@ public class ProductInquiryController {
         } else {
             return "/index";
         }
+    }
+
+    @GetMapping("/admin/{pInquiryId}/detail.do")
+    public String adminDetail(@PathVariable int pInquiryId,
+                              Model model){
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        System.out.println(productInquiry);
+        model.addAttribute("productInquiry",productInquiry);
+        return "/product_inquiry/admin/detail";
+    }
+
+    @GetMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser){
+        return "/product_inquiry/admin/detail";
+    }
+
+    @PostMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply){
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "redirect:/product_inquiry/admin/"+pInquiryId+"/detail.do";
+        }
+    }
+
+
+    @PostMapping ("/admin/list.do")
+    public String adminUpdate(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply
+    ){
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "/product_inquiry/admin/list";
+        }
+
     }
 }

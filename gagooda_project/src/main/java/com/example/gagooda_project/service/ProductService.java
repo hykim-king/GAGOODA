@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductService {
     List<ProductDto> showProducts();
     ProductDto selectOne(String productCode);
+    int insert(ProductDto product);
 }

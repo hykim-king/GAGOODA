@@ -49,13 +49,30 @@ public class AddressController {
         return "/address/list";
     }
 
-    @GetMapping("/{addressId}/modify.do")
-    public String modifyOne(@PathVariable int addressId,
-                            @SessionAttribute(required = true) UserDto loginUser,
-                            Model model) {
+
+
+    @GetMapping("/modify.do")
+    public String modifyOne(@SessionAttribute(required = true) UserDto loginUser,
+                            Model model,
+                            @RequestParam (name= "addressId") int addressId) {
         AddressDto address = addressService.selectOne(addressId);
         model.addAttribute("address",address);
-        return "/address/modify";
+        return "address/modify";
+    }
+
+    @GetMapping("/dismissDefault.do")
+    public String modifyDefault(@SessionAttribute(required = true) UserDto loginUser,
+                                AddressDto address) {
+        int modify=0;
+        if(loginUser.getUserId() == address.getUserId()) {
+            try {
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "";
     }
 
     @PostMapping("/modify.do")
@@ -70,10 +87,29 @@ public class AddressController {
             }
         }
         if(modify>0) {
-            return "redirect:/address/list";
+            return "redirect:list.do";
         } else {
-            return "redirect:/address/modify.do";
+            return "redirect:modify.do?addressId="+address.getAddressId();
         }
     }
 
+    @GetMapping("/delete.do")
+    public String removeOne(@RequestParam(name = "address_id") int addressId,
+                            @SessionAttribute(required = true) UserDto loginUser) {
+        int remove = 0;
+        AddressDto address = addressService.selectOne(addressId);
+        if (loginUser.getUserId() == address.getUserId()) {
+            try {
+                remove = addressService.removeOne(addressId);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(remove>0) {
+            return "redirect:list.do";
+        } else {
+            return "redirect:modify.do?addressId="+address.getAddressId();
+        }
+
+    }
 }

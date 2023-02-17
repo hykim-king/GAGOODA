@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div layout:fragment="content">
+<h2>환불 반품 신청 확인서</h2>
+
+<h3>환불 반품 신청</h3>
+<h3>주문 정보</h3>
+<ul>
+    <li>주문인 : <span th:text="${order.userName}"></span></li>
+    <li>주문 날짜 : <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></span></li>
+    <li>주문 번호 : <span th:text="${order.orderId}"></span></li>
+    <li>주문 상품 : <span th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></span></li>
+    <li>총 주문 금액 : <span th:text="${order.totalPrice}"></span></li>
+</ul>
+<h3>환불 요청 정보</h3>
+<ul>
+    <li>수령인 : <span th:text="${refund.receiverName}"></span></li>
+    <li>수령인 연락처 : <span th:text="${refund.receiverPhone}"></span></li>
+    <li>환불 대상 상품 : <span th:text="${optionNameList.get(refund.refundId)}"></span></li>
+    <li>환불 요청 금액 : <span th:text="${refund.cancelAmount}"></span></li>
+    <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>
+    <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>
+    <li >주소 : <span th:text=" ${'('+refund.postCode+') '+refund.address } "></span><span th:text="${refund.addressDetail}"></span></li>
+    <li>첨부 이미지 <span th:text="${refund.imgCode}"></span></li>
+</ul>
+
+<h3>환불 처리 정보</h3>
+<ul>
+    <li>환불 처리 현황 : <span th:text="${rfDetList[#strings.substring(refund.rfDet, 2)].detName}"></span></li>
+    <li></li>
+</ul>
+
+</div>
+</html>

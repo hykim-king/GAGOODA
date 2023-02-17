@@ -1,4 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<p>navbar</p>
+<a href="/">navbar</a>
+<th:block th:if="${session.loginUser == null}">
+    <a href="/user/g0/signup.do">회원가입</a>
+    <a href="/user/g1/signup.do">관리자 회원가입</a>
+    <a href="/user/login.do">로그인</a>
+    <a href="/user/findpw.do">비밀번호 찾기</a>
+</th:block>
+<th:block th:if="${session.loginUser != null}">
+    <span th:text="${session.loginUser.nickname}"></span>
+    <a href="/mypage/user_yes/main.do">마이페이지</a>
+    <a href="/user/user_yes/logout.do">로그아웃</a>
+</th:block>
 </html>

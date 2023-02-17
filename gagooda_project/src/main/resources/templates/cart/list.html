@@ -24,17 +24,23 @@
                     <tr th:each="cart:${cartList}">
                         <td>1</td>
                         <td><input type="checkbox" class="check"></td>
-                        <td th:text="${cart.optionCode}"></td>
-                        <td th:text="${cart.cnt}"></td>
-                        <td></td>
+                        <td th:text="${cart.getOptionProduct().getOpname()}"></td>
+                        <td>
+                            <input th:value="${cart.cnt}" id="cntText">
+                            <button type="button" id="updateBtn">변경</button>
+                        </td>
+                        <td th:text="${cart.getOptionProduct().getPrice()*cart.cnt}"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div>
+            <div>총 주문금액: <strong th:text="${totalPrice}"></strong> 원</div>
+            <div>총 주문수량: <strong th:text="${totalCnt}"></strong> 개</div>
+            <button type="button" class="orderBtn">주문하기</button>
             <button type="button" class="delOneBtn">선택삭제</button>
-            <button type="button" class="delAllBtn">전체삭제</button>
+            <a class="btn btn-primary" role="button" th:href="@{'deleteAll.do'}" >전체삭제</a>
         </div>
     </div>
 </body>
@@ -84,17 +90,6 @@
                 document.body.appendChild(form);
                 form.submit();
             }
-        }
-    }
-
-    const delAllBtn = document.querySelector(".delAllBtn");
-    delAllBtn.onclick = () => {
-        if (confirm("정말로 전체삭제하시겠습니까?")) {
-            const form = document.createElement('form');
-            form.setAttribute('method', 'post');
-            form.setAttribute('action', '/deleteAll');
-            document.body.appendChild(form);
-            form.submit();
         }
     }
 </script>

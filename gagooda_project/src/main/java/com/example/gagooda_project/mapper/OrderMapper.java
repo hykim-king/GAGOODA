@@ -2,6 +2,7 @@ package com.example.gagooda_project.mapper;
 
 import com.example.gagooda_project.dto.ODetDto;
 import com.example.gagooda_project.dto.OrderDto;
+import com.example.gagooda_project.dto.PagingDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -12,7 +13,8 @@ public interface OrderMapper {
 
     List<OrderDto> listAll();
 
-    List<OrderDto> pageAll(); //PagingDto 추가해야함. Mapper에 query 추가 아직 안함.
+    List<OrderDto> pageAll(PagingDto paging); //PagingDto 추가해야함. Mapper에 query 추가 아직 안함.
+    int count(PagingDto paging,int userId);
 
     List<OrderDto> listByUserIdAndDate(int userId, int dates); //userId
 

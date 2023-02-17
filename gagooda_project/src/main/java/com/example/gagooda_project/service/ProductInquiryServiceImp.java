@@ -38,4 +38,9 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
         return productInquiryMapper.deleteById(productInquiryId);
     }
 
+    @Override
+    public int modifyOne(ProductInquiryDto productInquiryDto) {
+        return productInquiryMapper.updateReplyInTable(productInquiryDto);
+    }
+
 }
