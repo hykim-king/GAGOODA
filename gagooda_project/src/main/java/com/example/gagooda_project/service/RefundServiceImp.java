@@ -26,6 +26,7 @@ public class RefundServiceImp implements RefundService{
     public int registerOne(RefundDto refund){
         int register = 0;
         RefundDto checkRefund;
+        AddressDto newAddress = null;
         if(refund.getOrderDetailId() == -1){
             OrderDto order = orderMapper.findById(refund.getOrderId());
             for(int i = 0; i < order.getOrderDetailList().size(); i++){
@@ -37,6 +38,7 @@ public class RefundServiceImp implements RefundService{
                         case "rf0": case "rf2": case "rf3": case "rf4": case "rf5": case "rf6": case "rf7": case "rf8":
                             throw new Error();
                         case "rf1":
+
                             register += refundMapper.insertOne(refund);
                             break;
                     }
@@ -53,6 +55,7 @@ public class RefundServiceImp implements RefundService{
                 register += refundMapper.insertOne(refund);
             }
         }
+        
         return register;
     }
 

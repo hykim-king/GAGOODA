@@ -5,6 +5,13 @@
         <result property="optionCode" column="option_code" />
         <result property="productCode" column="product_code" />
     </resultMap>
+    <update id="updateOne">
+        UPDATE option_product
+        SET opname = #{opname},
+            price = #{price},
+            stock = #{stock}
+        WHERE option_code=#{optionCode} AND product_code=#{productCode}
+    </update>
 
     <select id="listByProductCode" resultMap="optionProductMap">
         SELECT * FROM option_product WHERE product_code=#{productCode}

@@ -18,5 +18,6 @@ public interface ReviewMapper {
 
     int updateOne(ReviewDto review);
 
-    int deleteById(int reviewId);
+    int deleteOne(int reviewId);
+
 }

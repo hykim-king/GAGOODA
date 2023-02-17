@@ -18,4 +18,9 @@ public class CategoryConnServiceImp implements CategoryConnService {
     public List<CategoryConnDto> categoryProducts(int categoryId) {
         return categoryConnMapper.listByCategoryId(categoryId);
     }
+
+    @Override
+    public int removeForProduct(String productCode) {
+        return categoryConnMapper.deleteByProductCode(productCode);
+    }
 }

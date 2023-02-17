@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>새로운 상품 등록</title>
 </head>
-<body>
-
+<div  layout:fragment="content">
 <form action="/product/admin/register.do" enctype="multipart/form-data" method="post" name="productForm">
     <label for="productCode">상품 코드:</label>
     <input type="text" id="productCode" name="productCode" required>
@@ -17,7 +19,7 @@
     </select>
     <br>
     <label for="name">상품명:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="pname" required>
     <br>
     <label for="place">판매처:</label>
     <input type="text" id="place" name="place" required>
@@ -53,7 +55,7 @@
     <button type="button" name="moreInfoImg">상세 정보 추가</button>
     <br>
     <div class="option-products">
-        <fieldset class="option" id="option">
+        <fieldset class="optionProduct" id="optionProduct">
             <legend>옵션</legend>
             <input type="hidden" name="" class="productCode">
             <input type="hidden" name="" class="optionPrice">
@@ -100,7 +102,6 @@
     <button type="submit">제출</button>
 
 </form>
-</body>
 <script th:inline="javascript">
     const productForm = document.forms["productForm"];
     const moreOptBtn = productForm["moreOptBtn"];
@@ -137,8 +138,8 @@
     let i = 1;
     moreOptBtn.onclick = (e) => {
         const fieldset = document.createElement("fieldset");
-        fieldset.classList.add("option");
-        fieldset.id = "option" + i;
+        fieldset.classList.add("optionProduct");
+        fieldset.id = "optionProduct" + i;
 
         fieldset.innerHTML = `
             <legend>옵션</legend>
@@ -157,7 +158,7 @@
                 <input type="number" name="" id="optionStock" class="optionStock" required="">
             </div>
             <button type="button" onclick="nameset();
-                document.getElementById('option${i}').remove();">삭제</button>
+                document.getElementById('optionProduct${i}').remove();">삭제</button>
         `;
         optionProducts.append(fieldset);
         i++;
@@ -182,7 +183,7 @@
     }
 
     function nameset() {
-        const options = document.querySelectorAll(".option");
+        const options = document.querySelectorAll(".optionProduct");
         let j = 0;
         options.forEach(option => {
             const productCode = option.querySelector(".productCode");
@@ -203,4 +204,5 @@
     }
 
 </script>
+</div>
 </html>

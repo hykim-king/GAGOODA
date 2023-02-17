@@ -13,7 +13,7 @@
 
     <h2>천하민</h2>
     <ul>
-        <li><a href="/user/double_check.do">회원 정보 수정 및 삭제</a></li>
+        <li><a href="/user/user_yes/double_check.do">회원 정보 수정 및 삭제</a></li>
         <li><a href="/product/admin/register.do">상품 등록</a></li>
         <li><a href="/product/list.do">상품 첫 20개 리스트</a></li>
     </ul>
@@ -27,15 +27,17 @@
     </ul>
     <h2>구도윤</h2>
     <ul>
-        <li><a th:href="@{ '/exchange/user_yes/mypage/register.do' (orderId='00010') }">교환신청서 작성</a></li>
         <li><a href="exchange/user_yes/mypage/list.do">유저 교환 목록</a></li>
+        <li><a th:href="@{ '/exchange/user_yes/mypage/register.do' (orderId='00010') }">교환신청서 작성</a></li>
+        <li><a th:href="@{ '/exchange/user_yes/mypage/detail.do' (exchangeId=11) }">교환 상세 페이지</a></li>
+
     </ul>
     <h2>주문배송팀 이창국 Address</h2>
     <h4>주소지 관련 페이지(Address): 기본적으로 모든 서비스 로그인 필요</h4>
     <ul>
-        <li><a href="/address/register.do">주소지 등록</a></li>
-        <li><a href="/address/list.do">본인아이디에 저장된 주소 목록보기(로그인필요) </a></li>
-        <li><a th:href="@{ '/address/modify.do' (addressId=100)}">주소지 수정/삭제도 가능</a></li>
+        <li><a href="/address/user_yes/mypage/register.do">주소지 등록</a></li>
+        <li><a href="/address/user_yes/mypage/list.do">본인아이디에 저장된 주소 목록보기(로그인필요) </a></li>
+        <li><a th:href="@{ '/address/user_yes/mypage/modify.do' (addressId=103)}">주소지 수정/삭제도 가능 (예시 addressId=103 이지만 위에 리스트에서 수정하기 버튼으로 이동하기 추천)</a></li>
     </ul>
     <h4>주문 페이지들(Order)</h4>
     <ul>
@@ -52,6 +54,17 @@
         <li><a th:href="@{ '/refund/user_yes/mypage/register.do/{orderId}' (orderId='00010') }">유저 환불 등록폼(로그인 후 가능!)</a></li>
         <li><a th:href="@{ '/refund/user_yes/mypage/detail.do/{refundId}' (refundId=11) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
         <li><a href="/refund/admin/list.do">관리자 리스트(로그인)</a></li>
+    </ul>
+
+    <h2>양한나</h2>
+    <ul>
+        <h4>사용자</h4>
+        <li><a th:href="@{'/product_inquiry/list.do' (productCode='HA10C15EE')}">상품 문의 리스트</a></li>
+        <li><a th:href="@{'/product_inquiry/user_yes/{productCode}/register.do'(productCode='HA10C15EE')}">상품 문의 등록</a></li>
+    </ul>
+    <ul>
+        <h4>관리자</h4>
+        <li><a href="/product_inquiry/admin/list.do">상품 문의 리스트</a></li>
     </ul>
 </div>
 </body>

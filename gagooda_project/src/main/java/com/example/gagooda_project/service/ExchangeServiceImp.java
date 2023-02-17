@@ -1,9 +1,6 @@
 package com.example.gagooda_project.service;
 
-import com.example.gagooda_project.dto.AddressDto;
-import com.example.gagooda_project.dto.ExchangeDto;
-import com.example.gagooda_project.dto.OrderDetailDto;
-import com.example.gagooda_project.dto.OrderDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +10,12 @@ import java.util.List;
 public class ExchangeServiceImp implements ExchangeService {
     private ExchangeMapper exchangeMapper;
     private AddressMapper addressMapper;
-    private OrderMapper orderMapper;
-    private OrderDetailMapper orderDetailMapper;
+    private CommonCodeMapper commonCodeMapper;
 
-    public ExchangeServiceImp(ExchangeMapper exchangeMapper, AddressMapper addressMapper, OrderMapper orderMapper, OrderDetailMapper orderDetailMapper) {
+    public ExchangeServiceImp(ExchangeMapper exchangeMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper) {
         this.exchangeMapper = exchangeMapper;
         this.addressMapper = addressMapper;
-        this.orderMapper = orderMapper;
-        this.orderDetailMapper = orderDetailMapper;
+        this.commonCodeMapper = commonCodeMapper;
     }
 
     @Override
@@ -59,17 +54,17 @@ public class ExchangeServiceImp implements ExchangeService {
     }
 
     @Override
-    public OrderDto selectOrder(String orderId) {
-        return orderMapper.findById(orderId);
-    }
-
-    @Override
-    public List<OrderDetailDto> showOrderDetailListByUserId(String orderId) {
-        return orderDetailMapper.findByOrderId(orderId);
-    }
-
-    @Override
     public List<AddressDto> showAddressListByUserId(int userId) {
         return addressMapper.listByUserId(userId);
+    }
+
+    @Override
+    public List<CommonCodeDto> detCodeList(String  mstCode) {
+        return commonCodeMapper.listByMstCode(mstCode);
+    }
+
+    @Override
+    public ExchangeDto selectOne(int id) {
+        return exchangeMapper.findById(id);
     }
 }

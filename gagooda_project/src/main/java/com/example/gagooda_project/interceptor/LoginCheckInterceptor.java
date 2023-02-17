@@ -18,10 +18,17 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object loginUser_obj=session.getAttribute("loginUser");
         String url = request.getRequestURI();
+        String querString=request.getQueryString();
+        url+=(querString!=null)?"?"+querString:"";
         log.info("preHandle(url) : "+ url);
+        String method = request.getMethod();
+        System.out.println(method);
         if(loginUser_obj==null) {
             session.setAttribute("msg", "로그인 후 이용 가능한 서비스 입니다.");
-            session.setAttribute("redirectUri", url);
+            if (method.equals("GET")) {
+                System.out.println("GET 들어옴");
+                session.setAttribute("getUri", url);
+            }
             response.sendRedirect("/user/login.do");
             return false;
         }
@@ -31,13 +38,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     //동적 페이지에서 view를 렌더링(합성) 하기 전
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("postHandle : "+ modelAndView.getViewName());
     }
 
     //동적 페이지에서 view를 렌더링한 후, 요청 처리가 다 끝나서 응답하기 직전
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-//        response.getWriter().append("<h1>ㅎㅎㅎㅎㅎㅎㅎ<h1>");
-        log.info("afterCompletion");
     }
 }

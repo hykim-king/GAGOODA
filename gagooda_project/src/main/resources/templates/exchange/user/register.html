@@ -11,23 +11,23 @@
     주문자 : <span th:text="${order.userName}"></span><br>
     주문 날짜 : <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span><br>
     주문 번호 : <span th:text="${order.orderId}"></span><br>
-    상품명 : <span th:text="${orderDetailList[0].optionName}+ ' 외 ' + ${orderDetailList.size()-1} + '건'"></span><br>
+    상품명 : <span th:text="${order.orderDetailList[0].optionName}+ ' 외 ' + ${order.orderDetailList.size()-1} + '건'"></span><br>
     총 상품 금액 : <span th:text="${order.totalPrice}"></span>
     <hr>
-    <form action="/mypage/exchange/register.do" method="post">
+    <form th:action="@{'' (orderId = ${order.orderId})}" method="post">
         <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
         <input type="hidden" id="uname" name="uname" th:value="${session.loginUser.uname}">
         <input type="hidden" id="email" name="email" th:value="${session.loginUser.email}">
         <input type="hidden" id="phone" name="phone" th:value="${session.loginUser.phone}">
-        <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
+<!--        <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
         <fieldset>
             <legend>교환 정보</legend>
             <div>
                 <label for="orderDetailId">교환 대상 상품</label>
                 <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()">
                     <option value="" selected disabled>교환 대상을 선택해주세요.</option>
-                    <th:block th:each="orderDetail : ${orderDetailList}">
-                        <option th:text="${orderDetail.optionName} +' 수량 : ' +${orderDetail.cnt}" th:value="${orderDetail.orderDetailId}"></option>
+                    <th:block th:each="orderDetail : ${order.orderDetailList}">
+                        <option th:text="${order.orderDetailList[0].optionName} +' 수량 : ' +${order.orderDetailList[0].cnt}" th:value="${orderDetail.orderDetailId}"></option>
                     </th:block>
                 </select>
             </div>

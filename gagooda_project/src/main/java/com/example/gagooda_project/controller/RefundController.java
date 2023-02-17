@@ -75,17 +75,23 @@ public class RefundController {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
         }
-        OrderDto order = orderServiceImp.selectOne(orderId);
-        int refundCount = refundServiceImp.countByOrderId(orderId);
-        List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
-        AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
+        try{
+            OrderDto order = orderServiceImp.selectOne(orderId);
+            int refundCount = refundServiceImp.countByOrderId(orderId);
+            List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+            AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
 
-        model.addAttribute("order", order);
-        model.addAttribute("refundCount", refundCount);
-        model.addAttribute("orderAddress", orderAddress);
-        model.addAttribute("addressList", addressList);
-        model.addAttribute("refundMsg", refundMsg);
+            model.addAttribute("order", order);
+            model.addAttribute("refundCount", refundCount);
+            model.addAttribute("orderAddress", orderAddress);
+            model.addAttribute("addressList", addressList);
+            model.addAttribute("refundMsg", refundMsg);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "redirect:/";
+        }
         return "refund/user/register";
+
     }
 
     @PostMapping("user_yes/mypage/register.do/{orderId}")
@@ -117,7 +123,6 @@ public class RefundController {
                          @PathVariable int refundId,
                          HttpSession session,
                          Model model) {
-        log.info("$$$$$$$$$$$$$$$$$$$$"+session.getAttribute("refundMsg")+"$$$$$$$$$$$$$$");
         String refundMsg = null;
         if (session.getAttribute("refundMsg") != null) {
             refundMsg = session.getAttribute("refundMsg").toString();

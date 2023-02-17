@@ -19,8 +19,8 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object loginUser_obj=session.getAttribute("loginUser");
         UserDto loginUser = (UserDto) loginUser_obj;
-        String url = request.getRequestURI();
-        log.info("preHandle(url) : "+ url);
+        String uri = request.getRequestURI();
+        log.info("preHandle(uri) : "+ uri);
         if(loginUser_obj==null || !loginUser.getGDet().equals("g1")) {
             session.setAttribute("msg", "관리자 로그인 후 접근 가능한 서비스 입니다");
             response.sendRedirect("/");

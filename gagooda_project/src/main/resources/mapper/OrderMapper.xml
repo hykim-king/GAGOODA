@@ -22,6 +22,7 @@
                     fetchType="lazy"/>
 
     </resultMap>
+
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
         <id column="o_det" property="oDet"/>
         <id column="cnt" property="count"/>
@@ -58,8 +59,8 @@
         SELECT COUNT(*) FROM order_db WHERE user_id=#{userId}
     </select>
     <insert id="insertOne">
-        INSERT INTO ORDER_DB (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path, o_det)
-        VALUES (#{orderId}, #{userId}, #{addressId}, #{totalPrice}, #{userName}, #{userEmail}, #{userPhone}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgPath}, #{oDet})
+        INSERT INTO ORDER_DB (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path)
+        VALUES (#{orderId}, #{userId}, #{addressId}, #{totalPrice}, #{userName}, #{userEmail}, #{userPhone}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgPath})
     </insert>
     <update id="updateStatus">
         UPDATE ORDER_DB SET o_det=#{oDet} WHERE order_id=#{id}

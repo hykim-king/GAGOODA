@@ -18,8 +18,6 @@
                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
                     column="product_code"
                     fetchType="lazy"/>
-
-
     </resultMap>
 
     <insert id="insertOne" parameterType="CartDto" useGeneratedKeys="true" keyProperty="cartId">

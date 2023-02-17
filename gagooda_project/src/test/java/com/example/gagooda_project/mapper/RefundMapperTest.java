@@ -28,14 +28,14 @@ class RefundMapperTest {
     @Test
     void insertOne() {
         RefundDto refund = new RefundDto();
-        refund.setUserId(2);
+        refund.setUserId(1);
         refund.setReceiverName("김김김");
         refund.setEmail("ddd@dddd.ddd");
         refund.setPhone("01022221111");
         refund.setOrderDetailId(1);
-        refund.setOrderId("E22222");
+        refund.setOrderId("00010");
         refund.setAddressId(1);
-        refund.setCancelAmount(1111);
+        refund.setCancelAmount(10000);
         refund.setReason("222");
         refund.setPostCode("2222");
         refund.setAddress("서울시");
@@ -56,18 +56,16 @@ class RefundMapperTest {
 
     @Test
     void pageAll() {
-        List<CommonCodeDto> rfDetList = new ArrayList<>();
+        List<CommonCodeDto> rfDetList = null;
         List<RefundDto> refundList = refundMapper.pageAll(rfDetList);
         System.out.println(refundList);
     }
 
     @Test
     void updateOne() {
-        RefundDto findRefund = refundMapper.findById(1);
-        findRefund.setReply("코멘트 남깁니다~");
-        findRefund.setRfDet("rf1");
+        RefundDto findRefund = refundMapper.findById(33);
         refundMapper.updateOne(findRefund, "admin");
-        RefundDto resultRefund = refundMapper.findById(1);
+        RefundDto resultRefund = refundMapper.findById(33);
         System.out.println(resultRefund);
     }
 
