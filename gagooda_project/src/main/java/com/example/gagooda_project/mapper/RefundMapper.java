@@ -18,6 +18,12 @@ public interface RefundMapper {
 
     List<RefundDto> pageAll(List<String> rfCodeList);
 
-    int updateOne(RefundDto refund);
+    int updateOne(RefundDto refund, String auth);
+
+    int countByUserId(int userId);
+
+    RefundDto findByOrderDetailId(int orderDetailId);
+
+    int countByOrderId(String orderId);
 
 }

@@ -23,7 +23,7 @@
 <ul>
     <li>수령인 : <span th:text="${refund.receiverName}"></span></li>
     <li>수령인 연락처 : <span th:text="${refund.receiverPhone}"></span></li>
-    <li>환불 대상 상품 : <span th:text="${optionNameList.get(refund.refundId)}"></span></li>
+    <li>환불 대상 상품 : <span th:text="${refund.orderDetailDto.optionName}"></span></li>
     <li>환불 요청 금액 : <span th:text="${refund.cancelAmount}"></span></li>
     <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>
     <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>
@@ -34,8 +34,28 @@
 <h3>환불 처리 정보</h3>
 <ul>
     <li>환불 처리 현황 : <span th:text="${rfDetList[#strings.substring(refund.rfDet, 2)].detName}"></span></li>
-    <li></li>
+    <li>
+        <div>
+            아직 답변이 달리지 않았습니다.
+        </div>
+    </li>
 </ul>
-
-</div>환
+<th:block th:if="${refund.rfDet.equals('rf0')}">
+    <form th:action="@{'/refund/user_yes/mypage/modify.do/{refundId}' (refundId = ${refund.refundId})}" method="post">
+        <button type="submit" >환불 요청 취소</button>
+    </form>
+</th:block>
+<th:block th:if="${refundMsg != null}">
+    <span id="msg" th:data-msg="${refundMsg}"></span>
+    <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
+</th:block>
+<!--<script th:inline="javascript">-->
+<!--    let msg = document.querySelector("#msg");-->
+<!--    if (msg){-->
+<!--        console.log(msg)-->
+<!--        console.log(msg.dataset.msg);-->
+<!--        alert(msg.dataset.msg);-->
+<!--    }-->
+<!--</script>-->
+</div>
 </html>

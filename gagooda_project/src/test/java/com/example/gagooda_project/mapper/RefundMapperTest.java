@@ -45,6 +45,7 @@ class RefundMapperTest {
         refund.setImgCode("imgcode222");
         refund.setRfrDet("rfr1");
         refundMapper.insertOne(refund);
+
     }
 
     @Test
@@ -67,8 +68,14 @@ class RefundMapperTest {
         RefundDto findRefund = refundMapper.findById(1);
         findRefund.setReply("코멘트 남깁니다~");
         findRefund.setRfDet("rf1");
-        refundMapper.updateOne(findRefund);
+        refundMapper.updateOne(findRefund, "admin");
         RefundDto resultRefund = refundMapper.findById(1);
         System.out.println(resultRefund);
+    }
+
+    @Test
+    void countByUserId(){
+        int count = refundMapper.countByUserId(10);
+        System.out.println("**********************"+ count +"**********************");
     }
 }
