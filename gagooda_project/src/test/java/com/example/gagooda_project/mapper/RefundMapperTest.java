@@ -56,9 +56,7 @@ class RefundMapperTest {
 
     @Test
     void pageAll() {
-        List<String> rfDetList = new ArrayList<>();
-        rfDetList.add("rf0");
-        rfDetList.add("rf1");
+        List<CommonCodeDto> rfDetList = new ArrayList<>();
         List<RefundDto> refundList = refundMapper.pageAll(rfDetList);
         System.out.println(refundList);
     }

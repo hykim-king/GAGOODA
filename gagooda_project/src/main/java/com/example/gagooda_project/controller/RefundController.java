@@ -165,18 +165,22 @@ public class RefundController {
         }
         if (modify > 0) {
             session.setAttribute("refundMsg", "환불 요청이 성공적으로 취소되었습니다.");
+            return "redirect:/refund/user_yes/mypage/list.do";
         } else {
             session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
+            return "redirect:/refund/user_yes/mypage/detail.do/"+refundId;
         }
-        return "redirect:/refund/user_yes/mypage/list.do";
     }
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
                             Model model){
-        List<String> rfDetList = null;
+        List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
+        List<CommonCodeDto> rfDetList = null;
         List<RefundDto> refundList = refundServiceImp.showRefundList(rfDetList);
+
         model.addAttribute("refundList", refundList);
+        model.addAttribute("rfCodeList", rfCodeList);
         return "refund/admin/list";
     }
 

@@ -61,7 +61,7 @@
     <select id="pageAll" resultMap="refundMap">
         SELECT * FROM refund
         <if test="rfDetList != null">
-            WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet}</foreach>
+            WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet.detCode}</foreach>
         </if>
         ORDER BY reg_date DESC
     </select>

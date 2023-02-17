@@ -60,7 +60,7 @@ public class RefundServiceImp implements RefundService{
         return refundMapper.pageByUserIdAndDate(id, period, startDate, endDate, detCode);
     }
 
-    public List<RefundDto> showRefundList(List<String> rfDetList){ return refundMapper.pageAll(rfDetList); }
+    public List<RefundDto> showRefundList(List<CommonCodeDto> rfDetList){ return refundMapper.pageAll(rfDetList); }
 
     public RefundDto selectOne(int id){ return refundMapper.findById(id); }
 

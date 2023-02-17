@@ -8,6 +8,37 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
+
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>작성자</th>
+                <th>주문 ID</th>
+                <th>상세 주문 ID</th>
+                <th>옵션 상품 ID</th>
+                <th>주문 가격</th>
+                <th>환불 요청 가격</th>
+                <th>환불 진행 상태</th>
+                <th>환불 신청일</th>
+                <th>최근 상태 변경일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="i : ${#numbers.sequence(refundList.size()-1,0,1)}" th:with="refund = ${refundList[i]}">
+                <td th:text="${i+1}"></td>
+                <td th:text="${refund.uname}"></td>
+                <td th:text="${refund.orderId}"></td>
+                <td th:text="${refund.orderDetailId}"></td>
+                <td th:text="${refund.orderDetailDto.optionCode}"></td>
+                <td th:text="${refund.orderDetailDto.price}"></td>
+                <td th:text="${refund.cancelAmount}"></td>
+                <td th:text="${rfCodeList[refund.rfDet.substring(3)]}"></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
     <th:block th:text="${refundList}"></th:block>
 </div>
 </html>

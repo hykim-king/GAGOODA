@@ -16,7 +16,7 @@ public interface RefundMapper {
 
     RefundDto findById(int id);
 
-    List<RefundDto> pageAll(List<String> rfCodeList);
+    List<RefundDto> pageAll(List<CommonCodeDto> rfCodeList);
 
     int updateOne(RefundDto refund, String auth);
 

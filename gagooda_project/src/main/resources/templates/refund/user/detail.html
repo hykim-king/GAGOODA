@@ -9,7 +9,10 @@
 </head>
 <div layout:fragment="content">
 <h2>환불 반품 신청 확인서</h2>
-
+    <th:block th:if="${refundMsg != null}">
+        <span id="msg" th:data-msg="${refundMsg}"></span>
+        <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
+    </th:block>
 <h3>환불 반품 신청</h3>
 <h3>주문 정보</h3>
 <ul>
@@ -45,10 +48,7 @@
         <button type="submit" >환불 요청 취소</button>
     </form>
 </th:block>
-<th:block th:if="${refundMsg != null}">
-    <span id="msg" th:data-msg="${refundMsg}"></span>
-    <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
-</th:block>
+
 
 <!--<script th:inline="javascript">-->
 <!--    let msg = document.querySelector("#msg");-->
