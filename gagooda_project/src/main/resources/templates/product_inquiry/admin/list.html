@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>상품문의</title>
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <div layout:fragment="content">
     <div class="container" >
@@ -44,34 +43,14 @@
                 </td>
                 <td>
                     <th:block th:if="${p.getReply() == null}">
-                        <p>미답변</p>
+                        <p class="text-danger">미답변</p>
 <!--                            <a th:href="@{'/product_inquiry/admin/register.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">답변등록</a>-->
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">
-                            답변등록
-                        </button>
+<!--                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">-->
+<!--                            답변등록-->
+<!--                        </button>-->
 
                         <!-- Modal -->
-
-                            <div class="modal fade" th:id="${'exampleModal'+p.PInquiryId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <input id="pInquiryId" type="hidden" name="pInquiryId" th:value="${p.PInquiryId}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body" th:text="${p.getContent()}"></div>
-                                        <div class="modal-body">
-                                            <textarea name="reply" id="reply" class="form-control mx-lg-auto" rows="5" placeholder="답변"></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                                            <button type="submit" class="reply_register btn btn-primary" > 등록</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
 <!--                        <script>-->
 <!--                            $(function(){-->
