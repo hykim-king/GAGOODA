@@ -13,20 +13,7 @@
                     <tr>
                         <th>전체 <span th:text="${cartList.size()}"></span>개</th>
                         <th>
-                            <div class="checkAll">
-                                <input type="checkbox" name="checkAll" id="checkAll">
-                                <label for="checkAll"></label>
-                                <script>
-                                    $("checkAll").click(function () {
-                                        var check = $("#checkAll").prop("checked");
-                                        if (check) {
-                                            $(".chBox").prop("checked", true);
-                                        } else {
-                                            $(".chBox").prop("checked", false);
-                                        }
-                                    });
-                                </script>
-                            </div>
+                            <input type="checkbox" class="allCheck">
                         </th>
                         <th>상품정보</th>
                         <th>수량</th>
@@ -36,44 +23,78 @@
                 <tbody>
                     <tr th:each="cart:${cartList}">
                         <td>1</td>
-                        <td>
-                            <div class="checkBox">
-                                <input type="checkbox" name="chBox" class="chBox" data-cartId="${cart.cartId}">
-                                <script>
-                                    $(".chBox").click(function () {
-                                        $("#checkAll").prop("checked", false);
-                                    });
-                                </script>
-                            </div>
-                        </td>
+                        <td><input type="checkbox" class="check"></td>
                         <td th:text="${cart.optionCode}"></td>
                         <td th:text="${cart.cnt}"></td>
-                        <td>가격은 어떻게...</td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div>
-            <div class="delOneBtn">
-                <button type="button" class="deleteOne_btn">선택삭제</button>
-                <script>
-                    $(".deleteOne_btn").click(function () {
-                        var confirm_val = confirm("정말 삭제하시겠습니까?");
-                        if (confirm_val) {
-                            var checkArr = new Array();
-                            $("input[class='chBox']:checked").each(function () {
-                                checkArr.push($(this).attr("data-cartId"));
-                            });
-
-                        }
-                    })
-                </script>
-            </div>
-            <div class="delAllBtn">
-                <button type="button" class="deleteAll_btn">전체삭제</button>
-            </div>
+            <button type="button" class="delOneBtn">선택삭제</button>
+            <button type="button" class="delAllBtn">전체삭제</button>
         </div>
     </div>
 </body>
 </html>
+
+<script>
+    const allCheck = document.querySelector(".allCheck");
+    const list = document.querySelectorAll(".check");
+
+    allCheck.onclick = () => {
+        if (allCheck.checked) {
+            for (let i=0; i<list.length; i++) {
+                list[i].checked = true;
+            }
+        } else {
+            for (let j=0; j<list.length; j++) {
+                list[j].checked = false;
+            }
+        }
+    }
+
+    const delOneBtn = document.querySelector(".delOneBtn");
+    delOneBtn.onclick = () => {
+        var arr = new Array();
+        if (list.length == 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return false;
+        } else {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                const url = "deleteOne";
+                const arr = new Array(list.length);
+                document.querySelectorAll(".check").forEach(function (v, i) {
+                    arr[i] = v.value;
+                });
+
+                const form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', '/deleteOne');
+
+                const input1 = document.createElement('input');
+                input1.setAttribute("type", "hidden");
+                input1.setAttribute("name", "cartIds");
+                input1.setAttribute("value", arr);
+
+                form.appendChild(input1);
+                console.log(form);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    }
+
+    const delAllBtn = document.querySelector(".delAllBtn");
+    delAllBtn.onclick = () => {
+        if (confirm("정말로 전체삭제하시겠습니까?")) {
+            const form = document.createElement('form');
+            form.setAttribute('method', 'post');
+            form.setAttribute('action', '/deleteAll');
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
