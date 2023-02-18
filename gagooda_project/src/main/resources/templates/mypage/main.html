@@ -2,24 +2,15 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<div layout:fragment="content">
-    <h1>마이페이지</h1>
-    <ul>
-        <li><a href="/order/user_yes/list.do">주문 내역</a></li>
-        <li><a href="/exchange/user_yes/mypage/list.do">유저 교환 목록</a></li>
-        <li><a href="/refund/user_yes/mypage/list.do">유저 환불 목록</a></li>
-        <li>배송 내역</li>
-        <li>내 활동 관리</li>
-        <li>문의 내역</li>
-        <li><a href="/address/list.do">내 배송지 관리</a></li>
-    </ul>
+<div layout:fragment="myPageContent">
+    <h1>마이페이지 메인</h1>
     <h3>진행 중인 주문</h3>
     <h3>최근 주문 정보</h3>
-    <h3>최근 본 상품</h3>
+    <h3>장바구니</h3>
 </div>
 </html>

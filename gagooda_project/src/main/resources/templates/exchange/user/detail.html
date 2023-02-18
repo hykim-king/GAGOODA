@@ -2,16 +2,16 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<div layout:fragment="content">
+<div layout:fragment="myPageContent">
     <h2>교환 신청 확인서</h2>
 
-    <h3>교환 반품 신청</h3>
+    <h3>교환 신청</h3>
     <h3>주문 정보</h3>
     <ul>
         <li>주문인 : <span th:text="${exchange.uname}"></span></li>
@@ -24,11 +24,11 @@
     <ul>
         <li>수령인 : <span th:text="${exchange.receiverName}"></span></li>
         <li>수령인 연락처 : <span th:text="${exchange.receiverPhone}"></span></li>
-        <li>교환 대상 상품 : <span th:text="${optionNameList.get(exchange.exchangeId)}"></span></li>
+        <li>교환 대상 상품 : <span th:text="${exchange}"></span></li>
         <li>교환 요청 수량 : <span th:text="${exchange.cnt}"></span></li>
-        <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(exchange.rfrDet,3)].detName}"></span></li>
-        <li>환불 요청 사유 : <span th:text="${exchange.reason}"></span></li>
-        <li >주소 : <span th:text=" ${'('+exchange.postCode+') '+exchange.address } "></span><span th:text="${exchange.addressDetail}"></span></li>
+        <li>교환 요청 유형 : <span th:text="${rfrDetList[#strings.substring(exchange.rfrDet,3)].detName}"></span></li>
+        <li>교환 요청 사유 : <span th:text="${exchange.reason}"></span></li>
+        <li>주소 : <span th:text=" ${'('+exchange.postCode+') '+exchange.address } "></span><span th:text="${exchange.addressDetail}"></span></li>
         <li>첨부 이미지 <span th:text="${exchange.imgCode}"></span></li>
     </ul>
 

@@ -2,16 +2,16 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<div layout:fragment="content">
-    <h2>유저 환불 목록</h2>
+<div layout:fragment="myPageContent">
+    <h2>유저 교환 목록</h2>
     <div th:text="${session.exchangeMsg}"></div>
-    <h3>환불 내역</h3>
+    <h3>교환 내역</h3>
     <ul>
         <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기</a></li>
         <li><a class="afterParam" th:href="@{ '' (period=15) }">최근 15일 기록 보기</a></li>
@@ -27,12 +27,12 @@
         </li>
     </ul>
     <ul>
-        <li><a th:href="@{ '' }">전체 환불 내역</a></li>
-        <li><a th:href="@{ '' (detCode=notEnd) }">환불 진행 내역</a></li>
-        <li><a th:href="@{ '' (detCode=end) }">환불 완료 내역</a></li>
+        <li><a th:href="@{ '' }">전체 교환 내역</a></li>
+        <li><a th:href="@{ '' (detCode=notEnd) }">교환 진행 내역</a></li>
+        <li><a th:href="@{ '' (detCode=end) }">교환 완료 내역</a></li>
     </ul>
 
-    <h3>환불 신청 내역 총 <th:block th:text="${exchangeList.size()}"></th:block> 건</h3>
+    <h3>교환 신청 내역 총 <th:block th:text="${exchangeList.size()}"></th:block> 건</h3>
     <table>
         <thead>
         <tr>

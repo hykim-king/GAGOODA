@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
+<div layout:fragment="myPageContent">
     <form action="/product_inquiry/list.do">
         <h2 th:text="${succMsg}"></h2>
         <ul>
@@ -27,5 +30,5 @@
             </li>
         </ul>
     </form>
-</body>
+</div>
 </html>
