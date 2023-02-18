@@ -11,5 +11,8 @@ public interface DeliveryMapper {
     int updateOne(DeliveryDto dto);
     DeliveryDto findById(int id);
     DeliveryDto findByOrderId(String orderId);
+    List<DeliveryDto> listAll(DeliveryDto dto);
+    List<DeliveryDto> listByDDet(DeliveryDto dto);
+
 
 }

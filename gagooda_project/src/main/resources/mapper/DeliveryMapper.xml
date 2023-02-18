@@ -7,9 +7,11 @@
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
-        <association property="order"
+        <association property="orderDto"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
-                     column="order_id"/>
+                     column="order_id"
+                     fetchType="lazy"/>
+
 
 
     </resultMap>
@@ -30,6 +32,12 @@
     </select>
     <select id="findByOrderId" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE order_id=#{orderId}
+    </select>
+    <select id="listAll" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
+        SELECT * FROM delivery;
+    </select>
+    <select id="listByDDet" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
+        SELECT * FROM delivery WHERE d_det=#{dDet}
     </select>
 </mapper>
 
