@@ -17,7 +17,7 @@
                     <tr>
                         <th>전체 <span th:text="${cartList.size()}"></span>개</th>
                         <th>
-                            <input type="checkbox" class="allCheck">
+                            <input type="checkbox" class="allCheck" checked>
                         </th>
                         <th>상품정보</th>
                         <th>수량</th>
@@ -27,11 +27,11 @@
                     <tbody>
                     <tr th:each="cart:${cartList}">
                         <td>1</td>
-                        <td><input type="checkbox" name="checkList" class="checkList" th:value="${cart.cartId}"></td>
+                        <td><input type="checkbox" name="checkList" class="checkList" checked th:value="${cart.cartId}"></td>
                         <td>
                             <img th:src="@{'/img/product/{file}'(file=${cart.product.getImgCode()+'_0.png'})}"
                                  style="width: 100px;">
-                            <a href="product/{cart.getProductCode()}/detail.do" th:text="${cart.getOptionProduct().getOpname()}"></a>
+                            <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cart.getProductCode()})}" th:text="${cart.getOptionProduct().getOpname()}"></a>
                         </td>
                         <td>
                             <input th:value="${cart.cnt}" name="cntText" class="cntText" style="width: 20px">
@@ -46,7 +46,8 @@
             <div>
                 <div>총 주문금액: <strong th:text="${totalPrice}"></strong> 원</div>
                 <div>총 주문수량: <strong th:text="${totalCnt}"></strong> 개</div>
-                <button type="button" class="orderBtn" onclick="orderPro()">전체주문</button>
+                <button type="button" class="orderBtn" onclick="orderOne()">선택주문</button>
+                <button type="button" class="orderBtn" onclick="orderAll()">전체주문</button>
                 <button type="button" class="delOneBtn" onclick="cartDelOne()">선택삭제</button>
                 <button type="button" class="delAllBtn" onclick="cartDelAll()">전체삭제</button>
             </div>
@@ -91,7 +92,7 @@
 
         const form = document.createElement('form');
         form.setAttribute('method', 'post');
-        form.setAttribute('action', 'update.do');
+        form.setAttribute('action', '/user_yes/mypage/update.do');
 
         var input1 = document.createElement('input');
         input1.setAttribute("type", "hidden");
@@ -115,7 +116,7 @@
             if (confirm("정말로 전체삭제하시겠습니까?")) {
                 const form = document.createElement('form');
                 form.setAttribute('method', 'post');
-                form.setAttribute('action', 'deleteAll.do');
+                form.setAttribute('action', '/user_yes/mypage/deleteAll.do');
                 document.body.appendChild(form);
                 form.submit();
             }
@@ -142,7 +143,7 @@
 
                 const form = document.createElement('form');
                 form.setAttribute('method', 'post');        //Post 메소드 적용
-                form.setAttribute('action', 'deleteOne.do');
+                form.setAttribute('action', '/user_yes/mypage/deleteOne.do');
 
                 var input1 = document.createElement('input');
                 input1.setAttribute("type", "hidden");

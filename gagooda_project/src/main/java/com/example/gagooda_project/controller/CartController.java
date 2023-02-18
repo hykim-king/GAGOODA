@@ -11,33 +11,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
 public class CartController {
     CartServiceImp cartServiceImp;
     OptionProductService optionProductService;
-    ProductService prductService;
+    ProductService productService;
     ImageService imageService;
 
     public CartController(CartServiceImp cartServiceImp,
-                          ProductService prductService,
+                          ProductService productService,
                           OptionProductService optionProductService,
                           ImageService imageService) {
         this.cartServiceImp = cartServiceImp;
-        this.prductService = prductService;
+        this.productService = productService;
         this.optionProductService = optionProductService;
         this.imageService = imageService;
     }
 
     @Value("${img.upload.path}")
-    private String imgPath;
 
-    @GetMapping("/list.do")
+    @GetMapping("/user_yes/mypage/list.do")
     public String list(@RequestParam(name = "optionCode", required = false) String optionCode,
                        Model model,
-                       @SessionAttribute UserDto loginUser) throws Exception {
+                       @SessionAttribute UserDto loginUser
+    ) throws Exception {
         List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
         CartDto cart = cartServiceImp.selectOne(loginUser.getUserId(), optionCode);
         int totalCnt = 0;
@@ -53,7 +52,7 @@ public class CartController {
         return "/cart/list";
     }
 
-    @PostMapping("/update.do")
+    @PostMapping("/user_yes/mypage/update.do")
     public String update(@RequestParam(name = "optionCode", required = false) String optionCode,
                          CartDto cart,
                          @RequestParam List<Integer> cartCnts,
@@ -78,13 +77,13 @@ public class CartController {
             e.printStackTrace();
         }
         if (update > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }
     }
 
-    @PostMapping("/deleteOne.do")
+    @PostMapping("/user_yes/mypage/deleteOne.do")
     public String deleteOne(CartDto cart,
                             @RequestParam List<Integer> cartIds,
                             @SessionAttribute UserDto loginUser) throws Exception {
@@ -98,13 +97,13 @@ public class CartController {
             e.printStackTrace();
         }
         if (delete > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }
     }
 
-    @PostMapping("/deleteAll.do")
+    @PostMapping("/user_yes/mypage/deleteAll.do")
     public String deleteAll(@SessionAttribute UserDto loginUser) throws Exception {
         int delete = 0;
         try {
@@ -113,7 +112,7 @@ public class CartController {
             e.printStackTrace();
         }
         if (delete > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }
