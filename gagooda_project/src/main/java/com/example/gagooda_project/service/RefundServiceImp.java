@@ -5,7 +5,10 @@ import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RefundServiceImp implements RefundService{
@@ -26,6 +29,7 @@ public class RefundServiceImp implements RefundService{
     public int registerOne(RefundDto refund){
         int register = 0;
         RefundDto checkRefund;
+        AddressDto newAddress = null;
         if(refund.getOrderDetailId() == -1){
             OrderDto order = orderMapper.findById(refund.getOrderId());
             for(int i = 0; i < order.getOrderDetailList().size(); i++){
@@ -37,6 +41,7 @@ public class RefundServiceImp implements RefundService{
                         case "rf0": case "rf2": case "rf3": case "rf4": case "rf5": case "rf6": case "rf7": case "rf8":
                             throw new Error();
                         case "rf1":
+
                             register += refundMapper.insertOne(refund);
                             break;
                     }
@@ -53,6 +58,7 @@ public class RefundServiceImp implements RefundService{
                 register += refundMapper.insertOne(refund);
             }
         }
+        
         return register;
     }
 
@@ -60,7 +66,24 @@ public class RefundServiceImp implements RefundService{
         return refundMapper.pageByUserIdAndDate(id, period, startDate, endDate, detCode);
     }
 
-    public List<RefundDto> showRefundList(List<String> rfDetList){ return refundMapper.pageAll(rfDetList); }
+    public List<RefundDto> showRefundList(Map<String, String> searchFilter){
+        if(!searchFilter.get("rfDet").equals("")){
+            String rfDet = searchFilter.get("rfDet");
+            List<String> rfList = new ArrayList<>(Arrays.asList(rfDet.split(",")));
+            String rfDetF = "'"+String.join("','", rfList)+"'";
+            searchFilter.put("rfDet", rfDetF);
+        }
+        if(searchFilter.get("searchDiv").equals("all")){
+            String allCol = "refund_id OR user_id OR uname OR email OR phone OR order_detail_id OR order_id " +
+                    "OR cancel_amount OR reason OR reply OR post_code OR address OR address_detail OR receiver_name OR receiver_phone";
+            searchFilter.put("searchDiv", allCol);
+        }
+        if(!searchFilter.get("searchWord").equals("")){
+            String keyword = "%"+searchFilter.get("searchWord")+"%";
+            searchFilter.put("searchWord", keyword);
+        }
+        return refundMapper.pageAll(searchFilter);
+    }
 
     public RefundDto selectOne(int id){ return refundMapper.findById(id); }
 
