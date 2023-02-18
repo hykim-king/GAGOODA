@@ -31,7 +31,7 @@
         SELECT * FROM ORDER_DB
     </select>
     <select id="pageAll" resultMap="orderMap" parameterType="PagingDto">
-        SELECT * FROM ORDER_DB LIMIT #{startRow},#{rows}
+        SELECT * FROM ORDER_DB ORDER BY ${orderField} ${direct} LIMIT #{startRow},#{rows}
     </select>
     <select id="listByUserIdAndDate" resultMap="orderMap">
         SELECT * FROM ORDER_DB WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()

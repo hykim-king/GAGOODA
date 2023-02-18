@@ -76,7 +76,7 @@
                     <th>카트아이디</th>
                     <th>상품 정보</th>
                     <th>수량</th>
-                    <th>주문금액</th>
+                    <th>상품별 금액</th>
                     </thead>
                     <tbody>
                     <tr th:each="cart, stat :${cartList}">
@@ -95,8 +95,6 @@
                         <td><input type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
                                    readonly></td>
                         <td>
-                            <input type="number" th:value="${cart.optionProduct.price}" name="orderDetail.price"
-                                   id="orderDetail.price">
                             <input type="number" th:value="${cart.optionProduct.price * cart.cnt}"
                                    name="orderDetail.totalPrice" id="orderDetail.totalPrice">
                         </td>

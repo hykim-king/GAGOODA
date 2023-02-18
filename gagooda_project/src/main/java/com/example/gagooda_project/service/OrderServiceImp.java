@@ -24,6 +24,8 @@ public class OrderServiceImp implements OrderService {
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId) {
         int totalRows=orderMapper.count(paging,userId);
+        paging.setRows(4);
+        paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
         return orderMapper.pageAll(paging);
     }
