@@ -2,12 +2,12 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<div layout:fragment="content">
+<div layout:fragment="myPageContent">
 <h2>유저 환불 목록</h2>
 <h3>환불 내역</h3>
 <ul>
@@ -69,13 +69,6 @@
             document.location.href =  targetHref;
         })
     })
-
-    // let msg = document.querySelector("#msg");
-    // if (msg){
-    //     console.log(msg)
-    //     console.log(msg.dataset.refundMsg);
-    //     alert(msg.dataset.refundMsg);
-    // }
 </script>
 </div>
 </html>

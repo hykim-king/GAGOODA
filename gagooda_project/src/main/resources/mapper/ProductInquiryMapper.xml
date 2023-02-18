@@ -44,7 +44,10 @@
     <select id="findById" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </select>
-<!--    <select id="pageAll" resultType="ProductInquiryDto">-->
+    <select id="countByPInquiryId" resultType="java.lang.Integer">
+        SELECT COUNT(p_inquiry_id) FROM product_inquiry WHERE product_code=#{productCode}
+    </select>
+    <!--    <select id="pageAll" resultType="ProductInquiryDto">-->
 <!--        SELECT * FROM product_inquiry ORDER BY-->
 <!--    </select>-->
 </mapper>

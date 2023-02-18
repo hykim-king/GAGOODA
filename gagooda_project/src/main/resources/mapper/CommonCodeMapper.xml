@@ -27,4 +27,7 @@
     <select id="finbByDetCode" resultMap="commonCodeMap">
         SELECT * FROM common_code WHERE det_code = #{detCode}
     </select>
+    <select id="findByMstAndDetCode" resultMap="commonCodeMap">
+        SELECT * FROM common_code WHERE mst_code=#{mstCode} AND det_code=#{detCode}
+    </select>
 </mapper>

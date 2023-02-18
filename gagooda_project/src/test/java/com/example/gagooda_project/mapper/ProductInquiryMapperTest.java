@@ -59,4 +59,9 @@ class ProductInquiryMapperTest {
     @Test
     void pageAll() {
     }
+
+    @Test
+    void countByPInquiryId() {
+        productInquiryMapper.countByPInquiryId("HA10C15EE");
+    }
 }

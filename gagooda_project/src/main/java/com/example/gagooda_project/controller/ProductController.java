@@ -123,7 +123,7 @@ public class ProductController {
     }
 
     @GetMapping("/admin/register.do")
-    public String insert(
+    public String register(
             @SessionAttribute UserDto loginUser,
             @SessionAttribute(required = false) String msg,
             HttpSession session,
@@ -143,7 +143,7 @@ public class ProductController {
     }
 
     @PostMapping("/admin/register.do")
-    public String insert(
+    public String register(
             @SessionAttribute UserDto loginUser,
             HttpSession session,
             ProductDto product,
@@ -152,47 +152,14 @@ public class ProductController {
             @RequestParam(name = "infoImageFile") List<MultipartFile> infoImageFileList
     ) {
         if (loginUser.getGDet().equals("g1")) {
-            // imgCode, infoImgCode 설정
-            product.setImgCode(product.getProductCode());
-            product.setInfoImgCode(product.getProductCode() + "_INFO");
-            product.setRegId(loginUser.getUserId());
-            product.setModId(loginUser.getUserId());
-            System.out.println(product.getInfoImgCode());
-
-            // categoryConnList 생성 및 product 에 설정
-            List<CategoryConnDto> categoryConnList = new ArrayList<>();
-            for (int categoryId : categoryIdList) {
-                CategoryConnDto categoryConn = new CategoryConnDto();
-                categoryConn.setProductCode(product.getProductCode());
-                categoryConn.setCategoryId(categoryId);
-                categoryConnList.add(categoryConn);
-            }
-            product.setCategoryConnList(categoryConnList);
             int insert = 0;
             try {
                 // product, categoryConn 등록
-                insert = productService.register(product);
-                for (int i = 0; i < imageFileList.size(); i++) {
-                    insert += imageService.registerMultipartImage(imageFileList.get(i),
-                            imgPath + "/product",
-                            product.getImgCode(),
-                            i + 1);
-                }
-                System.out.println("imageFileList 완료");
-                for (int i = 0; i < imageFileList.size(); i++) {
-                    insert += imageService.registerMultipartImage(infoImageFileList.get(i),
-                            imgPath + "/product",
-                            product.getInfoImgCode(),
-                            i + 1);
-                }
+                insert = productService.register(product, imageFileList, infoImageFileList,
+                        loginUser, categoryIdList, imgPath);
                 System.out.println("insert:" + insert);
             } catch (Exception e) {
                 e.printStackTrace();
-                imageService.removeWithCode(product.getImgCode());
-                imageService.removeWithCode(product.getInfoImgCode());
-                optionProductService.removeWithProduct(product.getProductCode());
-                categoryConnService.removeForProduct(product.getProductCode());
-                productService.remove(product.getProductCode());
                 insert = 0;
             }
             if (insert > 0) {
@@ -203,6 +170,38 @@ public class ProductController {
             }
         } else {
             session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/admin/{productCode}/modify.do")
+    public String modify(
+            @SessionAttribute UserDto loginUser,
+            @SessionAttribute(required = false) String msg,
+            HttpSession session,
+            Model model,
+            @PathVariable String productCode
+    ) {
+        if (loginUser.getGDet().equals("g1")) {
+            if (msg != null) {
+                session.removeAttribute("msg");
+                model.addAttribute("msg", msg);
+                System.out.println(msg);
+            }
+            ProductDto product = null;
+            try {
+                product = productService.selectOne(productCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (product != null) {
+                model.addAttribute("product", product);
+                return "/product/modify";
+            } else {
+                return "/redirect:/";
+            }
+        } else {
+            session.setAttribute("msg", "관리자만 상품을 수정 할 수 있습니다.");
             return "redirect:/";
         }
     }

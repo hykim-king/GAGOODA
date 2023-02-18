@@ -41,13 +41,16 @@ public class OrderController {
                        PagingDto paging,
                        HttpServletRequest req,
                        @SessionAttribute UserDto loginUser){
-        paging.setRows(4);
         paging.setQueryString(req.getParameterMap());
         log.info("req.getParameterMap(): "+req.getParameterMap());
-        List<OrderDto> orderList = orderService.orderList(paging, loginUser.getUserId());
-        model.addAttribute("orderList",orderList);
-        model.addAttribute("paging",paging);
-        log.info(paging.toString());
+        try{
+            List<OrderDto> orderList = orderService.orderList(paging, loginUser.getUserId());
+            model.addAttribute("orderList",orderList);
+            model.addAttribute("paging",paging);
+            log.info(paging.toString());
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
         return "/order/list";
     }
     @GetMapping("/user_yes/{orderId}/detail.do")

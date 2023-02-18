@@ -2,62 +2,84 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 
 <head>
     <meta charset="UTF-8">
     <title>주문 목록</title>
 </head>
-<div layout:fragment="content">
+<div layout:fragment="myPageContent">
     <h1>주문 목록</h1>
     <!--기간별 조회-->
-    <th:block>
-        <a>오늘</a>
-        <a>7일</a>
-        <a>15일</a>
-        <a>1개월</a>
-        <a>3개월</a>
-        <a>1년</a>
-    </th:block>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="#">전체</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">7일</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">15일</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link">1개월</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link">3개월</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link">1년</a>
+        </li>
+    </ul>
     <!--기간별 조회 end--------------->
     <!--주문목록 table-->
-    <table>
+    <table class="table">
         <thead>
-            <th>주문번호</th>
-            <th>주문날짜</th>
-            <th>상품정보</th>
-            <th>주문가격</th>
-            <th>주문상태</th>
-            <th>유저아이디</th>
-            <th>주문 상품량</th>
+            <th scope="col">주문번호</th>
+            <th scope="col">주문날짜</th>
+            <th scope="col">상품정보</th>
+            <th scope="col">주문가격</th>
+            <th scope="col">주문상태</th>
+            <th scope="col">유저아이디</th>
+            <th scope="col">주문 관리</th>
         </thead>
         <tbody>
             <tr th:each="order:${orderList}">
-                <td th:text="${order.orderId}" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
+                <!--=====================FIX:style cursor : pointer row 전체에 생김=============================-->
+                <td th:text="${order.orderId}" class="text-primary" th:style="cursor:pointer;" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
                 <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
                 <td>
                     <img th:src="@{'/img/product/{file}'(file=${order.imgPath})}"
                          style="width: 50px; height:50px; object-fit: cover;">
+                    <th:block th:if="${order.orderDetailList != null}">
+                         <span th:text="'상품 ' +${order.orderDetailList.size()} +'건'"></span>
+                    </th:block>
                 </td>
                 <td th:text="${order.totalPrice}+'원'"></td>
                 <td th:text="${order.ODet}"></td>
                 <td th:text="${order.userId}"></td>
-                <th:block th:if="${order.orderDetailList != null}">]
-                    <td th:text="'상품 ' +${order.orderDetailList.size()} +'건'"></td>
-                </th:block>
+                <td>
+                    <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
+                    <button class="btn btn-primary">배송 조회</button>
+                    <button class="btn btn-primary" th:classappend="${(#strings.equals(order.oDet,'o3'))?'disabled':''}">주문 취소</button>
+                </td>
+
+
             </tr>
         </tbody>
     </table>
     <!--주문 목록 table end----------------->
     <!--pagination-->
-    <div>
-        <ul>
-            <li>
-                <a th:href="@{${paging.queryString}(page=${paging.prevPage})}">이전</a>
-                <a th:href="@{${paging.queryString}(page=${paging.nextPage})}">다음</a>
+    <nav aria-label="Page navigation ">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
             </li>
         </ul>
-    </div>
+    </nav>
     <!--pagination end--------------->
 </div>
 </html>

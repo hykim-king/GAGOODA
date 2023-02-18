@@ -75,17 +75,23 @@ public class RefundController {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
         }
-        OrderDto order = orderServiceImp.selectOne(orderId);
-        int refundCount = refundServiceImp.countByOrderId(orderId);
-        List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
-        AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
+        try{
+            OrderDto order = orderServiceImp.selectOne(orderId);
+            int refundCount = refundServiceImp.countByOrderId(orderId);
+            List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+            AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
 
-        model.addAttribute("order", order);
-        model.addAttribute("refundCount", refundCount);
-        model.addAttribute("orderAddress", orderAddress);
-        model.addAttribute("addressList", addressList);
-        model.addAttribute("refundMsg", refundMsg);
+            model.addAttribute("order", order);
+            model.addAttribute("refundCount", refundCount);
+            model.addAttribute("orderAddress", orderAddress);
+            model.addAttribute("addressList", addressList);
+            model.addAttribute("refundMsg", refundMsg);
+        }catch (Exception e){
+            e.printStackTrace();
+            return "redirect:/";
+        }
         return "refund/user/register";
+
     }
 
     @PostMapping("user_yes/mypage/register.do/{orderId}")
@@ -117,7 +123,6 @@ public class RefundController {
                          @PathVariable int refundId,
                          HttpSession session,
                          Model model) {
-        log.info("$$$$$$$$$$$$$$$$$$$$"+session.getAttribute("refundMsg")+"$$$$$$$$$$$$$$");
         String refundMsg = null;
         if (session.getAttribute("refundMsg") != null) {
             refundMsg = session.getAttribute("refundMsg").toString();
@@ -165,18 +170,34 @@ public class RefundController {
         }
         if (modify > 0) {
             session.setAttribute("refundMsg", "환불 요청이 성공적으로 취소되었습니다.");
+            return "redirect:/refund/user_yes/mypage/list.do";
         } else {
             session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
+            return "redirect:/refund/user_yes/mypage/detail.do/"+refundId;
         }
-        return "redirect:/refund/user_yes/mypage/list.do";
     }
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
+                            @RequestParam(name = "rfDet", required = false, defaultValue = "") String rfDet,
+                            @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
+                            @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
+                            @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
+                            @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
                             Model model){
-        List<String> rfDetList = null;
-        List<RefundDto> refundList = refundServiceImp.showRefundList(rfDetList);
-        model.addAttribute("refundList", refundList);
+        try{
+            Map<String, String> searchFilter = new HashMap<>();
+            searchFilter.put("rfDet",rfDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
+            searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
+            List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
+            List<CommonCodeDto> rfDetList = null;
+            List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
+            model.addAttribute("refundList", refundList);
+            model.addAttribute("rfCodeList", rfCodeList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return "refund/admin/list";
     }
 

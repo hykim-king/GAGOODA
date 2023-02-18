@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>새로운 상품 등록</title>
+</head>
+<div  layout:fragment="content">
+<form action="/product/admin/register.do" enctype="multipart/form-data" method="post" name="productForm">
+    <label for="productCode">상품 코드:</label>
+    <input type="text" id="productCode" name="productCode" required>
+    <br>
+    <label for="pDet">상품 상태:</label>
+    <select name="pDet" id="pDet" required>
+        <option value="p1">p1</option>
+        <option value="p2">p2</option>
+    </select>
+    <br>
+    <label for="name">상품명:</label>
+    <input type="text" id="name" name="pname" required>
+    <br>
+    <label for="place">판매처:</label>
+    <input type="text" id="place" name="place" required>
+    <br>
+    <label for="supplyPc">공급 가격:</label>
+    <input type="number" id="supplyPc" name="supplyPc" required>
+    <br>
+    <label for="salesPc">판매 가격:</label>
+    <input type="number" id="salesPc" name="salesPc" required>
+    <br>
+    <label for="deliveryPc">배송 가격:</label>
+    <input type="number" id="deliveryPc" name="deliveryPc" required>
+    <br>
+    <label for="rot">과세율:</label>
+    <input type="text" id="rot" name="rot">
+    <br>
+    <label for="rot">마진율:</label>
+    <input type="text" id="margin" name="margin">
+    <br>
+    <div class="images">
+        <fieldset>
+            <label for="image">이미지:</label>
+            <input type="file" id="image" name="imageFile">
+        </fieldset>
+    </div>
+    <button type="button" name="moreImg">상품 이미지 추가</button>
+    <div class="infoImages">
+        <fieldset>
+            <label for="infoImages">상세 정보 이미지:</label>
+            <input type="file" id="infoImages" name="infoImageFile">
+        </fieldset>
+    </div>
+    <button type="button" name="moreInfoImg">상세 정보 추가</button>
+    <br>
+    <div class="option-products">
+        <fieldset class="optionProduct" id="optionProduct">
+            <legend>옵션</legend>
+            <input type="hidden" name="" class="productCode">
+            <input type="hidden" name="" class="optionPrice">
+            <div>
+                <label for="optionCode">옵션 코드:</label>
+                <input type="text" id="optionCode" name="" class="optionCode" required>
+            </div>
+            <div>
+                <label for="optionName">옵션 상품명:</label>
+                <input type="text" name="" id="optionName" class="optionName" required>
+            </div>
+            <div>
+                <label for="optionStock">옵션 상품 재고:</label>
+                <input type="number" name="" id="optionStock" class="optionStock" required>
+            </div>
+        </fieldset>
+    </div>
+    <br>
+    <button type="button" name="moreOptBtn">옵션추가</button>
+    <br>
+    <div class="categories">
+        <fieldset class="category conn1" data-name="대분류">
+            <legend>대분류</legend>
+            <label for="1">거실</label>
+            <input type="checkbox" id="1" value="1" class="categoryBox" name="categoryId">
+            <label for="2">침실</label>
+            <input type="checkbox" id="2" value="2" class="categoryBox" name="categoryId">
+        </fieldset>
+        <fieldset class="category conn2" data-name="중분류">
+            <legend>중분류</legend>
+            <label for="11">의자</label>
+            <input type="checkbox" id="11" value="11" class="categoryBox" name="categoryId">
+            <label for="12">탁자</label>
+            <input type="checkbox" id="12" value="12" class="categoryBox" name="categoryId">
+            <label for="21">침대</label>
+            <input type="checkbox" id="21" value="21" class="categoryBox" name="categoryId">
+            <label for="22">조명</label>
+            <input type="checkbox" id="22" value="22" class="categoryBox" name="categoryId">
+        </fieldset>
+        <fieldset class="category conn3" data-name="소분류">
+        </fieldset>
+    </div>
+    <br>
+    <button type="submit">제출</button>
+
+</form>
+<script th:inline="javascript">
+    const productForm = document.forms["productForm"];
+    const moreOptBtn = productForm["moreOptBtn"];
+    const moreImg = productForm["moreImg"];
+    const moreInfoImg = productForm["moreInfoImg"];
+    const images = productForm.querySelector(".images");
+    const infoImages = productForm.querySelector(".infoImages");
+    const optionProducts = productForm.querySelector(".option-products");
+
+    let imgNum=0;
+    moreImg.onclick = (e) => {
+        const fieldset = document.createElement("fieldset");
+        fieldset.id = "img"+imgNum;
+        fieldset.innerHTML = `
+            <label for="image">이미지:</label>
+            <input type="file" id="image" name="imageFile">
+            <button type="button" onclick="document.getElementById('img${imgNum}').remove()">삭제</button>
+        `;
+
+        images.append(fieldset);
+    }
+
+    moreInfoImg.onclick = (e) => {
+        const fieldset = document.createElement("fieldset");
+        fieldset.id = "infoImg"+imgNum;
+        fieldset.innerHTML = `
+            <label for="infoImages">상세 정보 이미지:</label>
+            <input type="file" id="infoImages" name="infoImageFile">
+            <button type="button" onclick="document.getElementById('infoImg${imgNum}').remove()">삭제</button>
+        `;
+        infoImages.append(fieldset);
+    }
+
+    let i = 1;
+    moreOptBtn.onclick = (e) => {
+        const fieldset = document.createElement("fieldset");
+        fieldset.classList.add("optionProduct");
+        fieldset.id = "optionProduct" + i;
+
+        fieldset.innerHTML = `
+            <legend>옵션</legend>
+            <input type="hidden" name="" class="productCode">
+            <input type="hidden" name="" class="optionPrice">
+            <div>
+                <label for="optionCode">옵션 코드:</label>
+                <input type="text" id="optionCode" name="" class="optionCode" required="">
+            </div>
+            <div>
+                <label for="optionName">옵션 상품명:</label>
+                <input type="text" name="" id="optionName" class="optionName" required="">
+            </div>
+            <div>
+                <label for="optionStock">옵션 상품 제고:</label>
+                <input type="number" name="" id="optionStock" class="optionStock" required="">
+            </div>
+            <button type="button" onclick="nameset();
+                document.getElementById('optionProduct${i}').remove();">삭제</button>
+        `;
+        optionProducts.append(fieldset);
+        i++;
+    }
+
+    productForm.onsubmit = (e) => {
+        let i = 0;
+        const categories = productForm.querySelector(".categories");
+        const fieldSets = categories.querySelectorAll(".category");
+        fieldSets.forEach(fieldset => {
+            const checkBoxes = fieldset.querySelectorAll(".categoryBox");
+            const checkedBoxes = [];
+            checkBoxes.forEach(checkBox => {
+                if (checkBox.checked) checkedBoxes.push(checkBox);
+            });
+            if (!fieldset.classList.contains("conn3") && checkedBoxes.length === 0) {
+                e.preventDefault();
+                alert(`최소 한개의 ${fieldset.dataset.name}를 선택해야 합니다.`);
+            }
+        });
+        nameset();
+    }
+
+    function nameset() {
+        const options = document.querySelectorAll(".optionProduct");
+        let j = 0;
+        options.forEach(option => {
+            const productCode = option.querySelector(".productCode");
+            const optionPrice = option.querySelector(".optionPrice");
+            const optionCode = option.querySelector(".optionCode");
+            const optionName = option.querySelector(".optionName");
+            const optionStock = option.querySelector(".optionStock");
+            productCode.setAttribute("value", productForm["productCode"].value);
+            optionPrice.setAttribute("value", productForm["salesPc"].value);
+
+            productCode.setAttribute("name", `optionProductList[${j}].productCode`);
+            optionPrice.setAttribute("name", `optionProductList[${j}].price`);
+            optionCode.setAttribute("name", `optionProductList[${j}].optionCode`);
+            optionName.setAttribute("name", `optionProductList[${j}].opname`);
+            optionStock.setAttribute("name", `optionProductList[${j}].stock`);
+            j++;
+        });
+    }
+
+</script>
+</div>
+</html>
