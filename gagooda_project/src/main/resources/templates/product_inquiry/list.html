@@ -10,6 +10,7 @@
 <div layout:fragment="myPageContent">
     <form action="/product_inquiry/list.do">
         <h2 th:text="${succMsg}"></h2>
+        <h4>문의수</h4><h4 th:text="${count}"></h4>
         <ul>
             <li th:each="p:${plist}">
                 <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>

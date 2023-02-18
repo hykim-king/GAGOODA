@@ -32,15 +32,28 @@ public class ProductInquiryController {
                        @SessionAttribute(required = false) String succMsg,
                        HttpSession session
     ) {
-        if (succMsg != null) {
-            session.removeAttribute("succMsg");
-            System.out.println(succMsg);
-        }
-        log.info(productCode);
+        int list = 0;
         List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
-        model.addAttribute("plist", plist);
-        model.addAttribute("succMsg", succMsg);
-        return "/product_inquiry/list";
+        int count = productInquiryService.numPInquiryId(productCode);
+        try{
+            if (succMsg != null) {
+                session.removeAttribute("succMsg");
+                System.out.println(succMsg);
+            }
+            log.info(productCode);
+            model.addAttribute("count", count);
+            model.addAttribute("plist", plist);
+            model.addAttribute("succMsg", succMsg);
+            list = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (list > 0){
+            return "/product_inquiry/list";
+        } else {
+            return "/errorHandler";
+        }
+
     }
 
     @GetMapping("/user_yes/{productCode}/register.do")
@@ -48,13 +61,23 @@ public class ProductInquiryController {
                            Model model,
                            @PathVariable(required = true, name = "productCode") String productCode
     ) {
+        int check = 0;
         List<CommonCodeDto> commonCodeList = productInquiryService.showCommonCode("pi");
         List<OptionProductDto> optionProductList = productInquiryService.showOptionProduct(productCode);
         System.out.println(commonCodeList);
         System.out.println(optionProductList);
-        model.addAttribute("commonCodeList", commonCodeList);
-        model.addAttribute("optionProductList", optionProductList);
-        return "/product_inquiry/user_yes/register";
+        try {
+            model.addAttribute("commonCodeList", commonCodeList);
+            model.addAttribute("optionProductList", optionProductList);
+            check = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (check > 0){
+            return "/product_inquiry/user_yes/register";
+        } else {
+            return "/errorHandler";
+        }
     }
 
     @PostMapping("/user_yes/{productCode}/register.do")
@@ -110,9 +133,19 @@ public class ProductInquiryController {
     public String adminList(Model model,
                             @SessionAttribute UserDto loginUser){
         if(loginUser.getGDet().equals("g1")){
-            List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries();
-            model.addAttribute("adminList",adminList);
-            return "/product_inquiry/admin/list";
+            int check = 0;
+            try {
+                List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries();
+                model.addAttribute("adminList",adminList);
+                check = 1;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            if (check > 0){
+                return "/product_inquiry/admin/list";
+            } else {
+                return "/errorHandler";
+            }
         } else {
             return "/index";
         }
@@ -121,10 +154,21 @@ public class ProductInquiryController {
     @GetMapping("/admin/{pInquiryId}/detail.do")
     public String adminDetail(@PathVariable int pInquiryId,
                               Model model){
+        int check =0;
         ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
         System.out.println(productInquiry);
-        model.addAttribute("productInquiry",productInquiry);
-        return "/product_inquiry/admin/detail";
+        try {
+            model.addAttribute("productInquiry",productInquiry);
+            check = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (check > 0){
+            return "/product_inquiry/admin/detail";
+        } else {
+            return "/errorHandler";
+        }
+
     }
 
     @GetMapping("/admin/detail.do")

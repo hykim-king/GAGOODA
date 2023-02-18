@@ -63,4 +63,9 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
         return optionProductMapper.listByProductCode(productCode);
     }
 
+    @Override
+    public int numPInquiryId(String productCode) {
+        return productInquiryMapper.countByPInquiryId(productCode);
+    }
+
 }

@@ -40,14 +40,22 @@
                 <textarea class="form-control" name="content" id="content" rows="3"></textarea>
             </div>
             <div class="mb-3">
-                <input class="form-check-input me-1" type="radio" name="secret" value="" id="secret" checked>
+                <input class="form-check-input secret" type="checkbox" name="secret" value="true" id="secret" checked>
                 <label class="form-check-label" for="secret">비밀글</label>
             </div>
             <div class="d-grid gap-2">
                 <button class="btn btn-primary" type="submit">등록</button>
             </div>
-
         </div>
     </form>
 </div>
+<script>
+    $("#secret").click(function (){
+       if ($(".secret").is(":checked")){
+           $("#secret").val(true);
+       } else {
+           $("#secret").val(false);
+       }
+    });
+</script>
 </html>
