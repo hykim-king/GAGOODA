@@ -8,13 +8,14 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-    <form action="/refund/admin/list.do" method="get">
+    <h2>환불 신청 목록</h2>
+    <form action="/refund/admin/list.do" method="get" id="searchForm">
         <div>
             <label class="d-block">검색 키워드 :
                 <select name="searchDiv" id="searchDiv">
                     <option value="" selected disabled>검색 분류 선택</option>
                     <option value="all">전체</option>
-                    <option value="orderId">주문번호</option>
+                    <option value="order_id">주문번호</option>
                     <option value="uname">신청자명</option>
                     <option value="phone">신청자 전화번호</option>
                 </select>
@@ -23,26 +24,30 @@
             <label class="d-block">검색 일시 :
                 <select name="dateType" id="dateType">
                     <option selected disabled>검색 일시 분류</option>
-                    <option value="regDate">요청 일시</option>
-                    <option value="modDate">상태 수정 일시</option>
+                    <option value="reg_date">요청 일시</option>
+                    <option value="mod_date">상태 수정 일시</option>
                 </select>
                 <input type="date" id="startDate" name="startDate"> ~
                 <input type="date" id="endDate" name="endDate">
             </label>
-            <label>진행 상태 :
-                <input type="checkbox" name="rfDet" id="rf0" value="rf0" >
-                <input type="checkbox" name="rfDet" id="rf1" value="rf1" >
-                <input type="checkbox" name="rfDet" id="rf2" value="rf2" >
-                <input type="checkbox" name="rfDet" id="rf3" value="rf3" >
-                <input type="checkbox" name="rfDet" id="rf4" value="rf4" >
-                <input type="checkbox" name="rfDet" id="rf5" value="rf5" >
-                <input type="checkbox" name="rfDet" id="rf6" value="rf6" >
-                <input type="checkbox" name="rfDet" id="rf7" value="rf7" >
-                <input type="checkbox" name="rfDet" id="rf8" value="rf8" >
-            </label>
+            <div class="d-flex">
+                <span>진행 상태 :</span>
+                <label><input type="checkbox" name="rfDet" id="rf0" value="rf0" > 환불 요청 </label>
+                <label><input type="checkbox" name="rfDet" id="rf1" value="rf1" > 환불 요청 취소 </label>
+                <label><input type="checkbox" name="rfDet" id="rf2" value="rf2" > 환불 요청 확인 </label>
+                <label><input type="checkbox" name="rfDet" id="rf3" value="rf3" > 반품 수거 중 </label>
+                <label><input type="checkbox" name="rfDet" id="rf4" value="rf4" > 반품 완료 </label>
+                <label><input type="checkbox" name="rfDet" id="rf5" value="rf5" > 환불 대기 </label>
+                <label><input type="checkbox" name="rfDet" id="rf6" value="rf6" > 환불 보류 </label>
+                <label><input type="checkbox" name="rfDet" id="rf7" value="rf7" > 환불 완료 </label>
+                <label><input type="checkbox" name="rfDet" id="rf8" value="rf8" > 환불 불가 </label>
+            </div>
         </div>
+        <button type="submit" class="btn btn-outline-secondary">검색</button>
     </form>
-
+<!--<th:block th:text="${param.size()}"></th:block>-->
+<!--<th:block th:if="${param.size()}"-->
+    <h3>환불 신청 <span th:if="${refundList != null}" th:text="${refundList.size()}"></span></h3>
     <table>
         <thead>
         <tr>
@@ -59,9 +64,8 @@
         </tr>
         </thead>
         <tbody>
-        <!--            <th:block th:each="refund, i : ${refundList}">-->
-        <th:block th:each="i : ${#numbers.sequence(0, refundList.size()-1)}">
-            <tr>
+        <th:block th:if="${refundList.size() > 0}" th:each="i : ${#numbers.sequence(0, refundList.size()-1)}">
+            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">
                 <td th:text="${i+1}"></td>
                 <td th:text="${refundList[i].uname}"></td>
                 <td th:text="${refundList[i].orderId}"></td>
@@ -77,6 +81,17 @@
         <!--            </th:block>-->
         </tbody>
     </table>
-    <!--    <th:block th:text="${refundList}"></th:block>-->
+    <th:block th:unless="${refundList.size() > 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
+<script th:inline="javascript">
+    let hrefRows = document.querySelectorAll(".hrefRow");
+    hrefRows.forEach((row)=>{
+        row.addEventListener('click',()=>{
+            console.log(row)
+            let targetHref = "http://"+ document.location.host + "/refund/admin/detail.do/" + row.dataset.refund;
+            console.log(targetHref)
+            document.location.href =  targetHref;
+        })
+    })
+</script>
 </div>
 </html>

@@ -179,13 +179,25 @@ public class RefundController {
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
+                            @RequestParam(name = "rfDet", required = false, defaultValue = "") String rfDet,
+                            @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
+                            @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
+                            @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
+                            @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
                             Model model){
-        List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
-        List<CommonCodeDto> rfDetList = null;
-        List<RefundDto> refundList = refundServiceImp.showRefundList(rfDetList);
-
-        model.addAttribute("refundList", refundList);
-        model.addAttribute("rfCodeList", rfCodeList);
+        try{
+            Map<String, String> searchFilter = new HashMap<>();
+            searchFilter.put("rfDet",rfDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
+            searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
+            List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
+            List<CommonCodeDto> rfDetList = null;
+            List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
+            model.addAttribute("refundList", refundList);
+            model.addAttribute("rfCodeList", rfCodeList);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return "refund/admin/list";
     }
 

@@ -58,11 +58,19 @@
     <select id="findById" resultMap="refundMap">
         SELECT * FROM refund WHERE refund_id = #{id}
     </select>
-    <select id="pageAll" resultMap="refundMap">
+    <select id="pageAll" resultMap="refundMap" parameterType="hashmap">
         SELECT * FROM refund
-        <if test="rfDetList != null">
-            WHERE rf_det IN <foreach collection="rfDetList" item="rfDet" separator="," open="(" close=")">#{rfDet.detCode}</foreach>
-        </if>
+         <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != ''">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="rfDet != ''">
+                AND rf_det in (${rfDet})
+            </if>
+         </where>
         ORDER BY reg_date DESC
     </select>
     <select id="countByUserId" resultType="java.lang.Integer">

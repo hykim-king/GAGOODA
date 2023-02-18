@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RefundMapper {
@@ -16,7 +17,7 @@ public interface RefundMapper {
 
     RefundDto findById(int id);
 
-    List<RefundDto> pageAll(List<CommonCodeDto> rfCodeList);
+    List<RefundDto> pageAll(Map<String, String> searchFilter);
 
     int updateOne(RefundDto refund, String auth);
 

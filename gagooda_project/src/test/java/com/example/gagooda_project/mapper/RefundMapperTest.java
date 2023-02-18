@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +53,7 @@ class RefundMapperTest {
 
     @Test
     void pageAll() {
-        List<CommonCodeDto> rfDetList = null;
+        Map<String,String> rfDetList = null;
         List<RefundDto> refundList = refundMapper.pageAll(rfDetList);
         System.out.println(refundList);
     }
