@@ -44,7 +44,7 @@ public class CartController {
         int totalPrice = 0;
         for (CartDto cartDto : cartList) {
             totalCnt += cartDto.getCnt();
-            totalPrice += cartDto.getOptionProduct().getPrice()*totalCnt;
+            totalPrice += cartDto.getOptionProduct().getPrice()*cartDto.getCnt();
         }
         model.addAttribute("cartList", cartList);
         model.addAttribute("cart", cart);
@@ -61,10 +61,15 @@ public class CartController {
         int update = 0;
         try {
             int i = 0;
+            int cnt = 0;
             List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
             for (CartDto cartDto : cartList) {
-                int cnt = Integer.parseInt(String.valueOf(cartCnts.get(i)));
-                cartDto.setCnt(cnt);
+                if (Integer.parseInt(String.valueOf(cartCnts.get(i))) > 0) {
+                    cnt = Integer.parseInt(String.valueOf(cartCnts.get(i)));
+                    cartDto.setCnt(cnt);
+                } else if (Integer.parseInt(String.valueOf(cartCnts.get(i))) == 0) {
+                    cartServiceImp.removeOne(cartDto.getCartId());
+                }
                 update = cartServiceImp.modifyOne(cartDto);
                 i += 1;
             }

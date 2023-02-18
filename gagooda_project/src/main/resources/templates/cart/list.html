@@ -19,7 +19,6 @@
                         <th>
                             <input type="checkbox" class="allCheck">
                         </th>
-                        <th></th>
                         <th>상품정보</th>
                         <th>수량</th>
                         <th>주문금액</th>
@@ -32,8 +31,8 @@
                         <td>
                             <img th:src="@{'/img/product/{file}'(file=${cart.product.getImgCode()+'_0.png'})}"
                                  style="width: 100px;">
+                            <a href="product/{cart.getProductCode()}/detail.do" th:text="${cart.getOptionProduct().getOpname()}"></a>
                         </td>
-                        <td th:text="${cart.getOptionProduct().getOpname()}"></td>
                         <td>
                             <input th:value="${cart.cnt}" name="cntText" class="cntText" style="width: 20px">
                             <button type="button" class="updateBtn" onclick="cartUpdate()">변경</button>
@@ -59,6 +58,7 @@
 
 <script>
     const allCheck = document.querySelector(".allCheck");
+    const checkList = document.querySelector(".checkList");
     const list = document.querySelectorAll(".checkList");
 
     allCheck.onclick = () => {
@@ -73,7 +73,6 @@
         }
     }
 
-    const checkList = document.querySelector(".checkList");
     checkList.onclick = () => {
         allCheck.checked = false;
     }
@@ -169,7 +168,7 @@
         } else {
             const form = document.createElement('form');
             form.setAttribute('method', 'get');        //Post 메소드 적용
-            form.setAttribute('action', 'order/user_yes/register.do');
+            form.setAttribute('action', '/order/user_yes/register.do');
             console.log(form);
             form.submit();
         }
