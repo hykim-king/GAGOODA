@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface CartMapper {
     int insertOne(CartDto cart);
+    CartDto findById(int id);
     int deleteById(int id);  // cart_id
     int deleteByUserId(int userId);   // user_id
     int countByUserId(int userId);

@@ -1,33 +1,176 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title>장바구니 목록</title>
 </head>
 <body>
-    <div>
+    <div layout:fragment="content">
         <h1>장바구니 목록</h1>
-        <div>
-            <table>
-                <tr>
-                    <th>전체</th>
-                    <th>선택칸</th>
-                    <th>상품정보</th>
-                    <th>수량</th>
-                    <th>주문금액</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>선택칸</td>
-                    <td>의자</td>
-                    <td>2</td>
-                    <td>50000</td>
-                </tr>
-            </table>
-        </div>
+        <form th:action method="get">
+            <div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>전체 <span th:text="${cartList.size()}"></span>개</th>
+                        <th>
+                            <input type="checkbox" class="allCheck">
+                        </th>
+                        <th>상품정보</th>
+                        <th>수량</th>
+                        <th>주문금액</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="cart:${cartList}">
+                        <td>1</td>
+                        <td><input type="checkbox" name="checkList" class="checkList" th:value="${cart.cartId}"></td>
+                        <td>
+                            <img th:src="@{'/img/product/{file}'(file=${cart.product.getImgCode()+'_0.png'})}"
+                                 style="width: 100px;">
+                            <a href="product/{cart.getProductCode()}/detail.do" th:text="${cart.getOptionProduct().getOpname()}"></a>
+                        </td>
+                        <td>
+                            <input th:value="${cart.cnt}" name="cntText" class="cntText" style="width: 20px">
+                            <button type="button" class="updateBtn" onclick="cartUpdate()">변경</button>
+                        </td>
+                        <td th:text="${cart.getOptionProduct().getPrice()*cart.cnt}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <a th:href="@{'deleteOne.do'(cart_id=${cart.getCartId()})}">선택삭제</a>
-        <a th:href="@{'deleteAll.do'(user_id=${cart.getUserId()})}">전체삭제</a>
+            <div>
+                <div>총 주문금액: <strong th:text="${totalPrice}"></strong> 원</div>
+                <div>총 주문수량: <strong th:text="${totalCnt}"></strong> 개</div>
+                <button type="button" class="orderBtn" onclick="orderPro()">전체주문</button>
+                <button type="button" class="delOneBtn" onclick="cartDelOne()">선택삭제</button>
+                <button type="button" class="delAllBtn" onclick="cartDelAll()">전체삭제</button>
+            </div>
+        </form>
+
     </div>
 </body>
 </html>
+
+<script>
+    const allCheck = document.querySelector(".allCheck");
+    const checkList = document.querySelector(".checkList");
+    const list = document.querySelectorAll(".checkList");
+
+    allCheck.onclick = () => {
+        if (allCheck.checked) {
+            for (let i=0; i<list.length; i++) {
+                list[i].checked = true;
+            }
+        } else {
+            for (let j=0; j<list.length; j++) {
+                list[j].checked = false;
+            }
+        }
+    }
+
+    checkList.onclick = () => {
+        allCheck.checked = false;
+    }
+
+    function cartUpdate() {
+        const query = 'input[name="cntText"]'
+        const selectedElements = document.querySelectorAll(query)
+
+        const selectedElementsCnt = selectedElements.length;
+
+        const arr = new Array(selectedElementsCnt);
+
+        document.querySelectorAll('input[name="cntText"]').forEach(function(v, i) {
+            arr[i] = v.value;
+        });
+
+        const form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', 'update.do');
+
+        var input1 = document.createElement('input');
+        input1.setAttribute("type", "hidden");
+        input1.setAttribute("name", "cartCnts");
+        input1.setAttribute("value", arr);
+        form.appendChild(input1);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function cartDelAll() {
+        const query = 'input[name="checkList"]'
+        const selectedElements = document.querySelectorAll(query)
+
+        const selectedElementsCnt = selectedElements.length;
+
+        if (selectedElementsCnt == 0) {
+            alert("삭제할 항목이 없습니다.");
+            return false;
+        } else {
+            if (confirm("정말로 전체삭제하시겠습니까?")) {
+                const form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', 'deleteAll.do');
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    }
+
+    function cartDelOne() {
+        const query = 'input[name="checkList"]:checked'
+        const selectedElements = document.querySelectorAll(query)
+
+        const selectedElementsCnt = selectedElements.length;
+
+        if (selectedElementsCnt == 0) {
+            alert("삭제할 항목을 선택해주세요.");
+            return false;
+        } else {
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                //배열생성
+                const arr = new Array(selectedElementsCnt);
+
+                document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+                    arr[i] = v.value;
+                });
+
+                const form = document.createElement('form');
+                form.setAttribute('method', 'post');        //Post 메소드 적용
+                form.setAttribute('action', 'deleteOne.do');
+
+                var input1 = document.createElement('input');
+                input1.setAttribute("type", "hidden");
+                input1.setAttribute("name", "cartIds");
+                input1.setAttribute("value", arr);
+                form.appendChild(input1);
+                console.log(form);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    }
+
+    // 장바구니 담긴 상품들 주문창으로 넘김?
+    function orderPro() {
+        const query = 'input[name="checkList"]'
+        const selectedElements = document.querySelectorAll(query)
+        const selectedElementsCnt = selectedElements.length;
+
+        if (selectedElementsCnt == 0) {
+            alert("주문할 상품이 없습니다.");
+            return false;
+        } else {
+            const form = document.createElement('form');
+            form.setAttribute('method', 'get');        //Post 메소드 적용
+            form.setAttribute('action', '/order/user_yes/register.do');
+            console.log(form);
+            form.submit();
+        }
+    }
+</script>

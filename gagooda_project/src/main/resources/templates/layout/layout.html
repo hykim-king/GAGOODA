@@ -4,13 +4,16 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 <header>
     <th:block th:replace="~{/layout/headerNav.html}"></th:block>
 </header>
 <div th:text="${msg}" style="background-color:#ff7575;"></div>
-<main class="container">
+<main>
     <th:block layout:fragment="content"></th:block>
 </main>
 </body>

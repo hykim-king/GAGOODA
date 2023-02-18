@@ -3,10 +3,13 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.UserService;
 import com.example.gagooda_project.service.UserServiceImp;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.View;
 
 @Controller
 @RequestMapping("/user")
@@ -26,6 +29,7 @@ public class UserController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("msg", msg);
@@ -46,7 +50,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(user);
+        System.out.println("************signup :"+signup);
         if (signup > 0) {
             session.setAttribute("msg", "회원가입을 성공적으로 마쳤습니다.");
             return "redirect:/user/login.do";
@@ -62,6 +66,7 @@ public class UserController {
                         Model model) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("msg", msg);
@@ -73,7 +78,9 @@ public class UserController {
             HttpSession session,
             String email,
             String pw,
-            @SessionAttribute(required = false) String redirectUri
+            HttpServletRequest request,
+            @SessionAttribute(required = false) String getUri,
+            @SessionAttribute(required = false) String postUri
     ) {
         UserDto user = null;
         try {
@@ -86,19 +93,23 @@ public class UserController {
             return "redirect:/user/login.do";
         } else {
             session.setAttribute("loginUser", user);
-            session.removeAttribute("redirectUri");
-            return (redirectUri != null) ? "redirect:" + redirectUri : "redirect:/";
+            System.out.println(postUri);
+            session.removeAttribute("getUri");
+            if (getUri != null) return "redirect:"+getUri;
+            return "redirect:/";
         }
     }
 
     @GetMapping("/findpw.do")
     public String findPw(
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
         }
         return "/user/find_pw";
     }
@@ -132,8 +143,9 @@ public class UserController {
             HttpSession session
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
         }
         System.out.println("userId: " + userId);
         model.addAttribute("userId", userId);
@@ -155,27 +167,30 @@ public class UserController {
             e.printStackTrace();
         }
         if (reset > 0) {
-            return "redirect:/user/login.do";
+            session.setAttribute("msg", "비밀번호를 성공적으로 재설정했습니다.");
+            return "redirect:/";
         } else {
             session.setAttribute("msg", "비밀번호 재설정에 실패했습니다.");
-            return "redirect:/user/" + userId + "/password_reset.do";
+            return "redirect:/user/"+userId+"/password_reset.do";
         }
     }
 
-    @GetMapping("/double_check.do")
+    @GetMapping("/user_yes/double_check.do")
     public String doubleCheck(
             @SessionAttribute(required = true) UserDto loginUser,
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
-            session.removeAttribute(msg);
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         return "/user/double_check";
     }
 
-    @PostMapping("/double_check.do")
+    @PostMapping("/user_yes/double_check.do")
     public String doubleCheck(
             @SessionAttribute(required = true) UserDto loginUser,
             String pw
@@ -187,27 +202,29 @@ public class UserController {
             e.printStackTrace();
         }
         if (user != null) {
-            return "redirect:/user/temp.do";
+            return "redirect:/user/user_yes/temp.do";
         } else {
-            return "redirect:/user/double_check.do";
+            return "redirect:/user/user_yes/double_check.do";
         }
     }
 
     /*임시적인 경로*/
-    @GetMapping("/temp.do")
+    @GetMapping("/user_yes/temp.do")
     public String temp(
             @SessionAttribute(required = true) UserDto loginUser,
             @SessionAttribute(required = false) String msg,
-            HttpSession session
+            HttpSession session,
+            Model model
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         return "/user/temp";
     }
 
-    @GetMapping("/{userId}/remove.do")
+    @GetMapping("/user_yes/{userId}/remove.do")
     public String remove(
             @SessionAttribute(required = true) UserDto loginUser,
             HttpSession session
@@ -223,11 +240,11 @@ public class UserController {
             return "redirect:/";
         } else {
             session.setAttribute("msg", "삭제 중 오류가 생겼습니다. 다시 시도해 주세요.");
-            return "redirect:/user/temp.do";
+            return "redirect:/user/user_yes/temp.do";
         }
     }
 
-    @GetMapping("/{userId}/modify.do")
+    @GetMapping("/user_yes/{userId}/modify.do")
     public String modify(
             @SessionAttribute(required = true) UserDto loginUser,
             Model model,
@@ -237,6 +254,7 @@ public class UserController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         model.addAttribute("user", loginUser);
@@ -244,7 +262,7 @@ public class UserController {
         return "/user/modify";
     }
 
-    @PostMapping("/modify.do")
+    @PostMapping("/user_yes/modify.do")
     public String modify(
             @SessionAttribute(required = true) UserDto loginUser,
             UserDto modifiedUser,
@@ -262,10 +280,10 @@ public class UserController {
             session.removeAttribute("loginUser");
             UserDto user = userService.selectOne(loginUser.getUserId());
             session.setAttribute("loginUser", user);
-            return "redirect:/user/temp.do";
+            return "redirect:/user/user_yes/temp.do";
         } else {
             session.setAttribute("msg", "사용자 정보 수정 중 오류 뜸");
-            return "redirect:/user/"+loginUser.getUserId()+"/modify.do";
+            return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
         }
     }
 
@@ -276,7 +294,7 @@ public class UserController {
         return "";
     }
 
-    @GetMapping("/logout.do")
+    @GetMapping("/user_yes/logout.do")
     public String logout(
             @SessionAttribute UserDto loginUser,
             HttpSession session

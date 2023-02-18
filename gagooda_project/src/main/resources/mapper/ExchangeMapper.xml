@@ -16,6 +16,14 @@
         <result column="img_code" property="imgCode"/>
         <result column="ex_det" property="exDet"/>
         <result column="rfr_det" property="rfrDet"/>
+        <association property="orderDto"
+                     column="order_id"
+                     select="com.example.gagooda_project.mapper.OrderMapper.findById"
+                     fetchType="lazy"/>
+        <association property="addressDto"
+                     column="address_id"
+                     select="com.example.gagooda_project.mapper.AddressMapper.findById"
+                     fetchType="lazy"/>
     </resultMap>
     <update id="updateOne">
         UPDATE exchange SET reply=#{reply}, mod_date=NOW(), ex_det=#{exDet} WHERE exchange_id = #{exchangeId}
@@ -28,7 +36,7 @@
     </insert>
     <select id="pageAll" resultMap="exchangeMap">
         SELECT * FROM exchange
-             <if test="exDetList">
+             <if test="exDetList != null">
                 WHERE ex_det IN
                  <foreach collection="exDetList" item="exDet" separator="," open="(" close=")">#{exDet}</foreach>
              </if>

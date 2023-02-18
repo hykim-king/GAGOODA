@@ -7,17 +7,24 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface RefundMapper {
-    List<RefundDto> pageByUserIdAndDate(int userId, int period);
+    List<RefundDto> pageByUserIdAndDate(int userId, int period, String startDate, String endDate, String detCode);
 
     int insertOne(RefundDto refund);
 
     RefundDto findById(int id);
 
-    List<RefundDto> pageAll(List<String> rfCodeList);
+    List<RefundDto> pageAll(Map<String, String> searchFilter);
 
-    int updateOne(RefundDto refund);
+    int updateOne(RefundDto refund, String auth);
+
+    int countByUserId(int userId);
+
+    RefundDto findByOrderDetailId(int orderDetailId);
+
+    int countByOrderId(String orderId);
 
 }

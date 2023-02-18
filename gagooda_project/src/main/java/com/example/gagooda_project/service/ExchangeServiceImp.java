@@ -1,7 +1,7 @@
 package com.example.gagooda_project.service;
 
-import com.example.gagooda_project.dto.ExchangeDto;
-import com.example.gagooda_project.mapper.ExchangeMapper;
+import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,41 +9,62 @@ import java.util.List;
 @Service
 public class ExchangeServiceImp implements ExchangeService {
     private ExchangeMapper exchangeMapper;
+    private AddressMapper addressMapper;
+    private CommonCodeMapper commonCodeMapper;
 
-    public ExchangeServiceImp(ExchangeMapper exchangeMapper) {
+    public ExchangeServiceImp(ExchangeMapper exchangeMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper) {
         this.exchangeMapper = exchangeMapper;
+        this.addressMapper = addressMapper;
+        this.commonCodeMapper = commonCodeMapper;
     }
 
     @Override
-    public List<ExchangeDto> pageAll(List<String> exDetList) {
-        exchangeMapper.pageAll(exDetList);
-        return null;
+    public List<ExchangeDto> list(List<String> exDetList) {
+        return exchangeMapper.pageAll(exDetList);
     }
 
     @Override
-    public List<ExchangeDto> pageByUserAndDate(int userId, int period) {
-        return null;
+    public List<ExchangeDto> orderInDate(int id, int period) {
+        return exchangeMapper.pageByUserAndDate(id, period);
     }
 
     @Override
-    public int insertOne(ExchangeDto exchange) {
-        int insert = 0;
-        insert += exchangeMapper.insertOne(exchange);
-        return 0;
+    public int register(ExchangeDto exchange) {
+        return exchangeMapper.insertOne(exchange);
     }
 
     @Override
-    public int updateOne(ExchangeDto exchange) {
-        return 0;
+    public int modify(ExchangeDto exchange) {
+        return exchangeMapper.updateOne(exchange);
     }
 
     @Override
     public int countByUserIdAndOrderDetailId(int userId, int orderDetailId) {
-        return 0;
+        return exchangeMapper.countByUserIdAndOrderDetailId(userId, orderDetailId);
     }
 
     @Override
     public ExchangeDto findById(int id) {
-        return null;
+        return exchangeMapper.findById(id);
+    }
+
+    @Override
+    public AddressDto selectAddress(int addressId) {
+        return addressMapper.findById(addressId);
+    }
+
+    @Override
+    public List<AddressDto> showAddressListByUserId(int userId) {
+        return addressMapper.listByUserId(userId);
+    }
+
+    @Override
+    public List<CommonCodeDto> detCodeList(String  mstCode) {
+        return commonCodeMapper.listByMstCode(mstCode);
+    }
+
+    @Override
+    public ExchangeDto selectOne(int id) {
+        return exchangeMapper.findById(id);
     }
 }

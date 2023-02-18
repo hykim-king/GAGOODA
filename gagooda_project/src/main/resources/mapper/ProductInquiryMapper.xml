@@ -10,6 +10,18 @@
         <result column="reply_date" property="replyDate" />
         <result column="reply_id" property="replyId" />
         <result column="pi_det" property="piDet" />
+        <association property="user"
+                     column="user_id"
+                     select="com.example.gagooda_project.mapper.UserMapper.findById"
+                     fetchType="lazy"/>
+        <association property="optionProductDto"
+                     column="option_code"
+                     select="com.example.gagooda_project.mapper.OptionProductMapper.findById"
+                     fetchType="lazy"/>
+        <association property="commonCodeDto"
+                     column="pi_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.finbByDetCode"
+                     fetchType="lazy"/>
     </resultMap>
 
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="pInquiryId">
@@ -32,7 +44,10 @@
     <select id="findById" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </select>
-<!--    <select id="pageAll" resultType="ProductInquiryDto">-->
+    <select id="countByPInquiryId" resultType="java.lang.Integer">
+        SELECT COUNT(p_inquiry_id) FROM product_inquiry WHERE product_code=#{productCode}
+    </select>
+    <!--    <select id="pageAll" resultType="ProductInquiryDto">-->
 <!--        SELECT * FROM product_inquiry ORDER BY-->
 <!--    </select>-->
 </mapper>

@@ -5,11 +5,11 @@ import com.example.gagooda_project.dto.ReviewDto;
 import java.util.List;
 
 public interface ReviewService {
-    List<ReviewDto> ReviewList();
+    List<ReviewDto> reviewList(String productCode);
+    ReviewDto selectOne(int reviewId);
+    int insertOne(ReviewDto dto);
+    int updateOne(ReviewDto dto);
+    int remove(int reviewId);
 
-    public void insertReview(ReviewDto dto);
 
-    public void deleteReview(ReviewDto dto);
-
-    public void updateReview(ReviewDto dto);
 }

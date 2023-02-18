@@ -9,9 +9,9 @@
 </head>
 <div layout:fragment="content">
 <ul>
-    <li><a th:href="@{'/user/{userId}/modify.do'(userId=${session.loginUser.userId})}">수정</a></li>
+    <li><a th:href="@{'/user/user_yes/{userId}/modify.do'(userId=${session.loginUser.userId})}">수정</a></li>
     <li><a th:href="@{'/user/{userId}/password_reset.do'(userId=${session.loginUser.userId})}">비밀번호 재설정</a></li>
-    <li><a th:href="@{'/user/{userId}/remove.do'(userId=${session.loginUser.userId})}">삭제</a></li>
+    <li><a th:href="@{'/user/user_yes/{userId}/remove.do'(userId=${session.loginUser.userId})}">삭제</a></li>
 </ul>
 </div>
 </html>

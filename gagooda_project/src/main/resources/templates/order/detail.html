@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세보기</title>
+</head>
+<div layout:fragment="myPageContent">
+    <h2> 주문 상세보기</h2>
+    <!--주문 일자, 번호, 상태-->
+    <fieldset>
+        <label for="regDate">주문 일자:</label>
+        <input type="text" id="regDate" readonly th:value="${#calendars.format(order.regDate,'yyyy-MM-dd')}+'  /  '" name="regDate">
+        <label for="orderId">주문 번호: </label>
+        <input type="text" id="orderId" readonly th:value="${order.orderId}" name="orderId">
+        <label for="oDet">주문 상태: </label>
+        <input type="text" id="oDet" name="oDet" readonly th:value="${order.ODet}">
+    </fieldset>
+    <!--주문 일자, 번호, 상태 end----------------->
+    <!--상세 주문 물품 리스트-->
+    <fieldset>
+        <table>
+            <thead>
+                <th>순번</th>
+                <th>상품정보</th>
+                <th>수량</th>
+                <th>가격</th>
+            </thead>
+            <tbody>
+                <tr th:each="orderDetail, stat :${orderDetailList}">
+                    <td th:text="|${stat.count}|"></td>
+                    <td>
+                        <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
+                             style="width: 50px; height:50px; object-fit: cover">
+                        <input type="text" th:value="${orderDetail.optionName}" id="optionName" name="optionName" readonly>
+                    </td>
+                    <td th:text="${orderDetail.cnt}"></td>
+                    <td th:text="${orderDetail.totalPrice}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <label for="totalPrice">상품 총 물품 금액</label>
+            <input type="text" readonly th:value="${order.totalPrice}" name="totalPrice" id="totalPrice">
+            <label for="paidPrice">총 결제 금액</label>
+            <input type="text" name="paidPrice" id="paidPrice" th:value="${order.totalPrice}" readonly>
+        </div>
+    </fieldset>
+    <!--상세 주문 물품 리스트 end------------>
+    <fieldset>
+        <legend>받는 사람의 정보</legend>
+        <div>
+            <label for="receiverName">받는 사람: </label>
+            <input type="text" id="receiverName" name="receiverName" th:value="${order.receiverName}" readonly>
+        </div>
+        <div>
+            <label for="receiverPhone">연락처: </label>
+            <input type="text" id="receiverPhone" name="receiverPhone" th:value="${order.receiverPhone}" readonly>
+        </div>
+        <div>
+            <label>받는 주소: </label>
+            <div>
+                <span th:text="${order.postCode}"></span>
+            </div>
+            <span th:text="${order.address}"></span>
+            <span th:text="${order.addressDetail}"></span>
+
+        </div>
+
+        <div>
+            <label for="elevator">엘레베이터: </label>
+            <input type="text" id="elevator" name="elevator" th:value="${order.elevator}">
+        </div>
+    </fieldset>
+
+    <button th:onclick="location.href=[[@{'/order/user_yes/list.do'}]]">주문 목록 돌아가기</button>
+    <button>주문 취소</button>
+
+
+</div>
+</html>

@@ -1,32 +1,74 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<h2>hi</h2>
-<!-- a 태그의 userId는 추후 session에서 가져온 유저의 아이디값을 넣을 것임 -->
-<a th:href="@{ '' (userId=10, period=7) }">최근 7일 기록 보기</a>
-<a th:href="@{ '' (userId=10, period=15) }">최근 15일 기록 보기</a>
-<a th:href="@{ '' (userId=10, period=30) }">최근 30일 기록 보기</a>
-<p th:text="${refundList}"></p>
-<div th:each="refund:${refundList}">
-    <span th:text="${refund.refundId}"></span>
-    <span th:text="${refund.orderId}"></span>
-    <span th:text="${refund.orderDetailId}"></span>
-    <span th:text="${refund.userId}"></span>
-    <span th:text="${refund.uname}"></span>
-    <span th:text="${refund.email}"></span>
-    <span th:text="${refund.phone}"></span>
-    <span th:text="${refund.postCode}"></span>
-    <span th:text="${refund.address}"></span>
-    <span th:text="${refund.addressDetail}"></span>
-    <span th:text="${refund.cancelAmount}"></span>
-    <span th:text="${refund.reason}"></span>
-    <span th:text="${refund.reply}"></span>
-    <span th:text="${refund.receiverName}"></span>
-    <span th:text="${refund.receiverPhone}"></span>
+<div layout:fragment="myPageContent">
+<h2>유저 환불 목록</h2>
+<h3>환불 내역</h3>
+<ul>
+    <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기(기본)</a></li>
+    <li><a class="afterParam" th:href="@{ '' (period=15) }">최근 15일 기록 보기</a></li>
+    <li><a class="afterParam" th:href="@{ '' (period=30) }">최근 1개월 기록 보기</a></li>
+    <li><a class="afterParam" th:href="@{ '' (period=90) }">최근 3개월 기록 보기</a></li>
+    <li><a class="afterParam" th:href="@{ '' (period=365) }">최근 1년 기록 보기</a></li>
+    <li>
+        <form class="afterParam" th:action="@{''}" method="get">
+            <input type="date" name="startDate" id="startDate" required> ~
+            <input type="date" name="endDate" id="endDate" required>
+            <button type="submit">조회</button>
+        </form>
+    </li>
+</ul>
+<ul>
+    <li><a th:href="@{ '' (detCode=all)}">전체 환불 내역</a></li>
+    <li><a th:href="@{ '' (detCode=notEnd) }">환불 진행 내역</a></li>
+    <li><a th:href="@{ '' (detCode=end) }">환불 완료 내역</a></li>
+    <li>(총 환불 신청 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
+</ul>
+
+<table>
+    <th:block th:if="${refundMsg != null}">
+        <span id="msg" th:data-msg="${refundMsg}"></span>
+        <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
+    </th:block>
+    <thead>
+        <tr>
+            <th>날짜</th>
+            <th>주문번호</th>
+            <th>상품명</th>
+            <th>환불 금액</th>
+            <th>처리 현황</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="refund:${refundList}" class="hrefRow" th:data-refund="${refund.refundId}">
+            <td th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
+            <td th:text="${refund.orderId}"></td>
+            <td th:text="${refund.orderDetailDto.optionName}"></td>
+            <td th:text="${refund.cancelAmount}"></td>
+            <td th:text="${rfDetList[#strings.substring(refund.rfDet,2)].detName}"></td>
+        </tr>
+    </tbody>
+</table>
+<th:block th:if="${userRefundCount == 0}">
+    <h3>환불 내역이 없습니다.</h3>
+</th:block>
+
+<script th:inline="javascript">
+    let hrefRows = document.querySelectorAll(".hrefRow");
+    hrefRows.forEach((row)=>{
+        row.addEventListener('click',()=>{
+            console.log(row)
+            let targetHref = "http://"+ document.location.host + "/refund/user_yes/mypage/detail.do/" + row.dataset.refund;
+            console.log(targetHref)
+            document.location.href =  targetHref;
+        })
+    })
+</script>
 </div>
-</body>
 </html>

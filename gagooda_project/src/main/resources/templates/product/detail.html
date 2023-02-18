@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.pname}+' 상세페이지'"></title>
 </head>
-<body>
+<div layout:fragment="content">
 <h1 th:text="${product.pname}"></h1>
 <p th:text="${product.productCode}"></p>
 <p th:text="${product.salesPc}+원"></p>
@@ -20,7 +23,7 @@
              style="width: 400px; height: 400px; object-fit: cover;">
     </th:block>
 </th:block>
-<form action="" name="product_choose">
+<form action="" name="product_choose" method="post">
     <div>
         <select name="optionCode" id="optionCode" required>
             <option value="" selected>--선택--</option>
@@ -35,10 +38,14 @@
         <label for="cnt">수량: </label>
         <input type="number" name="cnt" id="cnt" required>
     </div>
+    <th:block th:if="${session.loginUser != null}">
+        <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+    </th:block>
+    <input type="hidden" name="productCode" th:value="${product.productCode}">
     <button type="button" name="to_cart">장바구니에 담기</button>
     <button type="button" name="buy">구매하기</button>
 </form>
-<script>
+<script th:inline="javascript">
     const product_choose = document.forms["product_choose"];
     const to_cart = product_choose["to_cart"];
     const buy = product_choose["buy"];
@@ -47,7 +54,8 @@
             && product_choose["cnt"].value !== ""
             && product_choose["cnt"].value > 0
         ) {
-            product_choose.action = "/cart/register.do";
+            product_choose.setAttribute("action", "/cart/user_yes/register.do");
+            alert(product_choose.action);
             product_choose.submit();
         } else {
             alert("상품을 선택하고, 수량을 적어주세요.");
@@ -59,12 +67,12 @@
             && product_choose["cnt"].value !== ""
             && product_choose["cnt"].value > 0
         ) {
-            product_choose.action = "/order/register.do";
+            product_choose.action = "/order/user_yes/register.do";
             product_choose.submit();
         } else {
             alert("상품을 선택하고, 수량을 적어주세요.");
         }
     }
 </script>
-</body>
+</div>
 </html>

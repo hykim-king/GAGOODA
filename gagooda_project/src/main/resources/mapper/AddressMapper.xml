@@ -11,7 +11,7 @@
     </resultMap>
 
     <!--  List<AddressDto> listByUserId(int id);  완료-->
-    <select id="listByUserId" resultMap="addressMap" parameterType="int">
+    <select id="listByUserId" resultMap="addressMap">
         SELECT * FROM address WHERE user_id = #{userId}
     </select>
 

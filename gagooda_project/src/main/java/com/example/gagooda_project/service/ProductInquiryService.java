@@ -1,5 +1,7 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 
 import java.util.List;
@@ -15,5 +17,13 @@ public interface ProductInquiryService {
     List<ProductInquiryDto> showProductInquiries();
 
     int removeOne(int productInquiryId);
+
+    int modifyOne(ProductInquiryDto productInquiryDto);
+
+    List<CommonCodeDto> showCommonCode(String mstCode);
+
+    List<OptionProductDto> showOptionProduct(String productCode);
+
+    int numPInquiryId (String productCode);
 
 }

@@ -1,12 +1,13 @@
 package com.example.gagooda_project.controller;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import com.example.gagooda_project.dto.UserDto;
-import com.example.gagooda_project.service.ProductInquiryService;
+import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.service.ProductInquiryServiceImp;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.gagooda_project.service.UserServiceImp;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -31,25 +32,55 @@ public class ProductInquiryController {
                        @SessionAttribute(required = false) String succMsg,
                        HttpSession session
     ) {
-        if (succMsg != null) {
-            session.removeAttribute("succMsg");
-            System.out.println(succMsg);
-        }
-        log.info(productCode);
+        int list = 0;
         List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
-        model.addAttribute("plist", plist);
-        model.addAttribute("succMsg", succMsg);
-        return "/product_inquiry/list";
+        int count = productInquiryService.numPInquiryId(productCode);
+        try{
+            if (succMsg != null) {
+                session.removeAttribute("succMsg");
+                System.out.println(succMsg);
+            }
+            log.info(productCode);
+            model.addAttribute("count", count);
+            model.addAttribute("plist", plist);
+            model.addAttribute("succMsg", succMsg);
+            list = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (list > 0){
+            return "/product_inquiry/list";
+        } else {
+            return "/errorHandler";
+        }
+
     }
 
-    @GetMapping("/register.do")
-    public String register(
-            @SessionAttribute UserDto loginUser
+    @GetMapping("/user_yes/{productCode}/register.do")
+    public String register(@SessionAttribute UserDto loginUser,
+                           Model model,
+                           @PathVariable(required = true, name = "productCode") String productCode
     ) {
-        return "/product_inquiry/register";
+        int check = 0;
+        List<CommonCodeDto> commonCodeList = productInquiryService.showCommonCode("pi");
+        List<OptionProductDto> optionProductList = productInquiryService.showOptionProduct(productCode);
+        System.out.println(commonCodeList);
+        System.out.println(optionProductList);
+        try {
+            model.addAttribute("commonCodeList", commonCodeList);
+            model.addAttribute("optionProductList", optionProductList);
+            check = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (check > 0){
+            return "/product_inquiry/user_yes/register";
+        } else {
+            return "/errorHandler";
+        }
     }
 
-    @PostMapping("/register.do")
+    @PostMapping("/user_yes/{productCode}/register.do")
     public String register(ProductInquiryDto productInquiry,
                            Model model,
                            @SessionAttribute UserDto loginUser,
@@ -60,7 +91,6 @@ public class ProductInquiryController {
                 String user = Integer.toString(loginUser.getUserId());
                 System.out.println(user);
                 model.addAttribute("user", loginUser.getUserId());
-//                System.out.println(productInquiry);
                 System.out.println(productInquiry.getProductCode());
                 register = productInquiryService.registerProductInquiry(productInquiry);
             } catch (Exception e) {
@@ -72,7 +102,7 @@ public class ProductInquiryController {
         if (register > 0) {
             return "redirect:/product_inquiry/list.do?productCode="+productInquiry.getProductCode();
         } else {
-            return "redirect:/product_inquiry/register.do";
+            return "redirect:/product_inquiry/user_yes/register.do";
         }
     }
 
@@ -103,11 +133,112 @@ public class ProductInquiryController {
     public String adminList(Model model,
                             @SessionAttribute UserDto loginUser){
         if(loginUser.getGDet().equals("g1")){
-            List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries();
-            model.addAttribute("adminList",adminList);
-            return "/product_inquiry/admin/list";
+            int check = 0;
+            try {
+                List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries();
+                model.addAttribute("adminList",adminList);
+                check = 1;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            if (check > 0){
+                return "/product_inquiry/admin/list";
+            } else {
+                return "/errorHandler";
+            }
         } else {
             return "/index";
+        }
+    }
+
+    @GetMapping("/admin/{pInquiryId}/detail.do")
+    public String adminDetail(@PathVariable int pInquiryId,
+                              Model model){
+        int check =0;
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        System.out.println(productInquiry);
+        try {
+            model.addAttribute("productInquiry",productInquiry);
+            check = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (check > 0){
+            return "/product_inquiry/admin/detail";
+        } else {
+            return "/errorHandler";
+        }
+
+    }
+
+    @GetMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser){
+        return "/product_inquiry/admin/detail";
+    }
+
+    @PostMapping("/admin/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply){
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "redirect:/product_inquiry/admin/"+pInquiryId+"/detail.do";
+        }
+    }
+
+
+    @PostMapping ("/admin/list.do")
+    public String adminUpdate(@SessionAttribute UserDto loginUser,
+                              @RequestParam(name="pInquiryId") int pInquiryId,
+                              String reply
+    ){
+        int modify = 0;
+        System.out.println(pInquiryId);
+        System.out.println(reply);
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        productInquiry.setReplyId(loginUser.getUserId());
+        productInquiry.setReply(reply);
+        System.out.println("***********************************"+productInquiry);
+        try {
+            modify =productInquiryService.modifyOne(productInquiry);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (modify > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "/product_inquiry/admin/list";
+        }
+    }
+
+    @GetMapping("/admin/delete.do")
+    public String admindelete(@SessionAttribute UserDto loginUser,
+                         @RequestParam(name="pInquiryId") int pInquiryId
+                         ){
+        int delete = 0;
+        ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
+        try{
+            delete = productInquiryService.removeOne(productInquiry.getPInquiryId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (delete > 0){
+            return "redirect:/product_inquiry/admin/list.do";
+        } else {
+            return "redirect:/product_inquiry/admin/"+pInquiryId+"/detail.do";
         }
     }
 }

@@ -2,16 +2,18 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.CategoryConnService;
+import com.example.gagooda_project.service.ImageService;
+import com.example.gagooda_project.service.OptionProductService;
 import com.example.gagooda_project.service.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.http.HttpClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,17 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
     private CategoryConnService categoryConnService;
+    private ImageService imageService;
+    private OptionProductService optionProductService;
+
     public ProductController(ProductService productService,
-                             CategoryConnService categoryConnService) {
+                             CategoryConnService categoryConnService,
+                             ImageService imageService,
+                             OptionProductService optionProductService) {
         this.productService = productService;
         this.categoryConnService = categoryConnService;
+        this.imageService = imageService;
+        this.optionProductService = optionProductService;
     }
 
     @Value("${img.upload.path}")
@@ -37,6 +46,7 @@ public class ProductController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         List<ProductDto> productList = null;
@@ -64,6 +74,7 @@ public class ProductController {
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
             System.out.println(msg);
         }
         List<CategoryConnDto> categoryConnList = null;
@@ -83,11 +94,18 @@ public class ProductController {
     }
 
     @GetMapping("/{productCode}/detail.do")
-    public String detail (
+    public String detail(
             @PathVariable String productCode,
             HttpSession session,
-            Model model
+            Model model,
+            @SessionAttribute(required = false)  String msg,
+            HttpServletRequest request
     ) {
+        System.out.println("msg " + msg);
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         ProductDto product = null;
         try {
             product = productService.selectOne(productCode);
@@ -96,6 +114,7 @@ public class ProductController {
         }
         if (product != null) {
             model.addAttribute("product", product);
+            session.setAttribute("getUri", request.getRequestURI());
             return "/product/detail";
         } else {
             session.setAttribute("msg", "데이터를 찾을 수 없습니다.");
@@ -104,38 +123,87 @@ public class ProductController {
     }
 
     @GetMapping("/admin/register.do")
-    public String insert(
+    public String register(
             @SessionAttribute UserDto loginUser,
             @SessionAttribute(required = false) String msg,
             HttpSession session,
             Model model
     ) {
         if (msg != null) {
-            model.addAttribute("msg", msg);
             session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
         }
-        return "/product/register";
+        if (loginUser.getGDet().equals("g1")) {
+            return "/product/register";
+        } else {
+            session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/admin/register.do")
-    public String insert(
+    public String register(
             @SessionAttribute UserDto loginUser,
             HttpSession session,
             ProductDto product,
-            @RequestParam(name = "categoryId") List<Integer> categoryIdList
+            @RequestParam(name = "categoryId") List<Integer> categoryIdList,
+            @RequestParam(name = "imageFile") List<MultipartFile> imageFileList,
+            @RequestParam(name = "infoImageFile") List<MultipartFile> infoImageFileList
     ) {
-        System.out.println(product);
-        for (int categoryId : categoryIdList) {
-            CategoryConnDto categoryConn = new CategoryConnDto();
-            categoryConn.setCategoryId(categoryId);
-            categoryConn.setProductCode(product.getProductCode());
-            System.out.println(categoryConn);
+        if (loginUser.getGDet().equals("g1")) {
+            int insert = 0;
+            try {
+                // product, categoryConn 등록
+                insert = productService.register(product, imageFileList, infoImageFileList,
+                        loginUser, categoryIdList, imgPath);
+                System.out.println("insert:" + insert);
+            } catch (Exception e) {
+                e.printStackTrace();
+                insert = 0;
+            }
+            if (insert > 0) {
+                return "redirect:/product/" + product.getProductCode() + "/detail.do";
+            } else {
+                session.setAttribute("msg", "등록 중 오류가 났습니다.");
+                return "redirect:/product/admin/register.do";
+            }
+        } else {
+            session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
+            return "redirect:/";
         }
-        System.out.println(product.getImageList());
-        System.out.println(product.getInfoImgCode());
-        System.out.println(product.getCategoryConnList());
-        System.out.println(product.getOptionProductList());
-        return "redirect:/";
+    }
+
+    @GetMapping("/admin/{productCode}/modify.do")
+    public String modify(
+            @SessionAttribute UserDto loginUser,
+            @SessionAttribute(required = false) String msg,
+            HttpSession session,
+            Model model,
+            @PathVariable String productCode
+    ) {
+        if (loginUser.getGDet().equals("g1")) {
+            if (msg != null) {
+                session.removeAttribute("msg");
+                model.addAttribute("msg", msg);
+                System.out.println(msg);
+            }
+            ProductDto product = null;
+            try {
+                product = productService.selectOne(productCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (product != null) {
+                model.addAttribute("product", product);
+                return "/product/modify";
+            } else {
+                return "/redirect:/";
+            }
+        } else {
+            session.setAttribute("msg", "관리자만 상품을 수정 할 수 있습니다.");
+            return "redirect:/";
+        }
     }
 
 }
