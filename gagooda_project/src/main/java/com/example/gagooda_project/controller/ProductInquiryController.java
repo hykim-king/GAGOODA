@@ -33,13 +33,15 @@ public class ProductInquiryController {
                        HttpSession session
     ) {
         int list = 0;
+        List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
+        int count = productInquiryService.numPInquiryId(productCode);
         try{
             if (succMsg != null) {
                 session.removeAttribute("succMsg");
                 System.out.println(succMsg);
             }
             log.info(productCode);
-            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
+            model.addAttribute("count", count);
             model.addAttribute("plist", plist);
             model.addAttribute("succMsg", succMsg);
             list = 1;

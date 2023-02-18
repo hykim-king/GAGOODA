@@ -24,4 +24,6 @@ public interface ProductInquiryService {
 
     List<OptionProductDto> showOptionProduct(String productCode);
 
+    int numPInquiryId (String productCode);
+
 }

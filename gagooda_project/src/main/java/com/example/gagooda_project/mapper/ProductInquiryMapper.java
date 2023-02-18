@@ -20,6 +20,8 @@ public interface ProductInquiryMapper {
 
     int deleteById(int id);
 
+    int countByPInquiryId(String productCode);
+
 //    List<ProductInquiryDto> pageAll();
 
 }
