@@ -46,7 +46,7 @@
         <tbody>
             <tr th:each="order:${orderList}">
                 <!--=====================FIX:style cursor : pointer row 전체에 생김=============================-->
-                <td th:text="${order.orderId}" class="text-primary" th:style="cursor:pointer;" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
+                <td th:text="${order.orderId}" class="text-primary" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
                 <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
                 <td>
                     <img th:src="@{'/img/product/{file}'(file=${order.imgPath})}"
