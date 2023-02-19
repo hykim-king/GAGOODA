@@ -11,9 +11,6 @@
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"
                      fetchType="lazy"/>
-
-
-
     </resultMap>
 
     <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
@@ -38,6 +35,9 @@
     </select>
     <select id="listByDDet" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE d_det=#{dDet}
+    </select>
+    <select id="pageByUserIdAndDate" resultType="com.example.gagooda_project.dto.DeliveryDto">
+        SELECT * FROM delivery WHERE user_id = #{userId}
     </select>
 </mapper>
 

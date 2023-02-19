@@ -30,8 +30,7 @@ public class AddressController {
             if(addressService.defaultAddress(address.getUserId())==null) {
                 register = addressService.register(address);
             } else {
-                if(addressService.defaultAddress(address.getUserId()).getAddressId()!=address.getAddressId() &&
-                        address.isHome()==true) {
+                if(addressService.defaultAddress(address.getUserId()).getAddressId()!=address.getAddressId() && address.isHome()==true) {
                     addressService.modifyDefault(address.getUserId());
                     register = addressService.register(address);
                 } else {

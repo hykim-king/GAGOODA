@@ -20,11 +20,11 @@
   <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
   <div>
     <label for="postCode">우편번호</label>
-    <input type="text" name="postCode" id="postCode" th:value="${address.getPostCode}" required>
+    <input type="text" name="postCode" id="postCode" th:value="${address.getPostCode}" required th:readonly="true">
   </div>
   <div>
     <label for="address">주소</label>
-    <input type="text" name="address" id="address" th:value="${address.getAddress}" required>
+    <input type="text" name="address" id="address" th:value="${address.getAddress}" required th:readonly="true">
   </div>
   <div>
     <label for="addressDetail">상세주소</label>

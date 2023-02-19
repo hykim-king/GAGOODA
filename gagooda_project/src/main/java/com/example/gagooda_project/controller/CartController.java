@@ -15,13 +15,8 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/cart")
-<<<<<<< HEAD
-public class  CartController {
-    CartService cartService;
-=======
 public class CartController {
     CartServiceImp cartServiceImp;
->>>>>>> 423ec0785efabcafa9dfa11094b4e9482ef047cc
     OptionProductService optionProductService;
     ProductService prductService;
     ImageService imageService;
