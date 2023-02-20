@@ -96,7 +96,7 @@
         SELECT *
         FROM product
         WHERE place = #{place}
-        ORDER BY ${productCode} ASC
+        ORDER BY product_code = #{productCode} ASC
         LIMIT 8
     </select>
 </mapper>

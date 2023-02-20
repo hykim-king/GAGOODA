@@ -12,46 +12,100 @@
     <input type="hidden" th:value="${gDet}" name="gDet">
     <div>
         <label for="email">이메일</label>
-        <input type="email" name="email" id="email" required>
+        <input type="email" name="email" id="memail" required>
     </div>
     <div>
-        <label for="uname">이름</label>
-        <input type="text" name="uname" id="uname" required>
+        <label for="name">이름</label>
+        <input type="text" name="uname" id="name" required>
     </div>
     <div>
         <label for="nickname">닉네임</label>
-        <input type="text" name="nickname" id="nickname" required>
+        <input type="text" name="nickname" id="mnickname" required>
     </div>
     <div>
         <label for="pw">비밀번호</label>
-        <input type="password" name="pw" id="pw" required>
+        <input type="password" name="pw" id="mpw" required>
     </div>
     <div>
         <label for="check">비밀번호 확인</label>
-        <input type="password" name="check" id="check" required>
+        <input type="password" name="check" id="check1" required>
     </div>
     <fieldset>
         <label for="phone">전화번호</label>
-        <input type="text" id="phone" name="phone" required>
+        <input type="text" id="phone1" name="phone" required>
         <button type="button">인증번호 받기</button>
     </fieldset>
     <div>
         <label for="varify">인증번호 입력</label>
-        <input type="text" id="varify" required>
+        <input type="text" id="1varify" required>
     </div>
 
     <div>
         <label for="private-data">개인정보 수집 및 이용 동의</label>
-        <input type="checkbox" name="" id="private-data" required>
+        <input type="checkbox" name="" id="private-data1" required>
     </div>
 
     <div>
         <label for="emailCheck">광고 및 업데이트 관련 이메일 수신 동의</label>
-        <input type="checkbox" name="emailCheck" id="emailCheck" checked>
+        <input type="checkbox" name="emailCheck" id="emailCheck1" checked>
     </div>
 
     <button type="submit">가입하기</button>
     <a href="#">취소하기</a>
 </form>
+
+
+<form class="container" style="width: 40%; margin-bottom: 200px">
+    <div class="mx-auto" >
+        <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">이메일</label>
+        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="name@example.com" required>
+    </div>
+    <div class="mb-3">
+        <label for="uname" class="form-label">이름</label>
+        <input type="text" class="form-control form-control-lg" id="uname" name="uname" required>
+    </div>
+    <div class="mb-3">
+        <label for="nickname" class="form-label">닉네임</label>
+        <input type="text" class="form-control form-control-lg" id="nickname" name="nickname" required>
+    </div>
+    <div class="mb-3">
+        <label for="pw" class="form-label">비밀번호</label>
+        <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
+    </div>
+    <div class="mb-3">
+        <label for="check" class="form-label">비밀번호 확인</label>
+        <input type="password" class="form-control form-control-lg" id="check" name="check" required>
+    </div>
+    <label for="phone" class="form-label">전화번호</label>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control form-control-lg" id="phone" name="phone" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
+        <button type="button" class="input-group-text" style="background-color: #F9F4F0; color: #B68C68"  id="basic-addon2">인증번호 받기</button>
+    </div>
+    <div class="mb-3">
+        <label for="varify" class="form-label">인증번호 입력</label>
+        <input type="text" class="form-control form-control-lg" id="varify" name="varify" required>
+    </div>
+    <div class="form-check form-check-reverse">
+        <input class="form-check-input" type="checkbox" value="" name="" id="private-data" checked>
+        <label class="form-check-label" for="private-data">
+            개인정보 수집 및 이용 동의
+        </label>
+    </div>
+    <div class="form-check form-check-reverse">
+        <input class="form-check-input" type="checkbox" value="" name="emailCheck" id="emailCheck" checked>
+        <label class="form-check-label" for="emailCheck">
+            광고 및 업데이트 관련 이메일 수신 동의
+        </label>
+    </div>
+    <div class="mb-3">
+        <input type="submit" class="form-control form-control-lg text-white my-5" value="가입하기" style="background-color: #B68C68;">
+    </div>
+</form>
 </div>
+
+
+
 </html>

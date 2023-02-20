@@ -28,14 +28,7 @@ public class MainController {
     public String main(HttpServletRequest req,
                        Model model){
         try{
-            List<ProductDto> productList = productService.friMainList("GAGOODA");
-            System.out.println(productList);
-//            List<ProductDto> product = new ArrayList<ProductDto>();
-//            for (int i = 0; i<8; i++){
-//                product.add(productList.get(i));
-//            }
-//            System.out.println(product);
-            model.addAttribute("productList", productList);
+
         } catch (Exception e){
             e.printStackTrace();
         }
