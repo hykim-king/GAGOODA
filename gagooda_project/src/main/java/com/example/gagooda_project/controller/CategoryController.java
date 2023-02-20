@@ -2,13 +2,13 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.CategoryDto;
 import com.example.gagooda_project.service.CategoryService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/category")
@@ -17,23 +17,5 @@ public class CategoryController {
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-    }
-
-    @GetMapping("/levelone.do")
-    public String levelOne(
-            Model model
-    ) {
-        try {
-            List<CategoryDto> levelOneList = categoryService.showCategoriesAt(1);
-            model.addAttribute(levelOneList);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "product/register";
-    }
-
-    @PostMapping("/levelone.do")
-    public String levelOne() {
-        return "";
     }
 }

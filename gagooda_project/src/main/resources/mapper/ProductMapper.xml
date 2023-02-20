@@ -25,35 +25,71 @@
                     select="com.example.gagooda_project.mapper.OptionProductMapper.listByProductCode"
                     column="product_code"
                     fetchType="lazy"/>
+        <collection property="categoryConnList"
+                    select="com.example.gagooda_project.mapper.CategoryConnMapper.listByProductCode"
+                    column="product_code"
+                    fetchType="lazy"/>
     </resultMap>
     <insert id="insertOne" parameterType="ProductDto">
         INSERT INTO product
-            (product_code, pname, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
-        VALUES
-            (#{productCode}, #{pname}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode}, #{regId}, #{modId})
+        (product_code, pname, place, delivery_pc, supply_pc, sales_pc, img_code, info_img_code, reg_id, mod_id)
+        VALUES (#{productCode}, #{pname}, #{place}, #{deliveryPc}, #{supplyPc}, #{salesPc}, #{imgCode}, #{infoImgCode},
+                #{regId}, #{modId})
     </insert>
     <update id="updateOne" parameterType="ProductDto">
-        UPDATE product SET pname=#{pname},
-                           place=#{place},
-                           delivery_pc=#{deliveryPc},
-                           supply_pc=#{supplyPc},
-                           sales_pc=#{salesPc},
-                           rot=#{rot},
-                           margin=#{margin},
-                           p_det=#{pDet},
-                           mod_date=#{modDate},
-                           mod_id=#{modId}
-                       WHERE
-                           product_code=#{productCode}
+        UPDATE product
+        SET pname=#{pname},
+            place=#{place},
+            delivery_pc=#{deliveryPc},
+            supply_pc=#{supplyPc},
+            sales_pc=#{salesPc},
+            rot=#{rot},
+            margin=#{margin},
+            p_det=#{pDet},
+            mod_date=#{modDate},
+            mod_id=#{modId}
+        WHERE product_code = #{productCode}
     </update>
     <delete id="deleteById">
-        DELETE FROM product WHERE product_code=#{productCode}
+        DELETE
+        FROM product
+        WHERE product_code = #{productCode}
     </delete>
     <select id="findById" resultMap="productMap">
-        SELECT * FROM product WHERE product_code=#{productCode}
+        SELECT *
+        FROM product
+        WHERE product_code = #{productCode}
     </select>
     <select id="listAll" resultMap="productMap">
-        SELECT * FROM product
+        SELECT *
+        FROM product
     </select>
-
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM product
+    </select>
+    <select id="pageAll" resultMap="productMap">
+        SELECT *
+        FROM product
+        ORDER BY ${paging.orderField} ${paging.direct}
+        LIMIT #{paging.startRow}, #{paging.rows}
+    </select>
+    <select id="countForCategory" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM product
+                 LEFT JOIN category_conn cc
+                           ON product.product_code = cc.product_code
+        WHERE cc.category_id = #{categoryId}
+    </select>
+    <select id="pageForCategory" resultMap="productMap">
+        SELECT *
+        FROM product
+            <if test="categoryId != null">
+                LEFT JOIN category_conn cc
+                ON product.product_code = cc.product_code
+                WHERE cc.category_id = #{categoryId}
+            </if>
+        ORDER BY ${paging.orderField} ${paging.direct}
+        LIMIT #{paging.startRow}, #{paging.rows}
+    </select>
 </mapper>

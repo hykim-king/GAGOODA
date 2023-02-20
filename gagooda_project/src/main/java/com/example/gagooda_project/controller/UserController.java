@@ -69,7 +69,6 @@ public class UserController {
             model.addAttribute("msg", msg);
             System.out.println(msg);
         }
-        model.addAttribute("msg", msg);
         return "/user/login";
     }
 
@@ -78,25 +77,18 @@ public class UserController {
             HttpSession session,
             String email,
             String pw,
-            HttpServletRequest request,
-            @SessionAttribute(required = false) String getUri,
-            @SessionAttribute(required = false) String postUri
+            @SessionAttribute(required = false) String getUri
     ) {
-        UserDto user = null;
         try {
-            user = userService.login(email, pw);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (user == null) {
-            session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
-            return "redirect:/user/login.do";
-        } else {
+            UserDto user = userService.login(email, pw);
             session.setAttribute("loginUser", user);
-            System.out.println(postUri);
             session.removeAttribute("getUri");
             if (getUri != null) return "redirect:"+getUri;
             return "redirect:/";
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
+            return "redirect:/user/login.do";
         }
     }
 

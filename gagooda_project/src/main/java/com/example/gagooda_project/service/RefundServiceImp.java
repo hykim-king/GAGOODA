@@ -18,11 +18,12 @@ public class RefundServiceImp implements RefundService{
     OrderDetailMapper orderDetailMapper;
     OrderMapper orderMapper;
 
-    public RefundServiceImp(RefundMapper refundMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper, OrderDetailMapper orderDetailMapper) {
+    public RefundServiceImp(RefundMapper refundMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper, OrderDetailMapper orderDetailMapper, OrderMapper orderMapper) {
         this.refundMapper = refundMapper;
         this.addressMapper = addressMapper;
         this.commonCodeMapper = commonCodeMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.orderMapper = orderMapper;
     }
 
     @Transactional
@@ -30,8 +31,8 @@ public class RefundServiceImp implements RefundService{
         int register = 0;
         RefundDto checkRefund;
         AddressDto newAddress = null;
+        OrderDto order = orderMapper.findById(refund.getOrderId());
         if(refund.getOrderDetailId() == -1){
-            OrderDto order = orderMapper.findById(refund.getOrderId());
             for(int i = 0; i < order.getOrderDetailList().size(); i++){
                 refund.setOrderDetailId(order.getOrderDetailList().get(i).getOrderDetailId());
                 refund.setCancelAmount(order.getOrderDetailList().get(i).getPrice());
@@ -39,31 +40,40 @@ public class RefundServiceImp implements RefundService{
                 if (checkRefund != null){
                     switch(checkRefund.getRfDet()){
                         case "rf0": case "rf2": case "rf3": case "rf4": case "rf5": case "rf6": case "rf7": case "rf8":
-                            throw new Error();
-                        case "rf1":
-
-                            register += refundMapper.insertOne(refund);
                             break;
+                        case "rf1":
+                            register += refundMapper.insertOne(refund);
                     }
                 }else{
 
                     register += refundMapper.insertOne(refund);
                 }
             }
-        }else{
-            checkRefund = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
-            if (checkRefund != null){
-                throw new Error();
+            if (register == order.getOrderDetailList().size()){
+                return register;
             }else{
-                register += refundMapper.insertOne(refund);
+                throw new NullPointerException();
             }
         }
-        
-        return register;
+        checkRefund = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
+        if (checkRefund != null){
+            if(checkRefund.getRfDet().equals("rf1")){
+                register += refundMapper.insertOne(refund);
+                return register;
+            }
+            throw new Error();
+        }else{
+            register += refundMapper.insertOne(refund);
+            return register;
+        }
     }
 
-    public List<RefundDto> showUserRefundList(int id, int period, String startDate, String endDate, String detCode){
-        return refundMapper.pageByUserIdAndDate(id, period, startDate, endDate, detCode);
+    public List<RefundDto> showUserRefundList(int userId, int period, String startDate, String endDate, String detCode){
+        if (startDate != null && endDate != null && startDate.equals(endDate)){
+            startDate = startDate + "%";
+            endDate = endDate + "%";
+        }
+        return refundMapper.pageByUserIdAndDate(userId, period, startDate, endDate, detCode);
     }
 
     public List<RefundDto> showRefundList(Map<String, String> searchFilter){

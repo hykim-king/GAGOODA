@@ -36,9 +36,6 @@ public class PagingDto {
     }
 
     public void setQueryString(Map<String, String[]> queryMap) {
-        ///?hobby=낚시&hobby=그림&page=1&rows=7
-        //{name :[val1,val2..],boardNo=[1],hobby=["낚시","그림"]}
-        //?hobby=낚시&hobby=그림
         String queryString= "";
         String and="?";
         for (String name :queryMap.keySet()){
@@ -49,11 +46,7 @@ public class PagingDto {
                 }
             }
         }
-        //rows=10&order=user_id&
-        //th:href=@{'url'(name=1,name2=3) } => url?name=1&name2
-        //list.do ->  th:href=@{''(page=${i})}  => list.do?paeg=3
-        //list.do ->  th:href=@{('?'+'rows=10&order=user_id&')(page=${i})}  => list.do?rows=10&order=user_id&&paeg=3
-
+        System.out.println("queryString: "+queryString);
         this.queryString = queryString.toString();
     }
 
