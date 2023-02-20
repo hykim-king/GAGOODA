@@ -4,6 +4,7 @@ import com.example.gagooda_project.dto.DeliveryDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DeliveryMapper {
@@ -11,7 +12,7 @@ public interface DeliveryMapper {
     int updateOne(DeliveryDto dto);
     DeliveryDto findById(int id);
     DeliveryDto findByOrderId(String orderId);
-    List<DeliveryDto> listAll(DeliveryDto dto);
-    List<DeliveryDto> pageByUserIdAndDate(DeliveryDto dto);
+    List<DeliveryDto> listAll(Map<String, String> searchFilter);
+    List<DeliveryDto> pageByUserIdAndDate(int userId, int period, String startDate, String endDate, String detCode);
 
 }
