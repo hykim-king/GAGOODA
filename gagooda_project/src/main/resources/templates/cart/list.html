@@ -17,36 +17,44 @@
                     <tr>
                         <th>전체 <span th:text="${cartList.size()}"></span>개</th>
                         <th>
-                            <input type="checkbox" class="allCheck">
+                            <input type="checkbox" class="allCheck" checked>
                         </th>
                         <th>상품정보</th>
+                        <th>가격</th>
                         <th>수량</th>
-                        <th>주문금액</th>
+                        <th>합계</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="cart:${cartList}">
-                        <td>1</td>
-                        <td><input type="checkbox" name="checkList" class="checkList" th:value="${cart.cartId}"></td>
-                        <td>
-                            <img th:src="@{'/img/product/{file}'(file=${cart.product.getImgCode()+'_0.png'})}"
-                                 style="width: 100px;">
-                            <a href="product/{cart.getProductCode()}/detail.do" th:text="${cart.getOptionProduct().getOpname()}"></a>
-                        </td>
-                        <td>
-                            <input th:value="${cart.cnt}" name="cntText" class="cntText" style="width: 20px">
-                            <button type="button" class="updateBtn" onclick="cartUpdate()">변경</button>
-                        </td>
-                        <td th:text="${cart.getOptionProduct().getPrice()*cart.cnt}"></td>
-                    </tr>
+                    <th:block th:if="${cartList.size() > 0}" th:each="i : ${#numbers.sequence(0, cartList.size()-1)}">
+                        <tr th:data-cart="${cartList[i].cartId}">
+                            <td th:text="${i+1}"></td>
+                            <td><input type="checkbox" name="checkList" class="checkList" checked th:value="${cartList[i].cartId}"></td>
+                            <td>
+                                <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImgCode() +'_0.png'})}"
+                                     style="width: 100px;">
+                                <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getOptionProduct().getOpname()}"></a>
+                            </td>
+                            <td th:text="${cartList[i].optionProduct.getPrice()}"></td>
+                            <td>
+                                <div class="updown">
+                                    <button type="button" name="downBtn">-</button>
+                                    <input th:value="${cartList[i].cnt}" name="cntText" class="cntText" style="width: 20px" onkeyup="cartUpdate()">
+                                    <button type="button" name="upBtn">+</button>
+                                </div>
+                            </td>
+                            <td th:text="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}"></td>
+                        </tr>
+                    </th:block>
                     </tbody>
                 </table>
             </div>
 
             <div>
-                <div>총 주문금액: <strong th:text="${totalPrice}"></strong> 원</div>
-                <div>총 주문수량: <strong th:text="${totalCnt}"></strong> 개</div>
-                <button type="button" class="orderBtn" onclick="orderPro()">전체주문</button>
+                <div>총 주문금액: <strong id="totalPrice" th:text="${totalPrice}"></strong> 원</div>
+                <div>총 주문수량: <strong id="totalCnt" th:text="${totalCnt}"></strong> 개</div>
+                <button type="button" class="orderOneBtn" onclick="orderOne()">선택주문</button>
+                <button type="button" class="orderAllBtn" onclick="orderAll()">전체주문</button>
                 <button type="button" class="delOneBtn" onclick="cartDelOne()">선택삭제</button>
                 <button type="button" class="delAllBtn" onclick="cartDelAll()">전체삭제</button>
             </div>
@@ -91,7 +99,7 @@
 
         const form = document.createElement('form');
         form.setAttribute('method', 'post');
-        form.setAttribute('action', 'update.do');
+        form.setAttribute('action', '/cart/user_yes/mypage/update.do');
 
         var input1 = document.createElement('input');
         input1.setAttribute("type", "hidden");
@@ -115,7 +123,7 @@
             if (confirm("정말로 전체삭제하시겠습니까?")) {
                 const form = document.createElement('form');
                 form.setAttribute('method', 'post');
-                form.setAttribute('action', 'deleteAll.do');
+                form.setAttribute('action', '/cart/user_yes/mypage/deleteAll.do');
                 document.body.appendChild(form);
                 form.submit();
             }
@@ -142,7 +150,7 @@
 
                 const form = document.createElement('form');
                 form.setAttribute('method', 'post');        //Post 메소드 적용
-                form.setAttribute('action', 'deleteOne.do');
+                form.setAttribute('action', '/cart/user_yes/mypage/deleteOne.do');
 
                 var input1 = document.createElement('input');
                 input1.setAttribute("type", "hidden");
@@ -156,8 +164,37 @@
         }
     }
 
-    // 장바구니 담긴 상품들 주문창으로 넘김?
-    function orderPro() {
+    function orderOne() {
+        const query = 'input[name="checkList"]:checked';
+        const selectedElements = document.querySelectorAll(query);
+        const selectedElementsCnt = selectedElements.length;
+
+        if (selectedElementsCnt == 0) {
+            alert("주문할 상품이 없습니다.");
+            return false;
+        } else {
+            const arr = new Array(selectedElementsCnt);
+
+            document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+                arr[i] = v.value;
+            });
+
+            const form = document.createElement('form');
+            form.setAttribute('method', 'get');        //Post 메소드 적용
+            form.setAttribute('action', '/order/user_yes/register.do');
+
+            var input1 = document.createElement('input');
+            input1.setAttribute("type", "hidden");
+            input1.setAttribute("name", "orderCartIds");
+            input1.setAttribute("value", arr);
+            form.appendChild(input1);
+            console.log(form);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+
+    function orderAll() {
         const query = 'input[name="checkList"]'
         const selectedElements = document.querySelectorAll(query)
         const selectedElementsCnt = selectedElements.length;
@@ -166,10 +203,29 @@
             alert("주문할 상품이 없습니다.");
             return false;
         } else {
+            allCheck.checked = true;
+
+            for (let i=0; i<list.length; i++) {
+                list[i].checked = true;
+            }
+
+            const arr = new Array(selectedElementsCnt);
+
+            document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+                arr[i] = v.value;
+            });
+
             const form = document.createElement('form');
             form.setAttribute('method', 'get');        //Post 메소드 적용
             form.setAttribute('action', '/order/user_yes/register.do');
+
+            var input1 = document.createElement('input');
+            input1.setAttribute("type", "hidden");
+            input1.setAttribute("name", "orderCartIds");
+            input1.setAttribute("value", arr);
+            form.appendChild(input1);
             console.log(form);
+            document.body.appendChild(form);
             form.submit();
         }
     }

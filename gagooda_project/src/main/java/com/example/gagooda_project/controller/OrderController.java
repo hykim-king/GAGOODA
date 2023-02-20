@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,11 +22,13 @@ import java.util.UUID;
 @Controller
 public class OrderController {
     private OrderService orderService;
+    private CartService cartService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public OrderController(OrderService orderService){
-
+    public OrderController(OrderService orderService,
+                           CartService cartService){
+        this.cartService = cartService;
         this.orderService = orderService;
     }
 
@@ -79,15 +82,20 @@ public class OrderController {
     }
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
-                         HttpSession session,
-                         Model model
+                           @SessionAttribute(required = false) String msg,
+                           HttpSession session,
+                           Model model,
+                           @RequestParam List<Integer> orderCartIds
     ){
         List<AddressDto> addressList = null;
-        List<CartDto> cartList = null;
+        List<CartDto> cartList = new ArrayList<>();
         System.out.println(loginUser.getUserId());
         try {
-            cartList = orderService.userCartList(loginUser.getUserId());
-            log.info("user.cartList: "+cartList);
+            for (int i=0; i<orderCartIds.size(); i++) {
+                CartDto cartDto = new CartDto();
+                cartDto = cartService.selectByCartId(orderCartIds.get(i));
+                cartList.add(cartDto);
+            }
             addressList = orderService.userAddressList(loginUser.getUserId());
             log.info("user.addressList: "+addressList);
         } catch (Exception e) {
