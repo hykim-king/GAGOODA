@@ -14,16 +14,11 @@ public class OrderServiceImp implements OrderService {
     private DeliveryMapper deliveryMapper;
     private CartMapper cartMapper;
     private AddressMapper addressMapper;
-<<<<<<< HEAD
     public OrderServiceImp(OrderMapper orderMapper,
                            OrderDetailMapper orderDetailMapper,
                            DeliveryMapper deliveryMapper,
                            CartMapper cartMapper,
                            AddressMapper addressMapper){
-=======
-    public OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper,
-                            DeliveryMapper deliveryMapper, CartMapper cartMapper, AddressMapper addressMapper){
->>>>>>> f0e2a1b72f8890a76ba59331646a550a934c437f
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.deliveryMapper = deliveryMapper;
@@ -86,21 +81,4 @@ public class OrderServiceImp implements OrderService {
     public CartDto selectByCartId(int cartId) {
         return cartMapper.findById(cartId);
     }
-<<<<<<< HEAD
-=======
-
-//    @Override
-//    public int deleteCart(List<String> cartList) {
-//        int delete = 0;
-//        if(cartList !=null){
-//            for(String cartNum:cartList){
-//                int cartId = Integer.parseInt(cartNum);
-//                delete += cartMapper.deleteById(cartId);
-//            }
-//        }
-//        return delete;
-//    }
-
-
->>>>>>> f0e2a1b72f8890a76ba59331646a550a934c437f
 }

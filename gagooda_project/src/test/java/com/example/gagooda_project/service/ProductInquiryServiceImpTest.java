@@ -21,6 +21,15 @@ class ProductInquiryServiceImpTest {
 
     @Test
     void registerProductInquiry() {
+        ProductInquiryDto p = new ProductInquiryDto();
+        p.setPiDet("pi0");
+        p.setSecret(true);
+        p.setRegDate(new Date());
+        p.setUserId(1);
+        p.setProductCode("HA310611");
+        p.setOptionCode("HA310611_DIO");
+        productInquiryService.registerProductInquiry(p);
+        System.out.println(p);
     }
 
     @Test
