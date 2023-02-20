@@ -3,6 +3,7 @@ package com.example.gagooda_project.service;
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,8 +14,11 @@ public class OrderServiceImp implements OrderService {
     private DeliveryMapper deliveryMapper;
     private CartMapper cartMapper;
     private AddressMapper addressMapper;
-    private OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper,
-                            DeliveryMapper deliveryMapper, CartMapper cartMapper, AddressMapper addressMapper){
+    public OrderServiceImp(OrderMapper orderMapper,
+                           OrderDetailMapper orderDetailMapper,
+                           DeliveryMapper deliveryMapper,
+                           CartMapper cartMapper,
+                           AddressMapper addressMapper){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.deliveryMapper = deliveryMapper;
@@ -38,6 +42,7 @@ public class OrderServiceImp implements OrderService {
         return orderDetailMapper.findByOrderId(orderId);
     }
 
+    @Transactional
     public int register(OrderDto order, DeliveryDto delivery) {
         int register = orderMapper.insertOne(order);
         System.out.println(register);
@@ -69,6 +74,4 @@ public class OrderServiceImp implements OrderService {
     public CartDto selectByCartId(int cartId) {
         return cartMapper.findById(cartId);
     }
-
-
 }

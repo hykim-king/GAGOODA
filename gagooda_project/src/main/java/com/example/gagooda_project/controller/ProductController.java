@@ -1,10 +1,8 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.service.CategoryConnService;
-import com.example.gagooda_project.service.ImageService;
-import com.example.gagooda_project.service.OptionProductService;
-import com.example.gagooda_project.service.ProductService;
+import com.example.gagooda_project.service.*;
+import com.sun.jdi.event.ExceptionEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,24 +13,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-    private ProductService productService;
-    private CategoryConnService categoryConnService;
-    private ImageService imageService;
-    private OptionProductService optionProductService;
+    private final ProductService productService;
+    private final CategoryConnService categoryConnService;
+    private final CategoryService categoryService;
+    private final CommonCodeService commonCodeService;
 
     public ProductController(ProductService productService,
                              CategoryConnService categoryConnService,
-                             ImageService imageService,
-                             OptionProductService optionProductService) {
+                             CategoryService categoryService,
+                             CommonCodeService commonCodeService) {
         this.productService = productService;
         this.categoryConnService = categoryConnService;
-        this.imageService = imageService;
-        this.optionProductService = optionProductService;
+        this.categoryService = categoryService;
+        this.commonCodeService = commonCodeService;
     }
 
     @Value("${img.upload.path}")
@@ -135,7 +134,21 @@ public class ProductController {
             System.out.println(msg);
         }
         if (loginUser.getGDet().equals("g1")) {
-            return "/product/register";
+            try {
+                List<CategoryDto> levelOne = categoryService.showCategoriesAt(1);
+                List<CategoryDto> levelTwo = categoryService.showCategoriesAt(2);
+                List<CategoryDto> levelThree = categoryService.showCategoriesAt(3);
+                List<CommonCodeDto> productDet = commonCodeService.showDets("p");
+                model.addAttribute("levelOne", levelOne);
+                model.addAttribute("levelTwo", levelTwo);
+                model.addAttribute("levelThree", levelThree);
+                model.addAttribute("productDet", productDet);
+                return "/product/register";
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+                return "redirect:/";
+            }
         } else {
             session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
             return "redirect:/";
@@ -147,7 +160,7 @@ public class ProductController {
             @SessionAttribute UserDto loginUser,
             HttpSession session,
             ProductDto product,
-            @RequestParam(name = "categoryId") List<Integer> categoryIdList,
+            @RequestParam(name = "category") HashSet<String> categoryIdList,
             @RequestParam(name = "imageFile") List<MultipartFile> imageFileList,
             @RequestParam(name = "infoImageFile") List<MultipartFile> infoImageFileList
     ) {
@@ -174,36 +187,19 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/admin/{productCode}/modify.do")
-    public String modify(
-            @SessionAttribute UserDto loginUser,
-            @SessionAttribute(required = false) String msg,
-            HttpSession session,
+
+    @GetMapping("/admin/product_list.do")
+    public String productList(
             Model model,
-            @PathVariable String productCode
-    ) {
-        if (loginUser.getGDet().equals("g1")) {
-            if (msg != null) {
-                session.removeAttribute("msg");
-                model.addAttribute("msg", msg);
-                System.out.println(msg);
-            }
-            ProductDto product = null;
-            try {
-                product = productService.selectOne(productCode);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (product != null) {
-                model.addAttribute("product", product);
-                return "/product/modify";
-            } else {
-                return "/redirect:/";
-            }
-        } else {
-            session.setAttribute("msg", "관리자만 상품을 수정 할 수 있습니다.");
-            return "redirect:/";
-        }
+            PagingDto paging,
+            HttpServletRequest req
+    ){
+        if (paging.getOrderField() == null) paging.setOrderField("mod_date");
+        paging.setQueryString(req.getParameterMap());
+        List<ProductDto> boardList = productService.pagingProduct(paging);
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("paging", paging);
+        return "";
     }
 
 }

@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.HashAttributeSet;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +48,7 @@ public class ProductServiceImp implements ProductService{
                         List<MultipartFile> imageFileList,
                         List<MultipartFile> infoImageFileList,
                         UserDto loginUser,
-                        List<Integer> categoryIdList,
+                        HashSet<String> categoryIdList,
                         String imgPath) {
         // imgCode, infoImgCode 설정
         product.setImgCode(product.getProductCode());
@@ -56,11 +58,13 @@ public class ProductServiceImp implements ProductService{
         if (productMapper.insertOne(product) <= 0) throw new Error();
 
         // categoryConnList 생성 및 product 에 설정
-        for (int categoryId : categoryIdList) {
-            CategoryConnDto categoryConn = new CategoryConnDto();
-            categoryConn.setProductCode(product.getProductCode());
-            categoryConn.setCategoryId(categoryId);
-            if(categoryConnMapper.insertOne(categoryConn) <= 0) throw new Error();
+        for (String categoryId : categoryIdList) {
+            if (!categoryId.isBlank()) {
+                CategoryConnDto categoryConn = new CategoryConnDto();
+                categoryConn.setProductCode(product.getProductCode());
+                categoryConn.setCategoryId(categoryId);
+                if (categoryConnMapper.insertOne(categoryConn) <= 0) throw new Error();
+            }
         }
         for (OptionProductDto option : product.getOptionProductList()) {
             // 옵션 코드 재설정
@@ -70,7 +74,8 @@ public class ProductServiceImp implements ProductService{
         try {
             for (int i = 0; i < imageFileList.size(); i++) {
                 MultipartFile imgFile = imageFileList.get(i);
-                ImageDto image = parseIntoImage(imgFile, product.getImgCode(), imgPath, i+1);
+                ImageDto image = parseIntoImage(imgFile, product.getImgCode(),
+                        imgPath+"/product", i+1);
                 if (imageMapper.insertOne(image) <= 0) throw new Error();
             }
             System.out.println("imageFileList 완료");
@@ -110,6 +115,14 @@ public class ProductServiceImp implements ProductService{
             throw new Exception("사진파일이 아닙니다.");
         }
         return image;
+    }
+
+    public List<ProductDto> pagingProduct(PagingDto paging) {
+        int totalRows = productMapper.count(paging);
+        paging.setTotalRows(totalRows);
+        System.out.println(paging);
+//        return productMapper.pageSearch(paging);
+        return null;
     }
 }
 

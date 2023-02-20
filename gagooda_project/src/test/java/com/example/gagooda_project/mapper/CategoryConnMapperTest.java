@@ -26,7 +26,7 @@ class CategoryConnMapperTest {
     @Test
     void insertOne() {
         CategoryConnDto categoryConn = new CategoryConnDto();
-        categoryConn.setCategoryId(511);
+        categoryConn.setCategoryId("511");
         categoryConn.setProductCode("PDT001");
         categoryConnMapper.insertOne(categoryConn);
     }
