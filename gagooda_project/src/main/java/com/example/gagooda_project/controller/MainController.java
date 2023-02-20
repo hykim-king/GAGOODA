@@ -2,10 +2,8 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.CategoryDto;
 import com.example.gagooda_project.service.CategoryService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.catalina.connector.Request;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +17,10 @@ public class MainController {
 
     public MainController(CategoryService categoryService) {
         this.categoryService = categoryService;
+    }
+    @GetMapping("/mainpage.do")
+    public String main(HttpServletRequest req){
+        return "order/mainpage";
     }
 
     @GetMapping("/error.do")
@@ -59,6 +61,6 @@ public class MainController {
             model.addAttribute("categories", firstCategories);
         }
 
-        return "/index";
+        return "index";
     }
 }

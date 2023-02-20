@@ -13,8 +13,8 @@ public interface OrderMapper {
 
     List<OrderDto> listAll();
 
-    List<OrderDto> pageAll(PagingDto paging); //PagingDto 추가해야함. Mapper에 query 추가 아직 안함.
-    int count(PagingDto paging,int userId);
+    List<OrderDto> pageAll(PagingDto paging, int userId, int dates); //PagingDto 추가해야함. Mapper에 query 추가 아직 안함.
+    int count(PagingDto paging,int userId,int dates);
 
     List<OrderDto> listByUserIdAndDate(int userId, int dates); //userId
 

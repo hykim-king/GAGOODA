@@ -13,22 +13,19 @@
     <!--기간별 조회-->
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="#">전체</a>
+            <a class="nav-link" th:href="@{ '' (dates=7) }">7일</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">7일</a>
+            <a class="nav-link" th:href="@{ '' (dates=15) }">15일</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">15일</a>
+            <a class="nav-link" th:href="@{ '' (dates=30) }">1개월</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">1개월</a>
+            <a class="nav-link" th:href="@{ '' (dates=90) }">3개월</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">3개월</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">1년</a>
+            <a class="nav-link" th:href="@{ '' (dates=365) }">1년</a>
         </li>
     </ul>
     <!--기간별 조회 end--------------->
@@ -46,7 +43,7 @@
         <tbody>
             <tr th:each="order:${orderList}">
                 <!--=====================FIX:style cursor : pointer row 전체에 생김=============================-->
-                <td th:text="${order.orderId}" class="text-primary" th:style="cursor:pointer;" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
+                <td th:text="${order.orderId}" class="text-primary" style="cursor:pointer;" th:onclick="location.href = [[@{'/order/user_yes/{orderId}/detail.do' (orderId=${order.orderId})}]]"></td>
                 <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
                 <td>
                     <img th:src="@{'/img/product/{file}'(file=${order.imgPath})}"

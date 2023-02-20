@@ -4,9 +4,7 @@ import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import com.example.gagooda_project.dto.UserDto;
-import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.service.ProductInquiryServiceImp;
-import com.example.gagooda_project.service.UserServiceImp;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +145,7 @@ public class ProductInquiryController {
                 return "/errorHandler";
             }
         } else {
-            return "/index";
+            return "index";
         }
     }
 

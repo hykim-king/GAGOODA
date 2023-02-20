@@ -1,8 +1,6 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.service.AddressService;
-import com.example.gagooda_project.service.CartServiceImp;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -16,42 +14,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @RequestMapping("/order")
 @Controller
 public class OrderController {
     private OrderService orderService;
-    private AddressService addressService;
-    private CartServiceImp cartService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    public OrderController(OrderService orderService,
-                           AddressService addressService,
-                           CartServiceImp cartService){
+    public OrderController(OrderService orderService){
 
         this.orderService = orderService;
-        this.addressService = addressService;
-        this.cartService = cartService;
     }
 
-    @GetMapping("/user_yes/list.do")
+
+    @GetMapping("/user_yes/mypage/list.do")
     public String list(Model model,
                        PagingDto paging,
                        HttpServletRequest req,
+                       @RequestParam(name = "dates", defaultValue = "7", required = false) int dates,
                        @SessionAttribute UserDto loginUser){
-        paging.setQueryString(req.getParameterMap());
         log.info("req.getParameterMap(): "+req.getParameterMap());
+        log.info("nameS:" + req.getParameterNames());
+        System.out.println(paging);
+        List<OrderDto> orderList = null;
         try{
-            List<OrderDto> orderList = orderService.orderList(paging, loginUser.getUserId());
+            paging.setQueryString(req.getParameterMap());
+            orderList = orderService.orderList(paging, loginUser.getUserId(), dates);
             model.addAttribute("orderList",orderList);
             model.addAttribute("paging",paging);
-            log.info(paging.toString());
+            log.info("paging.toString(): "+paging.toString());
         }catch(Exception e){
             log.error(e.getMessage());
         }
-        return "/order/list";
+        if (orderList != null) {
+            return "/order/list";
+        } else {
+            return "redirect:/";
+        }
     }
     @GetMapping("/user_yes/{orderId}/detail.do")
     public String detail(@SessionAttribute(required = true) UserDto loginUser,
@@ -77,24 +79,30 @@ public class OrderController {
     }
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
-                         @SessionAttribute(required = false) String msg,
                          HttpSession session,
                          Model model
-
     ){
         List<AddressDto> addressList = null;
         List<CartDto> cartList = null;
         System.out.println(loginUser.getUserId());
         try {
             cartList = orderService.userCartList(loginUser.getUserId());
+            log.info("user.cartList: "+cartList);
             addressList = orderService.userAddressList(loginUser.getUserId());
+            log.info("user.addressList: "+addressList);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (addressList != null && cartList != null) {
+        UUID orderRandom = UUID.randomUUID();
+        String randomString = orderRandom.toString();
+        randomString = randomString.replace("-","").substring(0,8);
+        if(addressList != null){
             model.addAttribute("addressList", addressList);
+        }
+        if (cartList != null) {
             model.addAttribute("cartList",cartList);
             model.addAttribute("loginUser",loginUser);
+            model.addAttribute("ranString", randomString);
             return "/order/register";
         } else {
             return "redirect:/";
@@ -105,7 +113,8 @@ public class OrderController {
             OrderDto order,
             @SessionAttribute UserDto loginUser,
             @RequestParam(required = false, name="delivery.request") String request,
-            @RequestParam(required = true, name="cartItem") List<String> cartList
+            @RequestParam(required = true, name="cartItem") List<String> cartList,
+            HttpSession session
             ){
         System.out.println(order);
         System.out.println(cartList);
@@ -119,7 +128,7 @@ public class OrderController {
             DeliveryDto delivery = null;
             log.info("1.register에 진입");
             try{
-                orderDetailList = new ArrayList<OrderDetailDto>();
+                orderDetailList = new ArrayList<>();
                 for(String cartIdStr:cartList){
                     log.info("2. cart forloop에 들어옴");
                     int cartId = Integer.parseInt(cartIdStr);
@@ -147,8 +156,6 @@ public class OrderController {
                 log.info("5.orderservice.register 완료");
             }catch(Exception e){
                 log.error(e.getMessage());
-                register = 0;
-                /*delete를 해주어야 저장하다 만 것들이 삭제됨*/
             }
 
 
@@ -156,8 +163,11 @@ public class OrderController {
         log.info("6.register 등록 여부 확인");
         System.out.println("999.register: " + register);
         if(register>0){
+            log.info("주문 등록 완료!");
             return "redirect:/order/user_yes/"+order.getOrderId()+"/complete.do";
+
         }else{
+            session.setAttribute("orderMsg","주문을 완료하지 못했습니다. 다시 시도해주세요.");
             return "redirect:/order/user_yes/register.do";
         }
 
