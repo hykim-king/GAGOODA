@@ -10,14 +10,16 @@
 <div layout:fragment="myPageContent">
 <h2>유저 환불 목록</h2>
 <h3>환불 내역</h3>
-<ul>
-    <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기(기본)</a></li>
-    <li><a class="afterParam" th:href="@{ '' (period=15) }">최근 15일 기록 보기</a></li>
-    <li><a class="afterParam" th:href="@{ '' (period=30) }">최근 1개월 기록 보기</a></li>
-    <li><a class="afterParam" th:href="@{ '' (period=90) }">최근 3개월 기록 보기</a></li>
-    <li><a class="afterParam" th:href="@{ '' (period=365) }">최근 1년 기록 보기</a></li>
+<span class="currentPeriod" th:text="${param.period}" style="display: none"></span>
+
+    <ul>
+    <li><a class="afterParam" href="javascript:void(0)" data-val="7">최근 7일 기록 보기(기본)</a></li>
+    <li><a class="afterParam" href="javascript:void(0)" data-val="15">최근 15일 기록 보기</a></li>
+    <li><a class="afterParam" href="javascript:void(0)" data-val="30">최근 1개월 기록 보기</a></li>
+    <li><a class="afterParam" href="javascript:void(0)" data-val="90">최근 3개월 기록 보기</a></li>
+    <li><a class="afterParam" href="javascript:void(0)" data-val="365">최근 1년 기록 보기</a></li>
     <li>
-        <form class="afterParam" th:action="@{''}" method="get">
+        <form  th:action="@{ '' }" method="get">
             <input type="date" name="startDate" id="startDate" required> ~
             <input type="date" name="endDate" id="endDate" required>
             <button type="submit">조회</button>
@@ -25,11 +27,50 @@
     </li>
 </ul>
 <ul>
-    <li><a th:href="@{ '' (detCode=all)}">전체 환불 내역</a></li>
-    <li><a th:href="@{ '' (detCode=notEnd) }">환불 진행 내역</a></li>
-    <li><a th:href="@{ '' (detCode=end) }">환불 완료 내역</a></li>
+    <li><a class="afterCode" href="javascript:void(0)"  data-val="all">전체 환불 내역</a></li>
+    <li><a class="afterCode" href="javascript:void(0)" data-val="notEnd">환불 진행 내역</a></li>
+    <li><a class="afterCode" href="javascript:void(0)" data-val="end">환불 완료 내역</a></li>
     <li>(총 환불 신청 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
 </ul>
+    <th:block th:with="period=${param.period}, startDate=${param.startDate}
+                        , endDate=${param.endDate}, detCode=${param.detCode}">
+    <script th:inline="javascript">
+        const afterParam = document.querySelectorAll(".afterParam");
+        let period = document.querySelector(".currentPeriod").innerText;
+        let url = document.location.href;
+        afterParam.forEach((param)=>{
+            param.addEventListener("click", ()=>{
+                if (url.includes("?")){
+                    if(url.includes("startDate") && url.includes("endDate")){
+                        url = url.replace("startDate="+[[${startDate}]]+"&endDate="+[[${endDate}]],"");
+                    }
+                    if (url.includes("period")){
+                        document.location.href = url.replace("period="+[[${period}]], "period="+param.dataset.val);
+                    }else{
+                        document.location.href = url + "&period="+param.dataset.val;
+                    }
+                }else{
+                    document.location.href = document.location.href + "?period=" + param.dataset.val;
+                }
+            })
+        })
+        let afterCode = document.querySelectorAll(".afterCode");
+        afterCode.forEach(code=>{
+            code.addEventListener("click",()=>{
+                if (url.includes("?")){
+                    if (url.includes("detCode")){
+                        document.location.href = url.replace("detCode="+[[${detCode}]], "detCode="+code.dataset.val);
+                    }else{
+                        document.location.href = url + "&detCode="+code.dataset.val;
+                    }
+                }else{
+                    document.location.href = document.location.href + "?detCode=" + code.dataset.val;
+                }
+            })
+        })
+
+    </script>
+    </th:block>
 
 <table>
     <th:block th:if="${refundMsg != null}">

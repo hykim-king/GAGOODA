@@ -46,14 +46,23 @@
     </select>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
-        <choose>
-            <when test=" startDate != null and endDate != null"> AND reg_date BETWEEN #{startDate} AND #{endDate} </when>
-            <when test="detCode != null and detCode.equals('end')"> AND rf_det IN ('rf1','rf7','rf8') </when>
-            <when test="detCode != null and detCode.equals('notEnd')"> AND rf_det NOT IN ('rf1','rf7','rf8') </when>
-            <when test="detCode != null and detCode.equals('all')"> </when>
-            <otherwise> AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW() </otherwise>
-        </choose>
-            ORDER BY reg_date DESC
+            <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
+                AND reg_date BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="startDate != null and endDate != null and startDate.equals(endDate)">
+                AND reg_date LIKE #{startDate}
+            </if>
+            <if test="detCode != null and 'end'.equals(detCode)">
+                AND rf_det IN ('rf1','rf7','rf8')
+            </if>
+            <if test="detCode != null and 'notEnd'.equals(detCode)">
+                AND rf_det NOT IN ('rf1','rf7','rf8')
+            </if>
+            <if test="detCode != null and 'all'.equals(detCode)"/>
+            <if test="period != null">
+                AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+            </if>
+        ORDER BY reg_date DESC
     </select>
     <select id="findById" resultMap="refundMap">
         SELECT * FROM refund WHERE refund_id = #{id}
