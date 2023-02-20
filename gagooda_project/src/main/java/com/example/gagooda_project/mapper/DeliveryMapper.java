@@ -12,7 +12,6 @@ public interface DeliveryMapper {
     DeliveryDto findById(int id);
     DeliveryDto findByOrderId(String orderId);
     List<DeliveryDto> listAll(DeliveryDto dto);
-    List<DeliveryDto> listByDDet(DeliveryDto dto);
-
+    List<DeliveryDto> pageByUserIdAndDate(DeliveryDto dto);
 
 }
