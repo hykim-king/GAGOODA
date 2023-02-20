@@ -14,11 +14,16 @@ public class OrderServiceImp implements OrderService {
     private DeliveryMapper deliveryMapper;
     private CartMapper cartMapper;
     private AddressMapper addressMapper;
+<<<<<<< HEAD
     public OrderServiceImp(OrderMapper orderMapper,
                            OrderDetailMapper orderDetailMapper,
                            DeliveryMapper deliveryMapper,
                            CartMapper cartMapper,
                            AddressMapper addressMapper){
+=======
+    public OrderServiceImp(OrderMapper orderMapper, OrderDetailMapper orderDetailMapper,
+                            DeliveryMapper deliveryMapper, CartMapper cartMapper, AddressMapper addressMapper){
+>>>>>>> f0e2a1b72f8890a76ba59331646a550a934c437f
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.deliveryMapper = deliveryMapper;
@@ -26,12 +31,13 @@ public class OrderServiceImp implements OrderService {
         this.addressMapper = addressMapper;
     }
     @Override
-    public List<OrderDto> orderList(PagingDto paging, int userId) {
-        int totalRows=orderMapper.count(paging,userId);
+    public List<OrderDto> orderList(PagingDto paging, int userId,int dates) {
+        int totalRows=orderMapper.count(paging,userId,dates);
         paging.setRows(4);
         paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
-        return orderMapper.pageAll(paging);
+        System.out.println("pagingDto: "+paging);
+        return orderMapper.pageAll(paging,userId,dates);
     }
 
     @Override
@@ -42,16 +48,22 @@ public class OrderServiceImp implements OrderService {
         return orderDetailMapper.findByOrderId(orderId);
     }
 
+//    delete cart도 여기서 after registration if (register >0) => deleteCart
     @Transactional
+    @Override
     public int register(OrderDto order, DeliveryDto delivery) {
-        int register = orderMapper.insertOne(order);
-        System.out.println(register);
-        for(OrderDetailDto orderDetail: order.getOrderDetailList()){
-            register += orderDetailMapper.insertOne(orderDetail);
+        int register = 0;
+        if(order != null){
+            register = orderMapper.insertOne(order);
+            if(order.getOrderDetailList() != null) {
+                for (OrderDetailDto orderDetail : order.getOrderDetailList()) {
+                    register += orderDetailMapper.insertOne(orderDetail);
+                }
+            }
         }
-        System.out.println(register);
-        register += deliveryMapper.insertOne(delivery);
-        System.out.println(register);
+       if(delivery != null){
+           register += deliveryMapper.insertOne(delivery);
+       }
         return register;
     }
 
@@ -74,4 +86,21 @@ public class OrderServiceImp implements OrderService {
     public CartDto selectByCartId(int cartId) {
         return cartMapper.findById(cartId);
     }
+<<<<<<< HEAD
+=======
+
+//    @Override
+//    public int deleteCart(List<String> cartList) {
+//        int delete = 0;
+//        if(cartList !=null){
+//            for(String cartNum:cartList){
+//                int cartId = Integer.parseInt(cartNum);
+//                delete += cartMapper.deleteById(cartId);
+//            }
+//        }
+//        return delete;
+//    }
+
+
+>>>>>>> f0e2a1b72f8890a76ba59331646a550a934c437f
 }

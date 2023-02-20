@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>GAGOODA_MAIN</title>
+</head>
+<div layout:fragment="content">
+  <!--광고영역-->
+  <img th:src="@{'/img/main/furniture_ad.jpg'}" class="img-fluid" style="width:100vw; height: 50vh;">
+  <!--광고영역 end--------------------------->
+  <!--공지사항 영역-->
+  <div class="d-flex text-white justify-content-center align-items-center" style="height: 10vh; background-color: #B68C68;">공지</div>
+  <!--공지사항 영역 end------------------------>
+  <!--추천 상품 리스트-->
+  <div class="container">
+    <div class="text-center my-5">추천 리스트</div>
+    <!--상품 카드 틀, 반복문 돌리세요-->
+    <div class="d-flex flex-row justify-content-between">
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#">상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#">상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#">상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+    </div>
+    <!--추천 상품 리스트 end------------------------>
+    <!--event-->
+    <img th:src="@{'/img/main/event_dummy.jpg'}" class="my-5" style="width:100%; height: 40vh;">
+    <!--event end------------------------------------>
+    <!--신상품 -->
+    <div class="text-center my-5">신상품</div>
+    <!--상품 카드 틀, 반복문 돌리세요-->
+    <div class="d-flex flex-row justify-content-between">
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HB31H09EBN_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HB31H09EBN_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HB31H09EBN_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HB31H09EBN_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <p class="card-text mt-2">상품 가격</p>
+        </div>
+      </div>
+    </div>
+    <!--신상품 end--------------------------------->
+    <!--세일-->
+    <div class="text-center my-5">세일 상품</div>
+    <!--상품 카드 틀, 반복문 돌리세요-->
+    <div class="d-flex flex-row justify-content-between">
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HCS584CL_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <div class="d-flex justify-content-between my-2">
+            <p class="card-text">할인 가격</p>
+            <p class="text-decoration-line-through card-text">원가격</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HCS584CL_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <div class="d-flex justify-content-between my-2">
+            <p class="card-text">할인 가격</p>
+            <p class="text-decoration-line-through card-text">원가격</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HCS584CL_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <div class="d-flex justify-content-between my-2">
+            <p class="card-text">할인 가격</p>
+            <p class="text-decoration-line-through card-text">원가격</p>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="width: 271px;height: 350px;">
+        <img th:src="@{'/img/product/HCS584CL_0.png'}" class="card-img-top">
+        <div class="card-body">
+          <a href="#" >상품 이름</a>
+          <div class="d-flex justify-content-between my-2">
+            <p class="card-text">할인 가격</p>
+            <p class="text-decoration-line-through card-text">원가격</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--세일 end------------------------------------->
+  </div>
+  <!--푸터-->
+  <div class="d-flex text-white justify-content-center align-items-center mt-5" style="height: 40vh; background-color: #B68C68;">
+    푸터
+  </div>
+  <!--푸터 end-------------------------------------->
+</div>
+</html>
