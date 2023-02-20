@@ -18,15 +18,15 @@ import java.util.Map;
 public class CartController {
     CartServiceImp cartServiceImp;
     OptionProductService optionProductService;
-    ProductService prductService;
+    ProductService productService;
     ImageService imageService;
 
     public CartController(CartServiceImp cartServiceImp,
-                          ProductService prductService,
+                          ProductService productService,
                           OptionProductService optionProductService,
                           ImageService imageService) {
         this.cartServiceImp = cartServiceImp;
-        this.prductService = prductService;
+        this.productService = productService;
         this.optionProductService = optionProductService;
         this.imageService = imageService;
     }
@@ -34,10 +34,10 @@ public class CartController {
     @Value("${img.upload.path}")
     private String imgPath;
 
-    @GetMapping("/list.do")
+    @GetMapping("/user_yes/mypage/list.do")
     public String list(@RequestParam(name = "optionCode", required = false) String optionCode,
                        Model model,
-                       @SessionAttribute UserDto loginUser) throws Exception {
+                       @SessionAttribute UserDto loginUser) {
         List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
         CartDto cart = cartServiceImp.selectOne(loginUser.getUserId(), optionCode);
         int totalCnt = 0;
@@ -53,11 +53,11 @@ public class CartController {
         return "/cart/list";
     }
 
-    @PostMapping("/update.do")
+    @PostMapping("/user_yes/mypage/update.do")
     public String update(@RequestParam(name = "optionCode", required = false) String optionCode,
                          CartDto cart,
                          @RequestParam List<Integer> cartCnts,
-                         @SessionAttribute UserDto loginUser) throws Exception {
+                         @SessionAttribute UserDto loginUser) {
         int update = 0;
         try {
             int i = 0;
@@ -69,25 +69,25 @@ public class CartController {
                     cartDto.setCnt(cnt);
                 } else if (Integer.parseInt(String.valueOf(cartCnts.get(i))) == 0) {
                     cartServiceImp.removeOne(cartDto.getCartId());
+                    return "redirect:/cart/user_yes/mypage/list.do";
                 }
                 update = cartServiceImp.modifyOne(cartDto);
                 i += 1;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (update > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }
     }
 
-    @PostMapping("/deleteOne.do")
+    @PostMapping("/user_yes/mypage/deleteOne.do")
     public String deleteOne(CartDto cart,
                             @RequestParam List<Integer> cartIds,
-                            @SessionAttribute UserDto loginUser) throws Exception {
+                            @SessionAttribute UserDto loginUser) {
         int delete = 0;
         try {
             for (int i=0; i<cartIds.size(); i++){
@@ -98,14 +98,14 @@ public class CartController {
             e.printStackTrace();
         }
         if (delete > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }
     }
 
-    @PostMapping("/deleteAll.do")
-    public String deleteAll(@SessionAttribute UserDto loginUser) throws Exception {
+    @PostMapping("/user_yes/mypage/deleteAll.do")
+    public String deleteAll(@SessionAttribute UserDto loginUser) {
         int delete = 0;
         try {
             delete = cartServiceImp.removeAll(loginUser.getUserId());
@@ -113,7 +113,7 @@ public class CartController {
             e.printStackTrace();
         }
         if (delete > 0) {
-            return "redirect:/cart/list.do";
+            return "redirect:/cart/user_yes/mypage/list.do";
         } else {
             return "redirect:/";
         }

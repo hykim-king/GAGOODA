@@ -77,16 +77,20 @@ public class OrderController {
     }
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
-                         @SessionAttribute(required = false) String msg,
-                         HttpSession session,
-                         Model model
-
+                           @SessionAttribute(required = false) String msg,
+                           HttpSession session,
+                           Model model,
+                           @RequestParam List<Integer> orderCartIds
     ){
         List<AddressDto> addressList = null;
-        List<CartDto> cartList = null;
+        List<CartDto> cartList = new ArrayList<>();
         System.out.println(loginUser.getUserId());
         try {
-            cartList = orderService.userCartList(loginUser.getUserId());
+            for (int i=0; i<orderCartIds.size(); i++) {
+                CartDto cartDto = new CartDto();
+                cartDto = cartService.selectByCartId(orderCartIds.get(i));
+                cartList.add(cartDto);
+            }
             addressList = orderService.userAddressList(loginUser.getUserId());
         } catch (Exception e) {
             e.printStackTrace();

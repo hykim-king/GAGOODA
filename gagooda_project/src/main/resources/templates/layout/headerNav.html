@@ -10,7 +10,7 @@
 <th:block th:if="${session.loginUser != null}">
     <span th:text="${session.loginUser.nickname}"></span>
     <a href="/mypage/user_yes/main.do">마이페이지</a>
-    <a href="/cart/list.do">장바구니</a>
+    <a href="/cart/user_yes/mypage/list.do">장바구니</a>
     <a href="/user/user_yes/logout.do">로그아웃</a>
 </th:block>
 </html>
