@@ -20,4 +20,6 @@ public interface ProductService {
     int remove(String productCode);
 
     List<ProductDto> pagingProduct(PagingDto paging);
+
+    List<ProductDto> friMainList(String place);
 }

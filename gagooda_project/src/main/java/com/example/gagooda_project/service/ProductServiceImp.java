@@ -124,5 +124,10 @@ public class ProductServiceImp implements ProductService{
 //        return productMapper.pageSearch(paging);
         return null;
     }
+
+    @Override
+    public List<ProductDto> friMainList(String place) {
+        return productMapper.mainListBySales(place);
+    }
 }
 

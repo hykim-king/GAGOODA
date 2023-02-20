@@ -9,42 +9,48 @@
 </head>
 <div layout:fragment="content">
   <!--광고영역-->
-  <img th:src="@{'/img/main/furniture_ad.jpg'}" class="img-fluid" style="width:100vw; height: 50vh;">
+  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner" style="width:100vw;">
+      <div class="carousel-item active">
+        <img th:src="@{'/img/main/002.png'}" class="-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img th:src="@{'/img/main/003.png'}" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img th:src="@{'/img/main/004.png'}" class="d-block w-100" alt="...">
+      </div>
+    </div>
+  </div>
+<!--  <img th:src="@{'/img/main/furniture_ad.jpg'}" class="img-fluid" style="width:100vw; height: 50vh;">-->
   <!--광고영역 end--------------------------->
   <!--공지사항 영역-->
-  <div class="d-flex text-white justify-content-center align-items-center" style="height: 10vh; background-color: #B68C68;">공지</div>
+  <div id="carouselExampleSlidesOnly" class="carousel slide " data-bs-ride="carousel" style="background-color: #E5DBD2;">
+    <div class="carousel-inner" style="width:100vw;">
+      <div class="carousel-item active">
+        <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">GAGOODA 공식몰 웹 프로젝트</div>
+      </div>
+      <div class="carousel-item">
+        <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">가구다 공식몰 시스템 점검 일정 안내 (2월 20일 00시~9시 30분)</div>
+      </div>
+    </div>
+  </div>
+
   <!--공지사항 영역 end------------------------>
   <!--추천 상품 리스트-->
   <div class="container">
-    <div class="text-center my-5">추천 리스트</div>
+    <div class="text-center my-5 fs-3"><strong>추천 리스트</strong></div>
     <!--상품 카드 틀, 반복문 돌리세요-->
-    <div class="d-flex flex-row justify-content-between">
-      <div class="card" style="width: 271px;height: 350px;">
-        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
-        <div class="card-body">
-          <a href="#">상품 이름</a>
-          <p class="card-text mt-2">상품 가격</p>
-        </div>
-      </div>
-      <div class="card" style="width: 271px;height: 350px;">
-        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
-        <div class="card-body">
-          <a href="#">상품 이름</a>
-          <p class="card-text mt-2">상품 가격</p>
-        </div>
-      </div>
-      <div class="card" style="width: 271px;height: 350px;">
-        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
-        <div class="card-body">
-          <a href="#" >상품 이름</a>
-          <p class="card-text mt-2">상품 가격</p>
-        </div>
-      </div>
-      <div class="card" style="width: 271px;height: 350px;">
-        <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top">
-        <div class="card-body">
-          <a href="#">상품 이름</a>
-          <p class="card-text mt-2">상품 가격</p>
+    <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between" >
+      <div th:each="product:${productList}">
+        <div class="col mb-3" style="width: 285px;height: 320px;">
+          <a href="/" style="text-decoration: none; color: black">
+            <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+            <div>
+              <p class="mb-2" th:text="${product.getPname()}"></p>
+              <p class="card-text mt-1" th:text="${product.getSalesPc()}"></p>
+            </div>
+          </a>
         </div>
       </div>
     </div>

@@ -19,4 +19,5 @@ public interface ProductMapper {
     List<ProductDto> pageForCategory(PagingDto paging, String categoryId);
     List<ProductDto> pageAll(PagingDto paging);
 //    List<ProductDto> pageAll();
+    List<ProductDto> mainListBySales(String place);
 }
