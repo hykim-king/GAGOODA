@@ -38,7 +38,7 @@ public interface OrderMapper {
 
     int countByNotStatus(int userId, String oDet); //userId
 
-    List<ODetDto> countByUserIdAndStatus(int userId, String oDet); //userId
+    List<ODetDto> countByUserIdAndStatus(int userId); //userId
     //ODetDto로 변환시켜줄 resultMap 작성했습니다.
 
 }

@@ -10,7 +10,20 @@
 <div layout:fragment="myPageContent">
     <h1>마이페이지 메인</h1>
     <h3>진행 중인 주문</h3>
+    <th:block th:each="myPageDet:${myPageDetList}">
+        <span th:text="${myPageDet.detName}"></span>
+        <span>||</span>
+    </th:block>
+    <br>
+    <th:block th:each="oDet:${oDetList}">
+        <span th:text="${oDet.ODet}"></span>
+        <span th:text="${oDet.count}"></span>
+    </th:block>
     <h3>최근 주문 정보</h3>
     <h3>장바구니</h3>
+    <th:block th:each="cart:${cartList}">
+        <span th:text="${cart.optionProduct.opname}"></span>
+        <span th:text="${cart.optionProduct.price}"></span>
+    </th:block>
 </div>
 </html>
