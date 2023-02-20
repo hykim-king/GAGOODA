@@ -34,7 +34,7 @@ public class RefundController {
     }
 
     @GetMapping("user_yes/mypage/list.do")
-    public String list(@SessionAttribute(required = false) UserDto loginUser,
+    public String list(@SessionAttribute UserDto loginUser,
                        @RequestParam(name = "period", defaultValue = "7", required = false) int period,
                        @RequestParam(name = "startDate", required = false) String startDate,
                        @RequestParam(name = "endDate", required = false) String endDate,
@@ -143,6 +143,7 @@ public class RefundController {
                 e.printStackTrace();
             }
         }
+//        return "refund/user/list";
         // 아래 부분은 추후 삭제될 부분.
         List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
         List<CommonCodeDto> rfrDetList = refundServiceImp.showDetCodeList("rfr");
@@ -199,6 +200,11 @@ public class RefundController {
             e.printStackTrace();
         }
         return "refund/admin/list";
+    }
+
+    @GetMapping("admin/{refundId}/detail.do")
+    public String adminDetail(@PathVariable int refundId){
+        return "refund/admin/detail";
     }
 
 }

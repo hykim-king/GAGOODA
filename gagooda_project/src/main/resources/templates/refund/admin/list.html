@@ -87,7 +87,7 @@
     hrefRows.forEach((row)=>{
         row.addEventListener('click',()=>{
             console.log(row)
-            let targetHref = "http://"+ document.location.host + "/refund/admin/detail.do/" + row.dataset.refund;
+            let targetHref = "http://"+ document.location.host + "/refund/admin/" + row.dataset.refund +"/detail.do/";
             console.log(targetHref)
             document.location.href =  targetHref;
         })
