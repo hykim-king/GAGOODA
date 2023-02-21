@@ -4,6 +4,7 @@ package com.example.gagooda_project.service;
 import com.example.gagooda_project.dto.CartDto;
 import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.ODetDto;
+import com.example.gagooda_project.dto.OrderDto;
 import com.example.gagooda_project.mapper.CartMapper;
 import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.OrderMapper;
@@ -36,5 +37,10 @@ public class MyPageServiceImp implements MyPageService {
     @Override
     public List<CommonCodeDto> showDetCodeList(String mstCode) {
         return commonCodeMapper.listByMstCode(mstCode);
+    }
+
+    @Override
+    public List<OrderDto> orderList(int userId, int dates) {
+        return orderMapper.listByUserIdAndDate(userId, dates);
     }
 }
