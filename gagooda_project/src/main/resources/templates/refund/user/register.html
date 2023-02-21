@@ -32,7 +32,7 @@
 <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
+<form name="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
     <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
     <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
@@ -94,20 +94,10 @@
                     </th:block>
                 </select>
             </div>
-            <div>
-                <button class="addressBtn">새 배송지 입력</button>
-            </div>
-            <div class="addressModal" id="addressModal">
-                <div class="">
-                    <form th:action="@{'/address/user_yes/register.do'}" method="POST" name="addressRegister">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressBtn">
+                새 주소 입력
+            </button>
 
-                    </form>
-                    <div>
-                        <span class="closeModal">닫기</span>
-                        <button type="submit">주소지 등록</button>
-                    </div>
-                </div>
-            </div>
         </div>
         <th:block>
 
@@ -137,6 +127,70 @@
             <label for="elevator">엘리베이터 유무</label>
             <input type="text" id="elevator" name="elevator" class="add" th:value="${order.elevator}">
         </div>
+
+    </fieldset>
+    <button name="refundSubmit" type="submit">신청하기</button>
+    <button name="refundReset" type="reset">초기화</button>
+
+</form>
+
+        <div class="modal fade" id="addressBtn" tabindex="-1" aria-labelledby="addressTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addressTitle">주소지 등록</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{'/address/user_yes/register.do'}" id="addressRegister" method="POST" name="addressRegister">
+                            <div>
+                                <label for="userId" th:text="${session.loginUser.userId}"></label>
+                                <input type="text" name="newUserId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
+                            </div>
+                            <div>
+                                <label for="newAname">주소지 이름</label>
+                                <input type="text" name="newAname" id="newAname" required>
+                            </div>
+                            <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
+                            <div>
+                                <label for="postCode">우편번호</label>
+                                <input type="text" name="newPostCode" id="newPostCode" required>
+                            </div>
+                            <div>
+                                <label for="newAddress">주소</label>
+                                <input type="text" name="newAddress" id="newAddress" required>
+                            </div>
+                            <div>
+                                <label for="newAddressDetail">상세주소</label>
+                                <input type="text" name="newAddressDetail" id="newAddressDetail" required>
+                            </div>
+                            <div>
+                                <label for="newReceiverName">수령인 이름</label>
+                                <input type="text" name="newReceiverName" id="newReceiverName" required>
+                            </div>
+                            <fieldset>
+                                <label for="newReceiverPhone">수령인 전화번호</label>
+                                <input type="text" id="newReceiverPhone" name="newReceiverPhone" required>
+                            </fieldset>
+
+                            <div>
+                                <label for="newHome">기본 배송지 설정 여부</label>
+                                <input type="checkbox" name="newHome" id="newHome" value="1">
+                            </div>
+                            <div>
+                                <label for="newElevator">엘레베이터 유무 여부</label>
+                                <input type="checkbox" name="newElevator" id="newElevator" value="1">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" form="addressRegister" name="addressSubmit" class="btn btn-primary">등록하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script th:inline="javascript">
             let cancelAmount = document.querySelector("#cancelAmount");
             function changeOpt(){
@@ -172,11 +226,30 @@
                 currentAddressList[6].value = addressMap.get("elevator");
             }
 
-        </script>
-    </fieldset>
-    <button type="submit">신청하기</button>
-    <button type="reset">초기화</button>
-</form>
+            let refundRegister = document.forms.refundRegister;
+            let newAddressRegister = document.forms.addressRegister;
+            console.log(refundRegister);
+            console.log(newAddressRegister);
 
+            // refundRegister.refundSubmit.onclick=(e)=>{
+            //     e.preventDefault();
+            //
+            //     console.log("refund submit click!");
+            //     refundRegister.submit();
+            // }
+            // refundRegister.refundReset.onclick=(e)=>{
+            //     e.preventDefault();
+            //
+            //     console.log("refund reset click!")
+            // }
+            //
+            newAddressRegister.addressSubmit.onclick=(e)=>{
+                e.preventDefault();
+
+                console.log("newAddress submit click!!");
+                newAddressRegister.submit();
+            }
+
+        </script>
 </div>
 </html>
