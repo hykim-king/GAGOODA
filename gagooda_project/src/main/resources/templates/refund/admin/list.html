@@ -52,7 +52,7 @@
     <table>
         <thead>
         <tr>
-            <th>No.</th>
+<!--            <th>No.</th>-->
             <th>작성자</th>
             <th>주문 ID</th>
             <th>상세 주문 ID</th>
@@ -65,18 +65,31 @@
         </tr>
         </thead>
         <tbody>
-        <th:block th:if="${refundCount > 0}" th:each="i : ${#numbers.sequence(0, refundCount - 1)}">
-            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">
-                <td th:text="${i+1}"></td>
-                <td th:text="${refundList[i].uname}"></td>
-                <td th:text="${refundList[i].orderId}"></td>
-                <td th:text="${refundList[i].orderDetailId}"></td>
-                <td th:text="${refundList[i].orderDetailDto.optionCode}"></td>
-                <td th:text="${refundList[i].orderDetailDto.price}"></td>
-                <td th:text="${refundList[i].cancelAmount}"></td>
-                <td th:text="${rfCodeList[refundList[i].rfDet.substring(2)].detName}"></td>
-                <td th:text="${#calendars.format(refundList[i].regDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>
+<!--        <th:block th:if="${refundCount >= 0}" th:each="i : ${#numbers.sequence(0, refundCount - 1)}">-->
+<!--            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">-->
+<!--                <td th:text="${i+1}"></td>-->
+<!--                <td th:text="${refundList[i].uname}"></td>-->
+<!--                <td th:text="${refundList[i].orderId}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailId}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailDto.optionCode}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailDto.price}"></td>-->
+<!--                <td th:text="${refundList[i].cancelAmount}"></td>-->
+<!--                <td th:text="${rfCodeList[refundList[i].rfDet.substring(2)].detName}"></td>-->
+<!--                <td th:text="${#calendars.format(refundList[i].regDate, 'yyyy-MM-dd')}"></td>-->
+<!--                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>-->
+<!--            </tr>-->
+<!--        </th:block>-->
+        <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}">
+            <tr class="hrefRow" th:data-refund="${refund.refundId}">
+                <td th:text="${refund.uname}"></td>
+                <td th:text="${refund.orderId}"></td>
+                <td th:text="${refund.orderDetailId}"></td>
+                <td th:text="${refund.orderDetailDto.optionCode}"></td>
+                <td th:text="${refund.orderDetailDto.price}"></td>
+                <td th:text="${refund.cancelAmount}"></td>
+                <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
+                <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
             </tr>
         </th:block>
         <!--            </th:block>-->

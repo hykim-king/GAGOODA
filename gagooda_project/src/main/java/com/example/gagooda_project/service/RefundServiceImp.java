@@ -112,6 +112,7 @@ public class RefundServiceImp implements RefundService{
         }
         PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
         int totalRows = refundMapper.countPageAll(searchFilter);
+        pagingDto.setRows(10);
         pagingDto.setTotalRows(totalRows);
         if (pagingDto.getOrderField() == null){
             pagingDto.setOrderField("reg_date");
@@ -157,11 +158,8 @@ public class RefundServiceImp implements RefundService{
             imgFile.transferTo(path);
             ImageDto image=new ImageDto();
             image.setImgPath(fileName);
-            log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+image.getImgPath()+"$$$$$$$$$$$$$$$$$$$$$");
             image.setImgCode(code);
-            log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+image.getImgCode()+"$$$$$$$$$$$$$$$$$$$$$");
             image.setSeq(seq);
-            log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+image.getSeq()+"$$$$$$$$$$$$$$$$$$$$$");
             register = imageMapper.insertOne(image);
         } else {
             throw new Exception("사진파일이 아닙니다.");

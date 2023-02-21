@@ -8,6 +8,7 @@ import com.example.gagooda_project.mapper.OrderMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DeliveryServiceImp implements DeliveryService{
@@ -21,16 +22,6 @@ public class DeliveryServiceImp implements DeliveryService{
         this.commonCodeMapper = commonCodeMapper;
     }
     @Override
-    public int register(DeliveryDto delivery) {
-        return deliveryMapper.insertOne(delivery);
-    }
-
-    @Override
-    public DeliveryDto selectOne(int deliveryId) {
-        return deliveryMapper.findById(deliveryId);
-    }
-
-    @Override
     public int modifyOne(DeliveryDto delivery) {
         return deliveryMapper.updateOne(delivery);
     }
@@ -39,4 +30,15 @@ public class DeliveryServiceImp implements DeliveryService{
     public DeliveryDto selectByOrderId(String orderId) {
         return deliveryMapper.findByOrderId(orderId);
     }
+
+    @Override
+    public List<DeliveryDto> showDeliveryList(Map<String, Object> searchFilter) {
+        return null;
+    }
+
+    @Override
+    public int removeOne(String orderId) {
+        return deliveryMapper.deleteOne(orderId);
+    }
+
 }

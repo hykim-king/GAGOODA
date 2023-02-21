@@ -95,7 +95,18 @@
                 </select>
             </div>
             <div>
-                <a href="#">새 배송지 입력</a>
+                <button class="addressBtn">새 배송지 입력</button>
+            </div>
+            <div class="addressModal" id="addressModal">
+                <div class="">
+                    <form th:action="@{'/address/'}" method="POST">
+
+                    </form>
+                    <div>
+                        <span class="closeModal">닫기</span>
+                        <button type="submit">주소지 등록</button>
+                    </div>
+                </div>
             </div>
         </div>
         <th:block>
