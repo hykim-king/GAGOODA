@@ -27,7 +27,7 @@ public class DeliveryController {
                            @SessionAttribute UserDto loginUser) {
         int register = 0;
         try {
-            register= deliveryService.register(delivery);
+//            register= deliveryService.register(delivery);
         }catch (Exception e) {
             e.printStackTrace();
         }
