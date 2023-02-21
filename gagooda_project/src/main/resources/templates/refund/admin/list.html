@@ -9,7 +9,7 @@
 </head>
 <div layout:fragment="content">
     <h2>환불 신청 목록</h2>
-    <form action="/refund/admin/list.do" method="get" id="searchForm">
+    <form action="/refund/admin/list.do" method="get" id="searchForm" name="searchForm">
         <div>
             <label class="d-block">검색 키워드 :
                 <select name="searchDiv" id="searchDiv">
@@ -44,6 +44,7 @@
             </div>
         </div>
         <button type="submit" class="btn btn-outline-secondary">검색</button>
+        <button name="reset" type="reset">초기화</button>
     </form>
 <!--<th:block th:text="${param.size()}"></th:block>-->
 <!--<th:block th:if="${param.size()}"-->
@@ -51,7 +52,7 @@
     <table>
         <thead>
         <tr>
-            <th>No.</th>
+<!--            <th>No.</th>-->
             <th>작성자</th>
             <th>주문 ID</th>
             <th>상세 주문 ID</th>
@@ -64,24 +65,49 @@
         </tr>
         </thead>
         <tbody>
-        <th:block th:if="${refundList.size() > 0}" th:each="i : ${#numbers.sequence(0, refundList.size()-1)}">
-            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">
-                <td th:text="${i+1}"></td>
-                <td th:text="${refundList[i].uname}"></td>
-                <td th:text="${refundList[i].orderId}"></td>
-                <td th:text="${refundList[i].orderDetailId}"></td>
-                <td th:text="${refundList[i].orderDetailDto.optionCode}"></td>
-                <td th:text="${refundList[i].orderDetailDto.price}"></td>
-                <td th:text="${refundList[i].cancelAmount}"></td>
-                <td th:text="${rfCodeList[refundList[i].rfDet.substring(2)].detName}"></td>
-                <td th:text="${#calendars.format(refundList[i].regDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>
+<!--        <th:block th:if="${refundCount >= 0}" th:each="i : ${#numbers.sequence(0, refundCount - 1)}">-->
+<!--            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">-->
+<!--                <td th:text="${i+1}"></td>-->
+<!--                <td th:text="${refundList[i].uname}"></td>-->
+<!--                <td th:text="${refundList[i].orderId}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailId}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailDto.optionCode}"></td>-->
+<!--                <td th:text="${refundList[i].orderDetailDto.price}"></td>-->
+<!--                <td th:text="${refundList[i].cancelAmount}"></td>-->
+<!--                <td th:text="${rfCodeList[refundList[i].rfDet.substring(2)].detName}"></td>-->
+<!--                <td th:text="${#calendars.format(refundList[i].regDate, 'yyyy-MM-dd')}"></td>-->
+<!--                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>-->
+<!--            </tr>-->
+<!--        </th:block>-->
+        <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}">
+            <tr class="hrefRow" th:data-refund="${refund.refundId}">
+                <td th:text="${refund.uname}"></td>
+                <td th:text="${refund.orderId}"></td>
+                <td th:text="${refund.orderDetailId}"></td>
+                <td th:text="${refund.orderDetailDto.optionCode}"></td>
+                <td th:text="${refund.orderDetailDto.price}"></td>
+                <td th:text="${refund.cancelAmount}"></td>
+                <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
+                <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
             </tr>
         </th:block>
         <!--            </th:block>-->
         </tbody>
     </table>
-    <th:block th:unless="${refundList.size() > 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
+    <th:block th:unless="${refundCount == 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
+    <!--pagination-->
+    <nav aria-label="Page navigation ">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <!--pagination end--------------->
 <script th:inline="javascript">
     let hrefRows = document.querySelectorAll(".hrefRow");
     hrefRows.forEach((row)=>{
@@ -92,6 +118,22 @@
             document.location.href =  targetHref;
         })
     })
+    const forms = document.forms.searchForm;
+    console.log(forms);
+    forms.searchDiv.onchange = (qualifiedName, value)=>{
+        console.log(forms.searchDiv.value);
+        forms.searchWord.setAttribute("required", value);
+    }
+    forms.dateType.onchange = (qualifiedName, value)=>{
+        forms.startDate.setAttribute("required", value);
+        forms.endDate.setAttribute("required", value);
+    }
+    forms.reset.onclick=()=>{
+        forms.searchWord.removeAttribute("required");
+        forms.startDate.removeAttribute("required");
+        forms.endDate.removeAttribute("required");
+    }
+
 </script>
 </div>
 </html>

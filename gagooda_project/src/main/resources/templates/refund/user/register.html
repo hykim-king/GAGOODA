@@ -32,7 +32,7 @@
 <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form th:action="@{'{orderId}' (orderId = ${order.orderId})}" method="post">
+<form th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
     <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
     <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
@@ -51,12 +51,21 @@
             </select>
         </div>
         <div>
+            <div>신청 유형</div>
+            <input type="radio" id="refundType" name="reType" value="true" required>
+            <label for="refundType">환불</label>
+            <input type="radio" id="exchangeType" name="reType" value="false" required>
+            <label for="exchangeType">교환</label>
+        </div>
+        <div>
             <label for="cancelAmount">환불 금액</label>
             <input type="text" id="cancelAmount" name="cancelAmount">
         </div>
         <div>
-            <label for="imgCode">첨부 이미지</label>
-            <input type="file" id="imgCode" name="imgCode">
+            <label>첨부 이미지
+                <input type="file" name="imgFileList">
+            </label>
+
         </div>
         <div>
             <label for="rfrDet">환불 사유 카테고리</label>
@@ -86,7 +95,18 @@
                 </select>
             </div>
             <div>
-                <a href="#">새 배송지 입력</a>
+                <button class="addressBtn">새 배송지 입력</button>
+            </div>
+            <div class="addressModal" id="addressModal">
+                <div class="">
+                    <form th:action="@{'/address/'}" method="POST">
+
+                    </form>
+                    <div>
+                        <span class="closeModal">닫기</span>
+                        <button type="submit">주소지 등록</button>
+                    </div>
+                </div>
             </div>
         </div>
         <th:block>
