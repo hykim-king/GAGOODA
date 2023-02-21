@@ -15,7 +15,7 @@
     <h3>주문하신 상품 목록</h3>
     <table>
         <thead>
-            <th>전체 n개</th>
+            <th th:text="'전체 '+${itemCount}+'개'"></th>
             <th>상품 정보</th>
             <th>수량</th>
             <th>주문금액</th>

@@ -12,11 +12,11 @@
     <!--주문 일자, 번호, 상태-->
     <fieldset>
         <label for="regDate">주문 일자:</label>
-        <input type="text" id="regDate" readonly th:value="${#calendars.format(order.regDate,'yyyy-MM-dd')}+'  /  '" name="regDate">
+        <span th:text="${#calendars.format(order.regDate,'yyyy-MM-dd')}" id="regDate"></span>
         <label for="orderId">주문 번호: </label>
-        <input type="text" id="orderId" readonly th:value="${order.orderId}" name="orderId">
+        <span id="orderId"  th:text="${order.orderId}"></span>
         <label for="oDet">주문 상태: </label>
-        <input type="text" id="oDet" name="oDet" readonly th:value="${order.ODet}">
+        <span id="oDet" th:text="${order.ODet}"></span>
     </fieldset>
     <!--주문 일자, 번호, 상태 end----------------->
     <!--상세 주문 물품 리스트-->
@@ -34,7 +34,7 @@
                     <td>
                         <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
                              style="width: 50px; height:50px; object-fit: cover">
-                        <input type="text" th:value="${orderDetail.optionName}" id="optionName" name="optionName" readonly>
+                        <span th:text="${orderDetail.optionName}" id="optionName" name="optionName" ></span>
                     </td>
                     <td th:text="${orderDetail.cnt}"></td>
                     <td th:text="${orderDetail.totalPrice}"></td>
@@ -43,21 +43,22 @@
         </table>
         <div>
             <label for="totalPrice">상품 총 물품 금액</label>
-            <input type="text" readonly th:value="${order.totalPrice}" name="totalPrice" id="totalPrice">
+            <span th:text="${order.totalPrice}" name="totalPrice" id="totalPrice"></span>
             <label for="paidPrice">총 결제 금액</label>
-            <input type="text" name="paidPrice" id="paidPrice" th:value="${order.totalPrice}" readonly>
+            <span text="paidPrice" id="paidPrice" th:value="${order.totalPrice}"></span>
         </div>
     </fieldset>
     <!--상세 주문 물품 리스트 end------------>
+    <!--수령인 정보 ----------------------------------------------------->
     <fieldset>
         <legend>받는 사람의 정보</legend>
         <div>
             <label for="receiverName">받는 사람: </label>
-            <input type="text" id="receiverName" name="receiverName" th:value="${order.receiverName}" readonly>
+            <span id="receiverName" name="receiverName" th:text="${order.receiverName}"></span>
         </div>
         <div>
             <label for="receiverPhone">연락처: </label>
-            <input type="text" id="receiverPhone" name="receiverPhone" th:value="${order.receiverPhone}" readonly>
+            <span id="receiverPhone" name="receiverPhone" th:text="${order.receiverPhone}" ></span>
         </div>
         <div>
             <label>받는 주소: </label>
@@ -71,12 +72,23 @@
 
         <div>
             <label for="elevator">엘레베이터: </label>
-            <input type="text" id="elevator" name="elevator" th:value="${order.elevator}">
+            <span id="elevator" th:text="${order.elevator}" ></span>
         </div>
     </fieldset>
+    <!--수령인 정보 end------------------------------------->
+    <!--배달 요청 정보-->
+    <fieldset>
+        <div>
+            <label for="request">배달 요청 사항</label>
+            <div>
+                <span id="request" th:text="${delivery.request}"></span>
+            </div>
 
+        </div>
+    </fieldset>
+    <!--배달 요청 정보 end--------------------------------------------------->
     <button th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
-    <button>주문 취소</button>
+    <button th:onclick="location.href=[[@{'/order/user_yes/mypage/{orderId}/modify.do' (orderId=${order.orderId})}]]">주문 취소 요청</button>
 
 
 </div>
