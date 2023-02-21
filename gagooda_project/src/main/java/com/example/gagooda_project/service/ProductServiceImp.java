@@ -120,6 +120,11 @@ public class ProductServiceImp implements ProductService{
         System.out.println(paging);
         return productMapper.pageForPaging(paging, map);
     }
+
+    @Override
+    public List<ProductDto> friMainList(String place) {
+        return productMapper.mainListBySales(place);
+    }
 }
 /*
 SELECT COUNT(*) FROM

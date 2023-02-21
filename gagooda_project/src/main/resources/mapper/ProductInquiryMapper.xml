@@ -47,7 +47,12 @@
     <select id="countByPInquiryId" resultType="java.lang.Integer">
         SELECT COUNT(p_inquiry_id) FROM product_inquiry WHERE product_code=#{productCode}
     </select>
-    <!--    <select id="pageAll" resultType="ProductInquiryDto">-->
-<!--        SELECT * FROM product_inquiry ORDER BY-->
-<!--    </select>-->
+    <select id="pageAll" resultMap="productInquiryMap" parameterType="pagingDto" >
+        SELECT * FROM product_inquiry
+            ORDER BY ${orderField} ${direct}
+            LIMIT #{startRow}, #{rows}
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="PagingDto">
+        SELECT COUNT(*) FROM product_inquiry
+    </select>
 </mapper>

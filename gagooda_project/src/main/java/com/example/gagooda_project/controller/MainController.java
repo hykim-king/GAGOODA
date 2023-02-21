@@ -1,7 +1,10 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.CategoryDto;
+import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.service.CategoryService;
+import com.example.gagooda_project.service.ProductInquiryService;
+import com.example.gagooda_project.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -9,17 +12,26 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class MainController {
     private CategoryService categoryService;
+    private ProductService productService;
 
-    public MainController(CategoryService categoryService) {
+    public MainController(CategoryService categoryService, ProductService productService) {
         this.categoryService = categoryService;
+        this.productService = productService;
     }
     @GetMapping("/mainpage.do")
-    public String main(HttpServletRequest req){
+    public String main(HttpServletRequest req,
+                       Model model){
+        try{
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return "order/mainpage";
     }
 

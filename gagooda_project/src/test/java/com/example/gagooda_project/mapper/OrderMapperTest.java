@@ -81,6 +81,5 @@ class OrderMapperTest {
     @Test
     void countByUserIdAndStatus() {
         orderMapper.countByUserIdAndStatus(2);
-
     }
 }

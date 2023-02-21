@@ -1,10 +1,8 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.CommonCodeDto;
-import com.example.gagooda_project.dto.OptionProductDto;
-import com.example.gagooda_project.dto.ProductInquiryDto;
-import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.ProductInquiryServiceImp;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +24,7 @@ public class ProductInquiryController {
 
     @GetMapping("/list.do")
     public String list(Model model,
+                       PagingDto paging,
                        @RequestParam(required = true, name = "productCode") String productCode,
                        @SessionAttribute(required = false) String succMsg,
                        HttpSession session
@@ -129,12 +128,18 @@ public class ProductInquiryController {
 //    admin
     @GetMapping("/admin/list.do")
     public String adminList(Model model,
-                            @SessionAttribute UserDto loginUser){
+                            @SessionAttribute UserDto loginUser,
+                            PagingDto paging,
+                            HttpServletRequest req){
         if(loginUser.getGDet().equals("g1")){
             int check = 0;
             try {
-                List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries();
+                if(paging.getOrderField()==null)paging.setOrderField("p_inquiry_id");
+                paging.setQueryString(req.getParameterMap());
+                System.out.println(paging);
+                List<ProductInquiryDto> adminList = productInquiryService.showProductInquiries(paging);
                 model.addAttribute("adminList",adminList);
+                model.addAttribute("paging",paging);
                 check = 1;
             } catch (Exception e){
                 e.printStackTrace();

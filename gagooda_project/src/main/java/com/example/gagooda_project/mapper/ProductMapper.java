@@ -20,4 +20,5 @@ public interface ProductMapper {
     List<ProductDto> pageForPaging(PagingDto paging, Map<String, Object> map);
     List<ProductDto> pageAll(PagingDto paging);
 //    List<ProductDto> pageAll();
+    List<ProductDto> mainListBySales(String place);
 }

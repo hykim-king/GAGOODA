@@ -2,6 +2,7 @@ package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.OptionProductDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.OptionProductMapper;
@@ -39,8 +40,10 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     }
 
     @Override
-    public List<ProductInquiryDto> showProductInquiries() {
-        return productInquiryMapper.listAll();
+    public List<ProductInquiryDto> showProductInquiries(PagingDto paging) {
+        int totalRows = productInquiryMapper.count(paging);
+        paging.setTotalRows(totalRows);
+        return productInquiryMapper.pageAll(paging);
     }
 
     @Override
@@ -66,6 +69,11 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     @Override
     public int numPInquiryId(String productCode) {
         return productInquiryMapper.countByPInquiryId(productCode);
+    }
+
+    @Override
+    public int totalCount(PagingDto paging) {
+        return productInquiryMapper.count(paging);
     }
 
 }

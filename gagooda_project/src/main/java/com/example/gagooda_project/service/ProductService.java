@@ -19,6 +19,6 @@ public interface ProductService {
                         HashSet<String> categoryIdList,
                         String imgPath);
     int remove(String productCode);
-
     List<ProductDto> pagingProduct(PagingDto paging, Map<String, Object> map);
+    List<ProductDto> friMainList(String place);
 }

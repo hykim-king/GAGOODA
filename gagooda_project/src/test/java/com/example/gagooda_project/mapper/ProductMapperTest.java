@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductMapperTest {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     ProductMapper productMapper;
 
@@ -40,10 +39,15 @@ class ProductMapperTest {
 //        map.put("searchWord", "'%가구%'");
 
         System.out.println(map.get("searchWord"));
-        List<ProductDto> list =productMapper.pageForPaging(paging, map);
-        for(ProductDto product : list){
-            log.info("product Dto: "+product);
+        List<ProductDto> list = productMapper.pageForPaging(paging, map);
+        for (ProductDto product : list) {
+            log.info("product Dto: " + product);
         }
-        log.info("list size: "+list.size());
+        log.info("list size: " + list.size());
+    }
+
+    @Test
+    void mainListBySales() {
+        System.out.println(productMapper.mainListBySales("GAGOODA"));
     }
 }

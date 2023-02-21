@@ -117,5 +117,12 @@
         ORDER BY ${paging.orderField} ${paging.direct}
         LIMIT #{paging.startRow}, #{paging.rows}
     </select>
-</mapper>
 
+    <select id="mainListBySales" parameterType="String" resultMap="productMap">
+        SELECT *
+        FROM product
+        WHERE place = #{place}
+        ORDER BY product_code = #{productCode} ASC
+        LIMIT 8
+    </select>
+</mapper>
