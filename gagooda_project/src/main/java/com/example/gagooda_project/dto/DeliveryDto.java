@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 public class DeliveryDto {
     private String orderId; // 배송 ID PK NN AUTO_INCREMENT order:delivery_id = 1:1
-    private int userId;  // 유저 ID (1:N)  NN
+    private int userId;  //
     private String userName;
     private String userEmail;
     private String userPhone;

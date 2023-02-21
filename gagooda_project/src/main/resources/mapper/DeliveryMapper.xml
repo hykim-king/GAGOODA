@@ -7,6 +7,7 @@
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
         <result column="user_id" property="userId"/>
+        <result column="invoice" property="invoice"/>
         <association property="orderDto"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"
@@ -16,8 +17,6 @@
     <insert id="updateOne" parameterType="DeliveryDto">
         UPDATE delivery SET invoice=#{invoice},
                             start_date=#{startDate},
-                            end_date=#{endDate},
-                            request=#{request},
                             d_det=#{dDet}
                             WHERE order_id=#{orderId}
     </insert>
@@ -32,13 +31,6 @@
     </select>
     <select id="listByDDet" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE d_det=#{dDet}
-    </select>
-    <select id="pageByUserIdAndDate" resultType="com.example.gagooda_project.dto.DeliveryDto">
-        SELECT * FROM delivery WHERE user_id = #{userId}
-        <choose>
-            <when test=" startDate != null and endDate !=null">AND reg_date Between #{startDate} AND #{endDate} </when>
-            <when test="dCode != null and dCode.equals('end')"></when>
-        </choose>
     </select>
 </mapper>
 
