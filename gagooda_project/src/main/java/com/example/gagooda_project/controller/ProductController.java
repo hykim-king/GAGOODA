@@ -193,7 +193,7 @@ public class ProductController {
 
     @GetMapping("/admin/product_list.do")
     public String productList (
-            @RequestParam(required = false, name = "categoryId") String categoryId,
+            @RequestParam(required = false, name = "categoryId", defaultValue = "") String categoryId,
             @RequestParam(required = false, name = "catDet") List<String> catDetList,
             @RequestParam(required = false) String searchWord,
             Model model,
