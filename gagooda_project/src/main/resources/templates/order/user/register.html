@@ -8,15 +8,13 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
-    <h2>주문 등록</h2>
-
     <!--주문 form -->
-    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post">
+    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post" >
         <!--주문 번호 생성-->
         <div>
             <label for="orderId"></label>
             <input type="text" id="orderId" name="orderId"
-                   th:with="today=${#dates.format(#dates.createNow(), 'yyyyMMddmmss')}" th:value="${today}+${ranString}" readonly>
+                   th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
         </div>
         <!--배송지 입력란-->
         <fieldset>
@@ -38,27 +36,27 @@
             <input type="hidden" id="addressId" name="addressId" class="add">
             <div>
                 <label for="postCode">우편 번호</label>
-                <input type="text" id="postCode" name="postCode" class="add" readonly>
+                <input type="text" id="postCode" name="postCode" class="add" readonly th:required="required" >
             </div>
             <div>
                 <label for="address">주소</label>
-                <input type="text" id="address" name="address" class="add" readonly>
+                <input type="text" id="address" name="address" class="add" readonly th:required="required">
             </div>
             <div>
                 <label for="addressDetail">상세 주소</label>
-                <input type="text" id="addressDetail" name="addressDetail" class="add" readonly>
+                <input type="text" id="addressDetail" name="addressDetail" class="add" readonly th:required="required">
             </div>
             <div>
                 <label for="receiverName">수령인 이름</label>
-                <input type="text" id="receiverName" name="receiverName" class="add"readonly >
+                <input type="text" id="receiverName" name="receiverName" class="add" readonly th:required="required">
             </div>
             <div>
                 <label for="receiverPhone">수령인 전화번호</label>
-                <input type="text" id="receiverPhone" name="receiverPhone" class="add" readonly >
+                <input type="text" id="receiverPhone" name="receiverPhone" class="add" readonly th:required="required">
             </div>
             <div>
                 <label for="elevator">엘리베이터 유무</label>
-                <input type="text" id="elevator" name="elevator" class="add" readonly>
+                <input type="text" id="elevator" name="elevator" class="add" readonly th:required="required">
             </div>
 
 
@@ -67,7 +65,7 @@
         <div class="orderDetail">
             <!--주문할 상품 정보들-->
             <th:block th:each="cartItem:${cartList}">
-                <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
+                <input type="text" th:value="${cartItem.cartId}" name="cartItem" readonly>
             </th:block>
             <fieldset>
                 <legend>카트 정보들</legend>
@@ -155,7 +153,7 @@
         <input type="hidden" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
                id="imgPath" placeholder="imgPath" readonly>
         <!--대표 주문 사진 정하기 end----------------------------->
-        <button type="submit">제출</button>
+        <button type="submit" onclick="return validate(this);">제출</button>
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
@@ -163,7 +161,7 @@
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
             // document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
-            console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
+            //console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
             let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
             let addressMap = new Map();
             for (let add of address){
@@ -181,6 +179,34 @@
             currentAddressList[5].value = addressMap.get("receiverPhone");
             currentAddressList[6].value = addressMap.get("elevator");
         }
+
+        const orderForm = document.forms["orderRegisterForm"]
+        const postCode = orderForm.postCode.innerText;
+        const address = orderForm["address"].value[1];
+        const addressDetail = orderForm["addressDetail"].value[1];
+        const receiverName = orderForm["receiverName"].value[1];
+        const receiverPhone = orderForm["receiverPhone"].value[1];
+        const elevator = orderForm["elevator"].value[1];
+
+        console.log(postCode)
+        console.log(address)
+        console.log(addressDetail)
+        console.log(receiverName)
+        console.log(receiverPhone)
+        console.log(elevator)
+
+        function validate(e){
+            e.preventDefault();
+            console.log("submit 버튼 눌림")
+            for(let addre of currentAddressList){
+                if(addre.value === ""){
+                    alert("배송지를 선택해주세요.")
+                    return false;
+                }
+            }
+            return confirm("상품을 주문하시겠습니까?");
+        }
+
     </script>
 
 </div>

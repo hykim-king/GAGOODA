@@ -43,11 +43,11 @@ public class OrderServiceImp implements OrderService {
         return orderDetailMapper.findByOrderId(orderId);
     }
 
-//    delete cart도 여기서 after registration if (register >0) => deleteCart
     @Transactional
     @Override
-    public int register(OrderDto order, DeliveryDto delivery) {
+    public int register(OrderDto order, DeliveryDto delivery, List<String> cartList) {
         int register = 0;
+        int delete = 0;
         if(order != null){
             register = orderMapper.insertOne(order);
             if(order.getOrderDetailList() != null) {
@@ -58,8 +58,16 @@ public class OrderServiceImp implements OrderService {
         }
        if(delivery != null){
            register += deliveryMapper.insertOne(delivery);
+           for(String cartNum: cartList){
+               int cartId = Integer.parseInt(cartNum);
+               delete += cartMapper.deleteById(cartId);
+           }
        }
-        return register;
+       if(delete > 0){
+           return register;
+       }else{
+           throw new Error();
+       }
     }
 
     @Override
@@ -80,5 +88,10 @@ public class OrderServiceImp implements OrderService {
     @Override
     public CartDto selectByCartId(int cartId) {
         return cartMapper.findById(cartId);
+    }
+
+    @Override
+    public int modifyOne(String orderId, String oDet) {
+        return orderMapper.updateStatus(orderId,oDet);
     }
 }
