@@ -1,6 +1,7 @@
 package com.example.gagooda_project.mapper;
 
 import com.example.gagooda_project.dto.CommonCodeDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.RefundDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ class RefundMapperTest {
 
     @Test
     void pageByUserIdAndDate() {
-        refundMapper.pageByUserIdAndDate(1,15, "2023-02-01", "2023-02-16", "rf1");
+        PagingDto pagingDto = new PagingDto(1,10);
+        refundMapper.pageByUserIdAndDate(1,15, "2023-02-01", "2023-02-16", "rf1", pagingDto);
     }
 
     @Test
@@ -53,7 +55,7 @@ class RefundMapperTest {
 
     @Test
     void pageAll() {
-        Map<String,String> rfDetList = null;
+        Map<String,Object> rfDetList = null;
         List<RefundDto> refundList = refundMapper.pageAll(rfDetList);
         System.out.println(refundList);
     }
@@ -66,9 +68,4 @@ class RefundMapperTest {
         System.out.println(resultRefund);
     }
 
-    @Test
-    void countByUserId(){
-        int count = refundMapper.countByUserId(10);
-        System.out.println("**********************"+ count +"**********************");
-    }
 }

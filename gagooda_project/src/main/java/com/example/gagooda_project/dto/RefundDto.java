@@ -3,6 +3,7 @@ package com.example.gagooda_project.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class RefundDto {
@@ -31,4 +32,6 @@ public class RefundDto {
     private OrderDto orderDto;  // 주문 DTO
     private AddressDto addressDto; // 주소 DTO
     private OrderDetailDto orderDetailDto; // 주문 상세 DTO
+    private List<ImageDto> imageList;   // 이미지 리스트
+    private boolean reType;         // 환불/교환 여부(true: 환불, false:교환)
 }
