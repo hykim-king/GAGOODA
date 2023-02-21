@@ -4,14 +4,14 @@ import com.example.gagooda_project.dto.DeliveryDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface DeliveryMapper {
-    int insertOne(DeliveryDto dto);
+
     int updateOne(DeliveryDto dto);
-    DeliveryDto findById(int id);
     DeliveryDto findByOrderId(String orderId);
-    List<DeliveryDto> listAll(DeliveryDto dto);
-    List<DeliveryDto> pageByUserIdAndDate(DeliveryDto dto);
+    List<DeliveryDto> listAll(Map<String, String> searchFilter); // 관리자 입장 다 뽑아보기
+    int deleteOne(String orderId);
 
 }

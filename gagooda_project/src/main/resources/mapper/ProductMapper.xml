@@ -25,10 +25,6 @@
                     select="com.example.gagooda_project.mapper.OptionProductMapper.listByProductCode"
                     column="product_code"
                     fetchType="lazy"/>
-        <collection property="categoryConnList"
-                    select="com.example.gagooda_project.mapper.CategoryConnMapper.listByProductCode"
-                    column="product_code"
-                    fetchType="lazy"/>
     </resultMap>
     <insert id="insertOne" parameterType="ProductDto">
         INSERT INTO product
@@ -74,22 +70,59 @@
         ORDER BY ${paging.orderField} ${paging.direct}
         LIMIT #{paging.startRow}, #{paging.rows}
     </select>
-    <select id="countForCategory" resultType="java.lang.Integer">
-        SELECT COUNT(*)
+    <select id="countForPaging" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM
+        (SELECT product.*
         FROM product
-                 LEFT JOIN category_conn cc
-                           ON product.product_code = cc.product_code
-        WHERE cc.category_id = #{categoryId}
-    </select>
-    <select id="pageForCategory" resultMap="productMap">
-        SELECT *
-        FROM product
-            <if test="categoryId != null">
-                LEFT JOIN category_conn cc
-                ON product.product_code = cc.product_code
-                WHERE cc.category_id = #{categoryId}
+        LEFT JOIN category_conn cc
+        ON product.product_code = cc.product_code
+        <where>
+            <if test="map.get('categoryId')!=null and !map.get('categoryId').isEmpty()">
+                AND cc.category_id = ${map.get("categoryId")}
             </if>
+            <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
+                AND product.p_det in
+                <foreach item="det" index="index" collection="map.get('catDetList')"
+                         open="(" separator="," close=")">#{det}
+                </foreach>
+            </if>
+            <if test="map.get('searchWord')!=null and !map.get('searchWord').isBlank()">
+                AND (product.product_code LIKE ${map.get('searchWord')}
+                OR product.pname LIKE ${map.get('searchWord')})
+            </if>
+        </where>
+        GROUP BY product.product_code) as db
+    </select>
+    <select id="pageForPaging" resultMap="productMap">
+        SELECT product.*
+        FROM product
+        LEFT JOIN category_conn cc
+        ON product.product_code = cc.product_code
+        <where>
+            <if test="map.get('categoryId')!=null and !map.get('categoryId').isEmpty()">
+                AND cc.category_id = ${map.get("categoryId")}
+            </if>
+            <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
+                AND product.p_det in
+                <foreach item="det" index="index" collection="map.get('catDetList')"
+                         open="(" separator="," close=")">#{det}
+                </foreach>
+            </if>
+            <if test="map.get('searchWord')!=null and !map.get('searchWord').isBlank()">
+                AND (product.product_code LIKE ${map.get('searchWord')}
+                OR product.pname LIKE ${map.get('searchWord')})
+            </if>
+        </where>
+        GROUP BY product.product_code
         ORDER BY ${paging.orderField} ${paging.direct}
         LIMIT #{paging.startRow}, #{paging.rows}
+    </select>
+
+    <select id="mainListBySales" parameterType="String" resultMap="productMap">
+        SELECT *
+        FROM product
+        WHERE place = #{place}
+        ORDER BY product_code = #{productCode} ASC
+        LIMIT 8
     </select>
 </mapper>

@@ -1,10 +1,8 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.CartDto;
-import com.example.gagooda_project.dto.CommonCodeDto;
-import com.example.gagooda_project.dto.ODetDto;
-import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.mapper.CartMapper;
+import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.OrderDetailMapper;
 import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.CartServiceImp;
@@ -19,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
@@ -39,6 +39,28 @@ public class MyPageController {
             List<CartDto> cartList = myPageService.listByUserId(loginUser.getUserId());
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
+            List<OrderDto> orderList = myPageService.orderList(loginUser.getUserId(), 30);
+            if (!orderList.isEmpty()) {
+                orderList = orderList.subList(0,4);
+            }
+            myPageDetList = myPageDetList.subList(0, 4);
+            Map<String, String> detName = new HashMap<>();
+            Map<String, Integer> count = new HashMap<>();
+            for (CommonCodeDto myPageDet : myPageDetList) {
+                count.put(myPageDet.getDetCode(), 0);
+                detName.put(myPageDet.getDetCode(), myPageDet.getDetName());
+//                for (ODetDto oDetDto : oDetList) {
+//                    if (oDetDto.getODet().equals(myPageDet.getDetCode())) {
+//                        count.put(myPageDet.getDetCode(), oDetDto.getCount());
+//                    }
+//                }
+            }
+            for (ODetDto oDet : oDetList) {
+                count.put(oDet.getODet(), oDet.getCount());
+            }
+            model.addAttribute("orderList",orderList);
+            model.addAttribute("detName",detName);
+            model.addAttribute("count",count);
             model.addAttribute("cartList", cartList);
             model.addAttribute("oDetList", oDetList);
             model.addAttribute("myPageDetList",myPageDetList);
@@ -46,5 +68,15 @@ public class MyPageController {
             e.printStackTrace();
         }
         return "mypage/main";
+        // commonCode 랑 o_det 가 같은 ODetDto를 oDetList에서 찾아오기
+        // 있으면은 hashmap 없으면 hashmap에 put을 하는데, 개수가 0으로 들어오게
+        /*
+        {o0=결제 미확인, o1=결제 확인, o2=주문 완료, o3=구매 확정, o4=주문 취소, o5=주문 취소 요청}
+        [ODetDto(oDet=o0, count=1), ODetDto(oDet=o1, count=1), ODetDto(oDet=o2, count=1), ODetDto(oDet=o3, count=1), ODetDto(oDet=o4, count=1)]
+        {o0=결제 미확인, o1=결제 확인, o2=주문 완료, o3=구매 확정, o4=주문 취소, o5=주문 취소 요청}
+        {o0=0, o1=0, o2=0, o3=0, o4=0, o5=0}
+        {o0=1, o1=1, o2=1, o3=1, o4=1, o5=0}
+        {o0=1, o1=1, o2=1, o3=1, o4=1}
+         */
     }
 }

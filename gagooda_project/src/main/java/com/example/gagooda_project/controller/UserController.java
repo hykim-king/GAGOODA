@@ -84,10 +84,14 @@ public class UserController {
             session.setAttribute("loginUser", user);
             session.removeAttribute("getUri");
             if (getUri != null) return "redirect:"+getUri;
+            if (user == null) {
+                session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
+                return "redirect:/user/login.do";
+            }
             return "redirect:/";
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
+            session.setAttribute("msg", "로그인 중에 오류가 있었습니다.");
             return "redirect:/user/login.do";
         }
     }
@@ -118,11 +122,11 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (user == null) {
             session.setAttribute("msg", "존재하지 않는 이름이거나 이메일 주소 입니다");
             return "redirect:/user/findpw.do";
         } else {
+            session.setAttribute("msg", "해당 이메일로 링크가 보내졌습니다.");
             return "redirect:/";
         }
     }

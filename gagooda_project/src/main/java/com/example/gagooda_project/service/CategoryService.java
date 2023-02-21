@@ -8,5 +8,6 @@ public interface CategoryService {
     List<CategoryDto> showCategoriesAt(int lvl);
     List<CategoryDto> showChildCategories(int parentId);
     CategoryDto selectOne(int categoryId);
-    public List<CategoryDto> categoryMerge(List<String> categoryIdList);
+    List<CategoryDto> categoryMerge(List<String> categoryIdList);
+    List<CategoryDto> showAll();
 }

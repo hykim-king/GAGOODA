@@ -56,7 +56,8 @@ public class CartController {
     public String update(@RequestParam(name = "optionCode", required = false) String optionCode,
                          CartDto cart,
                          @RequestParam List<Integer> cartCnts,
-                         @SessionAttribute UserDto loginUser) {
+                         @SessionAttribute UserDto loginUser,
+                         HttpSession session) {
         int update = 0;
         try {
             int i = 0;
@@ -66,12 +67,14 @@ public class CartController {
                 if (Integer.parseInt(String.valueOf(cartCnts.get(i))) > 0) {
                     cnt = Integer.parseInt(String.valueOf(cartCnts.get(i)));
                     cartDto.setCnt(cnt);
+                    update = cartServiceImp.modifyOne(cartDto);
+                    i += 1;
                 } else if (Integer.parseInt(String.valueOf(cartCnts.get(i))) == 0) {
                     cartServiceImp.removeOne(cartDto.getCartId());
+                    update = cartServiceImp.modifyOne(cartDto);
+                    i += 1;
                     return "redirect:/cart/user_yes/mypage/list.do";
                 }
-                update = cartServiceImp.modifyOne(cartDto);
-                i += 1;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +82,7 @@ public class CartController {
         if (update > 0) {
             return "redirect:/cart/user_yes/mypage/list.do";
         } else {
-            return "redirect:/";
+            return "redirect:/cart/user_yes/mypage/list.do";
         }
     }
 

@@ -2,31 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.gagooda_project.mapper.DeliveryMapper">
     <resultMap id="deliveryMap" type="DeliveryDto" autoMapping="true">
-        <id column="delivery_id" property="deliveryId"/>
-        <result column="order_id" property="orderId"/>
+        <id column="order_id" property="orderId"/>
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
+        <result column="user_id" property="userId"/>
+        <result column="invoice" property="invoice"/>
         <association property="orderDto"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"
                      fetchType="lazy"/>
     </resultMap>
 
-    <insert id="insertOne" parameterType="DeliveryDto" useGeneratedKeys="true" keyProperty="deliveryId">
-        INSERT INTO delivery (invoice, request, order_id) VALUES (#{invoice},#{request},#{orderId})
-    </insert>
     <insert id="updateOne" parameterType="DeliveryDto">
         UPDATE delivery SET invoice=#{invoice},
                             start_date=#{startDate},
-                            end_date=#{endDate},
-                            request=#{request},
-                            d_det=#{dDet},
-                            order_id=#{orderId} WHERE delivery_id=#{deliveryId}
+                            d_det=#{dDet}
+                            WHERE order_id=#{orderId}
     </insert>
-    <select id="findById" resultMap="deliveryMap">
-        SELECT * FROM delivery WHERE delivery_id = #{id}
-    </select>
+    <delete id="deleteOne">
+        DELETE FROM delivery WHERE order_id = #{orderId}
+    </delete>
     <select id="findByOrderId" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE order_id=#{orderId}
     </select>
@@ -35,9 +31,6 @@
     </select>
     <select id="listByDDet" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE d_det=#{dDet}
-    </select>
-    <select id="pageByUserIdAndDate" resultType="com.example.gagooda_project.dto.DeliveryDto">
-        SELECT * FROM delivery WHERE user_id = #{userId}
     </select>
 </mapper>
 

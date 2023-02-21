@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @RequestMapping("/order")
@@ -32,7 +30,50 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping("/admin/list.do")
+    public String adminList(@SessionAttribute UserDto loginUser,
+                            PagingDto paging,
+                            HttpServletRequest req,
+                            @RequestParam(name = "oDet", required = false, defaultValue = "") String oDet,
+                            @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
+                            @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
+                            @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
+                            @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
+                            Model model){
 
+        log.info("req.getParameterMap:"+req.getParameterMap());
+        try{
+            if (loginUser.getGDet().equals("g1")){
+                Map<String, Object> searchFilter = new HashMap<>();
+                paging.setQueryString(req.getParameterMap());
+                searchFilter.put("oDet",oDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
+                searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
+                searchFilter.put("paging", paging);
+                List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+                List<OrderDto> orderList = orderService.showOrderList(searchFilter);
+                int oCount = orderService.countPageAll(searchFilter);
+//                int allRfCnt = refundServiceImp.countAll();
+                log.info(orderList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
+                model.addAttribute("orderList", orderList);
+                model.addAttribute("oCodeList", oCodeList);
+                model.addAttribute("paging",paging);
+                model.addAttribute("oCount", oCount);
+//                model.addAttribute("allCount",allRfCnt);
+                return "order/admin/list";
+            }
+            else{
+                return "/index";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "refund/admin/list";
+    }
+
+
+
+//    사용자 주문 목록
     @GetMapping("/user_yes/mypage/list.do")
     public String list(Model model,
                        PagingDto paging,
@@ -46,19 +87,22 @@ public class OrderController {
         try{
             paging.setQueryString(req.getParameterMap());
             orderList = orderService.orderList(paging, loginUser.getUserId(), dates);
+            List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
             model.addAttribute("orderList",orderList);
             model.addAttribute("paging",paging);
+            model.addAttribute("oCodeList",oCodeList);
             log.info("paging.toString(): "+paging.toString());
         }catch(Exception e){
             log.error(e.getMessage());
         }
         if (orderList != null) {
-            return "/order/list";
+            return "/order/user/list";
         } else {
             return "redirect:/";
         }
     }
-    @GetMapping("/user_yes/{orderId}/detail.do")
+//    사용자 주문 상세 보기
+    @GetMapping("/user_yes/mypage/{orderId}/detail.do")
     public String detail(@SessionAttribute(required = true) UserDto loginUser,
                          @PathVariable String orderId,
                          Model model){
@@ -68,18 +112,42 @@ public class OrderController {
         model.addAttribute("order",order);
         model.addAttribute("orderDetailList",orderDetailList);
         model.addAttribute("delivery", delivery);
-        return "/order/detail";
+        return "/order/user/detail";
     }
+    /*사용자 주문 취소로 주문 상태 수정*/
+    @GetMapping("/user_yes/mypage/{orderId}/modify.do")
+    public String modify(@SessionAttribute(required = true) UserDto loginUser,
+                         @PathVariable String orderId){
+        int modify = 0;
+        String oDet = "o5";
+        try{
+            OrderDto order = orderService.selectOne(orderId);
+            modify = orderService.modifyOne(orderId,oDet);
+
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        if (modify>0){
+            return "redirect:/order/user_yes/mypage/list.do";
+        }else{
+            return "redirect:/order/user_yes/mypage/"+orderId+"/detail.do";
+
+        }
+    }
+    /*주문 완료*/
     @GetMapping("/user_yes/{orderId}/complete.do")
     public String complete(@SessionAttribute(required=true) UserDto loginUser,
                            @PathVariable String orderId,
                            Model model){
         OrderDto order=orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        int itemCount = orderDetailList.size();
         model.addAttribute("totalPrice",order.getTotalPrice());
         model.addAttribute("orderDetailList",orderDetailList);
-        return "/order/complete";
+        model.addAttribute("itemCount",itemCount);
+        return "/order/user/complete";
     }
+    /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                            @SessionAttribute(required = false) String msg,
@@ -87,6 +155,11 @@ public class OrderController {
                            Model model,
                            @RequestParam List<Integer> orderCartIds
     ){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+           orderMsg = session.getAttribute(msg).toString();
+           session.removeAttribute(msg);
+        }
         List<AddressDto> addressList = null;
         List<CartDto> cartList = new ArrayList<>();
         System.out.println(loginUser.getUserId());
@@ -103,7 +176,7 @@ public class OrderController {
         }
         UUID orderRandom = UUID.randomUUID();
         String randomString = orderRandom.toString();
-        randomString = randomString.replace("-","").substring(0,8);
+        randomString = randomString.replace("-","").substring(0,10);
         if(addressList != null){
             model.addAttribute("addressList", addressList);
         }
@@ -111,11 +184,13 @@ public class OrderController {
             model.addAttribute("cartList",cartList);
             model.addAttribute("loginUser",loginUser);
             model.addAttribute("ranString", randomString);
-            return "/order/register";
+            model.addAttribute("orderMsg",orderMsg);
+            return "/order/user/register";
         } else {
             return "redirect:/";
         }
     }
+    /*주문 등록 (POST)*/
     @PostMapping("/user_yes/register.do")
     public String register(
             OrderDto order,
@@ -132,7 +207,6 @@ public class OrderController {
         if(loginUser.getUserId()==(order.getUserId())){
             List<OrderDetailDto> orderDetailList = null;
             OrderDetailDto orderDetail = null;
-            AddressDto address = null;
             DeliveryDto delivery = null;
             log.info("1.register에 진입");
             try{
@@ -157,10 +231,14 @@ public class OrderController {
                 }
                 delivery = new DeliveryDto();
                 delivery.setRequest(request);
-                delivery.setOrderId(order.getOrderId());
+//                delivery.setOrderId(order.getOrderId());
+//                delivery.setUserId(order.getUserId());
+//                delivery.setUserName(order.getUserName());
+//                delivery.setUserEmail(order.getUserEmail());
+//                delivery.setUserPhone(order.getUserPhone());
                 order.setOrderDetailList(orderDetailList);
                 log.info("4.order에 address등록 완료");
-                register = orderService.register(order,delivery);
+                register = orderService.register(order,delivery,cartList);
                 log.info("5.orderservice.register 완료");
             }catch(Exception e){
                 log.error(e.getMessage());
@@ -175,7 +253,7 @@ public class OrderController {
             return "redirect:/order/user_yes/"+order.getOrderId()+"/complete.do";
 
         }else{
-            session.setAttribute("orderMsg","주문을 완료하지 못했습니다. 다시 시도해주세요.");
+            session.setAttribute("msg","주문을 완료하지 못했습니다. 다시 시도해주세요.");
             return "redirect:/order/user_yes/register.do";
         }
 

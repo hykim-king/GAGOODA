@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div layout:fragment="content">
+    <form action="/product/admin/product_list.do">
+        <fieldset>
+            <label for="categoryId">카테고리 </label>
+            <select name="categoryId" id="categoryId">
+                <th:block th:each="category : ${categoryList}">
+                    <th:block th:if="${category.categoryId.equals(categoryId)}">
+                        <option th:value="${category.categoryId}" selected
+                                th:text="'('+${category.categoryId}+') '+${category.cname}"></option>
+                    </th:block>
+                    <th:block th:unless="${category.categoryId.equals(categoryId)}">
+                        <option th:value="${category.categoryId}"
+                                th:text="'('+${category.categoryId}+') '+${category.cname}"></option>
+                    </th:block>
+                </th:block>
+            </select>
+        </fieldset>
+        <button type="submit">찾기</button>
+    </form>
+    <div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>상품 코드</th>
+                <th>상품명</th>
+                <th>판매처</th>
+                <th>공급가</th>
+                <th>판매가</th>
+                <th>상태</th>
+                <th>수정일</th>
+            </tr>
+            <th:block th:each="product : ${productList}">
+                <tr>
+                    <td th:text="${product.productCode}"></td>
+                    <td th:text="${product.pname}"></td>
+                    <td th:text="${product.place}"></td>
+                    <td th:text="${product.supplyPc}"></td>
+                    <td th:text="${product.salesPc}"></td>
+                    <td th:text="${detDict[product.PDet]}"></td>
+                    <td th:text="${#dates.format(product.modDate, 'yyyy-MM-dd')}"></td>
+                </tr>
+            </th:block>
+            </thead>
+        </table>
+    </div>
+</div>
+</html>

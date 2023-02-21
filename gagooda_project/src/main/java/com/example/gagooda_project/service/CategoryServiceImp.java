@@ -26,6 +26,11 @@ public class CategoryServiceImp implements CategoryService {
     }
 
     @Override
+    public List<CategoryDto> showAll() {
+        return categoryMapper.listAll();
+    }
+
+    @Override
     public CategoryDto selectOne(int categoryId) {
         return categoryMapper.findById(categoryId);
     }

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 관리자</title>
+</head>
+<div layout:fragment="content">
+<form action="order/admin/list.do" method="get" id="searchForm" name="searchForm">
+  <div>
+    <label class="d-block">검색 키워드 :
+      <select name="searchDiv" id="searchDiv">
+        <option value="" selected disabled>검색 분류 선택</option>
+        <option value="order_id">주문번호</option>
+        <option value="orderID">주문자명</option>
+      </select>
+      <input type="text" id="searchWord" name="searchWord">
+    </label>
+    <label class="d-block">검색 일시 :
+      <select name="dateType" id="dateType">
+        <option value="reg_date">주문 일자</option>
+      </select>
+      <input type="date" id="startDate" name="startDate"> ~
+      <input type="date" id="endDate" name="endDate">
+    </label>
+    <div class="d-flex">
+      <span>진행 상태 :</span>
+      <label><input type="checkbox" name="oDet" id="o0" value="o0" > 결제 미확인 </label>
+      <label><input type="checkbox" name="oDet" id="o1" value="o1" > 결제 확인 </label>
+      <label><input type="checkbox" name="oDet" id="o2" value="o2" > 주문 완료 </label>
+      <label><input type="checkbox" name="oDet" id="o5" value="o5" > 주문 취소 요청 </label>
+      <label><input type="checkbox" name="oDet" id="o3" value="o3" > 주문 취소 </label>
+      <label><input type="checkbox" name="oDet" id="o4" value="o4" > 구매 확정 </label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-outline-secondary">검색</button>
+  <button name="reset" type="reset">초기화</button>
+</form>
+  <h3>주문 목록 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}+'개'"></span></h3>
+  <table>
+    <thead>
+    <tr>
+      <th>No.</th>
+      <th>주문자</th>
+      <th>주문 ID</th>
+      <th>총 결제 금액</th>
+      <th>주문 날짜</th>
+      <th>주문 상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:if="${oCount >= 0}" th:each="order,stat : ${orderList}">
+      <tr class="hrefRow" th:data-order="${order.orderId}">
+        <td th:text="|${stat.count}|"></td>
+        <td th:text="${order.userName}"></td>
+        <td th:text="${order.orderId}"></td>
+        <td th:text="${order.totalPrice}"></td>
+        <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${oCodeList[order.oDet.substring(1)].detName}"></td>
+        <td><button>상태 변경</button></td>
+      </tr>
+    </th:block>
+    </tbody>
+  </table>
+  <th:block th:unless="${oCount == 0}"><div>해당 주문 내역이 존재하지 않습니다.</div></th:block>
+  <!--pagination-->
+  <nav aria-label="Page navigation ">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
+      </li>
+    </ul>
+  </nav>
+  <!--pagination end--------------->
+  <script th:inline="javascript">
+    const forms = document.forms.searchForm;
+    console.log(forms);
+    forms.searchDiv.onchange = (qualifiedName, value)=>{
+      console.log(forms.searchDiv.value);
+      forms.searchWord.setAttribute("required", value);
+    }
+    forms.dateType.onchange = (qualifiedName, value)=>{
+      forms.startDate.setAttribute("required", value);
+      forms.endDate.setAttribute("required", value);
+    }
+    forms.reset.onclick=()=>{
+      forms.searchWord.removeAttribute("required");
+      forms.startDate.removeAttribute("required");
+      forms.endDate.removeAttribute("required");
+    }
+
+  </script>
+</div>
+</html>

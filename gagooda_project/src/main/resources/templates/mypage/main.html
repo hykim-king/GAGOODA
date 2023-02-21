@@ -10,20 +10,35 @@
 <div layout:fragment="myPageContent">
     <h1>마이페이지 메인</h1>
     <h3>진행 중인 주문</h3>
-    <th:block th:each="myPageDet:${myPageDetList}">
-        <span th:text="${myPageDet.detName}"></span>
-        <span>||</span>
-    </th:block>
-    <br>
-    <th:block th:each="oDet:${oDetList}">
-        <span th:text="${oDet.ODet}"></span>
-        <span th:text="${oDet.count}"></span>
+    <th:block th:each="det:${myPageDetList}">
+        <span th:text="${det.detName}"></span>
+        <span th:text="${count.get(det.detCode)}"></span>
     </th:block>
     <h3>최근 주문 정보</h3>
+    <table class="table">
+        <thead>
+            <th scope="col">주문번호</th>
+            <th scope="col">주문날짜</th>
+            <th scope="col">결제금액</th>
+        </thead>
+        <tbody>
+            <tr th:each="order:${orderList}">
+                <td th:text="${order.orderId}"></td>
+                <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${order.totalPrice}+'원'"></td>
+            </tr>
+        </tbody>
+    </table>
+    <th:block th:if="${orderList == null or orderList.isEmpty()}">
+        <p th:text="'주문 내역이 없습니다.'"></p>
+    </th:block>
     <h3>장바구니</h3>
     <th:block th:each="cart:${cartList}">
         <span th:text="${cart.optionProduct.opname}"></span>
         <span th:text="${cart.optionProduct.price}"></span>
+    </th:block>
+    <th:block th:if="${cartList == null or cartList.isEmpty()}">
+        <p th:text="'장바구니 내역이 없습니다.'"></p>
     </th:block>
 </div>
 </html>

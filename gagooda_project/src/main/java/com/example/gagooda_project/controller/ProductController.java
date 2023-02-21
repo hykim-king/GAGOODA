@@ -12,9 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/product")
@@ -69,24 +67,30 @@ public class ProductController {
             Model model,
             HttpSession session,
             @SessionAttribute(required = false) String msg,
-            @PathVariable int categoryId
+            @PathVariable int categoryId,
+            PagingDto paging,
+            HttpServletRequest req
     ) {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
             System.out.println(msg);
         }
-        List<CategoryConnDto> categoryConnList = null;
+        paging.setRows(16);
+        if (paging.getOrderField() == null) paging.setOrderField("mod_date");
+        paging.setQueryString(req.getParameterMap());
+        model.addAttribute("paging", paging);
+
+        Map<String, Object> map = new HashMap<>();
+        List<Integer> categoryIdList = new ArrayList<>();
+        categoryIdList.add(categoryId);
+        map.put("categoryIdList", categoryIdList);
         try {
-            categoryConnList = categoryConnService.categoryProducts(categoryId);
-            categoryConnList = categoryConnList.subList(0, 20);
+            List<ProductDto> productList = productService.pagingProduct(paging, map);
+            model.addAttribute("productList", productList);
+            return "/product/category_list";
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (categoryConnList != null) {
-            model.addAttribute("categoryConnList", categoryConnList);
-            return "/product/category_list";
-        } else {
             session.setAttribute("msg", "상품들을 가져올 수 없습니다.");
             return "redirect:/";
         }
@@ -187,19 +191,76 @@ public class ProductController {
         }
     }
 
-
     @GetMapping("/admin/product_list.do")
-    public String productList(
+    public String productList (
+            @RequestParam(required = false, name = "categoryId") String categoryId,
+            @RequestParam(required = false, name = "catDet") List<String> catDetList,
+            @RequestParam(required = false) String searchWord,
             Model model,
             PagingDto paging,
-            HttpServletRequest req
+            HttpServletRequest req,
+            HttpSession session
     ){
+        paging.setRows(20);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
-        List<ProductDto> boardList = productService.pagingProduct(paging);
-        model.addAttribute("boardList", boardList);
         model.addAttribute("paging", paging);
-        return "";
+        Map<String, Object> map = new HashMap<>();
+        if (categoryId != null) {
+            map.put("categoryId", categoryId);
+            model.addAttribute("categoryId", categoryId);
+        }
+        if (catDetList != null) {
+            map.put("catDetList", catDetList);
+        }
+        if (searchWord != null) {
+            map.put("searchWord", "'%"+searchWord+"%'");
+        }
+        try {
+            List<ProductDto> productList = productService.pagingProduct(paging, map);
+            model.addAttribute("productList", productList);
+
+            Map<String, String> detDict = commonCodeService.showNames("p");
+            model.addAttribute("detDict", detDict);
+
+            List<CategoryDto> levelOne = categoryService.showCategoriesAt(1);
+            List<CategoryDto> levelTwo = categoryService.showCategoriesAt(2);
+            List<CategoryDto> levelThree = categoryService.showCategoriesAt(3);
+            model.addAttribute("levelOne", levelOne);
+            model.addAttribute("levelTwo", levelTwo);
+            model.addAttribute("levelThree", levelThree);
+
+            List<CategoryDto> categoryList = categoryService.showAll();
+            model.addAttribute("categoryList", categoryList);
+
+            return "/product/admin_list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("msg", "물품 목록을 가져오는데에 문제가 있었습니다.");
+            return "redirect:/";
+        }
+    }
+
+
+
+    @PostMapping("/admin/product_list.do")
+    public String productListSearch (
+            HttpServletRequest req,
+            HttpSession session
+    ){
+        String queryString = req.getQueryString();
+        try{
+            return "redirect:/product/admin/product_list.do?"+queryString;
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("msg", "물품 목록을 가져오는데에 문제가 있었습니다.");
+            return "redirect:/";
+        }
     }
 
 }
+/*
+SELECT COUNT(*) FROM (SELECT product.* FROM product LEFT JOIN category_conn cc ON product.product_code
+= cc.product_code WHERE cc.category_id in ('511') AND product.p_det in ('p1' ,'p0' ) GROUP
+BY product.product_code) as db;
+ */

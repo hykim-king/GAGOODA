@@ -1,23 +1,21 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.ImageServiceImp;
 import com.example.gagooda_project.service.OrderServiceImp;
 import com.example.gagooda_project.service.RefundServiceImp;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.text.SimpleDateFormat;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Controller
@@ -26,11 +24,15 @@ public class RefundController {
 
     RefundServiceImp refundServiceImp;
     OrderServiceImp orderServiceImp;
+    ImageServiceImp imageServiceImp;
     Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+    @Value("${img.upload.path}")
+    private String imgPath;
 
-    public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp) {
+    public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp,ImageServiceImp imageServiceImp) {
         this.refundServiceImp = refundServiceImp;
         this.orderServiceImp = orderServiceImp;
+        this.imageServiceImp = imageServiceImp;
     }
 
     @GetMapping("user_yes/mypage/list.do")
@@ -39,17 +41,21 @@ public class RefundController {
                        @RequestParam(name = "startDate", required = false) String startDate,
                        @RequestParam(name = "endDate", required = false) String endDate,
                        @RequestParam(name = "detCode", required = false) String detCode,
+                       PagingDto paging,
+                       HttpServletRequest req,
                        HttpSession session,
                        Model model) {
+        log.info("req.getParameterMap:"+req.getParameterMap());
         String refundMsg = null;
         if (session.getAttribute("refundMsg") != null) {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
         }
         try {
+            paging.setQueryString(req.getParameterMap());
             List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
-            List<RefundDto> refundList = refundServiceImp.showUserRefundList(loginUser.getUserId(), period, startDate, endDate, detCode);
-            int userRefundCount = refundServiceImp.showCountByUser(loginUser.getUserId());
+            List<RefundDto> refundList = refundServiceImp.showUserRefundList(loginUser.getUserId(), period, startDate, endDate, detCode, paging);
+            int userRefundCount = refundServiceImp.showCountByUser(loginUser.getUserId(), period, startDate, endDate, detCode);
             Map<String, Integer> orderDetailCountMap = new HashMap<>();
             for (RefundDto refund : refundList) {
                 orderDetailCountMap.put(refund.getOrderId(), refundServiceImp.CountByOrderId(refund.getOrderId()));
@@ -58,6 +64,7 @@ public class RefundController {
             model.addAttribute("rfDetList", rfDetList);
             model.addAttribute("userRefundCount", userRefundCount);
             model.addAttribute("orderDetailCountMap", orderDetailCountMap);
+            model.addAttribute("paging", paging);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,7 +72,7 @@ public class RefundController {
         return "refund/user/list";
     }
 
-    @GetMapping("user_yes/mypage/register.do/{orderId}")
+    @GetMapping("user_yes/mypage/{orderId}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                            @PathVariable String orderId,
                            HttpSession session,
@@ -94,31 +101,67 @@ public class RefundController {
 
     }
 
-    @PostMapping("user_yes/mypage/register.do/{orderId}")
+    @PostMapping("user_yes/mypage/{orderId}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                            @PathVariable String orderId,
                            HttpSession session,
+                           @RequestParam(required = false, name="imgFileList") List<MultipartFile> imgFileList,
                            RefundDto refund) {
         int register = 0;
+        String reType;
+        String detailimgPath;
+        int seq = 1;
+
         RefundDto checkDto;
         if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
-                register += refundServiceImp.registerOne(refund);
+                /* 환불, 교환 체크하여 이름 지정 */
+                if (refund.isReType()){
+                    reType = "refund";
+                    detailimgPath = imgPath + "/refund";
+                }else{
+                    reType = "exchange";
+                    detailimgPath = imgPath + "/exchange";
+                }
+                /* 등록 */
+                if (refund.getOrderDetailId() == -1){ // 주문 상품 전체 등록
+                    OrderDto order = orderServiceImp.selectOne(orderId);
+                    List<RefundDto> checkList = null;
+                    if(order.getOrderDetailList() !=null){ // 주문의 상세 주문이 null이 아니면
+                        for(OrderDetailDto orderDetail : order.getOrderDetailList()){ // 주문 상세를 각각 조회해서
+                            checkList = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId()); // 해당 주문상세 번호로 등록된 refund 목록을 가져오고
+                            if (checkList != null){  // 등록된 refund가 있으면
+                                boolean isOk = true;
+                                if(isOk){
+                                    refund.setOrderDetailId(orderDetail.getOrderDetailId());
+                                    register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
+                                }
+                            }else{
+                                refund.setOrderDetailId(orderDetail.getOrderDetailId());
+                                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
+                            }
+                        }
+                        session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                        return "redirect:/refund/user_yes/mypage/list.do";
+                    }
+                }else{ // 단건 등록
+                    register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
+                }
+                if (register > 0) { // 성공했을 시
+                    session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                    return "redirect:/refund/user_yes/mypage/"+refund.getRefundId()+"/detail.do";
+                } else { // 실패했을 시
+                    session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
+                    return "redirect:/refund/user_yes/mypage/"+orderId+"/register.do" ;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (register > 0) {
-            System.out.println("환불 요청 완료!!!!");
-            session.setAttribute("refundMsg", "환불 요청에 성공했습니다.");
-            return "redirect:/refund/user_yes/mypage/list.do";
-        } else {
-            session.setAttribute("refundMsg", "환불 요청에 실패했습니다.");
-            return "redirect:/refund/user_yes/mypage/register.do/" + orderId;
-        }
+        return "redirect:/refund/user_yes/mypage/"+orderId+"/register.do";
     }
 
-    @GetMapping("user_yes/mypage/detail.do/{refundId}")
+    @GetMapping("user_yes/mypage/{refundId}/detail.do")
     public String detail(@SessionAttribute UserDto loginUser,
                          @PathVariable int refundId,
                          HttpSession session,
@@ -128,9 +171,10 @@ public class RefundController {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
         }
-        RefundDto refund = refundServiceImp.selectOne(refundId);
-        if (loginUser.getUserId() == refund.getUserId()) {
-            try {
+        RefundDto refund = null;
+        try {
+            refund = refundServiceImp.selectOne(refundId);
+            if (loginUser.getUserId() == refund.getUserId()) {
                 List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
                 List<CommonCodeDto> rfrDetList = refundServiceImp.showDetCodeList("rfr");
                 OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
@@ -138,25 +182,18 @@ public class RefundController {
                 model.addAttribute("rfDetList", rfDetList);
                 model.addAttribute("rfrDetList", rfrDetList);
                 model.addAttribute("order", order);
+                model.addAttribute("refundMsg", refundMsg);
                 return "refund/user/detail";
-            } catch (Exception e) {
-                e.printStackTrace();
+            }else{
+                return "index";
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-//        return "refund/user/list";
-        // 아래 부분은 추후 삭제될 부분.
-        List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
-        List<CommonCodeDto> rfrDetList = refundServiceImp.showDetCodeList("rfr");
-        OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
-        model.addAttribute("refund", refund);
-        model.addAttribute("rfDetList", rfDetList);
-        model.addAttribute("rfrDetList", rfrDetList);
-        model.addAttribute("order", order);
-        model.addAttribute("refundMsg", refundMsg);
-        return "refund/user/detail";
+        return "refund/user/list";
     }
 
-    @PostMapping("user_yes/mypage/modify.do/{refundId}")
+    @PostMapping("user_yes/mypage/{refundId}/modify.do")
     public String modify(@PathVariable int refundId,
                          @SessionAttribute UserDto loginUser,
                          HttpSession session) {
@@ -180,6 +217,8 @@ public class RefundController {
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
+                            PagingDto paging,
+                            HttpServletRequest req,
                             @RequestParam(name = "rfDet", required = false, defaultValue = "") String rfDet,
                             @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
                             @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
@@ -187,15 +226,29 @@ public class RefundController {
                             @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
                             @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
                             Model model){
+        log.info("req.getParameterMap:"+req.getParameterMap());
         try{
-            Map<String, String> searchFilter = new HashMap<>();
-            searchFilter.put("rfDet",rfDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
-            searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
-            List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
-            List<CommonCodeDto> rfDetList = null;
-            List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
-            model.addAttribute("refundList", refundList);
-            model.addAttribute("rfCodeList", rfCodeList);
+            if (loginUser.getGDet().equals("g1")){
+                Map<String, Object> searchFilter = new HashMap<>();
+                paging.setQueryString(req.getParameterMap());
+                searchFilter.put("rfDet",rfDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
+                searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
+                searchFilter.put("paging", paging);
+                List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
+                List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
+                int refundCount = refundServiceImp.countPageAll(searchFilter);
+                int allRfCnt = refundServiceImp.countAll();
+                log.info(refundList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
+                model.addAttribute("refundList", refundList);
+                model.addAttribute("rfCodeList", rfCodeList);
+                model.addAttribute("paging",paging);
+                model.addAttribute("refundCount", refundCount);
+                model.addAttribute("allCount",allRfCnt);
+                return "refund/admin/list";
+            }
+            else{
+                return "/index";
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

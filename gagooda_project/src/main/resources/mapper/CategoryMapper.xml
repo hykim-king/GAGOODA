@@ -20,4 +20,7 @@
     <select id="listByLevel" resultMap="categoryMap">
         SELECT * FROM category WHERE lvl=#{lvl}
     </select>
+    <select id="listAll" resultType="com.example.gagooda_project.dto.CategoryDto">
+        SELECT * FROM category
+    </select>
 </mapper>

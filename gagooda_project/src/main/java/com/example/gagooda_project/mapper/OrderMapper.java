@@ -3,10 +3,12 @@ package com.example.gagooda_project.mapper;
 import com.example.gagooda_project.dto.ODetDto;
 import com.example.gagooda_project.dto.OrderDto;
 import com.example.gagooda_project.dto.PagingDto;
+import com.example.gagooda_project.dto.RefundDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface OrderMapper {
@@ -40,5 +42,8 @@ public interface OrderMapper {
 
     List<ODetDto> countByUserIdAndStatus(int userId); //userId
     //ODetDto로 변환시켜줄 resultMap 작성했습니다.
+    List<OrderDto> pageAdminAll(Map<String, Object> searchFilter);
+    int countPageAll(Map<String, Object> searchFilter);
+
 
 }

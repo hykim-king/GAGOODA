@@ -13,10 +13,7 @@ import javax.print.attribute.HashAttributeSet;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class ProductServiceImp implements ProductService{
@@ -117,12 +114,25 @@ public class ProductServiceImp implements ProductService{
         return image;
     }
 
-    public List<ProductDto> pagingProduct(PagingDto paging) {
-        int totalRows = productMapper.count(paging);
+    public List<ProductDto> pagingProduct(PagingDto paging, Map<String, Object> map) {
+        int totalRows = productMapper.countForPaging(paging, map);
         paging.setTotalRows(totalRows);
         System.out.println(paging);
-//        return productMapper.pageSearch(paging);
-        return null;
+        return productMapper.pageForPaging(paging, map);
+    }
+
+    @Override
+    public List<ProductDto> friMainList(String place) {
+        return productMapper.mainListBySales(place);
     }
 }
+/*
+SELECT COUNT(*) FROM
+(SELECT product.*
+        FROM product
+        LEFT JOIN category_conn cc
+        ON product.product_code = cc.product_code
+        WHERE cc.category_id = 5
+        GROUP BY product.product_code) as db;
+ */
 

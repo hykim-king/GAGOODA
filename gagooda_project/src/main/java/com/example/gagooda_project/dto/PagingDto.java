@@ -7,7 +7,7 @@ import java.util.Map;
 @Data
 public class PagingDto {
     private int page=1;
-    private int rows=2;
+    private int rows=5;
     private int startRow;
     private String orderField;
     private String direct="DESC";
@@ -36,12 +36,12 @@ public class PagingDto {
     }
 
     public void setQueryString(Map<String, String[]> queryMap) {
-        String queryString= "";
+        StringBuilder queryString= new StringBuilder();
         String and="?";
         for (String name :queryMap.keySet()){
             if(!name.equals("page")){
                 for (String val : queryMap.get(name)){
-                    queryString+=and+name+"="+val;
+                    queryString.append(and).append(name).append("=").append(val);
                     and="&";
                 }
             }
