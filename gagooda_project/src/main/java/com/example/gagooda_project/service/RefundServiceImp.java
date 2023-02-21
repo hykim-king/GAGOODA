@@ -110,6 +110,11 @@ public class RefundServiceImp implements RefundService{
             String keyword = "%"+searchFilter.get("searchWord")+"%";
             searchFilter.put("searchWord", keyword);
         }
+        if(searchFilter.get("startDate").equals(searchFilter.get("endDate"))){
+            String equalsDate = searchFilter.get("startDate").toString() + "%";
+            searchFilter.put("startDate", equalsDate);
+            searchFilter.put("endDate", equalsDate);
+        }
         PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
         int totalRows = refundMapper.countPageAll(searchFilter);
         pagingDto.setRows(10);

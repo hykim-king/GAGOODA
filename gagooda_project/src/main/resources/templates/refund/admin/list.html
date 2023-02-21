@@ -46,9 +46,7 @@
         <button type="submit" class="btn btn-outline-secondary">검색</button>
         <button name="reset" type="reset">초기화</button>
     </form>
-<!--<th:block th:text="${param.size()}"></th:block>-->
-<!--<th:block th:if="${param.size()}"-->
-    <h3>환불 신청 <span th:if="${refundList != null}" th:text="${refundList.size()}"></span></h3>
+    <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
     <table>
         <thead>
         <tr>
