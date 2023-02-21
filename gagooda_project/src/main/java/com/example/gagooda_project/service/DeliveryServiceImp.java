@@ -21,6 +21,12 @@ public class DeliveryServiceImp implements DeliveryService{
         this.orderMapper = orderMapper;
         this.commonCodeMapper = commonCodeMapper;
     }
+
+    @Override
+    public int insertOne(DeliveryDto delivery) {
+        return deliveryMapper.insertOne(delivery);
+    }
+
     @Override
     public int modifyOne(DeliveryDto delivery) {
         return deliveryMapper.updateOne(delivery);
