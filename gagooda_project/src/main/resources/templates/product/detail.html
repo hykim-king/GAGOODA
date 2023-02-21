@@ -23,9 +23,13 @@
              style="width: 400px; height: 400px; object-fit: cover;">
     </th:block>
 </th:block>
-<form action="" name="product_choose" method="post">
+
+
+<!--    form name하고 id값들 이름 변경-->
+
+<form action="" name="product_choose1" method="post">
     <div>
-        <select name="optionCode" id="optionCode" required>
+        <select name="optionCode" id="optionCode1" required>
             <option value="" selected>--선택--</option>
             <th:block th:each="option:${product.optionProductList}">
                 <option th:value="${option.optionCode}"
@@ -36,7 +40,7 @@
     <div>
         <!--존재하는 수량을 초과하지 않는지 확인 필요-->
         <label for="cnt">수량: </label>
-        <input type="number" name="cnt" id="cnt1" required>
+        <input type="number" name="cnt1" id="cnt1" required>
     </div>
     <th:block th:if="${session.loginUser != null}">
         <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
@@ -45,35 +49,6 @@
     <button type="button" name="to_cart">장바구니에 담기</button>
     <button type="button" name="buy">구매하기</button>
 </form>
-<script th:inline="javascript">
-    const product_choose = document.forms["product_choose"];
-    const to_cart = product_choose["to_cart"];
-    const buy = product_choose["buy"];
-    to_cart.onclick=(e)=>{
-        if (product_choose["optionCode"].value!==""
-            && product_choose["cnt"].value !== ""
-            && product_choose["cnt"].value > 0
-        ) {
-            product_choose.setAttribute("action", "/cart/user_yes/register.do");
-            alert(product_choose.action);
-            product_choose.submit();
-        } else {
-            alert("상품을 선택하고, 수량을 적어주세요.");
-        }
-    }
-    buy.onclick=(e)=>{
-        if (
-            product_choose["optionCode"].value!==""
-            && product_choose["cnt"].value !== ""
-            && product_choose["cnt"].value > 0
-        ) {
-            product_choose.action = "/order/user_yes/register.do";
-            product_choose.submit();
-        } else {
-            alert("상품을 선택하고, 수량을 적어주세요.");
-        }
-    }
-</script>
 
 <div class="container">
     <!--상단 카테고리 표시-->
@@ -103,7 +78,7 @@
                 <div class="card px-3" style="width: 100%;">
                     <div class="card-body">
                         <h6 class="card-subtitle text-muted text-start mt-2 mb-3" th:text="${product.productCode}">GAGOODA</h6>
-                        <h5 class="card-title text-start" th:text="${product.pname}">상품명</h5>
+                        <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
                     </div>
                 </div>
                 <!--상품명 end-->
@@ -125,59 +100,158 @@
                     </div>
                 </div>
 
-                <!--옵션-->
-                <form class="row" action="" name="product_choose" method="post">
-                    <div class="col-8 mt-4">
-                        <label for="validationDefault04" class="form-label"></label>
-                        <select class="form-select form-control" id="validationDefault04" required>
-                            <option selected disabled value="">--옵션 선택--</option>
-                            <th:block th:each="option:${product.optionProductList}">
-                                <option th:value="${option.optionCode}"
-                                        th:text="${option.opname}+' '+${option.price}+'원'"></option>
-                            </th:block>
-                        </select>
-                    </div>
-                    <div class="col-4 mt-4 ">
-                        <!--존재하는 수량을 초과하지 않는지 확인 필요-->
-                        <div class="input-group " style="margin-top: 24px">
-                            <span class="input-group-text" id="inputGroup-sizing-default"><label for="cnt">수량:</label></span>
-                            <input type="number" name="cnt" id="cnt" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                <form action="" name="product_choose" method="post">
+                    <!--옵션-->
+                    <div class="row" >
+                        <div class="col-8 mt-4">
+                            <label for="optionCode" class="form-label"></label>
+                            <select class="form-select form-control" name="optionCode" id="optionCode" required>
+                                <option value="" selected >--옵션 선택--</option>
+                                <th:block th:each="option:${product.optionProductList}">
+                                    <option th:value="${option.optionCode}"
+                                            th:text="${option.opname}+' '+${option.price}+'원'"></option>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div class="col-4 mt-4 ">
+                            <!--존재하는 수량을 초과하지 않는지 확인 필요-->
+                            <div class="input-group " style="margin-top: 24px">
+                                <span class="input-group-text" id="inputGroup-sizing-default"><label for="cnt">수량:</label></span>
+                                <input type="number" name="cnt" id="cnt" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" required>
+                            </div>
                         </div>
                     </div>
-                </form>
-                <!--옵션 end-->
-                <hr style="margin: 40px 0 25px" />
+                    <!--옵션 end-->
+                    <hr style="margin: 40px 0 25px" />
 
-                <!--총 결제금액-->
-                <div class="d-flex flex-row-reverse">
-                    <div class="p-2">
-                        <span class="text-secondary me-3">총 결제금액</span>
-                        <span class="fs-2 fw-bold">139,000</span>
+                    <!--총 결제금액-->
+                    <div class="d-flex flex-row-reverse">
+                        <div class="p-2">
+                            <span class="text-secondary me-3">총 결제금액</span>
+                            <span class="fs-2 fw-bold">139,000</span>
+                        </div>
                     </div>
-                </div>
-                <!--총 결제금액 end-->
+                    <!--총 결제금액 end-->
 
-                <!--장바구니, 구매하기 버튼-->
-                <div class="row my-4">
-                    <th:block th:if="${session.loginUser != null}">
-                        <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
-                    </th:block>
-                    <input type="hidden" name="productCode" th:value="${product.productCode}">
-                    <button class="btn col-6 text-center me-1 .btn-outline-*" style="color: #B68C68; border-color: #B68C68" type="button" name="to_cart">장바구니에 담기</button>
-                    <button class="btn col-6 text-center ms-1" style="background-color: #B68C68; color: white" type="button" name="buy">구매하기</button>
-                </div>
-                <!--장바구니, 구매하기 버튼 end-->
-
+                    <!--장바구니, 구매하기 버튼-->
+                    <div class="row my-4">
+                        <th:block th:if="${session.loginUser != null}">
+                            <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+                        </th:block>
+                        <input type="hidden" name="productCode" th:value="${product.productCode}">
+                        <div class="col-6 d-grid gap-2">
+                            <button class="btn text-center  .btn-outline-*" style="color: #B68C68; border-color: #B68C68; padding: 10px" type="button" name="to_cart">장바구니에 담기</button>
+                        </div>
+                        <div class="col-6 d-grid gap-2">
+                            <button class="btn  text-center " style="background-color: #B68C68; color: white; padding: 10px" type="button" name="buy">구매하기</button>
+                        </div>
+                    </div>
+                    <!--장바구니, 구매하기 버튼 end-->
+                </form>
             </div>
             <!--오른쪽 그리드 end-->
-
-
-
-
         </div>
         <!--전체 그리드 컨테이너 end-->
+        <hr style="margin: 40px 0 25px" />
+
+        <!--상품 상세정보 영역-->
+        <div class="container">
+            <!--전체 그리드 컨테이너-->
+            <div class="row">
+                <!--왼쪽 그리드-->
+                <div class="col-9">
+                    <!--탭-->
+                    <nav id="hanna">
+                        <div class="nav nav-tabs" id="nav-tab detail_tab" role="tablist">
+                            <button class="nav-link active" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab" type="button" role="tab" aria-controls="detail-tab" aria-selected="true">상품 상세정보</button>
+                            <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-tab" type="button" role="tab" aria-controls="review-tab" aria-selected="false">리뷰</button>
+                            <button class="nav-link" id="inquiry-tab" data-bs-toggle="tab" data-bs-target="#inquiry-tab" type="button" role="tab" aria-controls="inquiry-tab" aria-selected="false">문의</button>
+                            <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery-tab" type="button" role="tab" aria-controls="delivery-tab" aria-selected="false" >배송</button>
+                        </div>
+                    </nav>
+
+                    <div class="tab-content detail_tab" id="nav-tabContent">
+                        <!--상품 상세정보 영역-->
+                        <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
+                            <img class="img-fluid" th:src="@{'/img/product/HA00G01EEU_0.png'}" style="width: 100%;">
+                        </div>
+                        <!--상품 상세정보 영역 end-->
+
+                        <!--리뷰 영역-->
+                        <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab" tabindex="0">...</div>
+                        <!--리뷰 영역 end-->
+
+                        <!--문의 영역-->
+                        <div class="tab-pane fade" id="inquiry" role="tabpanel" aria-labelledby="inquiry-tab" tabindex="0">
+<!--                            <th:block th:insert="/product_inquiry/list.html"></th:block>-->
+                        </div>
+                        <!--문의 영역 end-->
+
+                        <!--배송역역 영역-->
+                        <div class="tab-pane fade" id="delivery" role="tabpanel" aria-labelledby="delivery-tab" tabindex="0">...</div>
+                        <!--배송역역 영역 end-->
+                    </div>
+                    <!--탭 end-->
+                </div>
+                <!--왼쪽 그리드 end-->
+
+                <!--오른쪽 그리드-->
+                <div class="col-3">
+                    dsdsadasd
+                </div>
+                <!--오른쪽 그리드 end-->
+
+            </div>
+            <!--전체 그리드 컨테이너 end-->
+        </div>
     </div>
+    <script th:inline="javascript">
+        const product_choose = document.forms["product_choose"];
+        const to_cart = product_choose["to_cart"];
+        const buy = product_choose["buy"];
+        const test = document.getElementById("detail-tab");
+        const test2 = document.querySelector("#hanna");
+        const test3 = test2.querySelectorAll("button");
+        console.log(test3);
+        console.log(test2);
+        console.log(test);
+
+        check_active = function(){
+            if( this.classList == 'active' ) console.log('active 클래스를 가지고 있습니다.');
+            else console.log('클래스가 없습니다.');
+        }
+        for(var i = 0; i < test3.length; ++i){
+            test3[i].addEventListener('click',check_active);
+        }
+
+
+        to_cart.onclick=(e)=>{
+            if (product_choose["optionCode"].value!==""
+                && product_choose["cnt"].value !== ""
+                && product_choose["cnt"].value > 0
+            ) {
+                product_choose.setAttribute("action", "/cart/user_yes/register.do");
+                alert(product_choose.action);
+                product_choose.submit();
+            } else {
+                alert("상품을 선택하고, 수량을 적어주세요.");
+            }
+        }
+        buy.onclick=(e)=>{
+            if (
+                product_choose["optionCode"].value!==""
+                && product_choose["cnt"].value !== ""
+                && product_choose["cnt"].value > 0
+            ) {
+                product_choose.action = "/order/user_yes/register.do";
+                product_choose.submit();
+            } else {
+                alert("상품을 선택하고, 수량을 적어주세요.");
+            }
+        }
+    </script>
 </div>
+<!--container end-->
 
 </div>
 </html>
