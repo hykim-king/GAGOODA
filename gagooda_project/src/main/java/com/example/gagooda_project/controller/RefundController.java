@@ -238,6 +238,7 @@ public class RefundController {
                 List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
                 int refundCount = refundServiceImp.countPageAll(searchFilter);
                 int allRfCnt = refundServiceImp.countAll();
+                log.info(refundList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
                 model.addAttribute("refundList", refundList);
                 model.addAttribute("rfCodeList", rfCodeList);
                 model.addAttribute("paging",paging);
