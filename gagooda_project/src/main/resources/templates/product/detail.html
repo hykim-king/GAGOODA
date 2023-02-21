@@ -163,10 +163,10 @@
                     <!--탭-->
                     <nav id="hanna">
                         <div class="nav nav-tabs" id="nav-tab detail_tab" role="tablist">
-                            <button class="nav-link active" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab" type="button" role="tab" aria-controls="detail-tab" aria-selected="true">상품 상세정보</button>
-                            <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-tab" type="button" role="tab" aria-controls="review-tab" aria-selected="false">리뷰</button>
-                            <button class="nav-link" id="inquiry-tab" data-bs-toggle="tab" data-bs-target="#inquiry-tab" type="button" role="tab" aria-controls="inquiry-tab" aria-selected="false">문의</button>
-                            <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery-tab" type="button" role="tab" aria-controls="delivery-tab" aria-selected="false" >배송</button>
+                            <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">상품 상세정보</button>
+                            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">리뷰</button>
+                            <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">문의</button>
+                            <button class="nav-link" id="nav-disabled-tab" data-bs-toggle="tab" data-bs-target="#nav-disabled" type="button" role="tab" aria-controls="nav-disabled" aria-selected="false">배송</button>
                         </div>
                     </nav>
 
@@ -209,22 +209,6 @@
         const product_choose = document.forms["product_choose"];
         const to_cart = product_choose["to_cart"];
         const buy = product_choose["buy"];
-        const test = document.getElementById("detail-tab");
-        const test2 = document.querySelector("#hanna");
-        const test3 = test2.querySelectorAll("button");
-        console.log(test3);
-        console.log(test2);
-        console.log(test);
-
-        check_active = function(){
-            if( this.classList == 'active' ) console.log('active 클래스를 가지고 있습니다.');
-            else console.log('클래스가 없습니다.');
-        }
-        for(var i = 0; i < test3.length; ++i){
-            test3[i].addEventListener('click',check_active);
-        }
-
-
         to_cart.onclick=(e)=>{
             if (product_choose["optionCode"].value!==""
                 && product_choose["cnt"].value !== ""
