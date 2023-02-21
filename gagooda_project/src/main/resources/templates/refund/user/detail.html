@@ -31,7 +31,11 @@
     <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>
     <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>
     <li >주소 : <span th:text=" ${'('+refund.postCode+') '+refund.address } "></span><span th:text="${refund.addressDetail}"></span></li>
-    <li>첨부 이미지 <span th:text="${refund.imgCode}"></span></li>
+    <li th:if="${refund.imageList} != null">첨부 이미지
+        <th:block th:each="img:${refund.imageList}">
+            <img th:src="@{'/img/refund/{imgPath}' (imgPath=${img.imgPath}) }" alt="refundRequestImg" style="width: 400px; height: 400px; object-fit: cover;">
+        </th:block>
+    </li>
 </ul>
 
 <h3>환불 처리 정보</h3>
@@ -44,10 +48,11 @@
     </li>
 </ul>
 <th:block th:if="${refund.rfDet.equals('rf0')}">
-    <form th:action="@{'/refund/user_yes/mypage/modify.do/{refundId}' (refundId = ${refund.refundId})}" method="post">
+    <form th:action="@{'/refund/user_yes/mypage/{refundId}/modify.do' (refundId = ${refund.refundId})}" method="post">
         <button type="submit" >환불 요청 취소</button>
     </form>
 </th:block>
+    <a th:href="@{'/refund/user_yes/mypage/list.do'}">목록으로</a>
 
 </div>
 </html>

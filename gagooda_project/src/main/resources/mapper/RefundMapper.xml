@@ -17,23 +17,25 @@
         <result column="img_code" property="imgCode"/>
         <result column="rf_det" property="rfDet"/>
         <result column="rfr_det" property="rfrDet"/>
+        <result column="re_type" property="reType"/>
         <association property="orderDto"
                      column="order_id"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      fetchType="lazy"/>
-        <association property="addressDto"
-                     column="address_id"
-                     select="com.example.gagooda_project.mapper.AddressMapper.findById"
-                     fetchType="lazy"/>
         <association property="orderDetailDto"
                      column="order_detail_Id"
-                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findById"/>
+                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findById"
+                     fetchType="lazy"/>
+        <collection property="imageList"
+                    column="img_code"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    fetchType="lazy"/>
     </resultMap>
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="refundId">
         INSERT INTO refund (user_id, uname, email, phone, order_detail_id, order_id, address_id, cancel_amount, reason,
-                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
+                    post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det, re_type)
                 VALUES (#{userId}, #{uname}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cancelAmount}, #{reason}, #{postCode},
-                    #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
+                    #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet}, #{reType})
     </insert>
     <update id="updateOne">
         UPDATE refund SET
@@ -41,9 +43,6 @@
             <if test="auth.equals('user')">rf_det = "rf1", mod_date=NOW() WHERE refund_id = #{refund.refundId}</if>
 
     </update>
-    <select id="countByOrderId" resultType="int">
-        SELECT COUNT(*) FROM refund WHERE order_id = #{orderId}
-    </select>
     <select id="pageByUserIdAndDate" resultMap="refundMap">
         SELECT * FROM refund WHERE user_id = #{userId}
             <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
@@ -62,7 +61,26 @@
             <if test="period != null">
                 AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
             </if>
-        ORDER BY reg_date DESC
+        ORDER BY reg_date DESC LIMIT #{paging.startRow},#{paging.rows}
+    </select>
+    <select id="countByUserIdAndDate" resultType="int">
+        SELECT COUNT(*) FROM refund WHERE user_id = #{userId}
+        <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
+            AND reg_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="startDate != null and endDate != null and startDate.equals(endDate)">
+            AND reg_date LIKE #{startDate}
+        </if>
+        <if test="detCode != null and 'end'.equals(detCode)">
+            AND rf_det IN ('rf1','rf7','rf8')
+        </if>
+        <if test="detCode != null and 'notEnd'.equals(detCode)">
+            AND rf_det NOT IN ('rf1','rf7','rf8')
+        </if>
+        <if test="detCode != null and 'all'.equals(detCode)"/>
+        <if test="period != null">
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+        </if>
     </select>
     <select id="findById" resultMap="refundMap">
         SELECT * FROM refund WHERE refund_id = #{id}
@@ -80,10 +98,30 @@
                 AND rf_det in (${rfDet})
             </if>
          </where>
-        ORDER BY reg_date DESC
+        ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
-    <select id="countByUserId" resultType="java.lang.Integer">
-        SELECT count(*) FROM refund WHERE user_id = #{userId}
+    <select id="countByOrderId" resultType="int">
+        SELECT COUNT(*) FROM refund WHERE order_id = #{orderId}
+    </select>
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM refund
+    </select>
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*) FROM refund WHERE user_id = #{userId}
+    </select>
+    <select id="countPageAll" resultType="java.lang.Integer" parameterType="hashmap">
+        SELECT COUNT(*) FROM refund
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != ''">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="rfDet != ''">
+                AND rf_det in (${rfDet})
+            </if>
+        </where>
     </select>
     <select id="findByOrderDetailId" resultMap="refundMap">
         SELECT * FROM refund WHERE order_detail_id = #{orderDetailId}
