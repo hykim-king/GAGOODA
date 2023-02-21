@@ -15,4 +15,5 @@ public interface CategoryMapper {
     int insertOne(CategoryDto categoryDto);
 
     List<CategoryDto> listByLevel(int lvl);
+    List<CategoryDto> listAll();
 }

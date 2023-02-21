@@ -36,12 +36,12 @@ public class PagingDto {
     }
 
     public void setQueryString(Map<String, String[]> queryMap) {
-        String queryString= "";
+        StringBuilder queryString= new StringBuilder();
         String and="?";
         for (String name :queryMap.keySet()){
             if(!name.equals("page")){
                 for (String val : queryMap.get(name)){
-                    queryString+=and+name+"="+val;
+                    queryString.append(and).append(name).append("=").append(val);
                     and="&";
                 }
             }

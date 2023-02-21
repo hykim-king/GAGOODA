@@ -5,6 +5,7 @@ import com.example.gagooda_project.dto.ProductDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ProductMapper {
@@ -15,8 +16,8 @@ public interface ProductMapper {
     int deleteById(String productCode);
 
     int count(PagingDto paging);
-    int countForCategory(PagingDto paging, String categoryId);
-    List<ProductDto> pageForCategory(PagingDto paging, String categoryId);
+    int countForPaging(PagingDto paging, Map<String, Object> map);
+    List<ProductDto> pageForPaging(PagingDto paging, Map<String, Object> map);
     List<ProductDto> pageAll(PagingDto paging);
 //    List<ProductDto> pageAll();
 }

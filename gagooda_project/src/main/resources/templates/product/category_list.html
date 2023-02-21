@@ -8,15 +8,15 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-<th:block th:each="categoryConn:${categoryConnList}">
-    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${categoryConn.product.getProductCode()})}">
+<th:block th:each="product:${productList}">
+    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}">
         <div>
-            <img th:src="@{'/img/product/{file}'(file=${categoryConn.product.getImgCode()+'_0.png'})}"
+            <img th:src="@{'/img/product/{file}'(file=${product.imageList[0].imgPath})}"
                  style="width: 200px; height: 200px; object-fit: cover;">
         </div>
-        <p th:text="${categoryConn.product.getProductCode()}"></p>
-        <p th:text="${categoryConn.product.getPname()}"></p>
-        <p th:text="${categoryConn.product.getSalesPc()}"></p>
+        <p th:text="${product.getProductCode()}"></p>
+        <p th:text="${product.getPname()}"></p>
+        <p th:text="${product.getSalesPc()}"></p>
     </a>
 </th:block>
 </div>

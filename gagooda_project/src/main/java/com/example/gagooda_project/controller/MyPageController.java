@@ -5,6 +5,7 @@ import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.ODetDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.mapper.CartMapper;
+import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.OrderDetailMapper;
 import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.CartServiceImp;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/mypage")
@@ -39,6 +42,7 @@ public class MyPageController {
             List<CartDto> cartList = myPageService.listByUserId(loginUser.getUserId());
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
+
             model.addAttribute("cartList", cartList);
             model.addAttribute("oDetList", oDetList);
             model.addAttribute("myPageDetList",myPageDetList);
