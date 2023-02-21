@@ -19,7 +19,7 @@ class CategoryMapperTest {
 
     @Test
     void listByParentId() {
-        categoryMapper.listByParentId(1);
+        System.out.println(categoryMapper.listByParentId(1));
     }
 
     @Test
