@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.CategoryDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.service.CategoryService;
 import com.example.gagooda_project.service.ProductInquiryService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -28,7 +30,14 @@ public class MainController {
     public String main(HttpServletRequest req,
                        Model model){
         try{
-
+            PagingDto recentPaging = new PagingDto();
+            // 보여줄 상품의 개수
+            recentPaging.setRows(10);
+            // 정렬 기준
+            recentPaging.setOrderField("mod_date");
+            // 정렬 방향
+            recentPaging.setDirect("DESC");
+            List<ProductDto> recentProduct = productService.pagingProduct(recentPaging, new HashMap<>());
         } catch (Exception e){
             e.printStackTrace();
         }

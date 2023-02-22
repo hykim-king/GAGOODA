@@ -1,35 +1,26 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/mypageLayout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<div layout:fragment="myPageContent">
-    <form action="/product_inquiry/list.do">
-        <h2 th:text="${succMsg}"></h2>
-        <h4>문의수</h4><h4 th:text="${count}"></h4>
-        <ul>
-            <li th:each="p:${plist}">
-                <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
-                <p th:text="${p.getPInquiryId()}">문의ID</p>
-                <p th:text="${p.getUser().getUname()}">사용자이름</p>
-                <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
-                <p th:text="${p.getRegDate()}">문의작성일</p>
-                <p th:text="${p.getTitle()}">문의제목</p>
-                <p th:text="${p.getContent()}">문의내용</p>
-                <th:block th:if="${p.getReply() == null}">
-
-                </th:block>
-                <th:block th:if="${p.getReply() != null}">
-                    <p th:text="${p.getReply()}">답글</p>
-                    <p th:text="${p.getReplyDate()}">답글작성일</p>
-                </th:block>
-                <a th:href="@{'/product_inquiry/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">삭제</a>
-            </li>
-        </ul>
-    </form>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<h2 th:text="${msg}"></h2>
+<h4>문의수</h4><h4 th:text="${plist.size()}"></h4>
+<div>
+    <span th:if="${plist.isEmpty()}">해당 상품에는 문의가 없습니다.</span>
+    <ul th:unless="${plist.isEmpty()}">
+        <li th:each="p:${plist}">
+            <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
+            <p th:text="${p.getPInquiryId()}">문의ID</p>
+            <p th:text="${p.getUser().getUname()}">사용자이름</p>
+            <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
+            <p th:text="${p.getRegDate()}">문의작성일</p>
+            <p th:text="${p.getTitle()}">문의제목</p>
+            <p th:text="${p.getContent()}">문의내용</p>
+            <th:block th:if="${p.getReply() != null}">
+                <p th:text="${p.getReply()}">답글</p>
+                <p th:text="${p.getReplyDate()}">답글작성일</p>
+            </th:block>
+            <button type="button"
+                    th:onclick=|removePInquiryWindow(${p.PInquiryId})|
+                    th:if="${session.loginUser != null and session.loginUser.userId == p.userId}">삭제</button>
+        </li>
+    </ul>
 </div>
 </html>

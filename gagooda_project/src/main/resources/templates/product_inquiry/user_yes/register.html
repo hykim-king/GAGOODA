@@ -1,18 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
-<div layout:fragment="content">
-    <form th:action="@{'/product_inquiry/user_yes/{productCode}/register.do'(productCode=${productCode})}" method="post">
+      xmlns:th="http://www.thymeleaf.org">
+    <form action="/product_inquiry/user_yes/register.do" method="post" name="pInquiryForm" class="displayNone">
         <h2 class="text-center mb-5">상품 문의하기</h2>
         <div class="mx-auto" style="width: 50%">
-            <div>
-                <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
-            </div>
-            <div>
-                <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
-            </div>
+            <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
+            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
             <div class="mb-3">
                 <select name="piDet" id="piDet" class="form-select" required aria-label="select example">
                     <option value="">문의 유형</option>
@@ -25,7 +18,7 @@
             <div class="mb-3">
                 <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
                     <option value="">상품 옵션</option>
-                        <th:block th:each="optionProduct:${optionProductList}">
+                        <th:block th:each="optionProduct:${product.optionProductList}">
                             <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
                         </th:block>
                 </select>
@@ -40,7 +33,7 @@
                 <textarea class="form-control" name="content" id="content" rows="3" required></textarea>
             </div>
             <div class="mb-3">
-                <input class="form-check-input secret" type="checkbox" name="secret" value="true" id="secret" checked>
+                <input class="form-check-input secret" type="checkbox" name="secret" id="secret">
                 <label class="form-check-label" for="secret">비밀글</label>
             </div>
             <div class="d-grid gap-2">
@@ -49,13 +42,4 @@
         </div>
     </form>
 </div>
-<script>
-    $("#secret").click(function (){
-       if ($(".secret").is(":checked")){
-           $("#secret").val(true);
-       } else {
-           $("#secret").val(false);
-       }
-    });
-</script>
 </html>

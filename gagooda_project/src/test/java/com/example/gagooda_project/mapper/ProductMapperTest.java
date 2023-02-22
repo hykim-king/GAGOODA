@@ -31,7 +31,11 @@ class ProductMapperTest {
         paging.setOrderField("mod_date");
 
         Map<String, Object> map = new HashMap<>();
-        map.put("categoryId", "51");
+        List<String> categoryIdList = new ArrayList<>();
+        categoryIdList.add("51");
+        categoryIdList.add("611");
+        map.put("categoryIdList", categoryIdList);
+
         List<String> catDetList = new ArrayList<>();
         catDetList.add("p0");
         catDetList.add("p1");
