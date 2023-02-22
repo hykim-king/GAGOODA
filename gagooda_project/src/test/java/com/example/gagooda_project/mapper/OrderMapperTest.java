@@ -81,6 +81,12 @@ class OrderMapperTest {
     @Test
     void countByUserIdAndStatus() {
         orderMapper.countByUserIdAndStatus(2);
-//        orderMapper.countByUserIdAndStatus(2,"o2");
+
+    }
+
+    @Test
+    void deleteByStatus(){
+        String oDet = "o6";
+        orderMapper.deleteByStatus(oDet);
     }
 }

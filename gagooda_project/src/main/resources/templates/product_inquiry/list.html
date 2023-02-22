@@ -1,35 +1,60 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/mypageLayout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<div layout:fragment="myPageContent">
-    <form action="/product_inquiry/list.do">
-        <h2 th:text="${succMsg}"></h2>
-        <h4>문의수</h4><h4 th:text="${count}"></h4>
-        <ul>
-            <li th:each="p:${plist}">
-                <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
-                <p th:text="${p.getPInquiryId()}">문의ID</p>
-                <p th:text="${p.getUser().getUname()}">사용자이름</p>
-                <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
-                <p th:text="${p.getRegDate()}">문의작성일</p>
-                <p th:text="${p.getTitle()}">문의제목</p>
-                <p th:text="${p.getContent()}">문의내용</p>
-                <th:block th:if="${p.getReply() == null}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<h2 th:text="${msg}"></h2>
+<h4>문의수</h4><h4 th:text="${plist.size()}"></h4>
+<div>
+    <span th:if="${plist.isEmpty()}">해당 상품에는 문의가 없습니다.</span>
+    <ul th:unless="${plist.isEmpty()}">
+        <li th:each="p:${plist}">
+            <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
+            <p th:text="${p.getPInquiryId()}">문의ID</p>
+            <p th:text="${p.getUser().getUname()}">사용자이름</p>
+            <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
+            <p th:text="${p.getRegDate()}">문의작성일</p>
+            <p th:text="${p.getTitle()}">문의제목</p>
+            <p th:text="${p.getContent()}">문의내용</p>
+            <th:block th:if="${p.getReply() != null}">
+                <p th:text="${p.getReply()}">답글</p>
+                <p th:text="${p.getReplyDate()}">답글작성일</p>
+            </th:block>
+            <button type="button"
+                    th:onclick=|removePInquiryWindow(${p.PInquiryId})|
+                    th:if="${session.loginUser != null and session.loginUser.userId == p.userId}">삭제</button>
+        </li>
+    </ul>
+    <!--페이지네이션-->
+    <!--
+    <nav aria-label="Page navigation example" class="pt-3">
+        <ul class="pagination d-flex justify-content-center">
+            <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
+                <a class="page-link text-black-50" aria-label="Previous" th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span aria-hidden="true">&laquo;</span></a>
+            </li>
+            <th:block th:if="${paging.startPage>1}">
+                <li class="page-item">
+                    <a class="page-link"  th:href="@{${paging.queryString}(page=1)}">1</a>
+                </li>
+                <li class="page-link"><span>...</span></li>
+            </th:block>
 
-                </th:block>
-                <th:block th:if="${p.getReply() != null}">
-                    <p th:text="${p.getReply()}">답글</p>
-                    <p th:text="${p.getReplyDate()}">답글작성일</p>
-                </th:block>
-                <a th:href="@{'/product_inquiry/delete.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">삭제</a>
+            <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                th:classappend="${(i==paging.page)?'disaled':''}">
+                <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
+                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
+            </li>
+            <th:block th:if="${paging.endPage<paging.totalPages}">
+                <li class="page-item"><span>...</span></li>
+                <li>
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                       th:text="${paging.totalPages}"></a>
+                </li>
+            </th:block>
+
+            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}" aria-label="Next" ><span aria-hidden="true">&raquo;</span></a>
             </li>
         </ul>
-    </form>
+    </nav>
+    -->
+    <!--페이지네이션end-->
 </div>
 </html>

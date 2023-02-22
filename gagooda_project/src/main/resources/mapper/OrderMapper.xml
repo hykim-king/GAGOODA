@@ -22,11 +22,13 @@
                     fetchType="lazy"/>
 
     </resultMap>
-
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
         <id column="o_det" property="oDet"/>
         <id column="cnt" property="count"/>
     </resultMap>
+    <delete id="deleteByStatus">
+        DELETE FROM order_db WHERE o_det=#{oDet};
+    </delete>
     <select id="listAll" resultMap="orderMap">
         SELECT * FROM order_db
     </select>
@@ -45,7 +47,6 @@
     <select id="countByNotStatus" resultType="int">
         SELECT COUNT(*) FROM order_db WHERE user_id=#{userId} AND NOT o_det=#{oDet}
     </select>
-
     <select id="listByStatus" resultMap="orderMap">
         SELECT * FROM order_db WHERE o_det=#{oDet}
     </select>
@@ -61,6 +62,41 @@
     <select id="count" resultType="java.lang.Integer" >
         SELECT COUNT(*) FROM order_db WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
     </select>
+    <select id="pageAdminAll" resultMap="orderMap" parameterType="hashmap">
+        SELECT * FROM order_db
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="oDet != ''">
+                AND o_det in (${oDet})
+            </if>
+        </where>
+        ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
+    </select>
+    <select id="countPageAll" resultType="java.lang.Integer" parameterType="hashmap">
+        SELECT COUNT(*) FROM order_db
+        <where>
+            <if test="searchDiv != '' and searchWord != '' ">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="oDet != ''">
+                AND o_det in (${oDet})
+            </if>
+        </where>
+    </select>
     <insert id="insertOne">
         INSERT INTO order_db (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path)
         VALUES (#{orderId}, #{userId}, #{addressId}, #{totalPrice}, #{userName}, #{userEmail}, #{userPhone}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgPath})
@@ -68,6 +104,4 @@
     <update id="updateStatus">
         UPDATE order_db SET o_det=#{oDet} WHERE order_id=#{id}
     </update>
-
-
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ class ProductInquiryServiceImpTest {
 
     @Test
     void showInquiries() {
-        System.out.println(productInquiryService.showInquiries("HA10C15EE"));
+        PagingDto paging = new PagingDto();
+        paging.setOrderField("reply_date");
+        System.out.println(productInquiryService.showInquiries("HA10C15EE", paging));
     }
 
     @Test

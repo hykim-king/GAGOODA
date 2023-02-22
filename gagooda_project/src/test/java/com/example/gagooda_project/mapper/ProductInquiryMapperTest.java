@@ -1,5 +1,6 @@
 package com.example.gagooda_project.mapper;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ class ProductInquiryMapperTest {
 
     @Test
     void listByProductCode() {
-        productInquiryMapper.listByProductCode("PDT001");
+        PagingDto paging = new PagingDto();
+        paging.setOrderField("reply_date");
+        productInquiryMapper.listByProductCode("PDT001", paging);
     }
 
     @Test
@@ -62,7 +65,9 @@ class ProductInquiryMapperTest {
 
     @Test
     void countByPInquiryId() {
-        productInquiryMapper.countByPInquiryId("HA10C15EE");
+        PagingDto paging = new PagingDto();
+        paging.setOrderField("reply_date");
+        productInquiryMapper.countByPInquiryId("HA10C15EE", paging);
     }
 
     @Test

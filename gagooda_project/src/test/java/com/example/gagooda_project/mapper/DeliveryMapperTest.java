@@ -36,8 +36,5 @@ class DeliveryMapperTest {
 //        System.out.println(check);
     }
 
-    @Test
-    void findById() {
-//        DeliveryDto delivery = deliveryMapper.findById(1);
-    }
+
 }

@@ -8,37 +8,66 @@
     <title>Title</title>
 </head>
 <div layout:fragment="myPageContent">
-    <h1>마이페이지 메인</h1>
-    <h3>진행 중인 주문</h3>
-    <th:block th:each="det:${myPageDetList}">
-        <span th:text="${det.detName}"></span>
-        <span th:text="${count.get(det.detCode)}"></span>
-    </th:block>
-    <h3>최근 주문 정보</h3>
+    <h1>마이페이지</h1>
+    <h3 class="mt-4">진행 중인 주문</h3>
+    <hr style="margin-top: 0; background : #b68c68; height: 5px">
+    <div class="d-flex" style="justify-content: space-evenly">
+        <th:block th:each="det:${myPageDetList}">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <span th:text="${det.detName}"></span>
+                <div style="background-color: #ddd; margin: 10px 0; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center;" >
+                    <div style="font-size: x-large; color: #ffffff; font-weight: bold" th:text="${count.get(det.detCode)}"></div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <div class="d-flex mt-4" style="align-items: center; justify-content: space-between">
+        <div class="d-flex" style="align-items: center">
+            <h3>최근 주문 정보</h3>
+            <span style="color: #949494; margin-left: 30px">최근 30일 내에 주문 정보입니다.</span>
+        </div>
+        <span><a href="#" style="text-decoration: none; color: #000">+ 더보기</a></span>
+    </div>
+    <hr style="margin-top: 0; background : #B68C68; height: 5px">
     <table class="table">
         <thead>
             <th scope="col">주문번호</th>
             <th scope="col">주문날짜</th>
-            <th scope="col">결제금액</th>
+            <th scope="col">총 결제금액</th>
         </thead>
         <tbody>
             <tr th:each="order:${orderList}">
                 <td th:text="${order.orderId}"></td>
                 <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${order.totalPrice}+'원'"></td>
+                <td th:text="${order.totalPrice} + '원'"></td>
             </tr>
         </tbody>
     </table>
-    <th:block th:if="${orderList == null or orderList.isEmpty()}">
-        <p th:text="'주문 내역이 없습니다.'"></p>
-    </th:block>
-    <h3>장바구니</h3>
-    <th:block th:each="cart:${cartList}">
-        <span th:text="${cart.optionProduct.opname}"></span>
-        <span th:text="${cart.optionProduct.price}"></span>
-    </th:block>
-    <th:block th:if="${cartList == null or cartList.isEmpty()}">
-        <p th:text="'장바구니 내역이 없습니다.'"></p>
-    </th:block>
+    <div class="d-flex" style="justify-content: center">
+        <th:block th:if="${orderList == null or orderList.isEmpty()}">
+            <p th:text="'주문 내역이 없습니다.'"></p>
+        </th:block>
+    </div>
+    <div class="d-flex mt-4" style="justify-content: space-between; align-items: center">
+        <h3>장바구니</h3>
+        <span><a href="#" style="text-decoration: none; color: #000">+ 더보기</a></span>
+    </div>
+    <hr style="margin-top: 0; background : #B68C68; height: 5px">
+    <div class="d-flex" style="justify-content: space-around">
+        <th:block th:each="cart:${cartList}">
+            <div>
+                <img th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
+                <div style="display: flex; justify-content: space-between; margin: 0 10px;">
+                    <span th:text="${cart.optionProduct.opname}"></span>
+                    <span th:text="${cart.optionProduct.price} + '원'"></span>
+                </div>
+            </div>
+        </th:block>
+    </div>
+    <div class="d-flex" style="justify-content: center">
+        <th:block th:if="${cartList == null or cartList.isEmpty()}">
+            <p th:text="'장바구니 내역이 없습니다.'"></p>
+        </th:block>
+    </div>
 </div>
 </html>

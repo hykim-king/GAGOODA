@@ -35,8 +35,9 @@
     <delete id="deleteById">
         DELETE FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </delete>
-    <select id="listByProductCode" resultMap="productInquiryMap">
-        SELECT * FROM product_inquiry WHERE product_code=#{productCode}
+    <select id="listByProductCode" resultMap="productInquiryMap" parameterType="pagingDto">
+        SELECT * FROM product_inquiry WHERE product_code=#{productCode} ORDER BY ${orderField} ${direct}
+        LIMIT #{startRow}, #{rows}
     </select>
     <select id="listAll" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry
@@ -44,8 +45,8 @@
     <select id="findById" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </select>
-    <select id="countByPInquiryId" resultType="java.lang.Integer">
-        SELECT COUNT(p_inquiry_id) FROM product_inquiry WHERE product_code=#{productCode}
+    <select id="countByPInquiryId" resultType="java.lang.Integer" parameterType="PagingDto">
+        SELECT COUNT(*) FROM product_inquiry WHERE product_code=#{productCode}
     </select>
     <select id="pageAll" resultMap="productInquiryMap" parameterType="pagingDto" >
         SELECT * FROM product_inquiry
@@ -54,5 +55,8 @@
     </select>
     <select id="count" resultType="java.lang.Integer" parameterType="PagingDto">
         SELECT COUNT(*) FROM product_inquiry
+    </select>
+    <select id="listByProductCodeAll" resultMap="productInquiryMap">
+        SELECT * FROM product_inquiry WHERE product_code=#{productCode}
     </select>
 </mapper>

@@ -5,7 +5,10 @@ import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrderServiceImp implements OrderService {
@@ -14,16 +17,19 @@ public class OrderServiceImp implements OrderService {
     private DeliveryMapper deliveryMapper;
     private CartMapper cartMapper;
     private AddressMapper addressMapper;
+    private CommonCodeMapper commonCodeMapper;
     public OrderServiceImp(OrderMapper orderMapper,
                            OrderDetailMapper orderDetailMapper,
                            DeliveryMapper deliveryMapper,
                            CartMapper cartMapper,
-                           AddressMapper addressMapper){
+                           AddressMapper addressMapper,
+                           CommonCodeMapper commonCodeMapper){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
         this.deliveryMapper = deliveryMapper;
         this.cartMapper = cartMapper;
         this.addressMapper = addressMapper;
+        this.commonCodeMapper = commonCodeMapper;
     }
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId,int dates) {
@@ -57,7 +63,7 @@ public class OrderServiceImp implements OrderService {
             }
         }
        if(delivery != null){
-//           register += deliveryMapper.insertOne(delivery);
+           register += deliveryMapper.insertOne(delivery);
            for(String cartNum: cartList){
                int cartId = Integer.parseInt(cartNum);
                delete += cartMapper.deleteById(cartId);
@@ -93,5 +99,44 @@ public class OrderServiceImp implements OrderService {
     @Override
     public int modifyOne(String orderId, String oDet) {
         return orderMapper.updateStatus(orderId,oDet);
+    }
+
+    @Override
+    public List<CommonCodeDto> showDetCodeList(String mstCode) {
+        return commonCodeMapper.listByMstCode(mstCode);
+    }
+
+    @Override
+    public List<OrderDto> showOrderList(Map<String, Object> searchFilter) {
+        if(!searchFilter.get("oDet").equals("")){
+            String oDet = searchFilter.get("oDet").toString();
+            List<String> oList = new ArrayList<>(Arrays.asList(oDet.split(",")));
+            String oDetF = "'"+String.join("','", oList)+"'";
+            System.out.println("oDetF: "+oDetF);
+            searchFilter.put("rfDet", oDetF);
+        }
+        if(!searchFilter.get("searchWord").equals("")){
+            String keyword = "%"+searchFilter.get("searchWord")+"%";
+            searchFilter.put("searchWord", keyword);
+        }
+        if(searchFilter.get("startDate").equals(searchFilter.get("endDate"))){
+            String equalsDate = searchFilter.get("startDate").toString() + "%";
+            searchFilter.put("startDate", equalsDate);
+            searchFilter.put("endDate", equalsDate);
+        }
+        PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
+        int totalRows = orderMapper.countPageAll(searchFilter);
+        pagingDto.setRows(10);
+        pagingDto.setTotalRows(totalRows);
+        if (pagingDto.getOrderField() == null){
+            pagingDto.setOrderField("reg_date");
+        }
+        searchFilter.put("paging",pagingDto);
+        return orderMapper.pageAdminAll(searchFilter);
+    }
+
+    @Override
+    public int countPageAll(Map<String, Object> searchFilter) {
+        return orderMapper.countPageAll(searchFilter);
     }
 }

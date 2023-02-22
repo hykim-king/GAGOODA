@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @RequestMapping("/order")
@@ -33,9 +31,49 @@ public class OrderController {
     }
 
     @GetMapping("/admin/list.do")
-    public String adminList(@SessionAttribute UserDto loginUser){
-        return null;
+    public String adminList(@SessionAttribute UserDto loginUser,
+                            PagingDto paging,
+                            HttpServletRequest req,
+                            @RequestParam(name = "oDet", required = false, defaultValue = "") String oDet,
+                            @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
+                            @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
+                            @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
+                            @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
+                            Model model){
+
+        log.info("req.getParameterMap:"+req.getParameterMap());
+        try{
+            if (loginUser.getGDet().equals("g1")){
+                Map<String, Object> searchFilter = new HashMap<>();
+                paging.setQueryString(req.getParameterMap());
+                searchFilter.put("oDet",oDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
+                searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
+                searchFilter.put("paging", paging);
+                log.info("searchFilter: "+searchFilter);
+                List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+                List<OrderDto> orderList = orderService.showOrderList(searchFilter);
+                int oCount = orderService.countPageAll(searchFilter);
+                log.info("oCount: "+ oCount);
+//                int allRfCnt = refundServiceImp.countAll();
+                log.info("orderList:"+ orderList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
+                model.addAttribute("orderList", orderList);
+                model.addAttribute("oCodeList", oCodeList);
+                model.addAttribute("paging",paging);
+                model.addAttribute("oCount", oCount);
+//                model.addAttribute("allCount",allRfCnt);
+                return "order/admin/list";
+            }
+            else{
+                return "/index";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "refund/admin/list";
     }
+
+
 
 //    사용자 주문 목록
     @GetMapping("/user_yes/mypage/list.do")
@@ -51,8 +89,10 @@ public class OrderController {
         try{
             paging.setQueryString(req.getParameterMap());
             orderList = orderService.orderList(paging, loginUser.getUserId(), dates);
+            List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
             model.addAttribute("orderList",orderList);
             model.addAttribute("paging",paging);
+            model.addAttribute("oCodeList",oCodeList);
             log.info("paging.toString(): "+paging.toString());
         }catch(Exception e){
             log.error(e.getMessage());
@@ -193,7 +233,7 @@ public class OrderController {
                 }
                 delivery = new DeliveryDto();
                 delivery.setRequest(request);
-                delivery.setOrderId(order.getOrderId());
+//                delivery.setOrderId(order.getOrderId());
 //                delivery.setUserId(order.getUserId());
 //                delivery.setUserName(order.getUserName());
 //                delivery.setUserEmail(order.getUserEmail());
