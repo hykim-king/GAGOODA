@@ -9,7 +9,8 @@
 </head>
 <div layout:fragment="content">
     <!--주문 form -->
-    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do" method="post" >
+    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"
+          method="post" onsubmit="return validateForm();">
         <!--주문 번호 생성-->
         <div>
             <label for="orderId"></label>
@@ -153,7 +154,7 @@
         <input type="hidden" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
                id="imgPath" placeholder="imgPath" readonly>
         <!--대표 주문 사진 정하기 end----------------------------->
-        <button type="submit" onclick="return validate(this);">제출</button>
+        <button type="submit">제출</button>
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
@@ -180,32 +181,20 @@
             currentAddressList[6].value = addressMap.get("elevator");
         }
 
-        const orderForm = document.forms["orderRegisterForm"]
-        const postCode = orderForm.postCode.innerText;
-        const address = orderForm["address"].value[1];
-        const addressDetail = orderForm["addressDetail"].value[1];
-        const receiverName = orderForm["receiverName"].value[1];
-        const receiverPhone = orderForm["receiverPhone"].value[1];
-        const elevator = orderForm["elevator"].value[1];
-
-        console.log(postCode)
-        console.log(address)
-        console.log(addressDetail)
-        console.log(receiverName)
-        console.log(receiverPhone)
-        console.log(elevator)
-
-        function validate(e){
-            e.preventDefault();
-            console.log("submit 버튼 눌림")
-            for(let addre of currentAddressList){
-                if(addre.value === ""){
-                    alert("배송지를 선택해주세요.")
-                    return false;
-                }
+        function validateForm(){
+            const orderForm = document.forms["orderRegisterForm"]
+            let postCode = orderForm["postCode"].value;
+            if(postCode == ""){
+                alert("배송지를 선택해 주세요.")
+                return false;
+            }else{
+                return confirm("상품들을 결제하시겠습니까?")
             }
-            return confirm("상품을 주문하시겠습니까?");
         }
+
+
+
+
 
     </script>
 

@@ -91,13 +91,16 @@
             <div>
                 <span id="request" th:text="${delivery.request}"></span>
             </div>
-
         </div>
     </fieldset>
     <!--배달 요청 정보 end--------------------------------------------------->
     <button th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
-    <button th:onclick="location.href=[[@{'/order/user_yes/mypage/{orderId}/modify.do' (orderId=${order.orderId})}]]">주문 취소 요청</button>
+    <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
+        <button th:onclick="location.href=[[@{'/order/user_yes/mypage/{orderId}/modify.do' (orderId=${order.orderId})}]]">주문 취소 요청</button>
+    </th:block>
+    <script>
 
+    </script>
 
 </div>
 </html>
