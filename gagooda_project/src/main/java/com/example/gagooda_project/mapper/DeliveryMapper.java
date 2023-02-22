@@ -12,6 +12,7 @@ public interface DeliveryMapper {
     int updateOne(DeliveryDto dto);
     DeliveryDto findByOrderId(String orderId);
     List<DeliveryDto> listAll(Map<String, Object> searchFilter); // 관리자 입장 다 뽑아보기
+    int countListAll(Map<String, Object> searchFilter);
     int deleteOne(String orderId);
     int insertOne(DeliveryDto delivery);
 }

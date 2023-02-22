@@ -1,7 +1,8 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.CommonCodeDto;
 import com.example.gagooda_project.dto.DeliveryDto;
-import com.example.gagooda_project.dto.OrderDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.DeliveryMapper;
 import com.example.gagooda_project.mapper.OrderMapper;
@@ -60,12 +61,25 @@ public class DeliveryServiceImp implements DeliveryService{
             searchFilter.put("startDate", equalDate);
             searchFilter.put("endDate", equalDate);
         }
+        PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
+        int totalRows = deliveryMapper.countListAll(searchFilter);
+        pagingDto.setRows(10);
+        pagingDto.setTotalPages(totalRows);
+        if (pagingDto.getOrderField()==null) {
+            pagingDto.setOrderField("reg_date");
+        }
+        searchFilter.put("paging",pagingDto);
         return deliveryMapper.listAll(searchFilter);
     }
+    @Override
+    public int countListAll(Map<String,Object> searchFilter){ return deliveryMapper.countListAll(searchFilter);}
 
     @Override
     public int removeOne(String orderId) {
         return deliveryMapper.deleteOne(orderId);
     }
+
+    @Override
+    public List<CommonCodeDto> showDetCodeList(String mstCode){ return commonCodeMapper.listByMstCode(mstCode); }
 
 }
