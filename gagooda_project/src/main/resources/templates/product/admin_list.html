@@ -11,38 +11,57 @@
     <form action="/product/admin/product_list.do">
         <fieldset>
             <legend>상품 검색</legend>
-            <input type="text" name="searchWord">
+            <input type="text" name="searchWord" th:value="${searchWord}">
             <button type="submit">검색</button>
         </fieldset>
-        <fieldset>
-            <legend>카테고리</legend>
-            <select name="categoryId" id="categoryId">
-                <option value="" selected th:if="${categoryId.isBlank()}">전체</option>
-                <option value="" th:unless="${categoryId.isBlank()}">전체</option>
-                <th:block th:each="category : ${categoryList}">
-                    <th:block th:if="${category.categoryId.equals(categoryId)}">
-                        <option th:value="${category.categoryId}" selected
-                                th:text="'('+${category.categoryId}+') '+${category.cname}"></option>
+        <fieldset id="categoryCheck">
+            <div>
+                <h3>대분류</h3>
+                <div>
+                    <th:block th:each="category:${levelOne}">
+                        <input type="checkbox" name="categoryId" th:id="${category.key}" th:value="${category.key}">
+                        <label th:for="${category.key}" th:text="${category.value}"></label>
                     </th:block>
-                    <th:block th:unless="${category.categoryId.equals(categoryId)}">
-                        <option th:value="${category.categoryId}"
-                                th:text="'('+${category.categoryId}+') '+${category.cname}"></option>
+                </div>
+            </div>
+            <div>
+                <h3>중분류</h3>
+                <div>
+                    <th:block th:each="category:${levelTwo}">
+                        <input type="checkbox" name="categoryId" th:id="${category.key}" th:value="${category.key}">
+                        <label th:for="${category.key}" th:text="${category.value}"></label>
                     </th:block>
-                </th:block>
-            </select>
+                </div>
+            </div>
+            <div>
+                <h3>소분류</h3>
+                <div>
+                    <th:block th:each="category:${levelThree}">
+                        <input type="checkbox" name="categoryId" th:id="${category.key}" th:value="${category.key}">
+                        <label th:for="${category.key}" th:text="${category.value}"></label>
+                    </th:block>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset id="detCheckBox">
+            <legend>상품 상태</legend>
+            <th:block th:each="det:${detDict}">
+                <input type="checkbox" name="catDet" th:id="${det.key}" th:value="${det.key}">
+                <label th:for="${det.key}" th:text="${det.value}"></label>
+            </th:block>
         </fieldset>
         <button type="submit">찾기</button>
     </form>
-    <div>
+    <div id="table">
         <table class="table table-striped">
             <thead>
             <tr>
                 <th>상품 코드</th>
                 <th>상품명</th>
                 <th>판매처</th>
-                <th>공급가</th>
                 <th>옵션</th>
                 <th>수량</th>
+                <th>공급가</th>
                 <th>판매가</th>
                 <th>상태</th>
                 <th>수정일</th>
@@ -55,10 +74,15 @@
                     <td th:text="${product.pname}"></td>
                     <td th:text="${product.place}"></td>
                     <td>
-                        <select id="optionProduct" onchange="getValue()">
-
-                        </select>
+                        <label>
+                            <select th:id="${product.productCode}" class="form-control">
+                                <th:block th:each="option:${product.optionProductList}">
+                                    <option th:value="${option.stock}" th:text="${option.opname}"></option>
+                                </th:block>
+                            </select>
+                        </label>
                     </td>
+                    <td th:text="${product.optionProductList[0].stock}" th:id="${product.productCode+'_stock'}"></td>
                     <td th:text="${product.supplyPc}"></td>
                     <td th:text="${product.salesPc}"></td>
                     <td th:text="${detDict[product.PDet]}"></td>
@@ -68,5 +92,45 @@
             </tbody>
         </table>
     </div>
+    <script th:inline="javascript">
+        const table = document.getElementById("table");
+        const selects = table.querySelectorAll("select");
+        selects.forEach(select => {
+            select.onclick=()=>getValue(select.id);
+        });
+        function getValue(id) {
+            const select = document.getElementById(id);
+            const value = document.getElementById(id+"_stock");
+            value.innerText = select.value;
+        }
+
+        const catDetList = [[${catDetList}]];
+        const checkField = document.getElementById("detCheckBox");
+        const checkboxes = checkField.querySelectorAll("input[type=checkbox]");
+        if (catDetList != null) {
+            catDetList.forEach(value => {
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.value === value) {
+                        checkbox.setAttribute("checked", "true");
+                    }
+                });
+            });
+        }
+
+        const cateCheckField = document.getElementById("categoryCheck");
+        const cateCheckBoxes = cateCheckField.querySelectorAll("input[type=checkbox]");
+        const categoryIdList = [[${categoryIdList}]];
+
+        if (categoryIdList != null) {
+            categoryIdList.forEach(value => {
+                cateCheckBoxes.forEach(checkbox => {
+                    if (checkbox.value === value) {
+                        checkbox.setAttribute("checked", "true");
+                    }
+                });
+            });
+        }
+    </script>
+
 </div>
 </html>

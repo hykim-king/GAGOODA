@@ -5,7 +5,9 @@ import com.example.gagooda_project.mapper.CategoryMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryServiceImp implements CategoryService {
@@ -18,6 +20,16 @@ public class CategoryServiceImp implements CategoryService {
     @Override
     public List<CategoryDto> showCategoriesAt(int lvl) {
         return categoryMapper.listByLevel(lvl);
+    }
+
+    @Override
+    public Map<String, String> categoryDict(int lvl) {
+        List<CategoryDto> categoryList = categoryMapper.listByLevel(lvl);
+        Map<String, String> map = new HashMap<>();
+        for(CategoryDto category: categoryList) {
+            map.put(category.getCategoryId(), category.getCname());
+        }
+        return map;
     }
 
     @Override

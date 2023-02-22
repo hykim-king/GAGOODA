@@ -17,8 +17,12 @@
     <insert id="updateOne" parameterType="DeliveryDto">
         UPDATE delivery SET invoice=#{invoice},
                             start_date=#{startDate},
+                            end_Date=#{endDate},
                             d_det=#{dDet}
                             WHERE order_id=#{orderId}
+    </insert>
+    <insert id="insertOne">
+#         INSERT INTO delivery \\
     </insert>
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
@@ -26,11 +30,22 @@
     <select id="findByOrderId" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE order_id=#{orderId}
     </select>
-    <select id="listAll" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
-        SELECT * FROM delivery;
-    </select>
-    <select id="listByDDet" resultType="com.example.gagooda_project.dto.DeliveryDto" resultMap="deliveryMap">
-        SELECT * FROM delivery WHERE d_det=#{dDet}
+    <select id="listAll" resultMap="deliveryMap" parameterType="hashmap">
+        SELECT * FROM delivery
+        <where>
+            <if test="searchDiv !='' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN ${startDate} AND #{endDate}
+            </if>
+            <if test="dateType !='' and startDate != '' and endDate !='' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="dDet !='' ">
+                AND d_det in (${dDet})
+            </if>
+        </where>
     </select>
 </mapper>
 

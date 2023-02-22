@@ -63,7 +63,7 @@ public class OrderServiceImp implements OrderService {
             }
         }
        if(delivery != null){
-//           register += deliveryMapper.insertOne(delivery);
+           register += deliveryMapper.insertOne(delivery);
            for(String cartNum: cartList){
                int cartId = Integer.parseInt(cartNum);
                delete += cartMapper.deleteById(cartId);

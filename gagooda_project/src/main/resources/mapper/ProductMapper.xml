@@ -99,8 +99,11 @@
         LEFT JOIN category_conn cc
         ON product.product_code = cc.product_code
         <where>
-            <if test="map.get('categoryId')!=null and !map.get('categoryId').isEmpty()">
-                AND cc.category_id = ${map.get("categoryId")}
+            <if test="map.get('categoryIdList')!=null and !map.get('categoryIdList').isEmpty()">
+                AND cc.category_id in
+                <foreach item="det" index="index" collection="map.get('categoryIdList')"
+                         open="(" separator="," close=")">#{det}
+                </foreach>
             </if>
             <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
                 AND product.p_det in
@@ -126,3 +129,17 @@
         LIMIT 8
     </select>
 </mapper>
+<!--
+SELECT p.product_code,
+        COUNT(r.product_code) review_cnt,
+        AVG(r.rate)
+FROM (SELECT product.*
+        FROM product
+        LEFT JOIN category_conn cc
+        ON product.product_code = cc.product_code
+        GROUP BY product.product_code) p
+    LEFT JOIN review r
+    ON p.product_code = r.product_code
+    GROUP BY p.product_code
+    LIMIT 10
+-->

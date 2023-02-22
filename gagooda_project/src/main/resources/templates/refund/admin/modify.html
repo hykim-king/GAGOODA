@@ -26,7 +26,6 @@
     <div>상품명 <span th:text="${refund.orderDetailDto.optionName}"></span></div>
     <div>주문 수량 <span th:text="${refund.orderDetailDto.cnt}"></span></div>
     <div>환불 요청 금액 <span th:text="${refund.cancelAmount}"></span></div>
-    <div>환불 요청 분류 <span th:text="${refund.rfrDetDto.detName}"></span></div>
     <div>환불 요청 사유 <span th:text="${refund.reason}"></span></div>
     <div>첨부 사진
         <th:block th:if="${!refund.imageList.isEmpty() && refund.imageList != null}" th:each="img:${refund.imageList}">
@@ -61,13 +60,8 @@
         <div>현재 환불 진행 상태</div>
         <div th:text="${refund.rfDetDto.detName}"></div>
     </div>
-    <div>
-        <div>환불 답변</div>
-        <div th:text="${refund.reply}"></div>
-    </div>
-    <a th:href="@{'refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}">수정하기</a>
 
-    <form th:action="@{'refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}">
+    <form>
         <div>
             <label for="rfDet">상태 변경</label>
             <select name="rfDet" id="rfDet">

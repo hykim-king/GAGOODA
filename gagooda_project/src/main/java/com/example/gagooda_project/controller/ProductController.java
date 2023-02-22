@@ -18,18 +18,18 @@ import java.util.*;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-    private final CategoryConnService categoryConnService;
     private final CategoryService categoryService;
     private final CommonCodeService commonCodeService;
+    private final ProductInquiryService productInquiryService;
 
     public ProductController(ProductService productService,
-                             CategoryConnService categoryConnService,
                              CategoryService categoryService,
-                             CommonCodeService commonCodeService) {
+                             CommonCodeService commonCodeService,
+                             ProductInquiryService productInquiryService) {
         this.productService = productService;
-        this.categoryConnService = categoryConnService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
+        this.productInquiryService = productInquiryService;
     }
 
     @Value("${img.upload.path}")
@@ -102,24 +102,24 @@ public class ProductController {
             HttpSession session,
             Model model,
             @SessionAttribute(required = false)  String msg,
-            HttpServletRequest request
+            HttpServletRequest request,
+            @SessionAttribute(required = false) UserDto loginUser
     ) {
         System.out.println("msg " + msg);
         if (msg != null) {
             model.addAttribute("msg", msg);
             session.removeAttribute("msg");
         }
-        ProductDto product = null;
         try {
-            product = productService.selectOne(productCode);
+            ProductDto product = productService.selectOne(productCode);
+            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
+            List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            model.addAttribute("product", product);
+            model.addAttribute("plist", plist);
+            model.addAttribute("commonCodeList", commonCodeList);
+            return "/product/detail";
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (product != null) {
-            model.addAttribute("product", product);
-            session.setAttribute("getUri", request.getRequestURI());
-            return "/product/detail";
-        } else {
             session.setAttribute("msg", "데이터를 찾을 수 없습니다.");
             return "redirect:/product/list.do";
         }
@@ -139,14 +139,7 @@ public class ProductController {
         }
         if (loginUser.getGDet().equals("g1")) {
             try {
-                List<CategoryDto> levelOne = categoryService.showCategoriesAt(1);
-                List<CategoryDto> levelTwo = categoryService.showCategoriesAt(2);
-                List<CategoryDto> levelThree = categoryService.showCategoriesAt(3);
-                List<CommonCodeDto> productDet = commonCodeService.showDets("p");
-                model.addAttribute("levelOne", levelOne);
-                model.addAttribute("levelTwo", levelTwo);
-                model.addAttribute("levelThree", levelThree);
-                model.addAttribute("productDet", productDet);
+                attributesSet(model);
                 return "/product/register";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -193,9 +186,9 @@ public class ProductController {
 
     @GetMapping("/admin/product_list.do")
     public String productList (
-            @RequestParam(required = false, name = "categoryId", defaultValue = "") String categoryId,
+            @RequestParam(required = false, name = "categoryId") List<String> categoryIdList,
             @RequestParam(required = false, name = "catDet") List<String> catDetList,
-            @RequestParam(required = false) String searchWord,
+            @RequestParam(required = false, defaultValue = "") String searchWord,
             Model model,
             PagingDto paging,
             HttpServletRequest req,
@@ -206,15 +199,17 @@ public class ProductController {
         paging.setQueryString(req.getParameterMap());
         model.addAttribute("paging", paging);
         Map<String, Object> map = new HashMap<>();
-        if (categoryId != null) {
-            map.put("categoryId", categoryId);
-            model.addAttribute("categoryId", categoryId);
+        if (categoryIdList != null) {
+            map.put("categoryIdList", categoryIdList);
+            model.addAttribute("categoryIdList", categoryIdList);
         }
         if (catDetList != null) {
             map.put("catDetList", catDetList);
+            model.addAttribute("catDetList", catDetList);
         }
-        if (searchWord != null) {
+        if (searchWord != null && !searchWord.isBlank()) {
             map.put("searchWord", "'%"+searchWord+"%'");
+            model.addAttribute("searchWord", searchWord);
         }
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
@@ -223,15 +218,12 @@ public class ProductController {
             Map<String, String> detDict = commonCodeService.showNames("p");
             model.addAttribute("detDict", detDict);
 
-            List<CategoryDto> levelOne = categoryService.showCategoriesAt(1);
-            List<CategoryDto> levelTwo = categoryService.showCategoriesAt(2);
-            List<CategoryDto> levelThree = categoryService.showCategoriesAt(3);
+            Map<String, String> levelOne = categoryService.categoryDict(1);
+            Map<String, String> levelTwo = categoryService.categoryDict(2);
+            Map<String, String> levelThree = categoryService.categoryDict(3);
             model.addAttribute("levelOne", levelOne);
             model.addAttribute("levelTwo", levelTwo);
             model.addAttribute("levelThree", levelThree);
-
-            List<CategoryDto> categoryList = categoryService.showAll();
-            model.addAttribute("categoryList", categoryList);
 
             return "/product/admin_list";
         } catch (Exception e) {
@@ -258,9 +250,44 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/admin/{productCode}/modify.do")
+    public String modify(
+            @SessionAttribute UserDto loginUser,
+            @SessionAttribute(required = false) String msg,
+            @PathVariable String productCode,
+            HttpSession session,
+            Model model
+    ) {
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
+        if (loginUser.getGDet().equals("g1")) {
+            try {
+                ProductDto product = productService.selectOne(productCode);
+                model.addAttribute("product", product);
+                attributesSet(model);
+                return "/product/modify";
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+                return "redirect:/";
+            }
+        } else {
+            session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
+            return "redirect:/";
+        }
+    }
+
+    private void attributesSet(Model model) {
+        List<CategoryDto> levelOne = categoryService.showCategoriesAt(1);
+        List<CategoryDto> levelTwo = categoryService.showCategoriesAt(2);
+        List<CategoryDto> levelThree = categoryService.showCategoriesAt(3);
+        List<CommonCodeDto> productDet = commonCodeService.showDets("p");
+        model.addAttribute("levelOne", levelOne);
+        model.addAttribute("levelTwo", levelTwo);
+        model.addAttribute("levelThree", levelThree);
+        model.addAttribute("productDet", productDet);
+    }
 }
-/*
-SELECT COUNT(*) FROM (SELECT product.* FROM product LEFT JOIN category_conn cc ON product.product_code
-= cc.product_code WHERE cc.category_id in ('511') AND product.p_det in ('p1' ,'p0' ) GROUP
-BY product.product_code) as db;
- */

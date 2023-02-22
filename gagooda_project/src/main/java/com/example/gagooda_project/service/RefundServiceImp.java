@@ -58,7 +58,7 @@ public class RefundServiceImp implements RefundService{
                 if(imgFile!=null && !imgFile.isEmpty()) {
                     register = imageRegister(imgFile, imgPath, code, i+1);
                     if (register <= 0){
-
+                        throw new Error();
                     }
                 }
             }
@@ -70,6 +70,7 @@ public class RefundServiceImp implements RefundService{
                 register += imageRegister(imgFile, imgPath, code, i+1);
                 refund.setImgCode(code);
                 register += refundMapper.insertOne(refund);
+                if(register <= 0){throw new Error();}
             }
         }
         return register;
