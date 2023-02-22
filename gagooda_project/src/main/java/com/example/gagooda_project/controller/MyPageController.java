@@ -43,6 +43,9 @@ public class MyPageController {
             if (!orderList.isEmpty()) {
                 orderList = orderList.subList(0,4);
             }
+            if (!cartList.isEmpty()) {
+                cartList = cartList.subList(0,4);
+            }
             myPageDetList = myPageDetList.subList(0, 4);
             Map<String, String> detName = new HashMap<>();
             Map<String, Integer> count = new HashMap<>();
