@@ -12,6 +12,10 @@
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"
                      fetchType="lazy"/>
+        <association property="dDetDto"
+                     column="d_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
+                     fetchType="lazy"/>
     </resultMap>
 
     <insert id="updateOne" parameterType="DeliveryDto">
@@ -22,7 +26,7 @@
                             WHERE order_id=#{orderId}
     </insert>
     <insert id="insertOne">
-#         INSERT INTO delivery \\
+        INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request) VALUES (#{orderId},${userId},${userName},${userEmail},${userPhone},${request})
     </insert>
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
@@ -44,6 +48,23 @@
             </if>
             <if test="dDet !='' ">
                 AND d_det in (${dDet})
+            </if>
+        </where>
+    </select>
+    <select id="countListAll" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM delivery
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE ${searchWord}
+            </if>
+            <if test="dateType !='' and startDate !='' and endDate !='' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND ${endDate}}
+            </if>
+            <if test="dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="dDet != ''">
+                AND d_Det in (${dDet})
             </if>
         </where>
     </select>

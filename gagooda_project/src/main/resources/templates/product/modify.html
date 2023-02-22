@@ -20,36 +20,50 @@
         <label for="pDet">상품 상태:</label>
         <select name="pDet" id="pDet" required>
             <th:block th:each="det : ${productDet}">
-                <option th:value="${det.detCode}" th:text="${det.detName}"></option>
+                <option th:if="${det.detCode.equals(product.PDet)}"
+                        th:value="${det.detCode}" th:text="${det.detName}" selected></option>
+                <option th:unless="${det.detCode.equals(product.PDet)}"
+                        th:value="${det.detCode}" th:text="${det.detName}"></option>
             </th:block>
         </select>
         <br>
         <label for="name">상품명:</label>
-        <input type="text" id="name" name="pname" required>
+        <input type="text" id="name" name="pname" required th:value="${product.pname}">
         <br>
         <label for="place">판매처:</label>
-        <input type="text" id="place" name="place" required>
+        <input type="text" id="place" name="place" required th:value="${product.place}">
         <br>
         <label for="supplyPc">공급 가격:</label>
-        <input type="number" id="supplyPc" name="supplyPc" required>
+        <input type="number" id="supplyPc" name="supplyPc" required th:value="${product.supplyPc}">
         <br>
         <label for="salesPc">판매 가격:</label>
-        <input type="number" id="salesPc" name="salesPc" required>
+        <input type="number" id="salesPc" name="salesPc" required th:value="${product.salesPc}">
         <br>
         <label for="deliveryPc">배송 가격:</label>
-        <input type="number" id="deliveryPc" name="deliveryPc" required>
+        <input type="number" id="deliveryPc" name="deliveryPc" required th:value="${product.deliveryPc}">
         <br>
         <label for="rot">과세율:</label>
-        <input type="text" id="rot" name="rot">
+        <input type="text" id="rot" name="rot" required th:value="${product.rot}">
         <br>
         <label for="rot">마진율:</label>
-        <input type="text" id="margin" name="margin">
+        <input type="text" id="margin" name="margin" th:value="${product.margin}">
         <br>
+        <div class="already-images">
+            <p uk-form-custom="target: true">
+                <input type="file" name="imgFile" aria-label="Custom controls">
+                <input type="text" placeholder="수정 할 이미지 파일" disabled>
+            </p>
+            <th:block th:if="${product.imageList != null}"
+                      th:each="image:${product.imageList}">
+                <img class="uk-object-cover" style="width: 100px;height: 100px;"
+                     th:src="@{'/img/product/{imgPath}'(imgPath=${image.imgPath})}" alt="Avatar">
+            </th:block>
+        </div>
         <div class="images">
-            <fieldset>
+            <div>
                 <label for="image">이미지:</label>
                 <input type="file" id="image" name="imageFile">
-            </fieldset>
+            </div>
         </div>
         <button type="button" name="moreImg">상품 이미지 추가</button>
         <div class="infoImages">
@@ -223,7 +237,7 @@
 
         let imgNum = 0;
         moreImg.onclick = (e) => {
-            const fieldset = document.createElement("fieldset");
+            const fieldset = document.createElement("div");
             fieldset.id = "img" + imgNum;
             fieldset.innerHTML = `
             <label for="image">이미지:</label>
