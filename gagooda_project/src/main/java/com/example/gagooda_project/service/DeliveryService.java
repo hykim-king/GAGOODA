@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface DeliveryService {
 
+    public int insertOne(DeliveryDto delivery);
     public int modifyOne(DeliveryDto delivery);
     DeliveryDto selectByOrderId(String orderId);
     public List<DeliveryDto> showDeliveryList(Map<String,Object> searchFilter);
