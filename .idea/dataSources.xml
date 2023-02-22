@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-<<<<<<< HEAD
-    <data-source source="LOCAL" name="gagooda" uuid="9114a23e-2364-4fa1-b5d4-30b23598fc32">
-=======
     <data-source source="LOCAL" name="gagooda_public" uuid="612c9f2c-8a1f-492b-b5a1-cb9d4c6b51c1">
->>>>>>> 41a5ec1d76ef84dec64d30b82f64c09b90347154
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
