@@ -78,4 +78,8 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
         return productInquiryMapper.count(paging);
     }
 
+    @Override
+    public List<ProductInquiryDto> showAllInquiries(String productCode) {
+        return productInquiryMapper.listByProductCodeAll(productCode);
+    }
 }

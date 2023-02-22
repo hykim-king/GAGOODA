@@ -102,8 +102,8 @@ public class ProductController {
             HttpSession session,
             Model model,
             @SessionAttribute(required = false)  String msg,
-            HttpServletRequest request,
-            @SessionAttribute(required = false) UserDto loginUser
+            @SessionAttribute(required = false) UserDto loginUser,
+            PagingDto paging
     ) {
         System.out.println("msg " + msg);
         if (msg != null) {
@@ -112,7 +112,10 @@ public class ProductController {
         }
         try {
             ProductDto product = productService.selectOne(productCode);
-            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
+            paging.setRows(10);
+            if (paging.getOrderField() == null) paging.setOrderField("mod_date");
+//            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
             model.addAttribute("product", product);
             model.addAttribute("plist", plist);
@@ -121,7 +124,7 @@ public class ProductController {
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("msg", "데이터를 찾을 수 없습니다.");
-            return "redirect:/product/list.do";
+            return "redirect:/";
         }
     }
 

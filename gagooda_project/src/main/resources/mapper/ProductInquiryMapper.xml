@@ -56,4 +56,7 @@
     <select id="count" resultType="java.lang.Integer" parameterType="PagingDto">
         SELECT COUNT(*) FROM product_inquiry
     </select>
+    <select id="listByProductCodeAll" resultMap="productInquiryMap">
+        SELECT * FROM product_inquiry WHERE product_code=#{productCode}
+    </select>
 </mapper>

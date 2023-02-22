@@ -1,6 +1,7 @@
 package com.example.gagooda_project.mapper;
 
 import com.example.gagooda_project.dto.PagingDto;
+import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.dto.ProductInquiryDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -27,4 +28,5 @@ public interface ProductInquiryMapper {
 
     int count(PagingDto paging);
 
+    List<ProductInquiryDto> listByProductCodeAll(String productCode);
 }

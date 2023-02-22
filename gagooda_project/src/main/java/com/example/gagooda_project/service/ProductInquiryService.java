@@ -40,4 +40,5 @@ public interface ProductInquiryService {
 //  전체 문의 수
     int totalCount (PagingDto paging);
 
+    List<ProductInquiryDto> showAllInquiries(String productCode);
 }
