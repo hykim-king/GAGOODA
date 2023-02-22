@@ -233,11 +233,11 @@ public class OrderController {
                 }
                 delivery = new DeliveryDto();
                 delivery.setRequest(request);
-//                delivery.setOrderId(order.getOrderId());
-//                delivery.setUserId(order.getUserId());
-//                delivery.setUserName(order.getUserName());
-//                delivery.setUserEmail(order.getUserEmail());
-//                delivery.setUserPhone(order.getUserPhone());
+                delivery.setOrderId(order.getOrderId());
+                delivery.setUserId(order.getUserId());
+                delivery.setUserName(order.getUserName());
+                delivery.setUserEmail(order.getUserEmail());
+                delivery.setUserPhone(order.getUserPhone());
                 order.setOrderDetailList(orderDetailList);
                 log.info("4.order에 address등록 완료");
                 register = orderService.register(order,delivery,cartList);

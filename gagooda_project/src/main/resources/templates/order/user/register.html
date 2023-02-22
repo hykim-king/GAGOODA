@@ -181,7 +181,18 @@
             currentAddressList[6].value = addressMap.get("elevator");
         }
 
-        const orderForm = document.forms["orderRegisterForm"]
+        function validateForm(){
+            const orderForm = document.forms["orderRegisterForm"]
+            let postCode = orderForm["postCode"].value;
+            if(postCode == ""){
+                alert("배송지를 선택해 주세요.")
+                return false;
+            }else{
+                return confirm("상품들을 결제하시겠습니까?")
+            }
+        }
+
+
 
 
 

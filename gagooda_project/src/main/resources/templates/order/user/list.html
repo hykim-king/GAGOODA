@@ -9,11 +9,11 @@
     <title>주문 목록</title>
 </head>
 <div layout:fragment="myPageContent">
-    <h1>주문 목록</h1>
+    <h1 class="mb-4">주문 목록</h1>
     <!--기간별 조회-->
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs" id="searchDate">
         <li class="nav-item">
-            <a class="nav-link" th:href="@{ '' (dates=7) }">7일</a>
+            <a class="nav-link active" th:href="@{ '' (dates=7) }">7일</a>
         </li>
         <li class="nav-item">
             <a class="nav-link"  th:href="@{ '' (dates=15) }">15일</a>
@@ -59,7 +59,7 @@
                 <td>
                     <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
                     <button class="btn btn-primary">배송 조회</button>
-                    <button class="btn btn-primary"
+                    <button class="btn btn-primary" th:onclick="location.href=[[@{'/order/user_yes/mypage/{orderId}/modify.do' (orderId=${order.orderId})}]]"
                             th:classappend="${(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))?'disabled':''}">주문 취소</button>
                 </td>
 
@@ -83,9 +83,25 @@
     </div>
     <!--pagination end--------------->
     <script th:inline="javascript">
-        function active(aTag){
-            aTag.classList.add("active");
-        }
+       const searchDates = document.getElementById("searchDate");
+       const tabs = searchDates.getElementsByClassName("nav-link");
+
+       for(let i=0; i<tabs.length; i++){
+           tabs[i].addEventListener("click",function(){
+               let current = document.getElementsByClassName("active");
+
+               if(current.length>0){
+                   current[0].className = current[0].className.replace(" active","");
+               }
+               this.className += " active";
+           })
+       }
+
+       const
+       function cancelRecheck(){
+
+       }
+
     </script>
 </div>
 </html>
