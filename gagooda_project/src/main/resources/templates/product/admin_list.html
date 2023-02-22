@@ -10,8 +10,15 @@
 <div layout:fragment="content">
     <form action="/product/admin/product_list.do">
         <fieldset>
-            <label for="categoryId">카테고리 </label>
+            <legend>상품 검색</legend>
+            <input type="text" name="searchWord">
+            <button type="submit">검색</button>
+        </fieldset>
+        <fieldset>
+            <legend>카테고리</legend>
             <select name="categoryId" id="categoryId">
+                <option value="" selected th:if="${categoryId.isBlank()}">전체</option>
+                <option value="" th:unless="${categoryId.isBlank()}">전체</option>
                 <th:block th:each="category : ${categoryList}">
                     <th:block th:if="${category.categoryId.equals(categoryId)}">
                         <option th:value="${category.categoryId}" selected
@@ -34,22 +41,31 @@
                 <th>상품명</th>
                 <th>판매처</th>
                 <th>공급가</th>
+                <th>옵션</th>
+                <th>수량</th>
                 <th>판매가</th>
                 <th>상태</th>
                 <th>수정일</th>
             </tr>
+            </thead>
+            <tbody>
             <th:block th:each="product : ${productList}">
                 <tr>
                     <td th:text="${product.productCode}"></td>
                     <td th:text="${product.pname}"></td>
                     <td th:text="${product.place}"></td>
+                    <td>
+                        <select id="optionProduct" onchange="getValue()">
+
+                        </select>
+                    </td>
                     <td th:text="${product.supplyPc}"></td>
                     <td th:text="${product.salesPc}"></td>
                     <td th:text="${detDict[product.PDet]}"></td>
                     <td th:text="${#dates.format(product.modDate, 'yyyy-MM-dd')}"></td>
                 </tr>
             </th:block>
-            </thead>
+            </tbody>
         </table>
     </div>
 </div>

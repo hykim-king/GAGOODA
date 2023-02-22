@@ -28,45 +28,45 @@
         <id column="cnt" property="count"/>
     </resultMap>
     <select id="listAll" resultMap="orderMap">
-        SELECT * FROM ORDER_DB
+        SELECT * FROM order_db
     </select>
     <select id="pageAll" resultMap="orderMap">
-        SELECT * FROM ORDER_DB
+        SELECT * FROM order_db
                  WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
                  ORDER BY ${paging.orderField} ${paging.direct}
                  LIMIT #{paging.startRow},#{paging.rows}
     </select>
     <select id="listByUserIdAndDate" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
+        SELECT * FROM order_db WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
     </select>
     <select id="countByUserId" resultType="int">
-        SELECT COUNT(*) FROM ORDER_DB WHERE user_id=#{userId}
+        SELECT COUNT(*) FROM order_db WHERE user_id=#{userId}
     </select>
     <select id="countByNotStatus" resultType="int">
-        SELECT COUNT(*) FROM ORDER_DB WHERE user_id=#{userId} AND NOT o_det=#{oDet}
+        SELECT COUNT(*) FROM order_db WHERE user_id=#{userId} AND NOT o_det=#{oDet}
     </select>
 
     <select id="listByStatus" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE o_det=#{oDet}
+        SELECT * FROM order_db WHERE o_det=#{oDet}
     </select>
     <select id="listByDate" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{dates} DAY) AND NOW();
+        SELECT * FROM order_db WHERE reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{dates} DAY) AND NOW();
     </select>
     <select id="countByUserIdAndStatus" resultMap="oDetMap">
-        SELECT o_det, count(o_det) cnt FROM ORDER_DB WHERE user_id=#{userId} GROUP BY o_det
+        SELECT o_det, count(o_det) cnt FROM order_db WHERE user_id=#{userId} GROUP BY o_det
     </select>
     <select id="findById" resultMap="orderMap">
-        SELECT * FROM ORDER_DB WHERE order_id=#{id}
+        SELECT * FROM order_db WHERE order_id=#{id}
     </select>
     <select id="count" resultType="java.lang.Integer" >
         SELECT COUNT(*) FROM order_db WHERE user_id=#{userId} AND reg_date BETWEEN DATE_SUB(NOW(),INTERVAL #{dates} DAY) AND NOW()
     </select>
     <insert id="insertOne">
-        INSERT INTO ORDER_DB (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path)
+        INSERT INTO order_db (order_id, user_id, address_id, total_price, user_name, user_email, user_phone, post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_path)
         VALUES (#{orderId}, #{userId}, #{addressId}, #{totalPrice}, #{userName}, #{userEmail}, #{userPhone}, #{postCode}, #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgPath})
     </insert>
     <update id="updateStatus">
-        UPDATE ORDER_DB SET o_det=#{oDet} WHERE order_id=#{id}
+        UPDATE order_db SET o_det=#{oDet} WHERE order_id=#{id}
     </update>
 
 

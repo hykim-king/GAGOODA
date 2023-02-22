@@ -14,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 @Controller
@@ -131,11 +129,9 @@ public class RefundController {
                         for(OrderDetailDto orderDetail : order.getOrderDetailList()){ // 주문 상세를 각각 조회해서
                             checkList = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId()); // 해당 주문상세 번호로 등록된 refund 목록을 가져오고
                             if (checkList != null){  // 등록된 refund가 있으면
-                                boolean isOk = true;
-                                if(isOk){
-                                    refund.setOrderDetailId(orderDetail.getOrderDetailId());
-                                    register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
-                                }
+                                refund.setOrderDetailId(orderDetail.getOrderDetailId());
+                                refund.setCancelAmount(orderDetail.getPrice());
+                                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
                             }else{
                                 refund.setOrderDetailId(orderDetail.getOrderDetailId());
                                 register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
@@ -256,8 +252,17 @@ public class RefundController {
     }
 
     @GetMapping("admin/{refundId}/detail.do")
-    public String adminDetail(@PathVariable int refundId){
-        return "refund/admin/detail";
+    public String adminDetail(@PathVariable int refundId,
+                              @SessionAttribute UserDto loginUser,
+                              Model model){
+        RefundDto refund = refundServiceImp.selectOne(refundId);
+        if(loginUser.getGDet().equals("g1")){
+            List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
+            model.addAttribute("refund", refund);
+            model.addAttribute("rfCodeList", allRfList);
+            return "refund/admin/detail";
+        }
+        return "index";
     }
 
 }
