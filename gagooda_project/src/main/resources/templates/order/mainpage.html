@@ -99,80 +99,26 @@
     <!--신상품 -->
     <div class="text-center my-5 fs-3"><strong>신상품</strong></div>
     <!--상품 카드 틀, 반복문 돌리세요-->
+
     <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5" >
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+      <th:block th:each="product:${recentProduct}">
+      <div class="col mb-3" style="width: 240px;height: 300px;">
+        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}" style="text-decoration: none; color: black">
+          <th:block th:if="${product.imageList != null}">
+            <th:block th:each="img:${product.imageList.get(0)}">
+              <img th:src="@{'/img/product/{file}'(file=${img.imgPath})}" class="card-img-top rounded mb-3">
+            </th:block>
+          </th:block>
+<!--          <img th:src="@{'/img/product/{file}'(file=${product.getImgCode()+'_0.png'})}" class="card-img-top rounded mb-3">-->
           <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
+            <p class="mb-2" th:text="${product.getPname()}">상품</p>
+            <p class="card-text mt-1" th:text="${product.getSalesPc()}">가격</p>
           </div>
         </a>
       </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 285px;height: 320px;">
-        <a href="/" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
+      </th:block>
     </div>
+
     <!--신상품 end--------------------------------->
     <img th:src="@{'/img/main/event_dummy.jpg'}" class="my-5 py-5" style="width:100%; height: 40vh;">
     <!--세일-->
