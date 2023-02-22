@@ -59,7 +59,7 @@
         </div>
         <div>
             <label for="cancelAmount">환불 금액</label>
-            <input type="text" id="cancelAmount" name="cancelAmount">
+            <input type="text" id="cancelAmount" name="cancelAmount" disabled>
         </div>
         <div>
             <label>첨부 이미지
@@ -105,7 +105,7 @@
         <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
         <div>
             <label for="postCode">우편 번호</label>
-            <input type="text" id="postCode" name="postCode" class="add" th:value="${order.postCode}">
+            <input type="text" id="postCode" name="postCode" class="add" th:value="${order.postCode}" pattern="[0-9]{5}">
         </div>
         <div>
             <label for="address">주소</label>
@@ -121,7 +121,7 @@
         </div>
         <div>
             <label for="receiverPhone">수령인 전화번호</label>
-            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${order.receiverPhone}" >
+            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${order.receiverPhone}" pattern="[0-9]{11}">
         </div>
         <div>
             <label for="elevator">엘리베이터 유무</label>
@@ -230,17 +230,6 @@
             let refundRegister = document.forms.refundRegister;
             let newAddressRegister = document.forms.addressRegister;
             let addressReg = document.getElementById("addressRegister");
-            console.log(refundRegister);
-            console.log(newAddressRegister);
-            let formTest = new FormData(newAddressRegister);
-            let keys = formTest.keys();
-            let vals = formTest.values();
-            for (const pair of keys){
-                console.log(pair);
-            }
-            for (const pair of vals){
-                console.log(pair);
-            }
 
 
             async function newAddressSubmit(){

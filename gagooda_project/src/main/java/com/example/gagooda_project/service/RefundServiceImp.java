@@ -50,7 +50,7 @@ public class RefundServiceImp implements RefundService{
                 if(checkRefund.getRfDet().equals("rf1")){
                     continue;
                 }else{ // 상태가 rf1(요청 취소) 이외의 코드인 경우
-                    throw new Error();
+                    throw new RuntimeException();
                 }
             }
             for(int i=0; i < imgFileList.size(); i++ ) {
@@ -58,7 +58,7 @@ public class RefundServiceImp implements RefundService{
                 if(imgFile!=null && !imgFile.isEmpty()) {
                     register = imageRegister(imgFile, imgPath, code, i+1);
                     if (register <= 0){
-                        throw new Error();
+                        throw new RuntimeException();
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class RefundServiceImp implements RefundService{
                 register += imageRegister(imgFile, imgPath, code, i+1);
                 refund.setImgCode(code);
                 register += refundMapper.insertOne(refund);
-                if(register <= 0){throw new Error();}
+                if(register <= 0){throw new RuntimeException();}
             }
         }
         return register;

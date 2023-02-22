@@ -79,6 +79,7 @@ public class RefundController {
         if (session.getAttribute("refundMsg") != null) {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
+            model.addAttribute("refundMsg", refundMsg);
         }
         try{
             OrderDto order = orderServiceImp.selectOne(orderId);
@@ -90,7 +91,7 @@ public class RefundController {
             model.addAttribute("refundCount", refundCount);
             model.addAttribute("orderAddress", orderAddress);
             model.addAttribute("addressList", addressList);
-            model.addAttribute("refundMsg", refundMsg);
+            
         }catch (Exception e){
             e.printStackTrace();
             return "redirect:/";
@@ -110,7 +111,7 @@ public class RefundController {
         String detailimgPath;
         int seq = 1;
 
-        RefundDto checkDto;
+
         if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
                 /* 환불, 교환 체크하여 이름 지정 */
@@ -255,14 +256,18 @@ public class RefundController {
     public String adminDetail(@PathVariable int refundId,
                               @SessionAttribute UserDto loginUser,
                               Model model){
-        RefundDto refund = refundServiceImp.selectOne(refundId);
-        if(loginUser.getGDet().equals("g1")){
-            List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
-            model.addAttribute("refund", refund);
-            model.addAttribute("rfCodeList", allRfList);
-            return "refund/admin/detail";
+        try{
+            RefundDto refund = refundServiceImp.selectOne(refundId);
+            if(loginUser.getGDet().equals("g1")){
+                List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
+                model.addAttribute("refund", refund);
+                model.addAttribute("rfCodeList", allRfList);
+                return "refund/admin/detail";
+            }
+        }catch (Exception e){
+            log.info(e.getMessage());
         }
-        return "index";
+        return "/index";
     }
 
 }
