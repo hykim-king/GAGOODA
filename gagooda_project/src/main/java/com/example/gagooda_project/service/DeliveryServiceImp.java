@@ -7,6 +7,8 @@ import com.example.gagooda_project.mapper.DeliveryMapper;
 import com.example.gagooda_project.mapper.OrderMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,26 @@ public class DeliveryServiceImp implements DeliveryService{
 
     @Override
     public List<DeliveryDto> showDeliveryList(Map<String, Object> searchFilter) {
-        return null;
+        if(!searchFilter.get("dDet").equals("")) {
+            String dDet = searchFilter.get("dDet").toString();
+            List<String> dList = new ArrayList<>(Arrays.asList(dDet.split(",")));
+            String dDetF = "'"+String.join("','",dList) + "'";
+            searchFilter.put("dDet",dDetF);
+        }
+        if(searchFilter.get("searchDiv").equals("all")) {
+            String allCol = "order_id OR user_name OR invoice";
+            searchFilter.put("searchDiv",allCol);
+        }
+        if(!searchFilter.get("searchWord").equals("")) {
+            String keyword = "%" + searchFilter.get("searchWord") + "%";
+            searchFilter.put("searchWord",keyword);
+        }
+        if(searchFilter.get("startDate").equals(searchFilter.get("endDate"))) {
+            String equalDate = searchFilter.get("startDate").toString() + "%";
+            searchFilter.put("startDate", equalDate);
+            searchFilter.put("endDate", equalDate);
+        }
+        return deliveryMapper.listAll(searchFilter);
     }
 
     @Override
