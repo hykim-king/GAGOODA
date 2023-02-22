@@ -32,7 +32,7 @@
 <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
+<form name="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
     <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
     <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
@@ -94,20 +94,10 @@
                     </th:block>
                 </select>
             </div>
-            <div>
-                <button class="addressBtn">새 배송지 입력</button>
-            </div>
-            <div class="addressModal" id="addressModal">
-                <div class="">
-                    <form th:action="@{'/address/user_yes/register.do'}" method="POST" name="addressRegister">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressBtn">
+                새 주소 입력
+            </button>
 
-                    </form>
-                    <div>
-                        <span class="closeModal">닫기</span>
-                        <button type="submit">주소지 등록</button>
-                    </div>
-                </div>
-            </div>
         </div>
         <th:block>
 
@@ -137,6 +127,71 @@
             <label for="elevator">엘리베이터 유무</label>
             <input type="text" id="elevator" name="elevator" class="add" th:value="${order.elevator}">
         </div>
+
+    </fieldset>
+    <button name="refundSubmit" type="submit">신청하기</button>
+    <button name="refundReset" type="reset">초기화</button>
+
+</form>
+
+        <div class="modal fade" id="addressBtn" tabindex="-1" aria-labelledby="addressTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addressTitle">주소지 등록</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="javascript:void(0)" id="addressRegister" method="POST" name="addressRegister">
+                            <div>
+                                <label for="userId" th:text="${session.loginUser.userId}"></label>
+                                <input type="hidden" name="userId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
+                            </div>
+                            <div>
+                                <label for="newAname">주소지 이름</label>
+                                <input type="text" name="aname" id="newAname" required>
+                            </div>
+                            <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
+                            <div>
+                                <label for="postCode">우편번호</label>
+                                <input type="number" name="postCode" id="newPostCode" required>
+                            </div>
+                            <div>
+                                <label for="newAddress">주소</label>
+                                <input type="text" name="address" id="newAddress" required>
+                            </div>
+                            <div>
+                                <label for="newAddressDetail">상세주소</label>
+                                <input type="text" name="addressDetail" id="newAddressDetail" required>
+                            </div>
+                            <div>
+                                <label for="newReceiverName">수령인 이름</label>
+                                <input type="text" name="receiverName" id="newReceiverName" required>
+                            </div>
+                            <fieldset>
+                                <label for="newReceiverPhone">수령인 전화번호</label>
+                                <input type="number" id="newReceiverPhone" name="receiverPhone" maxlength="11" required>
+                            </fieldset>
+
+                            <div>
+                                <label for="newHome">기본 배송지 설정 여부</label>
+                                <input type="checkbox" name="home" id="newHome" value="1">
+                            </div>
+                            <div>
+                                <label for="newElevator">엘레베이터 유무 여부</label>
+                                <input type="checkbox" name="elevator" id="newElevator" value="1">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" form="addressRegister" name="addressSubmit" class="btn btn-primary" onclick="newAddressSubmit()">등록하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
             let cancelAmount = document.querySelector("#cancelAmount");
             function changeOpt(){
@@ -172,11 +227,121 @@
                 currentAddressList[6].value = addressMap.get("elevator");
             }
 
-        </script>
-    </fieldset>
-    <button type="submit">신청하기</button>
-    <button type="reset">초기화</button>
-</form>
+            let refundRegister = document.forms.refundRegister;
+            let newAddressRegister = document.forms.addressRegister;
+            let addressReg = document.getElementById("addressRegister");
+            console.log(refundRegister);
+            console.log(newAddressRegister);
+            let formTest = new FormData(newAddressRegister);
+            let keys = formTest.keys();
+            let vals = formTest.values();
+            for (const pair of keys){
+                console.log(pair);
+            }
+            for (const pair of vals){
+                console.log(pair);
+            }
 
+
+            async function newAddressSubmit(){
+                newAddressRegister.addressSubmit.onsubmit=(e)=>{e.preventDefault()};
+
+                let isOk = true;
+                if (!newAddressRegister.aname.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }else if (!newAddressRegister.postCode.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }else if (!newAddressRegister.address.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }else if (!newAddressRegister.addressDetail.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }else if (!newAddressRegister.receiverName.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }else if (!newAddressRegister.receiverPhone.value){
+                    alert("요소를 모두 입력해주세요.");
+                    return false;
+                }
+                console.log("newAddress submit click!!");
+                let url="/address/user_yes/mypage/register.do";
+                const form = new FormData(newAddressRegister);
+                const response = await fetch(url,{
+                    method: 'POST',
+                    body: form,
+                })
+                console.log("response.ok:"+response.ok);
+                console.log("response.redirected:"+response.redirected);
+
+            }
+
+
+            function DaumPostcode() {
+                new daum.Postcode({
+                    oncomplete: function(data) {
+                        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                        // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                        let addr = ''; // 주소 변수
+                        let extraAddr = ''; // 참고항목 변수
+
+                        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                            addr = data.roadAddress;
+                        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                            addr = data.jibunAddress;
+                        }
+
+                        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                        if(data.userSelectedType === 'R'){
+                            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                            if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                                extraAddr += data.bname;
+                            }
+                            // 건물명이 있고, 공동주택일 경우 추가한다.
+                            if(data.buildingName !== '' && data.apartment === 'Y'){
+                                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                            }
+                            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                            if(extraAddr !== ''){
+                                extraAddr = ' (' + extraAddr + ')';
+                            }
+                            // 조합된 참고항목을 해당 필드에 넣는다.
+                            document.getElementById("addressDetail").value = extraAddr;
+
+                        } else {
+                            document.getElementById("addressDetail").value = '';
+                        }
+
+                        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                        document.getElementById('newPostCode').value = data.zonecode;
+                        document.getElementById("newAddress").value = addr;
+                        // 커서를 상세주소 필드로 이동한다.
+                        document.getElementById("addressDetail").focus();
+                    }
+                }).open();
+            }
+
+            async function registerAddress(){
+                let url="/address/user_yes/mypage/register.do";
+                const form = new FormData(newAddressRegister);
+                const response = await fetch(url,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: 'follow',
+                    body: form,
+                })
+
+                let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
+                console.log(commits)
+            }
+        </script>
 </div>
 </html>

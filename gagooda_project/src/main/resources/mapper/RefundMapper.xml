@@ -22,6 +22,14 @@
                      column="order_id"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      fetchType="lazy"/>
+        <association property="rfDetDto"
+                     column="rf_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.finbByDetCode"
+                     fetchType="lazy"/>
+        <association property="rfrDetDto"
+                     column="rfr_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.finbByDetCode"
+                     fetchType="lazy"/>
         <association property="orderDetailDto"
                      column="order_detail_Id"
                      select="com.example.gagooda_project.mapper.OrderDetailMapper.findById"
