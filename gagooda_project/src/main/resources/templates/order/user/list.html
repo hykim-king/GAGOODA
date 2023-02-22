@@ -11,21 +11,21 @@
 <div layout:fragment="myPageContent">
     <h1>주문 목록</h1>
     <!--기간별 조회-->
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
             <a class="nav-link" th:href="@{ '' (dates=7) }">7일</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{ '' (dates=15) }">15일</a>
+            <a class="nav-link"  th:href="@{ '' (dates=15) }">15일</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{ '' (dates=30) }">1개월</a>
+            <a class="nav-link" th:href="@{ '' (dates=30) }" >1개월</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" th:href="@{ '' (dates=90) }">3개월</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" th:href="@{ '' (dates=365) }">1년</a>
+            <a class="nav-link" th:href="@{ '' (dates=365) }" >1년</a>
         </li>
     </ul>
     <!--기간별 조회 end--------------->
@@ -60,7 +60,7 @@
                     <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
                     <button class="btn btn-primary">배송 조회</button>
                     <button class="btn btn-primary"
-                            th:classappend="${(#strings.equals(order.oDet,'o3')||(#strings.equals(order.oDet,'o5')))?'disabled':''}">주문 취소</button>
+                            th:classappend="${(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))?'disabled':''}">주문 취소</button>
                 </td>
 
 
@@ -69,16 +69,23 @@
     </table>
     <!--주문 목록 table end----------------->
     <!--pagination-->
-    <nav aria-label="Page navigation ">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
-            </li>
-        </ul>
-    </nav>
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation ">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <!--pagination end--------------->
+    <script th:inline="javascript">
+        function active(aTag){
+            aTag.classList.add("active");
+        }
+    </script>
 </div>
 </html>

@@ -8,13 +8,13 @@
     <title>주문 관리자</title>
 </head>
 <div layout:fragment="content">
-<form action="order/admin/list.do" method="get" id="searchForm" name="searchForm">
+<form action="list.do" method="get" id="searchForm" name="searchForm">
   <div>
     <label class="d-block">검색 키워드 :
       <select name="searchDiv" id="searchDiv">
         <option value="" selected disabled>검색 분류 선택</option>
         <option value="order_id">주문번호</option>
-        <option value="orderID">주문자명</option>
+        <option value="user_name">주문자명</option>
       </select>
       <input type="text" id="searchWord" name="searchWord">
     </label>
@@ -30,15 +30,16 @@
       <label><input type="checkbox" name="oDet" id="o0" value="o0" > 결제 미확인 </label>
       <label><input type="checkbox" name="oDet" id="o1" value="o1" > 결제 확인 </label>
       <label><input type="checkbox" name="oDet" id="o2" value="o2" > 주문 완료 </label>
-      <label><input type="checkbox" name="oDet" id="o5" value="o5" > 주문 취소 요청 </label>
-      <label><input type="checkbox" name="oDet" id="o3" value="o3" > 주문 취소 </label>
-      <label><input type="checkbox" name="oDet" id="o4" value="o4" > 구매 확정 </label>
+      <label><input type="checkbox" name="oDet" id="o3" value="o3" > 구매 확정 </label>
+      <label><input type="checkbox" name="oDet" id="o4" value="o4" > 주문 취소 요청 </label>
+      <label><input type="checkbox" name="oDet" id="o5" value="o5" > 주문 취소 </label>
+
     </div>
   </div>
   <button type="submit" class="btn btn-outline-secondary">검색</button>
   <button name="reset" type="reset">초기화</button>
 </form>
-  <h3>주문 목록 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}+'개'"></span></h3>
+  <h3>주문 목록 <span th:if="${orderList != null && !orderList.isEmpty() }" th:text="${orderList.size()}+'개'"></span></h3>
   <table>
     <thead>
     <tr>
@@ -78,7 +79,7 @@
   </nav>
   <!--pagination end--------------->
   <script th:inline="javascript">
-    const forms = document.forms.searchForm;
+    const forms = document.forms["searchForm"];
     console.log(forms);
     forms.searchDiv.onchange = (qualifiedName, value)=>{
       console.log(forms.searchDiv.value);

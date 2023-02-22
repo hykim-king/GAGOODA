@@ -112,6 +112,7 @@ public class OrderServiceImp implements OrderService {
             String oDet = searchFilter.get("oDet").toString();
             List<String> oList = new ArrayList<>(Arrays.asList(oDet.split(",")));
             String oDetF = "'"+String.join("','", oList)+"'";
+            System.out.println("oDetF: "+oDetF);
             searchFilter.put("rfDet", oDetF);
         }
         if(!searchFilter.get("searchWord").equals("")){

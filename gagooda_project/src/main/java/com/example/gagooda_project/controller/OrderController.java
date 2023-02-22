@@ -50,11 +50,13 @@ public class OrderController {
                 searchFilter.put("oDet",oDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
                 searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
                 searchFilter.put("paging", paging);
+                log.info("searchFilter: "+searchFilter);
                 List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
                 List<OrderDto> orderList = orderService.showOrderList(searchFilter);
                 int oCount = orderService.countPageAll(searchFilter);
+                log.info("oCount: "+ oCount);
 //                int allRfCnt = refundServiceImp.countAll();
-                log.info(orderList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
+                log.info("orderList:"+ orderList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
                 model.addAttribute("orderList", orderList);
                 model.addAttribute("oCodeList", oCodeList);
                 model.addAttribute("paging",paging);

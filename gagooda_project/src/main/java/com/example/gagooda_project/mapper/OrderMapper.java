@@ -45,5 +45,7 @@ public interface OrderMapper {
     List<OrderDto> pageAdminAll(Map<String, Object> searchFilter);
     int countPageAll(Map<String, Object> searchFilter);
 
+    int deleteByStatus(String oDet);
+
 
 }
