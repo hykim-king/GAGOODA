@@ -22,7 +22,6 @@
                     fetchType="lazy"/>
 
     </resultMap>
-
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
         <id column="o_det" property="oDet"/>
         <id column="cnt" property="count"/>
@@ -48,7 +47,6 @@
     <select id="countByNotStatus" resultType="int">
         SELECT COUNT(*) FROM order_db WHERE user_id=#{userId} AND NOT o_det=#{oDet}
     </select>
-
     <select id="listByStatus" resultMap="orderMap">
         SELECT * FROM order_db WHERE o_det=#{oDet}
     </select>
@@ -106,6 +104,4 @@
     <update id="updateStatus">
         UPDATE order_db SET o_det=#{oDet} WHERE order_id=#{id}
     </update>
-
-
 </mapper>
