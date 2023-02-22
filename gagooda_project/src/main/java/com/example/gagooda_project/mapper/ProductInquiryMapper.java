@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface ProductInquiryMapper {
 
-    List<ProductInquiryDto> listByProductCode(String productCode);
+    List<ProductInquiryDto> listByProductCode(String productCode, PagingDto paging);
 
     int insertOne(ProductInquiryDto productInquiryDto);
 
@@ -21,7 +21,7 @@ public interface ProductInquiryMapper {
 
     int deleteById(int id);
 
-    int countByPInquiryId(String productCode);
+    int countByPInquiryId(String productCode, PagingDto paging);
 
     List<ProductInquiryDto> pageAll(PagingDto paging);
 

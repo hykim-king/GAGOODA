@@ -35,11 +35,13 @@ public class ProductInquiryController {
                        @RequestParam(required = true, name = "productCode") String productCode,
                        @SessionAttribute(required = false) String msg,
                        HttpSession session,
-                       @SessionAttribute(required = false) UserDto loginUser
+                       @SessionAttribute(required = false) UserDto loginUser,
+                       HttpServletRequest req
     ) {
         int list = 0;
-        List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode);
-        int count = productInquiryService.numPInquiryId(productCode);
+        if(paging.getOrderField()==null)paging.setOrderField("p_inquiry_id");
+        List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+        int count = productInquiryService.numPInquiryId(productCode, paging);
         try {
             if (msg != null) {
                 session.removeAttribute("msg");
@@ -49,6 +51,7 @@ public class ProductInquiryController {
             log.info(productCode);
             model.addAttribute("count", count);
             model.addAttribute("plist", plist);
+            model.addAttribute("paging",paging);
             list = 1;
         } catch (Exception e) {
             e.printStackTrace();

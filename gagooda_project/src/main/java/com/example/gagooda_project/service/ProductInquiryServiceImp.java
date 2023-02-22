@@ -25,8 +25,10 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
         this.optionProductMapper = optionProductMapper;
     }
 
-    public List<ProductInquiryDto> showInquiries(String productCode){
-        return productInquiryMapper.listByProductCode(productCode);
+    public List<ProductInquiryDto> showInquiries(String productCode, PagingDto paging){
+        int totalRows = productInquiryMapper.countByPInquiryId(productCode, paging);
+        paging.setTotalRows(totalRows);
+        return productInquiryMapper.listByProductCode(productCode,paging);
     }
 
     @Override
@@ -67,8 +69,8 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     }
 
     @Override
-    public int numPInquiryId(String productCode) {
-        return productInquiryMapper.countByPInquiryId(productCode);
+    public int numPInquiryId(String productCode, PagingDto paging) {
+        return productInquiryMapper.countByPInquiryId(productCode, paging);
     }
 
     @Override

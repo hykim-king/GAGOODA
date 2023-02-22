@@ -11,7 +11,7 @@ public interface ProductInquiryService {
 
 
 //  productCode에 맞는 문의 리스트
-    List<ProductInquiryDto> showInquiries(String ProductCode);
+    List<ProductInquiryDto> showInquiries(String ProductCode, PagingDto paging);
 
 //  문의 등록
     int registerProductInquiry (ProductInquiryDto productInquiryDto);
@@ -35,7 +35,7 @@ public interface ProductInquiryService {
     List<OptionProductDto> showOptionProduct(String productCode);
 
 //  상품별 문의 수
-    int numPInquiryId (String productCode);
+    int numPInquiryId (String productCode, PagingDto paging);
 
 //  전체 문의 수
     int totalCount (PagingDto paging);
