@@ -1,5 +1,6 @@
 package com.example.gagooda_project.mapper;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ReviewDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -20,4 +21,7 @@ public interface ReviewMapper {
 
     int deleteOne(int reviewId);
 
+    int countByProductCode(String productCode);
+
+    List<ReviewDto> listByProductCodeAll(String productCode);
 }

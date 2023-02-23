@@ -15,7 +15,7 @@
         <th:block th:each="det:${myPageDetList}">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span th:text="${det.detName}"></span>
-                <div style="background-color: #ddd; margin: 10px 0; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center;" >
+                <div style="background-color: #a6a6a6; margin: 10px 0; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center;" >
                     <div style="font-size: x-large; color: #ffffff; font-weight: bold" th:text="${count.get(det.detCode)}"></div>
                 </div>
             </div>
