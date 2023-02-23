@@ -21,15 +21,19 @@
                             d_det=#{dDet}
                             WHERE order_id=#{orderId}
     </insert>
+
     <insert id="insertOne">
-#         INSERT INTO delivery \\
+#       INSERT INTO delivery \\
     </insert>
+
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
     </delete>
+
     <select id="findByOrderId" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE order_id=#{orderId}
     </select>
+
     <select id="listAll" resultMap="deliveryMap" parameterType="hashmap">
         SELECT * FROM delivery
         <where>
