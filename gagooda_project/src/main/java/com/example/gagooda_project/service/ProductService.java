@@ -21,4 +21,14 @@ public interface ProductService {
     int remove(String productCode);
     List<ProductDto> pagingProduct(PagingDto paging, Map<String, Object> map);
     List<ProductDto> friMainList(String place);
+
+    int modifyOne(
+            ProductDto product,
+            List<MultipartFile> imageFileList,
+            List<MultipartFile> infoImageFileList,
+            HashSet<String> categoryIdList,
+            List<String> imgToDelete,
+            UserDto loginUser,
+            String imgPath
+    );
 }

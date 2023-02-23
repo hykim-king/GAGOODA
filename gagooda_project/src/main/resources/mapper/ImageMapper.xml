@@ -11,10 +11,13 @@
     <delete id="deleteByImgCode">
         DELETE FROM image WHERE img_code=#{imgCode}
     </delete>
+    <delete id="deleteByImgCodeAndSeq">
+        DELETE FROM image WHERE img_code=#{imgCode} AND seq=#{seq}
+    </delete>
     <select id="findByImgCodeAndSeq" resultMap="imageMap">
         SELECT * FROM image WHERE img_code=#{imgCode} AND seq=#{seq}
     </select>
     <select id="listByImgCode" resultMap="imageMap">
-        SELECT * FROM image WHERE img_code=#{imgCode}
+        SELECT * FROM image WHERE img_code=#{imgCode} ORDER BY seq ASC
     </select>
 </mapper>

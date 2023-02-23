@@ -5,10 +5,10 @@
       layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>새로운 상품 등록</title>
+    <title th:text="${product.productCode}+' 상품 수정'"></title>
 </head>
 <div layout:fragment="content">
-    <form action="/product/admin/register.do"
+    <form th:action="@{'/product/admin/{productCode}/modify.do'(productCode=${product.productCode})}"
           enctype="multipart/form-data"
           method="post"
           name="productForm"
@@ -49,90 +49,84 @@
         <input type="text" id="margin" name="margin" th:value="${product.margin}">
         <br>
         <div class="already-images">
-            <p uk-form-custom="target: true">
-                <input type="file" name="imgFile" aria-label="Custom controls">
-                <input type="text" placeholder="수정 할 이미지 파일" disabled>
-            </p>
             <th:block th:if="${product.imageList != null}"
-                      th:each="image:${product.imageList}">
-                <img class="uk-object-cover" style="width: 100px;height: 100px;"
-                     th:src="@{'/img/product/{imgPath}'(imgPath=${image.imgPath})}" alt="Avatar">
+                      th:each="image, num:${product.imageList}">
+                <div th:id="${image.imgCode}+${num.count}" class="imageEx">
+                    <label>
+                        <input type="checkbox" name="imgToDelete" th:value="${image.imgCode}+'/'+${image.seq}">
+                        <img style="width: 100px;height: 100px;"
+                             th:src="@{'/img/product/{imgPath}'(imgPath=${image.imgPath})}" alt="Avatar">
+                    </label>
+                </div>
             </th:block>
         </div>
         <div class="images">
-            <div>
-                <label for="image">이미지:</label>
-                <input type="file" id="image" name="imageFile">
-            </div>
         </div>
         <button type="button" name="moreImg">상품 이미지 추가</button>
+        <div class="already-infoimages">
+            <th:block th:if="${product.infoImageList != null}"
+                      th:each="image:${product.infoImageList}">
+                <div th:id="${image.imgCode}+${num.count}" class="infoImageEx">
+                    <label>
+                        <input type="checkbox" name="imgToDelete" th:value="${image.imgCode}+'/'+${image.seq}">
+                        <img style="width: 100px;height: 100px;"
+                             th:src="@{'/img/product/{imgPath}'(imgPath=${image.imgPath})}" alt="Avatar">
+                    </label>
+                </div>
+            </th:block>
+        </div>
         <div class="infoImages">
-            <fieldset>
-                <label for="infoImages">상세 정보 이미지:</label>
-                <input type="file" id="infoImages" name="infoImageFile">
-            </fieldset>
         </div>
         <button type="button" name="moreInfoImg">상세 정보 추가</button>
         <br>
         <div class="option-products">
-            <fieldset class="optionProduct" id="optionProduct">
-                <legend>옵션</legend>
-                <input type="hidden" name="" class="productCode">
-                <input type="hidden" name="" class="optionPrice">
-                <div>
-                    <label for="optionCode">옵션 코드:</label>
-                    <input type="text" id="optionCode" name="" class="optionCode" required>
-                </div>
-                <div>
-                    <label for="optionName">옵션 상품명:</label>
-                    <input type="text" name="" id="optionName" class="optionName" required>
-                </div>
-                <div>
-                    <label for="optionStock">옵션 상품 재고:</label>
-                    <input type="number" name="" id="optionStock" class="optionStock" required>
-                </div>
-            </fieldset>
+            <th:block th:each="option, num:${product.optionProductList}">
+                <fieldset class="optionProduct">
+                    <label>
+                        <legend>기존 옵션</legend>
+                        삭제?
+                        <input type="checkbox" name="optionToDelete" th:value="${option.productCode}">
+                    </label>
+                    <input type="hidden" th:name="'optionUpdateList['+${num.index}+'].productCode'"
+                           th:value="${option.productCode}">
+                    <input type="hidden" th:name="'optionUpdateList['+${num.index}+'].price'"
+                           th:value="${option.price}">
+                    <div>
+                        <label for="optionCode">옵션 코드:</label>
+                        <input type="text" id="optionCode"
+                               th:name="'optionUpdateList['+${num.index}+'].optionCode'"
+                               required readonly th:value="${option.optionCode}">
+                    </div>
+                    <div>
+                        <label for="optionName">옵션 상품명:</label>
+                        <input type="text" name="" id="optionName" required
+                               th:name="'optionUpdateList['+${num.index}+'].opname'"
+                               th:value="${option.opname}">
+                    </div>
+                    <div>
+                        <label for="optionStock">옵션 상품 재고:</label>
+                        <input type="number" th:name="'optionUpdateList['+${num.index}+'].stock'"
+                                id="optionStock" required th:value="${option.stock}">
+                    </div>
+                </fieldset>
+            </th:block>
         </div>
         <br>
         <button type="button" name="moreOptBtn">옵션추가</button>
         <br>
         <h1>카테고리</h1>
+        <fieldset name="existedCategoryContainer">
+            <th:block th:each="categoryConn:${categoryConnList}">
+                <div th:id="${categoryConn.categoryId}+'existed'">
+                    <input type="text" th:name="category"
+                           th:value="${categoryConn.categoryId}">
+                    <button th:onclick="document.getElementById([[${categoryConn.categoryId}]]+'existed').remove()">
+                        삭제
+                    </button>
+                </div>
+            </th:block>
+        </fieldset>
         <fieldset class="categoryContainer" id="conn1">
-            <div class="connContainer">
-                <label>대분류:
-                    <select th:if="${levelOne}!=null" name="category" onchange="levelTwo(1)"
-                        required id="levelOne1">
-                        <option style="display: none;"></option>
-                        <th:block th:each="category : ${levelOne}">
-                            <option th:value="${category.categoryId}"
-                                    th:text="${category.cname}+' ('+${category.categoryId}+')'"></option>
-                        </th:block>
-                    </select>
-                </label>
-                <label>중분류:
-                    <select th:if="${levelTwo}!=null" name="category" onchange="levelThree(1)"
-                        required id="levelTwo1">
-                        <option style="display: none;"></option>
-                        <th:block th:each="category : ${levelTwo}">
-                            <option th:value="${category.categoryId}"
-                                    style="display: none;"
-                                    th:text="${category.cname}+' ('+${category.categoryId}+')'">
-                            </option>
-                        </th:block>
-                    </select>
-                </label>
-                <label>소분류:
-                    <select th:if="${levelTwo}!=null" name="category" id="levelThree1">
-                        <option style="display: none;"></option>
-                        <th:block th:each="category : ${levelThree}">
-                            <option th:value="${category.categoryId}"
-                                    style="display: none;"
-                                    th:text="${category.cname}+' ('+${category.categoryId}+')'">
-                            </option>
-                        </th:block>
-                    </select>
-                </label>
-            </div>
         </fieldset>
         <button type="button" name="moreCategory" onclick="addCategory()">분류 추가</button>
         <br>
@@ -153,10 +147,10 @@
             categoryNum++;
             const div = document.createElement("div");
             div.classList.add("categories");
-            div.id = "categoryFieldSet"+categoryNum;
+            div.id = "categoryFieldSet" + categoryNum;
 
             html = `<label>대분류: `;
-            let level1 =  [[${levelOne}]];
+            let level1 = [[${levelOne}]];
             html += `<select name="category" onchange="levelTwo(${categoryNum})" required id="levelOne${categoryNum}">`;
             html += `<option style="display: none;"></option>`;
             level1.forEach(category => {
@@ -165,7 +159,7 @@
             })
             html += `</select></label>`;
             html += `\n<label>중분류: `;
-            let level2 =  [[${levelTwo}]];
+            let level2 = [[${levelTwo}]];
             html += `<select name="category" onchange="levelThree(${categoryNum})" required id="levelTwo${categoryNum}">`;
             html += `<option style="display: none;"></option>`;
             level2.forEach(category => {
@@ -175,7 +169,7 @@
             })
             html += `</select></label>`;
             html += `\n<label>소분류: `;
-            let level3 =  [[${levelThree}]];
+            let level3 = [[${levelThree}]];
             html += `<select name="category" id="levelThree${categoryNum}">`;
             html += `<option style="display: none;"></option>`;
             level3.forEach(category => {
@@ -201,18 +195,18 @@
 
         function levelTwo(num) {
             console.log(num);
-            const level2 = document.getElementById("levelTwo"+num);
+            const level2 = document.getElementById("levelTwo" + num);
             const options = level2.querySelectorAll("option");
-            const level3 = document.getElementById("levelThree"+num);
+            const level3 = document.getElementById("levelThree" + num);
             const options2 = level3.querySelectorAll("option");
 
             resetSelect(options);
             resetSelect(options2);
 
-            const level1Val = Number($("#levelOne"+num).val());
-            console.log("level1Val: "+level1Val);
+            const level1Val = Number($("#levelOne" + num).val());
+            console.log("level1Val: " + level1Val);
             options.forEach(option => {
-                let val = Number(option.value)/10;
+                let val = Number(option.value) / 10;
                 if (Math.trunc(val) === level1Val) {
                     option.setAttribute("style", "");
                 }
@@ -220,14 +214,14 @@
         }
 
         function levelThree(num) {
-            const level3 = document.getElementById("levelThree"+num);
+            const level3 = document.getElementById("levelThree" + num);
             const options = level3.querySelectorAll("option");
             resetSelect(options);
 
-            const level2Val = Number($("#levelTwo"+num).val());
-            console.log("level2Val: "+level2Val);
+            const level2Val = Number($("#levelTwo" + num).val());
+            console.log("level2Val: " + level2Val);
             options.forEach(option => {
-                let val = Number(option.value)/10;
+                let val = Number(option.value) / 10;
                 if (Math.trunc(val) === level2Val) {
                     option.setAttribute("style", "");
                 }

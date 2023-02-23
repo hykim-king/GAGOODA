@@ -14,4 +14,6 @@ public interface ImageMapper {
     ImageDto findByImgCodeAndSeq(String imgCode, int seq);
 
     List<ImageDto> listByImgCode(String imgCode);
+
+    int deleteByImgCodeAndSeq(String imgCode, int seq);
 }

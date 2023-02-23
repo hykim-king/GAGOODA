@@ -22,7 +22,7 @@ public class AdminCheckInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         log.info("preHandle(uri) : "+ uri);
         if(loginUser_obj==null || !loginUser.getGDet().equals("g1")) {
-            session.setAttribute("msg", "관리자 로그인 후 접근 가능한 서비스 입니다");
+            session.setAttribute("msg", "접근 권한이 없습니다.");
             response.sendRedirect("/");
             return false;
         }
