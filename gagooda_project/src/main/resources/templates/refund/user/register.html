@@ -32,7 +32,7 @@
 <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
 
 
-<form name="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
+<form name="refundRegister" id="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
     <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
     <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
     <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
@@ -44,9 +44,9 @@
             <label for="orderDetailId">환불 대상 상품</label>
             <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
                 <option value="" selected disabled>환불 대상을 선택해주세요.</option>
-                <option value="-1" th:text="'전체 환불'+'( 환불 금액:' + ${order.totalPrice} + ')'"></option>
+                <option value="-1" th:text="'전체 환불'+'( 환불 예상 금액:' + ${order.totalPrice} + ')'" th:data-amount="${order.totalPrice}"></option>
                 <th:block th:each="orderDetail : ${order.orderDetailList}">
-                <option th:text="${orderDetail.optionName+'( 환불 금액:'+orderDetail.price+')'}" th:value="${orderDetail.orderDetailId}"></option>
+                <option th:text="${orderDetail.optionName+'( 환불 예상 금액:'+orderDetail.totalPrice+')'}" th:value="${orderDetail.orderDetailId}" th:data-amount="${orderDetail.totalPrice}"></option>
                 </th:block>
             </select>
         </div>
@@ -59,7 +59,8 @@
         </div>
         <div>
             <label for="cancelAmount">환불 금액</label>
-            <input type="text" id="cancelAmount" name="cancelAmount" disabled>
+            <span></span>
+            <input type="text" id="cancelAmount" name="cancelAmount" readonly="">
         </div>
         <div>
             <label>첨부 이미지
@@ -85,51 +86,20 @@
 
     <fieldset>
         <legend>환불 물품 수거지 주소</legend>
-        <div>
-            <div>
-                <select id="myAddressList" onchange="changeAdd()">
-                    <option value="" disabled selected>내 배송지 목록</option>
-                    <th:block th:if="${addressList != null}" th:each="address:${addressList}">
-                        <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
-                    </th:block>
-                </select>
-            </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addressBtn">
-                새 주소 입력
-            </button>
+        <div id="loadAddressList">
+            <th:block th:include="refund/user/newAddress"></th:block>
+        </div>
 
-        </div>
-        <th:block>
-
-        </th:block>
-        <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
-        <div>
-            <label for="postCode">우편 번호</label>
-            <input type="text" id="postCode" name="postCode" class="add" th:value="${order.postCode}" pattern="[0-9]{5}">
-        </div>
-        <div>
-            <label for="address">주소</label>
-            <input type="text" id="address" name="address" class="add" th:value="${order.address}">
-        </div>
-        <div>
-            <label for="addressDetail">상세 주소</label>
-            <input type="text" id="addressDetail" name="addressDetail" class="add" th:value="${order.addressDetail}">
-        </div>
-        <div>
-            <label for="receiverName">수령인 이름</label>
-            <input type="text" id="receiverName" name="receiverName" class="add" th:value="${order.receiverName}">
-        </div>
-        <div>
-            <label for="receiverPhone">수령인 전화번호</label>
-            <input type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${order.receiverPhone}" pattern="[0-9]{11}">
-        </div>
-        <div>
-            <label for="elevator">엘리베이터 유무</label>
-            <input type="text" id="elevator" name="elevator" class="add" th:value="${order.elevator}">
-        </div>
+<!--        <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">-->
+<!--        <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">-->
+<!--        <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">-->
+<!--        <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">-->
+<!--        <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">-->
+<!--        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">-->
+<!--        <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">-->
 
     </fieldset>
-    <button name="refundSubmit" type="submit">신청하기</button>
+    <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit">신청하기</button>
     <button name="refundReset" type="reset">초기화</button>
 
 </form>
@@ -143,6 +113,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="javascript:void(0)" id="addressRegister" method="POST" name="addressRegister">
+                            <input type="hidden" name="newCheck" value="new">
                             <div>
                                 <label for="userId" th:text="${session.loginUser.userId}"></label>
                                 <input type="hidden" name="userId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
@@ -153,7 +124,7 @@
                             </div>
                             <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
                             <div>
-                                <label for="postCode">우편번호</label>
+                                <label for="newPostCode">우편번호</label>
                                 <input type="number" name="postCode" id="newPostCode" required>
                             </div>
                             <div>
@@ -184,7 +155,7 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-secondary closeBtn" data-bs-dismiss="modal">닫기</button>
                         <button type="button" form="addressRegister" name="addressSubmit" class="btn btn-primary" onclick="newAddressSubmit()">등록하기</button>
                     </div>
                 </div>
@@ -193,21 +164,23 @@
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
-            let cancelAmount = document.querySelector("#cancelAmount");
             function changeOpt(){
+                let cancelAmount = document.querySelector("#cancelAmount");
                 console.log(document.getElementById("orderDetailId"));
                 let changeSelect = document.getElementById("orderDetailId");
-                let optVal = changeSelect.options[changeSelect.selectedIndex].value;
-                console.log("opt:"+optVal);
-                let optTxt = changeSelect.options[changeSelect.selectedIndex].text;
-                console.log("option:"+optTxt);
-                cancelAmount.value = optTxt.split(":")[1].split(")")[0];
+                cancelAmount.value = changeSelect.options[changeSelect.selectedIndex].dataset.amount;
+                // let optVal = changeSelect.options[changeSelect.selectedIndex].value;
+                // console.log("opt:"+optVal);
+                // let optTxt = changeSelect.options[changeSelect.selectedIndex].text;
+                // console.log("option:"+optTxt);
+                // cancelAmount.value = optTxt.split(":")[1].split(")")[0];
             }
 
             const currentAddressList = document.querySelectorAll(".add");
+            const realAddressList = document.querySelectorAll(".realValue");
             function changeAdd(){
                 let addressSlt = document.getElementById("myAddressList");
-                // document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+                document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
                 console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
                 let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
                 let addressMap = new Map();
@@ -219,12 +192,19 @@
                 console.log(addressMap);
                 console.log(addressMap.get("addressId"));
                 currentAddressList[0].value = addressMap.get("addressId");
+                realAddressList[0].value = addressMap.get("addressId");
                 currentAddressList[1].value = addressMap.get("postCode");
+                realAddressList[1].value = addressMap.get("postCode");
                 currentAddressList[2].value = addressMap.get("address");
+                realAddressList[2].value = addressMap.get("address");
                 currentAddressList[3].value = addressMap.get("addressDetail");
+                realAddressList[3].value = addressMap.get("addressDetail");
                 currentAddressList[4].value = addressMap.get("receiverName");
+                realAddressList[4].value = addressMap.get("receiverName");
                 currentAddressList[5].value = addressMap.get("receiverPhone");
+                realAddressList[5].value = addressMap.get("receiverPhone");
                 currentAddressList[6].value = addressMap.get("elevator");
+                realAddressList[6].value = addressMap.get("elevator");
             }
 
             let refundRegister = document.forms.refundRegister;
@@ -255,16 +235,37 @@
                     alert("요소를 모두 입력해주세요.");
                     return false;
                 }
+                newAddressRegister.newCheck.value = "isNew";
                 console.log("newAddress submit click!!");
-                let url="/address/user_yes/mypage/register.do";
+
+                let url="/refund/user_yes/mypage/"+[[${order.orderId}]]+"/addressRegister.do";
                 const form = new FormData(newAddressRegister);
-                const response = await fetch(url,{
+                const resp = await fetch(url,{
                     method: 'POST',
                     body: form,
+                    redirect: "manual"
                 })
-                console.log("response.ok:"+response.ok);
-                console.log("response.redirected:"+response.redirected);
+                console.log("resp.url:"+resp.url);
+                const respJson = await resp.json();
+                console.log("response.json:"+respJson);
+                if (respJson > 0){
+                    let loadAddressList = document.forms.loadAddressList
+                    await loadNewAddress();
+                    let closeBtn = document.querySelector(".closeBtn");
+                    closeBtn.click();
+                }else{
+                    alert("등록에 실패하였습니다. 잘못된 값이 없는지 확인해주세요.")
+                }
+            }
 
+            async function loadNewAddress(){
+                let loadForm = document.querySelector("#loadAddressList")
+                let loadUrl = "/refund/user_yes/mypage/"+[[${order.orderId}]]+"/addressList.do";
+                const response = await fetch(loadUrl);
+                const addressHtml = await response.text();
+                console.log("load$$$$");
+                console.log("addressHtml"+addressHtml);
+                loadForm.innerHTML = addressHtml;
             }
 
 
@@ -316,21 +317,21 @@
                 }).open();
             }
 
-            async function registerAddress(){
-                let url="/address/user_yes/mypage/register.do";
-                const form = new FormData(newAddressRegister);
-                const response = await fetch(url,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    redirect: 'follow',
-                    body: form,
-                })
-
-                let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
-                console.log(commits)
-            }
+            // async function registerAddress(){
+            //     let url="/address/user_yes/mypage/register.do";
+            //     const form = new FormData(newAddressRegister);
+            //     const response = await fetch(url,{
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/x-www-form-urlencoded',
+            //         },
+            //         redirect: 'follow',
+            //         body: form,
+            //     })
+            //
+            //     let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
+            //     console.log(commits)
+            // }
         </script>
 </div>
 </html>

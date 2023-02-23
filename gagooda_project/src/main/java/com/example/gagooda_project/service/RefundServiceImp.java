@@ -153,6 +153,8 @@ public class RefundServiceImp implements RefundService{
 
     public int countByUser(int userId){return refundMapper.countByUserId(userId);};
 
+    public int registerAddress(AddressDto address){return addressMapper.insertOne(address);}
+
     private int imageRegister(MultipartFile imgFile,String imgPath,String code,int seq) throws Exception {
         int register;
         String[] contentsTypes = Objects.requireNonNull(imgFile.getContentType()).split("/");

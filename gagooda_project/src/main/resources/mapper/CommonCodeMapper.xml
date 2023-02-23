@@ -24,7 +24,7 @@
     <select id="listByMstCode" resultMap="commonCodeMap" >
         SELECT * FROM common_code WHERE mst_code = #{mstCode}
     </select>
-    <select id="finbByDetCode" resultMap="commonCodeMap">
+    <select id="findByDetCode" resultMap="commonCodeMap">
         SELECT * FROM common_code WHERE det_code = #{detCode}
     </select>
     <select id="findByMstAndDetCode" resultMap="commonCodeMap">
