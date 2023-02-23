@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ReviewDto;
 
@@ -12,5 +13,5 @@ public interface ReviewService {
     int updateOne(ReviewDto dto);
     int remove(int reviewId);
 
-
+    List<OptionProductDto> showOptionProduct(String productCode);
 }
