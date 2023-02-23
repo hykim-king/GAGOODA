@@ -6,6 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <title>사용자 회원가입</title>
+
 </head>
 <div layout:fragment="content">
 <form action="/user/signup.do" method="post">
@@ -82,7 +83,7 @@
     <label for="phone" class="form-label">전화번호</label>
     <div class="input-group mb-3">
         <input type="text" class="form-control form-control-lg" id="phone" name="phone" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-        <button type="button" class="input-group-text" style="background-color: #FFFAF5; color: #B68C68"  id="basic-addon2">인증번호 받기</button>
+        <button type="button" class="input-group-text" onclick="onClickCertification()" style="background-color: #FFFAF5; color: #B68C68"  id="basic-addon2">인증번호 받기</button>
     </div>
     <div class="mb-3">
         <label for="varify" class="form-label">인증번호 입력</label>
@@ -104,8 +105,61 @@
         <input type="submit" class="form-control form-control-lg text-white my-5" value="가입하기" style="background-color: #B68C68;">
     </div>
 </form>
+
+<script>
+    var IMP = window.IMP;
+    IMP.init("imp61025700");
+
+    function onClickCertification() {
+        console.log("click");
+        /* 2. 본인인증 데이터 정의하기 */
+        const data = {
+            merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
+            company: '아임포트', // 회사명 또는 URL
+            // carrier: 'KT', // 통신사
+            // name: '양한나', // 이름
+            // phone: '01043302309', // 전화번호
+            popup: false
+        };
+
+        /* 4. 본인인증 창 호출하기 */
+        IMP.certification(data, callback);
+    };
+
+    /* 3. 콜백 함수 정의하기 */
+    function callback(response) {
+        const {
+            success,
+            merchant_uid,
+            error_msg
+        } = response;
+
+        if (success) {
+            console.log('본인인증 성공');
+            $.ajax({
+                type: 'POST',
+                url: 'user/signup.do',
+                dataType:'json',
+                data: {'imp_uid' : response.imp_uid},
+            });
+            console.log(response.imp_uid);
+        } else {
+            console.log(`본인인증 실패: ${error_msg}`);
+        }
+    }
+
+    // app.use(bodyParser.json());
+    // // "/certifications"에 대한 POST 요청을 처리하는 controller
+    // app.post("/certifications", async (request, response) => {
+    //     // request의 body에서 imp_uid 추출
+    //     const { imp_uid } = request.body;
+    //     console.log(imp_uid);
+    // })
+
+
+
+
+</script>
 </div>
-
-
 
 </html>
