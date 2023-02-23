@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
+<html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/mypageLayout}"">
+      layout:decorate="~{/layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<div layout:fragment="myPageContent">
-
+<div layout:fragment="content">
+    <div>
+        <select class="form-select-sm" name="" id="">
+            <option value="" selected disabled>정렬</option>
+            <option value="">최신순</option>
+            <option value="">평점 높은순</option>
+            <option value="">평점 낮은순</option>
+        </select>
+    </div>
+    <th:block th:each="review:${reviewList}">
+        아이디<p th:text="${review.user.nickname}+'님의 리뷰입니다.'"></p>
+        평점<p th:text="${review.rate}"></p>
+        등록날짜<p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
+        내용<p th:text="${review.content}"></p>
+        <button>삭제</button>
+    </th:block>
 </div>
 </html>
