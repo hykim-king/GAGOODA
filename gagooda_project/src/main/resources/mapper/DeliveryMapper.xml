@@ -7,14 +7,17 @@
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
         <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_phone" property="userPhone"/>
         <result column="invoice" property="invoice"/>
         <association property="orderDto"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      column="order_id"
                      fetchType="lazy"/>
         <association property="dDetDto"
-                     column="d_det"
                      select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
+                     column="d_det"
                      fetchType="lazy"/>
     </resultMap>
 
@@ -26,7 +29,8 @@
                             WHERE order_id=#{orderId}
     </insert>
     <insert id="insertOne">
-        INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request) VALUES (#{orderId},${userId},${userName},${userEmail},${userPhone},${request})
+        INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request)
+        VALUES (#{orderId},#{userId},#{userName},#{userEmail},#{userPhone},#{request})
     </insert>
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
