@@ -27,4 +27,5 @@ public class ProductDto {
     private List<ImageDto> infoImageList;
     private List<OptionProductDto> optionProductList;
     private List<CategoryConnDto> categoryConnList;
+    private List<OptionProductDto> optionUpdateList;
 }

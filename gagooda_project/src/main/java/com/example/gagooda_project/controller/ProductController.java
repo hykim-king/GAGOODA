@@ -206,7 +206,6 @@ public class ProductController {
         paging.setRows(20);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
-        model.addAttribute("paging", paging);
         Map<String, Object> map = new HashMap<>();
         if (categoryIdList != null) {
             map.put("categoryIdList", categoryIdList);
@@ -223,6 +222,7 @@ public class ProductController {
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
             model.addAttribute("productList", productList);
+            model.addAttribute("paging", paging);
 
             Map<String, String> detDict = commonCodeService.showNames("p");
             model.addAttribute("detDict", detDict);
@@ -301,19 +301,18 @@ public class ProductController {
             @RequestParam(required = false, name = "imageFile") List<MultipartFile> imageFileList,
             @RequestParam(required = false, name = "infoImageFile") List<MultipartFile> infoImageFileList,
             @RequestParam(required = false, name = "imgToDelete") List<String> imgToDelete,
-            @RequestParam(required = false, name = "optionUpdateList") List<OptionProductDto> optionUpdateList,
             @RequestParam(required = false, name = "optionToDelete") List<String> optionToDeleteList
     ) {
         if (loginUser.getGDet().equals("g1")) {
             try {
-                log.info("optionUpdateList printlog: "+optionUpdateList);
-                log.info("optionToDeleteList printlog: "+optionToDeleteList);
-//                int modify = productService.modifyOne(product, imageFileList, infoImageFileList,
-//                        categoryIdList, imgToDelete, loginUser, imgPath);
-//                log.info("modify 성공: "+modify);
+                int modify = productService.modifyOne(product, imageFileList, infoImageFileList,
+                        categoryIdList, imgToDelete, loginUser, imgPath, optionToDeleteList);
+                log.info("modify 성공: "+modify);
+                session.setAttribute("msg", "성공적으로 수정 되었습니다.");
                 return "redirect:/product/admin/product_list.do";
             } catch (Exception | Error e) {
                 e.printStackTrace();
+                session.setAttribute("msg", "수정 중 오류가 있었습니다.");
                 return "redirect:/product/admin/"+productCode+"/modify.do";
             }
         } else {

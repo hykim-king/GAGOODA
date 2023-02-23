@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.StaticMethods;
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.mapper.CategoryConnMapper;
 import com.example.gagooda_project.mapper.ImageMapper;
@@ -76,15 +77,15 @@ public class ProductServiceImp implements ProductService {
         try {
             for (int i = 0; i < imageFileList.size(); i++) {
                 MultipartFile imgFile = imageFileList.get(i);
-                ImageDto image = parseIntoImage(imgFile, product.getImgCode(),
-                        imgPath + "/product", i + 1);
+                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getImgCode(),
+                        imgPath+"/product", i + 1);
                 if (imageMapper.insertOne(image) <= 0) throw new Error();
             }
             System.out.println("imageFileList 완료");
             for (int i = 0; i < infoImageFileList.size(); i++) {
                 MultipartFile imgFile = infoImageFileList.get(i);
-                ImageDto image = parseIntoImage(imgFile, product.getInfoImgCode(),
-                        imgPath + "/product", i + 1);
+                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getInfoImgCode(),
+                        imgPath+"/product", i + 1);
                 if (imageMapper.insertOne(image) <= 0) throw new Error();
             }
         } catch (Exception e) {
@@ -98,30 +99,12 @@ public class ProductServiceImp implements ProductService {
         return productMapper.deleteById(productCode);
     }
 
-    public ImageDto parseIntoImage(MultipartFile imgFile,
-                                   String code,
-                                   String imgPath,
-                                   int seq) throws Exception {
-        ImageDto image = null;
-        String[] contentsTypes = Objects.requireNonNull(imgFile.getContentType()).split("/");
-        if (contentsTypes[0].equals("image")) {
-            String fileName = code + "_" + System.currentTimeMillis() + "_"
-                    + (int) (Math.random() * 10000) + "." + contentsTypes[1];
-            Path path = Paths.get(imgPath + "/" + fileName);
-            imgFile.transferTo(path);
-            image = new ImageDto();
-            image.setImgPath(fileName);
-            image.setImgCode(code);
-            image.setSeq(seq);
-        } else {
-            throw new Exception("사진파일이 아닙니다.");
-        }
-        return image;
-    }
-
     public List<ProductDto> pagingProduct(PagingDto paging, Map<String, Object> map) {
         int totalRows = productMapper.countForPaging(paging, map);
         paging.setTotalRows(totalRows);
+        log.info("pagingDto pagination: "+paging);
+        log.info("totalRows pagination: "+totalRows);
+        log.info("map pagination: "+map);
         System.out.println(paging);
         return productMapper.pageForPaging(paging, map);
     }
@@ -140,7 +123,8 @@ public class ProductServiceImp implements ProductService {
             HashSet<String> categoryIdList,
             List<String> imgToDelete,
             UserDto loginUser,
-            String imgPath
+            String imgPath,
+            List<String> optionToDeleteList
     ) {
         // imgCode, infoImgCode 설정
         product.setImgCode(product.getProductCode());
@@ -150,7 +134,7 @@ public class ProductServiceImp implements ProductService {
         List<ImageDto> imagesToDelete = new ArrayList<>();
         try {
             // 기존 상품 정보 수정
-            if (productMapper.updateOne(product) <= 0) throw new Error();
+            if (productMapper.updateOne(product) <= 0) throw new Error("상품 등록 중 오류");
 
             // 기존에 있던 상품과 카테고리 연결 삭제
             categoryConnMapper.deleteByProductCode(product.getProductCode());
@@ -160,16 +144,28 @@ public class ProductServiceImp implements ProductService {
                     CategoryConnDto categoryConn = new CategoryConnDto();
                     categoryConn.setProductCode(product.getProductCode());
                     categoryConn.setCategoryId(categoryId);
-                    if (categoryConnMapper.insertOne(categoryConn) <= 0) throw new Error();
+                    if (categoryConnMapper.insertOne(categoryConn) <= 0)
+                        throw new Error("상품 카테고리 연결 등록 중 오류");
                 }
             }
 
-            // 기존에 있던 옵션상품들 삭제
-            optionProductMapper.deleteByProductCode(product.getProductCode());
+            // 삭제 할 옵션들 삭제
+            for (String optionCode:optionToDeleteList) {
+                if (optionProductMapper.deleteById(optionCode)<=0) throw new Error("옵션 상품 삭제 중 오류");
+                product.getOptionUpdateList().removeIf(optionProduct -> optionCode.equals(optionProduct.getOptionCode()));
+            }
+
+            // 수정 할 옵션들 수정
+            for (OptionProductDto optionProduct:product.getOptionUpdateList()) {
+                optionProduct.setPrice(product.getSalesPc());
+                if (optionProductMapper.updateOne(optionProduct)<=0) throw new Error("옵션 상품 수정 중 오류");
+            }
+
+            // 추가할 옵션들 추가
             for (OptionProductDto option : product.getOptionProductList()) {
                 // 옵션 코드 재설정
                 option.setOptionCode(option.getProductCode() + "_" + option.getOptionCode());
-                if (optionProductMapper.insertOne(option) <= 0) throw new Error();
+                if (optionProductMapper.insertOne(option) <= 0) throw new Error("옵션 추가 중 오류");
             }
 
             // 삭제 될 image데이터 삭제
@@ -187,41 +183,40 @@ public class ProductServiceImp implements ProductService {
             // 이미지 파일들 ImageDto 객체로 변환해서 list에 담기
             for (int i = 0; i < imageFileList.size(); i++) {
                 MultipartFile imgFile = imageFileList.get(i);
-                ImageDto image = parseIntoImage(imgFile, product.getImgCode(),
-                        imgPath + "/product", i + 1);
+                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getImgCode(),
+                        imgPath+"/product", i + 1);
                 imageList.add(image);
             }
             // imageList에 있는 모든 이미지들을 순번을 다시 매겨서 DB에 저장
             for (int i = 0; i < imageList.size(); i++) {
                 imageList.get(i).setSeq(i+1);
-                if(imageMapper.insertOne(imageList.get(i)) <= 0) throw new Error();
+                if(imageMapper.insertOne(imageList.get(i)) <= 0) throw new Error("상품 이미지 등록 중 오류");
             }
 
             List<ImageDto> infoImageList = imageMapper.listByImgCode(product.getInfoImgCode());
             imageMapper.deleteByImgCode(product.getInfoImgCode());
             for (int i = 0; i < infoImageFileList.size(); i++) {
                 MultipartFile imgFile = infoImageFileList.get(i);
-                ImageDto image = parseIntoImage(imgFile, product.getInfoImgCode(),
-                        imgPath + "/product", i + 1);
+                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getInfoImgCode(),
+                        imgPath+"/product", i + 1);
                 infoImageList.add(image);
             }
             for (int i = 0; i < infoImageList.size(); i++) {
                 infoImageList.get(i).setSeq(i+1);
-                if(imageMapper.insertOne(infoImageList.get(i)) <= 0) throw new Error();
+                if(imageMapper.insertOne(infoImageList.get(i)) <= 0) throw new Error("상품 정보 이미지 등록 중 오류");
             }
-            throw new Error("에러는 아니고 성공은 했지만 데이터는 변하면 안되니까");
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error();
         }
 
-//        for (ImageDto deletedImage : imagesToDelete) {
-//            File file = new File(imgPath+"/product/"+deletedImage.getImgPath());
-//            boolean del = file.delete();
-//            log.info(deletedImage.getImgPath()+" 삭제 완료");
-//        }
+        for (ImageDto deletedImage : imagesToDelete) {
+            File file = new File(imgPath+"/product/"+deletedImage.getImgPath());
+            boolean del = file.delete();
+            log.info(deletedImage.getImgPath()+" 삭제 완료: "+del);
+        }
 
-//        return 1;
+        return 1;
     }
 }
 /*
