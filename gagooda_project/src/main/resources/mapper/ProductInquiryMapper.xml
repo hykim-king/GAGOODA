@@ -20,7 +20,7 @@
                      fetchType="lazy"/>
         <association property="commonCodeDto"
                      column="pi_det"
-                     select="com.example.gagooda_project.mapper.CommonCodeMapper.finbByDetCode"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
                      fetchType="lazy"/>
     </resultMap>
 
