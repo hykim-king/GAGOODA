@@ -59,7 +59,7 @@
                 <td th:text="${order.userId}"></td>
                 <td>
                     <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
-                    <button class="btn btn-primary">배송 조회</button>
+                    <button class="btn btn-primary" th:onclick="location.href=[[@{'/delivery/user_yes/mypage/{orderId}/detail.do'(orderId=${order.orderId})}]]">배송 조회</button>
                     <button id="cancelOrder" class="btn btn-primary" th:onclick="cancelRecheck([[${order.orderId}]])"
                             th:classappend="${(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))?'disabled':''}">주문 취소</button>
                 </td>

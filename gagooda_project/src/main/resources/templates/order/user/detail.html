@@ -40,10 +40,10 @@
                     <td th:text="${orderDetail.totalPrice}"></td>
                     <td>
                         <div>
-                            <button>교환</button>
+                            <button >교환</button>
                         </div>
                         <div>
-                            <button>환불</button>
+                            <button th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderId}/register.do'(orderId=${order.orderId})}]]">환불</button>
                         </div>
                       </td>
                 </tr>

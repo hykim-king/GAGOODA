@@ -16,14 +16,14 @@
         <result column="receiver_phone" property="receiverPhone"/>
         <result column="img_path" property="imgPath"/>
         <result column="o_det" property="oDet"/>
+        <association property="commonCodeDto"
+                     column="o_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
+                     fetchType="lazy"/>
         <collection property="orderDetailList"
                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findByOrderId"
                     column="order_id"
                     fetchType="lazy"/>
-        <association property="commonCodeDto"
-                     column="pi_det"
-                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
-                     fetchType="lazy"/>
 
     </resultMap>
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
