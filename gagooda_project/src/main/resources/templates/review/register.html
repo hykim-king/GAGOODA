@@ -8,18 +8,31 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-    <form action="/review/user_yes/register.do" method="post" name="reviewForm" multiple enctype="multipart/form-data">
+    <form action="/review/user_yes/register.do" method="post" name="reviewForm" enctype="multipart/form-data">
         <h2 class="text-center mb-5">리뷰 등록</h2>
         <div class="mx-auto" style="width: 50%">
             <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
-            <input type="hidden" name="optionCode" id="optionCode" th:value="${optionCode}">
+            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
+            <div class="mb-3">
+                <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
+                    <option value="">상품 옵션</option>
+                    <th:block th:each="optionProduct:${optionProductList}">
+                        <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
+                    </th:block>
+                </select>
+                <div class="invalid-feedback">Example invalid select feedback</div>
+            </div>
+            <div class="mb-3">
+                <label for="rate" class="form-label">평점</label>
+                <input type="number" class="form-control" id="rate">
+            </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
                 <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
             </div>
             <div class="mb-3">
-                <label for="image">이미지 첨부</label>
-                <input type="file" class="form-control" name="image" id="image">
+                <label for="imgFile">이미지 첨부</label>
+                <input type="file" class="form-control" name="imgFile" id="imgFile">
             </div>
             <div class="d-grid gap-2">
                 <button class="btn btn-primary" type="submit">등록</button>
