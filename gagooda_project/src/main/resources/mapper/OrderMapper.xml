@@ -20,6 +20,10 @@
                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findByOrderId"
                     column="order_id"
                     fetchType="lazy"/>
+        <association property="commonCodeDto"
+                     column="pi_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
+                     fetchType="lazy"/>
 
     </resultMap>
     <resultMap id="oDetMap" type="ODetDto" autoMapping="true">
