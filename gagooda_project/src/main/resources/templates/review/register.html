@@ -1,12 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-<form action="/review/user_yes/register.do" method="post">
-    <input type="text" name="optionCode" th:value="${optionCode}" readonly>
-</form>
-</body>
+<div layout:fragment="content">
+    <form action="/review/user_yes/register.do" method="post" name="reviewForm" multiple enctype="multipart/form-data">
+        <h2 class="text-center mb-5">리뷰 등록</h2>
+        <div class="mx-auto" style="width: 50%">
+            <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+            <input type="hidden" name="optionCode" id="optionCode" th:value="${optionCode}">
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image">이미지 첨부</label>
+                <input type="file" class="form-control" name="image" id="image">
+            </div>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">등록</button>
+            </div>
+        </div>
+    </form>
+</div>
 </html>

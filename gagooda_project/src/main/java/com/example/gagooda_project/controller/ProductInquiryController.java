@@ -40,7 +40,8 @@ public class ProductInquiryController {
     ) {
         int list = 0;
         if(paging.getOrderField()==null)paging.setOrderField("p_inquiry_id");
-        List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+//        List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+        List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
         int count = productInquiryService.numPInquiryId(productCode, paging);
         try {
             if (msg != null) {

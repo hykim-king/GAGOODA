@@ -1,5 +1,6 @@
 package com.example.gagooda_project.dto;
 
+import com.example.gagooda_project.mapper.CommonCodeMapper;
 import lombok.Data;
 
 import java.util.Date;
@@ -18,7 +19,7 @@ public class DeliveryDto {
     private String request; // 배송 요청사항
     private String dDet; // 배송 상태 상세 코드(공통 코드) NN FK (1:1)
     private OrderDto orderDto;
-
+    private CommonCodeDto dDetDto;
 
 
 }

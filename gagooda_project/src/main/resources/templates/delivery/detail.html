@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
+<head>
+  <meta charset="UTF-8">
+  <title>배송 목록</title>
+</head>
+<div layout:fragment="myPageContent">
+  <h2>배송 목록</h2>
+
+  <table>
+    <thead>
+    <th>order_id</th>
+    <th>user_id</th>
+    <th>user_name</th>
+    <th>user_email</th>
+    <th>user_phone</th>
+    <th>invoice</th>
+    <th>start_date</th>
+    <th>end_date</th>
+    <th>request</th>
+    <th>d_det</th>
+    </thead>
+    <tbody>
+    <tr th:each="d:${delivery}" style="cursor: pointer">
+      <td th:text="${d.orderId}"> </td>
+      <td th:text="${d.userId}"> </td>
+      <td th:text="${d.userName}"> </td>
+      <td th:text="${d.userEmail}"> </td>
+      <td th:text="${d.userPhone}"> </td>
+      <td th:text="${d.invoice}"> </td>
+      <td th:text="${d.startDate}"> </td>
+      <td th:text="${d.endDate}"> </td>
+      <td th:text="${d.request}"></td>
+      <td th:text="${d.dDet}"> </td>
+    </tr>
+    </tbody>
+
+
+
+
+</div>
+</html>

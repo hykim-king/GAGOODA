@@ -30,7 +30,8 @@
         <li><a href="exchange/user_yes/mypage/list.do">유저 교환 목록</a></li>
         <li><a th:href="@{ '/exchange/user_yes/mypage/register.do' (orderId='00010') }">교환신청서 작성</a></li>
         <li><a th:href="@{ '/exchange/user_yes/mypage/detail.do' (exchangeId=11) }">교환 상세 페이지</a></li>
-
+        <li><a th:href="@{'review/list.do'(productCode=HA00G01EEU)}">리뷰 리스트</a></li>
+        <li><a th:href="@{'review/user_yes/register.do'(optionCode=HA00G01EEU_GY)}">리뷰 등록</a></li>
     </ul>
     <h2>주문배송팀 이창국 Address</h2>
     <h4>주소지 관련 페이지(Address): 기본적으로 모든 서비스 로그인 필요</h4>
@@ -45,7 +46,6 @@
         <li><a href="/order/user_yes/register.do">주문 등록</a></li>
         <li><a href="/order/admin/list.do">주문 관리자 페이지</a></li>
         <li><a href="/mainpage.do">메인페이지</a></li>
-        
     </ul>
     <h2>주문배송팀 유한비 cart</h2>
     <ul>
@@ -55,8 +55,9 @@
     <ul>
         <li><a href="/refund/user_yes/mypage/list.do">유저 환불 목록(로그인!!!)</a></li>
         <li><a th:href="@{ '/refund/user_yes/mypage/{orderId}/register.do' (orderId='00010') }">유저 환불 등록폼(로그인 후 가능!)</a></li>
-        <li><a th:href="@{ '/refund/user_yes/mypage/{refundId}/detail.do' (refundId=11) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
+        <li><a th:href="@{ '/refund/user_yes/mypage/{refundId}/detail.do' (refundId=1) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
         <li><a href="/refund/admin/list.do">관리자 리스트(로그인)</a></li>
+        <li><a href="/refund/admin/1/detail.do">관리자 상세(로그인)</a></li>
     </ul>
 
     <h2>양한나</h2>

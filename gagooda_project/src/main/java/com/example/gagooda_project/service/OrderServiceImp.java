@@ -63,6 +63,7 @@ public class OrderServiceImp implements OrderService {
             }
         }
        if(delivery != null){
+           System.out.println("Service에서 delivery 넘어오나?: "+delivery);
            register += deliveryMapper.insertOne(delivery);
            for(String cartNum: cartList){
                int cartId = Integer.parseInt(cartNum);

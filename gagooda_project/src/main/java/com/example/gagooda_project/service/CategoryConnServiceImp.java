@@ -1,10 +1,14 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.CategoryConnDto;
+import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.mapper.CategoryConnMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryConnServiceImp implements CategoryConnService {
@@ -22,5 +26,10 @@ public class CategoryConnServiceImp implements CategoryConnService {
     @Override
     public int removeForProduct(String productCode) {
         return categoryConnMapper.deleteByProductCode(productCode);
+    }
+
+    @Override
+    public List<CategoryConnDto> showForProduct(String productCode) {
+        return categoryConnMapper.listByProductCode(productCode);
     }
 }

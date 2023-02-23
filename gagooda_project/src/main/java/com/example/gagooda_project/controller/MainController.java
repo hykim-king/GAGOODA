@@ -38,6 +38,7 @@ public class MainController {
             // 정렬 방향
             recentPaging.setDirect("DESC");
             List<ProductDto> recentProduct = productService.pagingProduct(recentPaging, new HashMap<>());
+            model.addAttribute("recentProduct",recentProduct);
         } catch (Exception e){
             e.printStackTrace();
         }

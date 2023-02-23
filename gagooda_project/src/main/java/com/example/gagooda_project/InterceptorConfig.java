@@ -27,7 +27,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginCheckInterceptor)
                 .addPathPatterns("/**/user_yes/**/");
         registry.addInterceptor(adminCheckInterceptor)
-                .addPathPatterns("/**/admin/*.do")
+                .addPathPatterns("/**/admin/**/")
                 .excludePathPatterns("/user/admin/register.do");
 //        registry.addInterceptor(errorInterceptor);
     }

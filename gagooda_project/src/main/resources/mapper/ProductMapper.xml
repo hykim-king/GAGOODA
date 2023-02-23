@@ -42,7 +42,7 @@
             rot=#{rot},
             margin=#{margin},
             p_det=#{pDet},
-            mod_date=#{modDate},
+            mod_date=NOW(),
             mod_id=#{modId}
         WHERE product_code = #{productCode}
     </update>

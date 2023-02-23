@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="gagooda_public" uuid="612c9f2c-8a1f-492b-b5a1-cb9d4c6b51c1">
+    <data-source source="LOCAL" name="MySQL" uuid="5d04c2aa-120d-40c1-bf65-0bf27047145f">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://jdbc:log4jdbc:mysql://ls-572153144623a9a19dbc0cd813e7ba0ece3ebb9e.cfy1xagoomxv.ap-northeast-2.rds.amazonaws.com:3306/GAGOODA:3306</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="gagooda_public" uuid="5cb37643-3d0f-4ad2-8b9b-ad30fd4fe929">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

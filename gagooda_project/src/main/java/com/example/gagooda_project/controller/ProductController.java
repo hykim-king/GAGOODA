@@ -5,6 +5,8 @@ import com.example.gagooda_project.service.*;
 import com.sun.jdi.event.ExceptionEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
@@ -21,15 +23,19 @@ public class ProductController {
     private final CategoryService categoryService;
     private final CommonCodeService commonCodeService;
     private final ProductInquiryService productInquiryService;
+    private final CategoryConnService categoryConnService;
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductController(ProductService productService,
                              CategoryService categoryService,
                              CommonCodeService commonCodeService,
-                             ProductInquiryService productInquiryService) {
+                             ProductInquiryService productInquiryService,
+                             CategoryConnService categoryConnService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
         this.productInquiryService = productInquiryService;
+        this.categoryConnService = categoryConnService;
     }
 
     @Value("${img.upload.path}")
@@ -165,13 +171,13 @@ public class ProductController {
             @RequestParam(name = "infoImageFile") List<MultipartFile> infoImageFileList
     ) {
         if (loginUser.getGDet().equals("g1")) {
-            int insert = 0;
+            int insert;
             try {
                 // product, categoryConn 등록
                 insert = productService.register(product, imageFileList, infoImageFileList,
                         loginUser, categoryIdList, imgPath);
                 System.out.println("insert:" + insert);
-            } catch (Exception e) {
+            } catch (Exception | Error e) {
                 e.printStackTrace();
                 insert = 0;
             }
@@ -270,6 +276,8 @@ public class ProductController {
             try {
                 ProductDto product = productService.selectOne(productCode);
                 model.addAttribute("product", product);
+                List<CategoryConnDto> categoryConnList = categoryConnService.showForProduct(productCode);
+                model.addAttribute("categoryConnList", categoryConnList);
                 attributesSet(model);
                 return "/product/modify";
             } catch (Exception e) {
@@ -279,6 +287,37 @@ public class ProductController {
             }
         } else {
             session.setAttribute("msg", "관리자만 상품을 등록 할 수 있습니다.");
+            return "redirect:/";
+        }
+    }
+
+    @PostMapping("/admin/{productCode}/modify.do")
+    public String modify(
+            @SessionAttribute UserDto loginUser,
+            HttpSession session,
+            @PathVariable String productCode,
+            ProductDto product,
+            @RequestParam(name = "category") HashSet<String> categoryIdList,
+            @RequestParam(required = false, name = "imageFile") List<MultipartFile> imageFileList,
+            @RequestParam(required = false, name = "infoImageFile") List<MultipartFile> infoImageFileList,
+            @RequestParam(required = false, name = "imgToDelete") List<String> imgToDelete,
+            @RequestParam(required = false, name = "optionUpdateList") List<OptionProductDto> optionUpdateList,
+            @RequestParam(required = false, name = "optionToDelete") List<String> optionToDeleteList
+    ) {
+        if (loginUser.getGDet().equals("g1")) {
+            try {
+                log.info("optionUpdateList printlog: "+optionUpdateList);
+                log.info("optionToDeleteList printlog: "+optionToDeleteList);
+//                int modify = productService.modifyOne(product, imageFileList, infoImageFileList,
+//                        categoryIdList, imgToDelete, loginUser, imgPath);
+//                log.info("modify 성공: "+modify);
+                return "redirect:/product/admin/product_list.do";
+            } catch (Exception | Error e) {
+                e.printStackTrace();
+                return "redirect:/product/admin/"+productCode+"/modify.do";
+            }
+        } else {
+            session.setAttribute("msg", "접근 권한이 없습니다.");
             return "redirect:/";
         }
     }

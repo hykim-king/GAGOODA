@@ -9,8 +9,11 @@
          <result column="product_code" property="productCode" />
          <result column="reg_date" property="regDate" />
          <result column="img_code" property="imgCode" />
+         <association property="user"
+                     column="user_id"
+                     select="com.example.gagooda_project.mapper.UserMapper.findById"
+                     fetchType="lazy"/>
     </resultMap>
-
     <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
         INSERT INTO
             review ( user_id, option_code, product_code, rate, content, img_code)
@@ -36,5 +39,11 @@
 <!--    </select>-->
     <select id="findById" parameterType="Integer" resultMap="reviewMap">
         SELECT * FROM review WHERE review_id=#{id}
+    </select>
+    <select id="countByProductCode" resultType="java.lang.Integer">
+        SELECT COUNT(*) from review WHERE product_code=#{productCode}
+    </select>
+    <select id="listByProductCodeAll" resultMap="reviewMap">
+        SELECT * FROM review WHERE product_code=#{productCode}
     </select>
 </mapper>

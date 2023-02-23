@@ -8,7 +8,7 @@
     <title>주문 관리자</title>
 </head>
 <div layout:fragment="content">
-<form action="list.do" method="get" id="searchForm" name="searchForm">
+<form action="list.do" method="get" id="orderSearchForm" name="orderSearchForm">
   <div>
     <label class="d-block">검색 키워드 :
       <select name="searchDiv" id="searchDiv">
@@ -79,7 +79,7 @@
   </nav>
   <!--pagination end--------------->
   <script th:inline="javascript">
-    const forms = document.forms["searchForm"];
+    const forms = document.forms.orderSearchForm;
     console.log(forms);
     forms.searchDiv.onchange = (qualifiedName, value)=>{
       console.log(forms.searchDiv.value);

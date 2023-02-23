@@ -36,7 +36,7 @@
     <li><a class="afterCode" href="javascript:void(0)" data-val="notEnd">환불 진행 내역</a></li>
     <li><a class="afterCode" href="javascript:void(0)" data-val="end">환불 완료 내역</a></li>
     <!--공통 코드별(진행:rf0,rf2,rf3,rf4,rf5,rf6 / 완료:rf1,rf7,rf8) 선택 조회 end-->
-    <li>(총 환불 신청 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
+    <li>( 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
 </ul>
 
 
@@ -81,8 +81,6 @@
 </nav>
 <!--pagination end--------------->
 
-<th:block th:with="period=${param.period}, startDate=${param.startDate}
-                    , endDate=${param.endDate}, detCode=${param.detCode}">
 <script th:inline="javascript">
     let hrefRows = document.querySelectorAll(".hrefRow");
     hrefRows.forEach((row)=>{
@@ -100,10 +98,10 @@
         param.addEventListener("click", ()=>{
             if (url.includes("?")){
                 if(url.includes("startDate") && url.includes("endDate")){
-                    url = url.replace("startDate="+[[${startDate}]]+"&endDate="+[[${endDate}]],"");
+                    url = url.replace("startDate="+[[${param.startDate}]]+"&endDate="+[[${param.endDate}]],"");
                 }
                 if (url.includes("period")){
-                    document.location.href = url.replace("period="+[[${period}]], "period="+param.dataset.val);
+                    document.location.href = url.replace("period="+[[${param.period}]], "period="+param.dataset.val);
                 }else{
                     document.location.href = url + "&period="+param.dataset.val;
                 }
@@ -117,7 +115,7 @@
         code.addEventListener("click",()=>{
             if (url.includes("?")){
                 if (url.includes("detCode")){
-                    document.location.href = url.replace("detCode="+[[${detCode}]], "detCode="+code.dataset.val);
+                    document.location.href = url.replace("detCode="+[[${param.detCode}]], "detCode="+code.dataset.val);
                 }else{
                     document.location.href = url + "&detCode="+code.dataset.val;
                 }
@@ -127,6 +125,5 @@
         })
     })
 </script>
-</th:block>
 </div>
 </html>

@@ -5,22 +5,27 @@ import com.example.gagooda_project.mapper.CategoryConnMapper;
 import com.example.gagooda_project.mapper.ImageMapper;
 import com.example.gagooda_project.mapper.OptionProductMapper;
 import com.example.gagooda_project.mapper.ProductMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.print.attribute.HashAttributeSet;
-import java.io.IOException;
+import java.awt.*;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 
 @Service
-public class ProductServiceImp implements ProductService{
+public class ProductServiceImp implements ProductService {
     private ProductMapper productMapper;
     private CategoryConnMapper categoryConnMapper;
     private OptionProductMapper optionProductMapper;
     private ImageMapper imageMapper;
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductServiceImp(ProductMapper productMapper,
                              CategoryConnMapper categoryConnMapper,
@@ -65,21 +70,21 @@ public class ProductServiceImp implements ProductService{
         }
         for (OptionProductDto option : product.getOptionProductList()) {
             // 옵션 코드 재설정
-            option.setOptionCode(option.getProductCode()+"_"+option.getOptionCode());
+            option.setOptionCode(option.getProductCode() + "_" + option.getOptionCode());
             if (optionProductMapper.insertOne(option) <= 0) throw new Error();
         }
         try {
             for (int i = 0; i < imageFileList.size(); i++) {
                 MultipartFile imgFile = imageFileList.get(i);
                 ImageDto image = parseIntoImage(imgFile, product.getImgCode(),
-                        imgPath+"/product", i+1);
+                        imgPath + "/product", i + 1);
                 if (imageMapper.insertOne(image) <= 0) throw new Error();
             }
             System.out.println("imageFileList 완료");
             for (int i = 0; i < infoImageFileList.size(); i++) {
                 MultipartFile imgFile = infoImageFileList.get(i);
                 ImageDto image = parseIntoImage(imgFile, product.getInfoImgCode(),
-                        imgPath+"/product", i+1);
+                        imgPath + "/product", i + 1);
                 if (imageMapper.insertOne(image) <= 0) throw new Error();
             }
         } catch (Exception e) {
@@ -97,12 +102,12 @@ public class ProductServiceImp implements ProductService{
                                    String code,
                                    String imgPath,
                                    int seq) throws Exception {
-        ImageDto image=null;
+        ImageDto image = null;
         String[] contentsTypes = Objects.requireNonNull(imgFile.getContentType()).split("/");
-        if(contentsTypes[0].equals("image")) {
-            String fileName=code+"_"+System.currentTimeMillis()+"_"
-                    +(int)(Math.random()*10000)+"."+contentsTypes[1];
-            Path path= Paths.get(imgPath+"/"+fileName);
+        if (contentsTypes[0].equals("image")) {
+            String fileName = code + "_" + System.currentTimeMillis() + "_"
+                    + (int) (Math.random() * 10000) + "." + contentsTypes[1];
+            Path path = Paths.get(imgPath + "/" + fileName);
             imgFile.transferTo(path);
             image = new ImageDto();
             image.setImgPath(fileName);
@@ -124,6 +129,99 @@ public class ProductServiceImp implements ProductService{
     @Override
     public List<ProductDto> friMainList(String place) {
         return productMapper.mainListBySales(place);
+    }
+
+    @Override
+    @Transactional
+    public int modifyOne(
+            ProductDto product,
+            List<MultipartFile> imageFileList,
+            List<MultipartFile> infoImageFileList,
+            HashSet<String> categoryIdList,
+            List<String> imgToDelete,
+            UserDto loginUser,
+            String imgPath
+    ) {
+        // imgCode, infoImgCode 설정
+        product.setImgCode(product.getProductCode());
+        product.setInfoImgCode(product.getProductCode() + "_INFO");
+        product.setModId(loginUser.getUserId());
+
+        List<ImageDto> imagesToDelete = new ArrayList<>();
+        try {
+            // 기존 상품 정보 수정
+            if (productMapper.updateOne(product) <= 0) throw new Error();
+
+            // 기존에 있던 상품과 카테고리 연결 삭제
+            categoryConnMapper.deleteByProductCode(product.getProductCode());
+            // categoryConnList 생성 및 product 에 설정
+            for (String categoryId : categoryIdList) {
+                if (!categoryId.isBlank()) {
+                    CategoryConnDto categoryConn = new CategoryConnDto();
+                    categoryConn.setProductCode(product.getProductCode());
+                    categoryConn.setCategoryId(categoryId);
+                    if (categoryConnMapper.insertOne(categoryConn) <= 0) throw new Error();
+                }
+            }
+
+            // 기존에 있던 옵션상품들 삭제
+            optionProductMapper.deleteByProductCode(product.getProductCode());
+            for (OptionProductDto option : product.getOptionProductList()) {
+                // 옵션 코드 재설정
+                option.setOptionCode(option.getProductCode() + "_" + option.getOptionCode());
+                if (optionProductMapper.insertOne(option) <= 0) throw new Error();
+            }
+
+            // 삭제 될 image데이터 삭제
+            for (String imageCodeSeq : imgToDelete) {
+                String code = imageCodeSeq.split("/")[0];
+                int seq = Integer.parseInt(imageCodeSeq.split("/")[1]);
+                imagesToDelete.add(imageMapper.findByImgCodeAndSeq(code,seq));
+                imageMapper.deleteByImgCodeAndSeq(code, seq);
+            }
+
+            // 남은 이미지를 불러오고, DB 속 이미지들 삭제
+            List<ImageDto> imageList = imageMapper.listByImgCode(product.getImgCode());
+            imageMapper.deleteByImgCode(product.getImgCode());
+
+            // 이미지 파일들 ImageDto 객체로 변환해서 list에 담기
+            for (int i = 0; i < imageFileList.size(); i++) {
+                MultipartFile imgFile = imageFileList.get(i);
+                ImageDto image = parseIntoImage(imgFile, product.getImgCode(),
+                        imgPath + "/product", i + 1);
+                imageList.add(image);
+            }
+            // imageList에 있는 모든 이미지들을 순번을 다시 매겨서 DB에 저장
+            for (int i = 0; i < imageList.size(); i++) {
+                imageList.get(i).setSeq(i+1);
+                if(imageMapper.insertOne(imageList.get(i)) <= 0) throw new Error();
+            }
+
+            List<ImageDto> infoImageList = imageMapper.listByImgCode(product.getInfoImgCode());
+            imageMapper.deleteByImgCode(product.getInfoImgCode());
+            for (int i = 0; i < infoImageFileList.size(); i++) {
+                MultipartFile imgFile = infoImageFileList.get(i);
+                ImageDto image = parseIntoImage(imgFile, product.getInfoImgCode(),
+                        imgPath + "/product", i + 1);
+                infoImageList.add(image);
+            }
+            for (int i = 0; i < infoImageList.size(); i++) {
+                infoImageList.get(i).setSeq(i+1);
+                if(imageMapper.insertOne(infoImageList.get(i)) <= 0) throw new Error();
+            }
+            throw new Error("에러는 아니고 성공은 했지만 데이터는 변하면 안되니까");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Error();
+        }
+
+//        for (ImageDto deletedImage : imagesToDelete) {
+//            File file = new File(imgPath+"/product/"+deletedImage.getImgPath());
+//            boolean del = file.delete();
+//            log.info(deletedImage.getImgPath()+" 삭제 완료");
+//        }
+
+//        return 1;
     }
 }
 /*

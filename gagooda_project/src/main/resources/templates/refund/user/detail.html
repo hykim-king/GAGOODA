@@ -40,11 +40,14 @@
 
 <h3>환불 처리 정보</h3>
 <ul>
-    <li>환불 처리 현황 : <span th:text="${rfDetList[#strings.substring(refund.rfDet, 2)].detName}"></span></li>
+    <li>환불 처리 현황 : <span th:text="${refund.rfrDetDto.detName}"></span></li>
     <li>
-        <div>
-            아직 답변이 달리지 않았습니다.
-        </div>
+        <th:block th:if="${refund.reply != null}" >
+            <div th:text="${refund.reply}"></div>
+        </th:block>
+        <th:block th:unless="${refund.reply != null}">
+            <div> 아직 답변이 달리지 않았습니다. </div>
+        </th:block>
     </li>
 </ul>
 <th:block th:if="${refund.rfDet.equals('rf0')}">
@@ -52,7 +55,7 @@
         <button type="submit" >환불 요청 취소</button>
     </form>
 </th:block>
-    <a th:href="@{'/refund/user_yes/mypage/list.do'}">목록으로</a>
+<a th:href="@{'/refund/user_yes/mypage/list.do'}">목록으로</a>
 
 </div>
 </html>

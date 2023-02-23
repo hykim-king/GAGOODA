@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ReviewDto;
 import com.example.gagooda_project.mapper.ReviewMapper;
 import org.springframework.stereotype.Service;

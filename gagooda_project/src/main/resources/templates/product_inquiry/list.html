@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<h2 th:text="${msg}"></h2>
 <h4>문의수</h4><h4 th:text="${plist.size()}"></h4>
 <div>
     <span th:if="${plist.isEmpty()}">해당 상품에는 문의가 없습니다.</span>

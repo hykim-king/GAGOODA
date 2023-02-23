@@ -197,6 +197,7 @@ public class OrderController {
     public String register(
             OrderDto order,
             @SessionAttribute UserDto loginUser,
+
             @RequestParam(required = false, name="delivery.request") String request,
             @RequestParam(required = true, name="cartItem") List<String> cartList,
             HttpSession session
@@ -233,11 +234,12 @@ public class OrderController {
                 }
                 delivery = new DeliveryDto();
                 delivery.setRequest(request);
-//                delivery.setOrderId(order.getOrderId());
-//                delivery.setUserId(order.getUserId());
-//                delivery.setUserName(order.getUserName());
-//                delivery.setUserEmail(order.getUserEmail());
-//                delivery.setUserPhone(order.getUserPhone());
+                delivery.setOrderId(order.getOrderId());
+                delivery.setUserId(order.getUserId());
+                delivery.setUserName(order.getUserName());
+                delivery.setUserEmail(order.getUserEmail());
+                delivery.setUserPhone(order.getUserPhone());
+                log.info("deliveryDto: "+delivery);
                 order.setOrderDetailList(orderDetailList);
                 log.info("4.order에 address등록 완료");
                 register = orderService.register(order,delivery,cartList);
