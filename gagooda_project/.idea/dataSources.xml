@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="GAGOODA@ls-572153144623a9a19dbc0cd813e7ba0ece3ebb9e.cfy1xagoomxv.ap-northeast-2.rds.amazonaws.com" uuid="c833f536-d296-4c7d-a448-e235ad749adb">
+    <data-source source="LOCAL" name="GAGOODA_public" uuid="c833f536-d296-4c7d-a448-e235ad749adb">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

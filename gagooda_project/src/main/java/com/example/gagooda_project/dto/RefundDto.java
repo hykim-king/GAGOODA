@@ -34,6 +34,6 @@ public class RefundDto {
     private OrderDetailDto orderDetailDto; // 주문 상세 DTO
     private List<ImageDto> imageList;   // 이미지 리스트
     private boolean reType;         // 환불/교환 여부(true: 환불, false:교환)
-    CommonCodeDto rfDetDto;
-    CommonCodeDto rfrDetDto;
+    private CommonCodeDto rfDetDto;
+    private CommonCodeDto rfrDetDto;
 }

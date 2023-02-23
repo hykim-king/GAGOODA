@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.AddressServiceImp;
 import com.example.gagooda_project.service.ImageServiceImp;
 import com.example.gagooda_project.service.OrderServiceImp;
 import com.example.gagooda_project.service.RefundServiceImp;
@@ -23,14 +24,16 @@ public class RefundController {
     RefundServiceImp refundServiceImp;
     OrderServiceImp orderServiceImp;
     ImageServiceImp imageServiceImp;
+    AddressServiceImp addressServiceImp;
     Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     @Value("${img.upload.path}")
     private String imgPath;
 
-    public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp,ImageServiceImp imageServiceImp) {
+    public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp,ImageServiceImp imageServiceImp,AddressServiceImp addressServiceImp) {
         this.refundServiceImp = refundServiceImp;
         this.orderServiceImp = orderServiceImp;
         this.imageServiceImp = imageServiceImp;
+        this.addressServiceImp = addressServiceImp;
     }
 
     @GetMapping("user_yes/mypage/list.do")
@@ -79,6 +82,7 @@ public class RefundController {
         if (session.getAttribute("refundMsg") != null) {
             refundMsg = session.getAttribute("refundMsg").toString();
             session.removeAttribute("refundMsg");
+            model.addAttribute("refundMsg", refundMsg);
         }
         try{
             OrderDto order = orderServiceImp.selectOne(orderId);
@@ -90,7 +94,7 @@ public class RefundController {
             model.addAttribute("refundCount", refundCount);
             model.addAttribute("orderAddress", orderAddress);
             model.addAttribute("addressList", addressList);
-            model.addAttribute("refundMsg", refundMsg);
+
         }catch (Exception e){
             e.printStackTrace();
             return "redirect:/";
@@ -110,7 +114,7 @@ public class RefundController {
         String detailimgPath;
         int seq = 1;
 
-        RefundDto checkDto;
+
         if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
                 /* 환불, 교환 체크하여 이름 지정 */
@@ -210,6 +214,56 @@ public class RefundController {
             return "redirect:/refund/user_yes/mypage/detail.do/"+refundId;
         }
     }
+    @GetMapping("user_yes/mypage/{orderId}/addressList.do")
+    public String addressList(Model model,
+                              HttpSession session,
+                              @PathVariable String orderId,
+                              @SessionAttribute UserDto loginUser){
+        String refundMsg = "";
+        int addressId = 0;
+        try{
+            if (session.getAttribute("refundMsg") != null ){
+                refundMsg = session.getAttribute("refundMsg").toString();
+                session.removeAttribute("refundMsg");
+                model.addAttribute("refundMsg",refundMsg);
+            }
+            if (session.getAttribute("addressId") != null ){
+                addressId = (int) session.getAttribute("addressId");
+                session.removeAttribute("addressId");
+                AddressDto address = addressServiceImp.selectOne(addressId);
+                model.addAttribute("addressId", addressId);
+                model.addAttribute("address",address);
+            }
+            OrderDto order = orderServiceImp.selectOne(orderId);
+            if(loginUser.getUserId() == order.getUserId()){
+                List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+                model.addAttribute("addressList",addressList);
+                model.addAttribute("order",order);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "refund/user/newAddress";
+    }
+    @PostMapping("user_yes/mypage/{orderId}/addressRegister.do")
+    public @ResponseBody int addressRegister(@SessionAttribute UserDto loginUser,
+                               @PathVariable String orderId,
+                               AddressDto address,
+                               HttpSession session ){
+        int register = 0;
+        int addressId;
+        try{
+            register = addressServiceImp.register(address);
+            if (register > 0){
+                addressId = address.getAddressId();
+                session.setAttribute("refundMsg", "new");
+                session.setAttribute("addressId", addressId);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return register;
+    }
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
@@ -234,7 +288,6 @@ public class RefundController {
                 List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
                 int refundCount = refundServiceImp.countPageAll(searchFilter);
                 int allRfCnt = refundServiceImp.countAll();
-                log.info(refundList.toString()+"$$$$$$$$$$$$$$$$$$$$$");
                 model.addAttribute("refundList", refundList);
                 model.addAttribute("rfCodeList", rfCodeList);
                 model.addAttribute("paging",paging);
@@ -255,14 +308,35 @@ public class RefundController {
     public String adminDetail(@PathVariable int refundId,
                               @SessionAttribute UserDto loginUser,
                               Model model){
-        RefundDto refund = refundServiceImp.selectOne(refundId);
-        if(loginUser.getGDet().equals("g1")){
-            List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
-            model.addAttribute("refund", refund);
-            model.addAttribute("rfCodeList", allRfList);
-            return "refund/admin/detail";
+        try{
+            RefundDto refund = refundServiceImp.selectOne(refundId);
+            if(loginUser.getGDet().equals("g1")){
+                List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
+                model.addAttribute("refund", refund);
+                model.addAttribute("rfCodeList", allRfList);
+                return "refund/admin/detail";
+            }
+        }catch (Exception e){
+            log.info(e.getMessage());
         }
-        return "index";
+        return "/index";
     }
+
+    @PostMapping("admin/{refundId}/modify.do")
+    public String adminModify(@PathVariable int refundId,
+                              @SessionAttribute UserDto loginUser,
+                              RefundDto refund){
+        int register = 0;
+        try{
+            if(refund.getRefundId() == refundId && loginUser.getGDet().equals("g1")){
+                register = refundServiceImp.modifyOne(refund, "admin");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return "redirect:/refund/admin/"+refundId+"/detail.do";
+    }
+
+
 
 }
