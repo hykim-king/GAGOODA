@@ -3,6 +3,10 @@
 <mapper namespace="com.example.gagooda_project.mapper.DeliveryMapper">
     <resultMap id="deliveryMap" type="DeliveryDto" autoMapping="true">
         <id column="order_id" property="orderId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_phone" property="userPhone"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_id" property="userId"/>
         <result column="start_date" property="startDate"/>
         <result column="end_date" property="endDate"/>
         <result column="d_det" property="dDet"/>
@@ -26,7 +30,7 @@
                             WHERE order_id=#{orderId}
     </insert>
     <insert id="insertOne">
-        INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request) VALUES (#{orderId},${userId},${userName},${userEmail},${userPhone},${request})
+        INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request) VALUES (#{orderId},#{userId},#{userName},#{userEmail},#{userPhone},#{request})
     </insert>
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
