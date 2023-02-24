@@ -2,6 +2,7 @@ package com.example.gagooda_project.dto;
 
 import com.example.gagooda_project.mapper.CommonCodeMapper;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -13,8 +14,10 @@ public class DeliveryDto {
     private String userName;
     private String userEmail;
     private String userPhone;
-    private int invoice; // 운송장 번호 11자리
+    private String invoice; // 운송장 번호 11자리
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date startDate; // 배송 시작일
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date endDate; // 배송 완료일
     private String request; // 배송 요청사항
     private String dDet; // 배송 상태 상세 코드(공통 코드) NN FK (1:1)
