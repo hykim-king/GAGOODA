@@ -20,6 +20,7 @@
     </label>
     <label class="d-block">검색 일시 :
       <select name="dateType" id="dateType">
+        <option selected disabled>검색 일시 분류</option>
         <option value="reg_date">주문 일자</option>
       </select>
       <input type="date" id="startDate" name="startDate"> ~
@@ -31,48 +32,69 @@
       <label><input type="checkbox" name="oDet" id="o1" value="o1" > 결제 확인 </label>
       <label><input type="checkbox" name="oDet" id="o2" value="o2" > 주문 완료 </label>
       <label><input type="checkbox" name="oDet" id="o3" value="o3" > 구매 확정 </label>
-      <label><input type="checkbox" name="oDet" id="o4" value="o4" > 주문 취소 요청 </label>
-      <label><input type="checkbox" name="oDet" id="o5" value="o5" > 주문 취소 </label>
-
+      <label><input type="checkbox" name="oDet" id="o5" value="o5" > 주문 취소 요청 </label>
+      <label><input type="checkbox" name="oDet" id="o4" value="o4" > 주문 취소 </label>
     </div>
   </div>
   <button type="submit" class="btn btn-outline-secondary">검색</button>
-  <button name="reset" type="reset">초기화</button>
+  <button name="reset" class="btn btn-outline-primary" type="reset">초기화</button>
 </form>
-  <h3>주문 목록 <span th:if="${orderList != null && !orderList.isEmpty() }" th:text="${orderList.size()}+'개'"></span></h3>
-  <table>
+  <h4 class="mt-3">주문 목록 <span th:if="${orderList != null && !orderList.isEmpty() }" th:text="${oCount}+'개'"></span></h4>
+ <form action="/order/admin/modify.do" method="post" name="changeStateForm">
+   <div class="d-flex justify-content-between">
+     <button class="btn btn-outline-success ms-3" type="button" onclick="changeState('o0')">결재 미확인</button>
+     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o1')">결제 확인</button>
+     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o2')">주문 완료</button>
+     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o3')">구매 확정</button>
+     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o4')">주문 취소</button>
+     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o5')">주문 취소 요청</button>
+   </div>
+  <table class="table table-striped" id="orderList">
     <thead>
     <tr>
-      <th>No.</th>
-      <th>주문자</th>
-      <th>주문 ID</th>
-      <th>총 결제 금액</th>
-      <th>주문 날짜</th>
-      <th>주문 상태</th>
+      <th scope="col">No.</th>
+      <th scope="col"><input type="checkbox" class="allChecked"></th>
+      <th scope="col">주문자</th>
+      <th scope="col">주문 ID</th>
+      <th scope="col">총 결제 금액</th>
+      <th scope="col">주문 날짜</th>
+      <th scope="col">주문 상태</th>
+      <th scope="col">변경될 주문 상태</th>
     </tr>
     </thead>
     <tbody>
     <th:block th:if="${oCount >= 0}" th:each="order,stat : ${orderList}">
-      <tr class="hrefRow" th:data-order="${order.orderId}">
+      <tr class="hrefRow" th:data-order="${order.orderId}" th:id="${order.orderId}+'tr'">
         <td th:text="|${stat.count}|"></td>
+        <td><input type="checkbox" class="orderChecked" name="checkboxes" th:value="${order.orderId}"></td>
         <td th:text="${order.userName}"></td>
-        <td th:text="${order.orderId}"></td>
+        <td>
+          <a th:href="@{'/order/admin/{orderId}/detail.do'(orderId=${order.orderId})}"><span th:text="${order.orderId}"></span></a>
+          <input type="hidden" name="orderIdHidden" th:value="${order.orderId}">
+        </td>
         <td th:text="${order.totalPrice}"></td>
         <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
-        <td th:text="${oCodeList[order.oDet.substring(1)].detName}"></td>
-        <td><button>상태 변경</button></td>
+        <td th:text="${oCodeList[order.ODet.substring(1)].detName}"></td>
+        <td>
+          <input type="hidden" name="oDetHidden" th:value="${order.ODet}" th:id="'hidden'+${order.orderId}">
+          <span th:class="oDetName" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
+        </td>
       </tr>
     </th:block>
     </tbody>
-  </table>
-  <th:block th:unless="${oCount == 0}"><div>해당 주문 내역이 존재하지 않습니다.</div></th:block>
+    </table>
+  <th:block th:unless="${oCount >= 0}"><div>해당 주문 내역이 존재하지 않습니다.</div></th:block>
+   <div class="d-flex justify-content-end">
+       <button type="submit" class="btn btn-outline-primary mx-3">상태변경</button>
+   </div>
+ </form>
   <!--pagination-->
-  <nav aria-label="Page navigation ">
+  <nav class="d-flex justify-content-center" aria-label="Page navigation ">
     <ul class="pagination">
-      <li class="page-item">
+      <li class="page-item mx-3">
         <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
       </li>
-      <li class="page-item">
+      <li class="page-item mx-3">
         <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
       </li>
     </ul>
@@ -94,6 +116,40 @@
       forms.startDate.removeAttribute("required");
       forms.endDate.removeAttribute("required");
     }
+
+    const allChecked = document.querySelector(".allChecked");
+    const orderCheck = document.querySelector(".orderChecked");
+    const orderCheckList = document.querySelectorAll(".orderChecked");
+    allChecked.onclick = ()=>{
+      if(allChecked.checked){
+        for(let i=0; i<orderCheckList.length; i++){
+          orderCheckList[i].checked = true;
+        }
+      }else{
+        for(let j=0; j<orderCheckList.length; j++){
+          orderCheckList[j].checked = false;
+        }
+      }
+    }
+
+    function changeState(state) {
+      const checkedBoxes = document.getElementById("orderList").querySelector("tbody")
+              .querySelectorAll("input[type=checkbox]:checked");
+      checkedBoxes.forEach(checkedBox => {
+        const row = document.getElementById(checkedBox.value+"tr");
+        const hidden = document.getElementById("hidden"+checkedBox.value);
+        hidden.setAttribute("value", state);
+        [[${oCodeList}]].forEach(oDet=>{
+          if(oDet.detCode === state) {
+            row.querySelector(".oDetName").innerText = oDet.detName;
+          }
+        })
+        // const orderIdHidden = document.getElementById("orderIdHidden");
+        // orderIdHidden.setAttribute("value",checkedBox.value);
+      })
+    }
+
+
 
   </script>
 </div>

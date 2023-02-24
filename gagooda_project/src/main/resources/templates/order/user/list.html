@@ -13,19 +13,19 @@
     <!--기간별 조회-->
     <ul class="nav nav-tabs" id="searchDate">
         <li class="nav-item">
-            <a class="dayNum nav-link active" th:href="@{ '' (dates=7) }">7일</a>
+            <a class="dayNum nav-link" th:classappend="${(dates==7)?'active':''}" th:href="@{ '' (dates=7) }">7일</a>
         </li>
         <li class="nav-item">
-            <a class="dayNum nav-link"  th:href="@{ '' (dates=15) }">15일</a>
+            <a class="dayNum nav-link" th:classappend="${(dates==15)?'active':''}"  th:href="@{ '' (dates=15) }">15일</a>
         </li>
         <li class="nav-item">
-            <a class="dayNum nav-link" th:href="@{ '' (dates=30) }" >1개월</a>
+            <a class="dayNum nav-link" th:classappend="${(dates==30)?'active':''}" th:href="@{ '' (dates=30) }" >1개월</a>
         </li>
         <li class="nav-item">
-            <a class="dayNum nav-link" th:href="@{ '' (dates=90) }">3개월</a>
+            <a class="dayNum nav-link" th:classappend="${(dates==90)?'active':''}" th:href="@{ '' (dates=90) }">3개월</a>
         </li>
         <li class="nav-item">
-            <a class="dayNum nav-link" th:href="@{ '' (dates=365) }" >1년</a>
+            <a class="dayNum nav-link" th:classappend="${(dates==365)?'active':''}" th:href="@{ '' (dates=365) }" >1년</a>
         </li>
     </ul>
     <!--기간별 조회 end--------------->
@@ -59,7 +59,7 @@
                 <td th:text="${order.userId}"></td>
                 <td>
                     <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
-                    <button class="btn btn-primary">배송 조회</button>
+                    <button class="btn btn-primary" th:onclick="location.href=[[@{'/delivery/user_yes/mypage/{orderId}/detail.do'(orderId=${order.orderId})}]]">배송 조회</button>
                     <button id="cancelOrder" class="btn btn-primary" th:onclick="cancelRecheck([[${order.orderId}]])"
                             th:classappend="${(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))?'disabled':''}">주문 취소</button>
                 </td>
@@ -84,16 +84,7 @@
     </div>
     <!--pagination end--------------->
     <script th:inline="javascript">
-       const searchDates = document.getElementById("searchDate");
-       const tabs = searchDates.getElementsByClassName("dayNum");
 
-       for(let i=0; i<tabs.length; i++){
-           tabs[i].addEventListener("click",function(){
-               let current = document.getElementsByClassName("active");
-               current[0].className = current[0].className.replace(" active","");
-               this.className += " active";
-           })
-       }
 
        function cancelRecheck(orderId){
            if(confirm("주문을 정말로 취소하시겠습니까?")) {

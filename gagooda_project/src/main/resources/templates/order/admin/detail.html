@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/mypageLayout}">
+      layout:decorate="~{/layout/layout}">
 <head>
     <meta charset="UTF-8">
     <title>주문 상세보기</title>
@@ -23,30 +23,22 @@
     <fieldset>
         <table>
             <thead>
-                <th>순번</th>
-                <th>상품정보</th>
-                <th>수량</th>
-                <th>가격</th>
+            <th>순번</th>
+            <th>상품정보</th>
+            <th>수량</th>
+            <th>가격</th>
             </thead>
             <tbody>
-                <tr th:each="orderDetail, stat :${orderDetailList}">
-                    <td th:text="|${stat.count}|"></td>
-                    <td>
-                        <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
-                             class="rounded" style="width: 50px; height:50px; object-fit: cover">
-                        <span th:text="${orderDetail.optionName}" id="optionName" name="optionName" ></span>
-                    </td>
-                    <td th:text="${orderDetail.cnt}"></td>
-                    <td th:text="${orderDetail.totalPrice}"></td>
-                    <td>
-                        <div>
-                            <button >교환</button>
-                        </div>
-                        <div>
-                            <button th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderId}/register.do'(orderId=${order.orderId})}]]">환불</button>
-                        </div>
-                      </td>
-                </tr>
+            <tr th:each="orderDetail, stat :${orderDetailList}">
+                <td th:text="|${stat.count}|"></td>
+                <td>
+                    <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
+                         class="rounded" style="width: 50px; height:50px; object-fit: cover">
+                    <span th:text="${orderDetail.optionName}" id="optionName" name="optionName" ></span>
+                </td>
+                <td th:text="${orderDetail.cnt}"></td>
+                <td th:text="${orderDetail.totalPrice}"></td>
+            </tr>
             </tbody>
         </table>
         <div>
@@ -88,23 +80,13 @@
     <fieldset>
         <div>
             <label for="request">배달 요청 사항</label>
-            <div th:if="${delivery.request != null}">
+            <div>
                 <span id="request" th:text="${delivery.request}"></span>
             </div>
         </div>
     </fieldset>
     <!--배달 요청 정보 end--------------------------------------------------->
-    <button th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
-    <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
-        <button th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
-    </th:block>
-    <script>
-        function cancelRecheck(orderId){
-            if(confirm("주문을 정말로 취소하시겠습니까?")) {
-                location.href = '/order/user_yes/mypage/' + orderId + '/modify.do'
-            }
-        }
-    </script>
+    <button th:onclick="location.href=[[@{'/order/admin/list.do'}]]">주문 목록 돌아가기</button>
 
 </div>
 </html>

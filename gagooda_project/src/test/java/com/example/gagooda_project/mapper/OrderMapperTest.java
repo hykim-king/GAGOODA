@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderMapperTest {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private DeliveryMapper deliveryMapper;
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     @Test
     void listAll() {
@@ -86,7 +90,15 @@ class OrderMapperTest {
 
     @Test
     void deleteByStatus(){
-        String oDet = "o6";
+        String oDet = "";
         orderMapper.deleteByStatus(oDet);
+    }
+
+    @Test
+    void deleteById(){
+        String orderId = "23022340410faf8772e8";
+        deliveryMapper.deleteOne(orderId);
+        orderDetailMapper.deleteByOrderId(orderId);
+        orderMapper.deleteById(orderId);
     }
 }

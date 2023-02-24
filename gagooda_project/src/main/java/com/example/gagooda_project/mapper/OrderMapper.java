@@ -46,6 +46,7 @@ public interface OrderMapper {
     int countPageAll(Map<String, Object> searchFilter);
 
     int deleteByStatus(String oDet);
+    int deleteById(String orderId);
 
 
 }
