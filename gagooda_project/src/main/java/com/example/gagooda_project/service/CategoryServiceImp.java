@@ -33,7 +33,7 @@ public class CategoryServiceImp implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> showChildCategories(int parentId) {
+    public List<CategoryDto> showChildCategories(String parentId) {
         return categoryMapper.listByParentId(parentId);
     }
 
@@ -43,7 +43,7 @@ public class CategoryServiceImp implements CategoryService {
     }
 
     @Override
-    public CategoryDto selectOne(int categoryId) {
+    public CategoryDto selectOne(String categoryId) {
         return categoryMapper.findById(categoryId);
     }
 
@@ -51,7 +51,7 @@ public class CategoryServiceImp implements CategoryService {
     public List<CategoryDto> categoryMerge(List<String> categoryIdList) {
         List<CategoryDto> categoryList = new ArrayList<>();
         for (String categoryId : categoryIdList) {
-            CategoryDto category = categoryMapper.findById(Integer.parseInt(categoryId));
+            CategoryDto category = categoryMapper.findById(categoryId);
             categoryList.add(category);
             for (CategoryDto categoryIn : categoryList) {
                 if (categoryIn != category && categoryIn.getCname().equals(category.getCname())) {
