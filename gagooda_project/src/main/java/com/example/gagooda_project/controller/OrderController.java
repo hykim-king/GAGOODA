@@ -197,6 +197,13 @@ public class OrderController {
         model.addAttribute("itemCount",itemCount);
         return "/order/user/complete";
     }
+    /*주문 등록 새 배송지 등록*/
+    @PostMapping("/user_yes/addressRegister.do")
+    public String addressRegister(@SessionAttribute UserDto loginUser,
+                                  AddressDto address){
+        int register = 0;
+        return null;
+    }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,

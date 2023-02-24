@@ -21,6 +21,9 @@
         <fieldset>
             <legend>배송지 입력란</legend>
             <button type="button" name="setAddressBtn">새로운 배송지입력</button>
+            <div th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
+                <th:block th:include="/order/user/newAddress"></th:block>
+            </div>
             <label for="myAddressList">다른 배송지</label>
             <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
                 <option disabled selected="selected" th:text="'----선택-----'"></option>
@@ -192,6 +195,28 @@
             }
         }
 
+        function init(){
+            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
+            newAddressRegisterForm.onsubmit=function(e){
+                registerAddress(e, newAddressRegisterForm);
+            }
+        }
+        init();
+        async function registerAddress(e, newAddressRegisterForm){
+            e.preventDefault();
+            let url="/order/user_yes/addressRegister.do";
+            const formData = new FormData(newAddressRegisterForm);
+            const resp = await fetch(url,{method:"POST",body:formData});
+            const json = await resp.json();
+            console.log("json: "+json);
+            if(json.state==1){
+                await showNewAddress();
+            }
+        }
+        async function showNewAddress(){
+            console.log("새로운 주소 보여주자.")
+
+        }
 
 
 
