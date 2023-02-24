@@ -68,7 +68,7 @@
         <fieldset class="already-infoimages">
             <legend>기존 상품 정보 사진</legend>
             <th:block th:if="${product.infoImageList != null}"
-                      th:each="image:${product.infoImageList}">
+                      th:each="image, num:${product.infoImageList}">
                 <div th:id="${image.imgCode}+${num.count}" class="infoImageEx">
                     <label>
                         <input type="checkbox" name="imgToDelete" th:value="${image.imgCode}+'/'+${image.seq}">

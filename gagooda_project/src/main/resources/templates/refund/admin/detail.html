@@ -90,7 +90,7 @@
 <script th:inline="javascript">
     const cancelBtn = document.querySelector("#cancelBtn");
     cancelBtn.addEventListener("click",()=>{
-        document.open("/refund/admin/"+[[${refund.refundId}]]+"/payments/cancel.do","cancel", "width=600, height=400, left=50%, top=50%");
+        document.open("/refund/admin/payments/cancel.do","cancel", "width=600, height=400, left=50%, top=50%");
     })
 </script>
 </div>

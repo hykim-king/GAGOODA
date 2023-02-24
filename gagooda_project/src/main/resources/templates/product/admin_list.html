@@ -122,7 +122,9 @@
 
 
     <script th:inline="javascript">
-        const table = document.getElementById("table");
+        console.log("[[${paging.startPage}]]");
+        console.log("[[${paging.endPage}]]");
+        const table = document.getElementById("table")main;
         const selects = table.querySelectorAll("select");
         selects.forEach(select => {
             select.onclick=()=>getValue(select.id);

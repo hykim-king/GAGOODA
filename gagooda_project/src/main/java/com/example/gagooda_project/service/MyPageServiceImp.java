@@ -1,10 +1,7 @@
 package com.example.gagooda_project.service;
 
 
-import com.example.gagooda_project.dto.CartDto;
-import com.example.gagooda_project.dto.CommonCodeDto;
-import com.example.gagooda_project.dto.ODetDto;
-import com.example.gagooda_project.dto.OrderDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.mapper.CartMapper;
 import com.example.gagooda_project.mapper.CommonCodeMapper;
 import com.example.gagooda_project.mapper.OrderMapper;
@@ -22,6 +19,23 @@ public class MyPageServiceImp implements MyPageService {
         this.cartMapper = cartMapper;
         this.orderMapper = orderMapper;
         this.commonCodeMapper = commonCodeMapper;
+    }
+    public List<OrderDto> orderList(PagingDto paging, int userId, int dates) {
+        int totalRows=orderMapper.count(paging,userId,dates);
+        paging.setRows(4);
+        paging.setOrderField("reg_date");
+        paging.setTotalRows(totalRows);
+        System.out.println("pagingDto: "+paging);
+        return orderMapper.pageAll(paging,userId,dates);
+    }
+
+    @Override
+    public List<CartDto> cartList(PagingDto paging, int userId) {
+        int totalRows = cartMapper.count(paging, userId);
+        paging.setRows(4);
+        paging.setOrderField("cart_id");
+        paging.setTotalRows(totalRows);
+        return cartMapper.pageAll(paging, userId);
     }
 
     @Override

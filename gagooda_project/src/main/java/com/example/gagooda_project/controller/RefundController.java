@@ -338,51 +338,37 @@ public class RefundController {
         }
         return "refund/user/paymentTemp";
     }
-    // 결제 정보 확인
-    @PostMapping("user_yes/payments/{merchant_uid}/{payment_status}/pay.do")
-    public IamportResponse<PagedDataList<Payment>> paymentsStatus(@PathVariable String merchant_uid,
-                                                                  @PathVariable String payment_status){
-        IamportResponse<PagedDataList<Payment>> response = null;
-        try{
-            if (payment_status == null){
-                payment_status = "paid";
-            }
-            response = iamportClient.paymentsByStatus(payment_status);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return response;
-    }
     //결제 취소 GET
-    @GetMapping("admin/{refundId}/payments/cancel.do")
-    public String cancelPaymentByIamUid(@PathVariable int refundId,
+    @GetMapping("admin/payments/cancel.do")
+    public String cancelPaymentByIamUid(
                                         Model model,
                                         @SessionAttribute UserDto loginUser){
-        try{
-            if(loginUser.getGDet().equals("g1")){
-                RefundDto refund = refundServiceImp.selectOne(refundId);
-                model.addAttribute("refund", refund);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            if(loginUser.getGDet().equals("g1")){
+//                RefundDto refund = refundServiceImp.selectOne(refundId);
+//                model.addAttribute("refund", refund);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
         return "refund/admin/cancelOrder";
     }
     //결제 취소 POST
-    @PostMapping("admin/{refundId}/payments/cancel.do")
+    @PostMapping("admin/payments/cancel.do")
     public String cancelPaymentByIamUid(RefundDto refund,
-                                        @SessionAttribute UserDto loginUser,
-                                        @PathVariable int refundId){
+                                        @SessionAttribute UserDto loginUser/*,
+                                        @PathVariable int refundId*/){
         IamportResponse<Payment> cancelResp = null;
         try{
-            if (loginUser.getGDet().equals("g1") && refund.getRefundId() == refundId){
-                CancelData cancelData = new CancelData(refund.getOrderId(), false, BigDecimal.valueOf(refund.getCancelAmount()));
+            if (loginUser.getGDet().equals("g1") /*&& refund.getRefundId() == refundId*/){
+                CancelData cancelData = new CancelData(refund.getOrderId(), false);
+                cancelData.setReason(refund.getReason());
                 cancelResp = iamportClient.cancelPaymentByImpUid(cancelData);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "redirect:refund/admin/"+refund.getRefundId()+"/payments/cancel.do";
+        return "redirect:/refund/admin/payments/cancel.do";
     }
 
 

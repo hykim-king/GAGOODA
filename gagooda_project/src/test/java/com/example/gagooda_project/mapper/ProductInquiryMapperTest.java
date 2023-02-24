@@ -73,4 +73,21 @@ class ProductInquiryMapperTest {
     @Test
     void testPageAll() {
     }
+
+    @Test
+    void countByUserId() {
+        System.out.println(productInquiryMapper.countByUserId(1));
+    }
+
+    @Test
+    void listByUserId() {
+        PagingDto paging = new PagingDto();
+        paging.setOrderField("p_inquiry_id");
+        paging.setPage(1);
+        paging.setDirect("DESC");
+        paging.setRows(5);
+        paging.setStartRow(1);
+        paging.setTotalRows(productInquiryMapper.countByUserId(1));
+        productInquiryMapper.listByUserId(1);
+    }
 }

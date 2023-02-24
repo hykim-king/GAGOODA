@@ -136,56 +136,70 @@ public class ProductServiceImp implements ProductService {
             // 기존 상품 정보 수정
             if (productMapper.updateOne(product) <= 0) throw new Error("상품 등록 중 오류");
 
-            // 기존에 있던 상품과 카테고리 연결 삭제
             categoryConnMapper.deleteByProductCode(product.getProductCode());
             // categoryConnList 생성 및 product 에 설정
-            for (String categoryId : categoryIdList) {
-                if (!categoryId.isBlank()) {
-                    CategoryConnDto categoryConn = new CategoryConnDto();
-                    categoryConn.setProductCode(product.getProductCode());
-                    categoryConn.setCategoryId(categoryId);
-                    if (categoryConnMapper.insertOne(categoryConn) <= 0)
-                        throw new Error("상품 카테고리 연결 등록 중 오류");
+            if (categoryIdList != null) {
+                // 기존에 있던 상품과 카테고리 연결 삭제
+                for (String categoryId : categoryIdList) {
+                    if (!categoryId.isBlank()) {
+                        CategoryConnDto categoryConn = new CategoryConnDto();
+                        categoryConn.setProductCode(product.getProductCode());
+                        categoryConn.setCategoryId(categoryId);
+                        if (categoryConnMapper.insertOne(categoryConn) <= 0)
+                            throw new Error("상품 카테고리 연결 등록 중 오류");
+                    }
                 }
+            } else {
+                log.info("등록될 상품 카테고리가 없습니다.");
             }
 
             // 삭제 할 옵션들 삭제
-            for (String optionCode:optionToDeleteList) {
-                if (optionProductMapper.deleteById(optionCode)<=0) throw new Error("옵션 상품 삭제 중 오류");
-                product.getOptionUpdateList().removeIf(optionProduct -> optionCode.equals(optionProduct.getOptionCode()));
+            if (optionToDeleteList != null) {
+                for (String optionCode:optionToDeleteList) {
+                    if (optionProductMapper.deleteById(optionCode)<=0) throw new Error("옵션 상품 삭제 중 오류");
+                    product.getOptionUpdateList().removeIf(optionProduct -> optionCode.equals(optionProduct.getOptionCode()));
+                }
             }
 
             // 수정 할 옵션들 수정
-            for (OptionProductDto optionProduct:product.getOptionUpdateList()) {
-                optionProduct.setPrice(product.getSalesPc());
-                if (optionProductMapper.updateOne(optionProduct)<=0) throw new Error("옵션 상품 수정 중 오류");
+            if (product.getOptionUpdateList() != null) {
+                for (OptionProductDto optionProduct:product.getOptionUpdateList()) {
+                    optionProduct.setPrice(product.getSalesPc());
+                    if (optionProductMapper.updateOne(optionProduct)<=0) throw new Error("옵션 상품 수정 중 오류");
+                }
             }
 
             // 추가할 옵션들 추가
-            for (OptionProductDto option : product.getOptionProductList()) {
-                // 옵션 코드 재설정
-                option.setOptionCode(option.getProductCode() + "_" + option.getOptionCode());
-                if (optionProductMapper.insertOne(option) <= 0) throw new Error("옵션 추가 중 오류");
+            if (product.getOptionProductList() != null) {
+                for (OptionProductDto option : product.getOptionProductList()) {
+                    // 옵션 코드 재설정
+                    option.setOptionCode(option.getProductCode() + "_" + option.getOptionCode());
+                    if (optionProductMapper.insertOne(option) <= 0) throw new Error("옵션 추가 중 오류");
+                }
             }
 
             // 삭제 될 image데이터 삭제
-            for (String imageCodeSeq : imgToDelete) {
-                String code = imageCodeSeq.split("/")[0];
-                int seq = Integer.parseInt(imageCodeSeq.split("/")[1]);
-                imagesToDelete.add(imageMapper.findByImgCodeAndSeq(code,seq));
-                imageMapper.deleteByImgCodeAndSeq(code, seq);
+            if (imgToDelete != null) {
+                for (String imageCodeSeq : imgToDelete) {
+                    String code = imageCodeSeq.split("/")[0];
+                    int seq = Integer.parseInt(imageCodeSeq.split("/")[1]);
+                    imagesToDelete.add(imageMapper.findByImgCodeAndSeq(code,seq));
+                    imageMapper.deleteByImgCodeAndSeq(code, seq);
+                }
             }
 
             // 남은 이미지를 불러오고, DB 속 이미지들 삭제
             List<ImageDto> imageList = imageMapper.listByImgCode(product.getImgCode());
             imageMapper.deleteByImgCode(product.getImgCode());
 
-            // 이미지 파일들 ImageDto 객체로 변환해서 list에 담기
-            for (int i = 0; i < imageFileList.size(); i++) {
-                MultipartFile imgFile = imageFileList.get(i);
-                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getImgCode(),
-                        imgPath+"/product", i + 1);
-                imageList.add(image);
+            if (imageFileList != null) {
+                // 이미지 파일들 ImageDto 객체로 변환해서 list에 담기
+                for (int i = 0; i < imageFileList.size(); i++) {
+                    MultipartFile imgFile = imageFileList.get(i);
+                    ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getImgCode(),
+                            imgPath+"/product", i + 1);
+                    imageList.add(image);
+                }
             }
 
             // imageList에 있는 모든 이미지들을 순번을 다시 매겨서 DB에 저장
@@ -196,11 +210,14 @@ public class ProductServiceImp implements ProductService {
 
             List<ImageDto> infoImageList = imageMapper.listByImgCode(product.getInfoImgCode());
             imageMapper.deleteByImgCode(product.getInfoImgCode());
-            for (int i = 0; i < infoImageFileList.size(); i++) {
-                MultipartFile imgFile = infoImageFileList.get(i);
-                ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getInfoImgCode(),
-                        imgPath+"/product", i + 1);
-                infoImageList.add(image);
+
+            if (infoImageFileList != null) {
+                for (int i = 0; i < infoImageFileList.size(); i++) {
+                    MultipartFile imgFile = infoImageFileList.get(i);
+                    ImageDto image = StaticMethods.parseIntoImage(imgFile, product.getInfoImgCode(),
+                            imgPath+"/product", i + 1);
+                    infoImageList.add(image);
+                }
             }
             for (int i = 0; i < infoImageList.size(); i++) {
                 infoImageList.get(i).setSeq(i+1);

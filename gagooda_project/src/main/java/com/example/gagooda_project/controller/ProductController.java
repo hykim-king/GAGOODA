@@ -135,11 +135,10 @@ public class ProductController {
         }
         try {
             ProductDto product = productService.selectOne(productCode);
-            paging.setRows(10);
-            if (paging.getOrderField() == null) paging.setOrderField("mod_date");
-//            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
-            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
+            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+//            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            model.addAttribute("paging", paging);
             model.addAttribute("product", product);
             model.addAttribute("plist", plist);
             model.addAttribute("commonCodeList", commonCodeList);
@@ -218,8 +217,14 @@ public class ProductController {
             Model model,
             PagingDto paging,
             HttpServletRequest req,
-            HttpSession session
+            HttpSession session,
+            @SessionAttribute(required = false) String msg
     ){
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
         paging.setRows(20);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
@@ -314,7 +319,7 @@ public class ProductController {
             HttpSession session,
             @PathVariable String productCode,
             ProductDto product,
-            @RequestParam(name = "category") HashSet<String> categoryIdList,
+            @RequestParam(required = false, name = "category") HashSet<String> categoryIdList,
             @RequestParam(required = false, name = "imageFile") List<MultipartFile> imageFileList,
             @RequestParam(required = false, name = "infoImageFile") List<MultipartFile> infoImageFileList,
             @RequestParam(required = false, name = "imgToDelete") List<String> imgToDelete,
