@@ -154,14 +154,19 @@ public class OrderController {
     public String detail(@SessionAttribute(required = true) UserDto loginUser,
                          @PathVariable String orderId,
                          Model model){
-        OrderDto order = orderService.selectOne(orderId);
-        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
-        DeliveryDto delivery = orderService.selectDelivery(orderId);
-        List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
-        model.addAttribute("order",order);
-        model.addAttribute("orderDetailList",orderDetailList);
-        model.addAttribute("delivery", delivery);
-        model.addAttribute("oCodeList",oCodeList);
+        try{
+            OrderDto order = orderService.selectOne(orderId);
+            List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+            DeliveryDto delivery = orderService.selectDelivery(orderId);
+            List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+            model.addAttribute("order",order);
+            model.addAttribute("orderDetailList",orderDetailList);
+            model.addAttribute("delivery", delivery);
+            model.addAttribute("oCodeList",oCodeList);
+        }catch(Exception exception){
+            log.error(exception.getMessage());
+        }
+
         return "/order/user/detail";
     }
     /*사용자 주문 취소로 주문 상태 수정*/

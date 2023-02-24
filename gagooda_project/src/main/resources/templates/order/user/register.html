@@ -8,22 +8,28 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
+    <div>배송지 입력란</div>
+    <button type="button" name="setAddressBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">새로운 배송지입력</button>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">새로운 배송지 입력</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
+                    <th:block th:include="/order/user/newAddress"></th:block>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--주문 form -->
     <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"
           method="post" onsubmit="return validateForm();">
-        <!--주문 번호 생성-->
-        <div>
-            <label for="orderId"></label>
-            <input type="text" id="orderId" name="orderId"
-                   th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
-        </div>
         <!--배송지 입력란-->
-        <fieldset>
-            <legend>배송지 입력란</legend>
-            <button type="button" name="setAddressBtn">새로운 배송지입력</button>
-            <div th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
-                <th:block th:include="/order/user/newAddress"></th:block>
-            </div>
             <label for="myAddressList">다른 배송지</label>
             <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
                 <option disabled selected="selected" th:text="'----선택-----'"></option>
@@ -63,10 +69,14 @@
                 <input type="text" id="elevator" name="elevator" class="add" readonly th:required="required">
             </div>
 
-
-        </fieldset>
         <!--배송지 입력란 end-->
         <div class="orderDetail">
+            <!--주문 번호 생성-->
+            <div>
+                <label for="orderId">주문번호: </label>
+                <input type="text" id="orderId" name="orderId"
+                       th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
+            </div>
             <!--주문할 상품 정보들-->
             <th:block th:each="cartItem:${cartList}">
                 <input type="text" th:value="${cartItem.cartId}" name="cartItem" readonly>
@@ -194,10 +204,11 @@
                 return confirm("상품들을 결제하시겠습니까?")
             }
         }
-
+        const newAddressRegisterContainer = document.getElementById("newAddressRegisterContainer");
         function init(){
             const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
             newAddressRegisterForm.onsubmit=function(e){
+                console.log("newAddressForm register!")
                 registerAddress(e, newAddressRegisterForm);
             }
         }
@@ -208,13 +219,14 @@
             const formData = new FormData(newAddressRegisterForm);
             const resp = await fetch(url,{method:"POST",body:formData});
             const json = await resp.json();
-            console.log("json: "+json);
+            console.log("json.state: "+json.state);
             if(json.state==1){
                 await showNewAddress();
             }
         }
         async function showNewAddress(){
             console.log("새로운 주소 보여주자.")
+
 
         }
 

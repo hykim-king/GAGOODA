@@ -41,13 +41,13 @@
 </form>
   <h4 class="mt-3">주문 목록 <span th:if="${orderList != null && !orderList.isEmpty() }" th:text="${oCount}+'개'"></span></h4>
  <form action="/order/admin/modify.do" method="post" name="changeStateForm">
-   <div class="d-flex justify-content-between">
-     <button class="btn btn-outline-success ms-3" type="button" onclick="changeState('o0')">결재 미확인</button>
-     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o1')">결제 확인</button>
-     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o2')">주문 완료</button>
-     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o3')">구매 확정</button>
-     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o4')">주문 취소</button>
-     <button class="btn btn-outline-success mx-3" type="button" onclick="changeState('o5')">주문 취소 요청</button>
+   <div class="d-flex justify-content-start">
+     <button class="btn btn-outline-dark ms-3" type="button" onclick="changeState('o0')">결재 미확인</button>
+     <button class="btn btn-outline-dark mx-3" type="button" onclick="changeState('o1')">결제 확인</button>
+     <button class="btn btn-outline-dark mx-3" type="button" onclick="changeState('o2')">주문 완료</button>
+     <button class="btn btn-outline-dark mx-3" type="button" onclick="changeState('o3')">구매 확정</button>
+     <button class="btn btn-outline-dark mx-3" type="button" onclick="changeState('o4')">주문 취소</button>
+     <button class="btn btn-outline-dark mx-3" type="button" onclick="changeState('o5')">주문 취소 요청</button>
    </div>
   <table class="table table-striped" id="orderList">
     <thead>
