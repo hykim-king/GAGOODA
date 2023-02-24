@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>환불 결제 취소 신청폼</h3>
+    <form th:action="@{'/refund/admin/{refundId}/payments/cancel.do' (refundId=${refund.refundId})}" method="POST">
+        <div>
+            <label for="refundId">환불 번호</label>
+            <input type="text" name="refundId" id="refundId" th:value="${refund.refundId}">  <!--체크할 환불번호-->
+        </div>
+        <div>
+            <label for="orderId">주문번호</label>
+            <input type="text" name="orderId" id="orderId" th:value="${refund.orderId}">  <!--환불 진행할 상품의 해당 주문번호-->
+        </div>
+        <div>
+            <label for="cancelAmount">환불 금액</label>
+            <input type="text" name="cancelAmount" id="cancelAmount" th:value="${refund.cancelAmount}">  <!--환불 금액-->
+        </div>
+        <div>
+            <label for="rfrDet">환불 사유</label>
+            <input type="text" name="rfrDet" id="rfrDet" th:value="${refund.rfrDet}" th:text="${refund.rfrDetDto.detName}">  <!--환불 사유-->
+        </div>
+        <button type="submit">환불하기</button>
+        <button id="closeBtn" >닫기</button>
+    </form>
+<script>
+    let closeBtn = document.querySelector("#closeBtn");
+    closeBtn.addEventListener("click",()=>{
+        window.close();
+    })
+</script>
+</body>
+</html>

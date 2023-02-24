@@ -8,20 +8,36 @@
     <title>Title</title>
 </head>
 <div layout:fragment="myPageContent">
+
 <h2>환불 반품 신청 확인서</h2>
     <th:block th:if="${refundMsg != null}">
         <span id="msg" th:data-msg="${refundMsg}"></span>
         <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
     </th:block>
-<h3>환불 반품 신청</h3>
-<h3>주문 정보</h3>
-<ul>
-    <li>주문인 : <span th:text="${order.userName}"></span></li>
-    <li>주문 날짜 : <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></span></li>
-    <li>주문 번호 : <span th:text="${order.orderId}"></span></li>
-    <li>주문 상품 : <span th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></span></li>
-    <li>총 주문 금액 : <span th:text="${order.totalPrice}"></span></li>
-</ul>
+<div>
+
+</div>
+<h3 style="border-bottom: 3px solid ;border-color: rgb(183,140,104);">주문 정보</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>주문인</th>
+            <th>주문 날짜</th>
+            <th>주문 번호</th>
+            <th>주문 상품</th>
+            <th>총 주문 금액</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td th:text="${order.userName}"></td>
+            <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${order.orderId}"></td>
+            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>
+            <td th:text="${order.totalPrice}"></td>
+        </tr>
+    </tbody>
+</table>
 <h3>환불 요청 정보</h3>
 <ul>
     <li>수령인 : <span th:text="${refund.receiverName}"></span></li>

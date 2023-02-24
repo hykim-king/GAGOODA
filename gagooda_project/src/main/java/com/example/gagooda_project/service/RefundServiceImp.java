@@ -104,7 +104,7 @@ public class RefundServiceImp implements RefundService{
         }
         if(searchFilter.get("searchDiv").equals("all")){
             String allCol = "refund_id OR user_id OR uname OR email OR phone OR order_detail_id OR order_id " +
-                    "OR cancel_amount OR reason OR post_code OR address OR address_detail OR receiver_name OR receiver_phone";
+                    "OR reason OR post_code OR address OR address_detail OR receiver_name OR receiver_phone";
             searchFilter.put("searchDiv", allCol);
         }
         if(!searchFilter.get("searchWord").equals("")){

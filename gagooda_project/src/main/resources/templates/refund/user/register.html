@@ -44,7 +44,6 @@
             <label for="orderDetailId">환불 대상 상품</label>
             <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
                 <option value="" selected disabled>환불 대상을 선택해주세요.</option>
-                <option value="-1" th:text="'전체 환불'+'( 환불 예상 금액:' + ${order.totalPrice} + ')'" th:data-amount="${order.totalPrice}"></option>
                 <th:block th:each="orderDetail : ${order.orderDetailList}">
                 <option th:text="${orderDetail.optionName+'( 환불 예상 금액:'+orderDetail.totalPrice+')'}" th:value="${orderDetail.orderDetailId}" th:data-amount="${orderDetail.totalPrice}"></option>
                 </th:block>
@@ -60,7 +59,7 @@
         <div>
             <label for="cancelAmount">환불 금액</label>
             <span></span>
-            <input type="text" id="cancelAmount" name="cancelAmount" readonly="">
+            <input type="text" id="cancelAmount" name="cancelAmount" readonly>
         </div>
         <div>
             <label>첨부 이미지
@@ -249,7 +248,7 @@
                 const respJson = await resp.json();
                 console.log("response.json:"+respJson);
                 if (respJson > 0){
-                    let loadAddressList = document.forms.loadAddressList
+                    let loadAddressList = document.forms.loadAddressList;
                     await loadNewAddress();
                     let closeBtn = document.querySelector(".closeBtn");
                     closeBtn.click();
