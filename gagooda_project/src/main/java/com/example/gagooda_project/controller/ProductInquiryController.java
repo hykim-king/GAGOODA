@@ -140,6 +140,32 @@ public class ProductInquiryController {
         return ajaxStateHandler;
     }
 
+    @GetMapping("/user_yes/list.do")
+    public String userMypageList(@SessionAttribute UserDto loginUser,
+                                 Model model,
+                                 PagingDto paging
+    ){
+        int list = 0;
+        try{
+            if(paging.getOrderField()==null) paging.setOrderField("user_id");
+            System.out.println(loginUser.getUserId());
+            List<ProductInquiryDto> mypageList = productInquiryService.showInquiryByUser(loginUser.getUserId());
+            int count = productInquiryService.numUserId(loginUser.getUserId());
+            model.addAttribute("mypageList", mypageList);
+            model.addAttribute("count",count);
+            model.addAttribute("paging",paging);
+            list = 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (list > 0){
+            return "/product_inquiry/user_yes/list";
+        } else {
+            return "/errorHandler";
+        }
+
+    }
+
     //    admin
     @GetMapping("/admin/list.do")
     public String adminList(Model model,

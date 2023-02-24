@@ -86,4 +86,15 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     public List<ProductInquiryDto> showAllInquiries(String productCode) {
         return productInquiryMapper.listByProductCodeAll(productCode);
     }
+
+    @Override
+    public List<ProductInquiryDto> showInquiryByUser(int userId) {
+        return productInquiryMapper.listByUserId(userId);
+    }
+
+    @Override
+    public int numUserId(int userId) {
+        return productInquiryMapper.countByUserId(userId);
+    }
+
 }

@@ -41,4 +41,9 @@ public interface ProductInquiryService {
     int totalCount (PagingDto paging);
 
     List<ProductInquiryDto> showAllInquiries(String productCode);
+
+//  사용자별 문의리스트
+    List<ProductInquiryDto> showInquiryByUser (int UserId);
+
+    int numUserId(int userId);
 }
