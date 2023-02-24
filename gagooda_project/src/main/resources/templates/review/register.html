@@ -12,7 +12,7 @@
         <h2 class="text-center mb-5">리뷰 등록</h2>
         <div class="mx-auto" style="width: 50%">
             <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
-            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
+            <input type="text" name="productCode" id="productCode" th:value="${productCode}">
             <div class="mb-3">
                 <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
                     <option value="">상품 옵션</option>
@@ -24,7 +24,7 @@
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">평점</label>
-                <input type="number" class="form-control" id="rate">
+                <input type="number" min="1" max="5" step="1" class="form-control" name="rate" id="rate" required placeholder="1~5점을 주세요 !">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>

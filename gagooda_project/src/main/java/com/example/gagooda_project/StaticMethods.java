@@ -17,7 +17,7 @@ public class StaticMethods {
         if (contentsTypes[0].equals("image")) {
             String fileName = code + "_" + System.currentTimeMillis() + "_"
                     + (int) (Math.random() * 10000) + "." + contentsTypes[1];
-            Path path = Paths.get(imgPath + fileName);
+            Path path = Paths.get(imgPath + "/" + fileName);
             imgFile.transferTo(path);
             image = new ImageDto();
             image.setImgPath(fileName);
@@ -29,3 +29,5 @@ public class StaticMethods {
         return image;
     }
 }
+
+// /Users/koodoyoon/GAGOODA/gagooda_project/src/main/resources/static/img/review
