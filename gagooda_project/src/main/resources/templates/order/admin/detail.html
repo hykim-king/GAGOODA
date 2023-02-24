@@ -16,7 +16,7 @@
         <label for="orderId">주문 번호: </label>
         <span id="orderId"  th:text="${order.orderId}"></span>
         <label for="oDet">주문 상태: </label>
-        <span id="oDet" th:text="${order.ODet}"></span>
+        <span id="oDet" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
     </fieldset>
     <!--주문 일자, 번호, 상태 end----------------->
     <!--상세 주문 물품 리스트-->

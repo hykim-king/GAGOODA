@@ -112,9 +112,11 @@ public class OrderController {
         OrderDto order = orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
         DeliveryDto delivery = orderService.selectDelivery(orderId);
+        List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
         model.addAttribute("order",order);
         model.addAttribute("orderDetailList",orderDetailList);
         model.addAttribute("delivery", delivery);
+        model.addAttribute("oCodeList",oCodeList);
         return "/order/admin/detail";
     }
 
@@ -155,9 +157,11 @@ public class OrderController {
         OrderDto order = orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
         DeliveryDto delivery = orderService.selectDelivery(orderId);
+        List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
         model.addAttribute("order",order);
         model.addAttribute("orderDetailList",orderDetailList);
         model.addAttribute("delivery", delivery);
+        model.addAttribute("oCodeList",oCodeList);
         return "/order/user/detail";
     }
     /*사용자 주문 취소로 주문 상태 수정*/
