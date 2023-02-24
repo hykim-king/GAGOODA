@@ -108,7 +108,14 @@ public class OrderController {
     }
     @GetMapping("/admin/{orderId}/detail.do")
     public String adminDetail(@PathVariable String orderId,
-                              Model model){
+                              Model model,
+                              HttpSession session,
+                              @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         OrderDto order = orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
         DeliveryDto delivery = orderService.selectDelivery(orderId);
@@ -126,7 +133,14 @@ public class OrderController {
                        PagingDto paging,
                        HttpServletRequest req,
                        @RequestParam(name = "dates", defaultValue = "7", required = false) int dates,
-                       @SessionAttribute UserDto loginUser){
+                       @SessionAttribute UserDto loginUser,
+                       HttpSession session,
+                       @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         log.info("req.getParameterMap(): "+req.getParameterMap());
         log.info("nameS:" + req.getParameterNames());
         System.out.println(paging);
@@ -153,7 +167,14 @@ public class OrderController {
     @GetMapping("/user_yes/mypage/{orderId}/detail.do")
     public String detail(@SessionAttribute(required = true) UserDto loginUser,
                          @PathVariable String orderId,
-                         Model model){
+                         Model model,
+                         HttpSession session,
+                         @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         try{
             OrderDto order = orderService.selectOne(orderId);
             List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
@@ -172,7 +193,14 @@ public class OrderController {
     /*사용자 주문 취소로 주문 상태 수정*/
     @GetMapping("/user_yes/mypage/{orderId}/modify.do")
     public String modify(@SessionAttribute(required = true) UserDto loginUser,
-                         @PathVariable String orderId){
+                         @PathVariable String orderId,
+                         HttpSession session,
+                         @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         int modify = 0;
         String oDet = "o5";
         try{
@@ -193,7 +221,14 @@ public class OrderController {
     @GetMapping("/user_yes/{orderId}/complete.do")
     public String complete(@SessionAttribute(required=true) UserDto loginUser,
                            @PathVariable String orderId,
-                           Model model){
+                           Model model,
+                           HttpSession session,
+                           @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         OrderDto order=orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
         int itemCount = orderDetailList.size();
