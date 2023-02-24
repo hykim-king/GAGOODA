@@ -6,57 +6,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <div layout:fragment="myPageContent">
 <h2>유저 환불 목록</h2>
-<h3>환불 내역</h3>
 <span class="currentPeriod" th:text="${param.period}" style="display: none"></span>
 
-<ul>
-    <!-- 기간 선택 조회-->
-    <li><a class="afterParam" href="javascript:void(0)" data-val="7">최근 7일 기록 보기(기본)</a></li>
-    <li><a class="afterParam" href="javascript:void(0)" data-val="15">최근 15일 기록 보기</a></li>
-    <li><a class="afterParam" href="javascript:void(0)" data-val="30">최근 1개월 기록 보기</a></li>
-    <li><a class="afterParam" href="javascript:void(0)" data-val="90">최근 3개월 기록 보기</a></li>
-    <li><a class="afterParam" href="javascript:void(0)" data-val="365">최근 1년 기록 보기</a></li>
-    <!-- 기간 선택 조회 end-->
-    <li>
-        <!-- 기간 검색 조회-->
-        <form  th:action="@{ '' }" method="get">
-            <input type="date" name="startDate" id="startDate" required> ~
-            <input type="date" name="endDate" id="endDate" required>
-            <button type="submit">조회</button>
-        </form>
-        <!-- 기간 검색 조회 end-->
-    </li>
-</ul>
-<ul>
-    <!--공통 코드별(진행:rf0,rf2,rf3,rf4,rf5,rf6 / 완료:rf1,rf7,rf8) 선택 조회-->
-    <li><a class="afterCode" href="javascript:void(0)"  data-val="all">전체 환불 내역</a></li>
-    <li><a class="afterCode" href="javascript:void(0)" data-val="notEnd">환불 진행 내역</a></li>
-    <li><a class="afterCode" href="javascript:void(0)" data-val="end">환불 완료 내역</a></li>
-    <!--공통 코드별(진행:rf0,rf2,rf3,rf4,rf5,rf6 / 완료:rf1,rf7,rf8) 선택 조회 end-->
-    <li>( 내역 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
-</ul>
 
+<div class="d-flex justify-content-between nav-tabs" >
+    <ul class="nav">
+        <!-- 기간 선택 조회-->
+        <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="7">7일</a></li>
+        <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="15">15일</a></li>
+        <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="30">1개월</a></li>
+        <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="90">3개월</a></li>
+        <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="365">1년</a></li>
+        <!-- 기간 선택 조회 end-->
+    </ul>
+    <!-- 기간 검색 조회-->
+    <form  th:action="@{ '' }" method="get" class="d-flex align-self-end" style="height: 40px;">
+        <input class="form-control" type="date" name="startDate" id="startDate" required>
+        <span class="mx-2" style="line-height: 40px;"><i class="bi bi-dash"></i></span>
+        <input class="form-control" type="date" name="endDate" id="endDate" required>
+        <button class="btn btn-outline-secondary mx-1" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+    <!-- 기간 검색 조회 end-->
+</div>
+    <ul class="nav">
+        <!--공통 코드별(진행:rf0,rf2,rf3,rf4,rf5,rf6 / 완료:rf1,rf7,rf8) 선택 조회-->
+        <li class="nav-item"><a class="nav-link afterCode" href="javascript:void(0)"  data-val="all">전체 환불 내역</a></li>
+        <li class="nav-item"><a class="nav-link afterCode" href="javascript:void(0)" data-val="notEnd">환불 진행 내역</a></li>
+        <li class="nav-item"><a class="nav-link afterCode" href="javascript:void(0)" data-val="end">환불 완료 내역</a></li>
+        <!--공통 코드별(진행:rf0,rf2,rf3,rf4,rf5,rf6 / 완료:rf1,rf7,rf8) 선택 조회 end-->
+        <li class="nav-link disabled">( 총 <th:block th:text="${userRefundCount}"></th:block> 건)</li>
+    </ul>
 
-<table>
+<table class="table table-hover">
     <th:block th:if="${refundMsg != null}">
         <span id="msg" th:data-msg="${refundMsg}"></span>
         <div class="alert alert-primary" role="alert" th:text="${refundMsg}"></div>
     </th:block>
     <thead>
         <tr>
-            <th>날짜</th>
-            <th>주문번호</th>
-            <th>상품명</th>
-            <th>환불 금액</th>
-            <th>처리 현황</th>
+            <th scope="col">환불 요청 날짜</th>
+            <th scope="col">주문번호</th>
+            <th scope="col">상품명</th>
+            <th scope="col">환불 금액</th>
+            <th scope="col">처리 현황</th>
         </tr>
     </thead>
     <tbody>
-        <tr th:each="refund:${refundList}" class="hrefRow" th:data-refund="${refund.refundId}">
-            <td th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
+        <tr th:each="refund:${refundList}" class="hrefRow" th:data-refund="${refund.refundId}" style="cursor: pointer">
+            <td scope="row" th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
             <td th:text="${refund.orderId}"></td>
             <td th:text="${refund.orderDetailDto.optionName}"></td>
             <td th:text="${refund.cancelAmount}"></td>
@@ -69,7 +70,7 @@
 </th:block>
 
 <!--pagination-->
-<nav aria-label="Page navigation ">
+<nav aria-label="Page navigation">
     <ul class="pagination">
         <li class="page-item">
             <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
@@ -80,6 +81,34 @@
     </ul>
 </nav>
 <!--pagination end--------------->
+
+    <nav class="m-1 d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${(!paging.prev)?'disabled':''}">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}">Prev</a></li>
+            <th:block th:if="${paging.startPage>1}">
+                <li>
+                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
+                </li>
+                <li class="disabled"><span>…</span></li>
+            </th:block>
+
+            <li class="page-item" th:each=" i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                th:classappend="${(i==paging.page)?'disabled':''}">
+                <a class="page-link" th:classappend="${(i==paging.page)?'text-primary fw-bold':''}"
+                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
+            </li>
+            <th:block th:if="${paging.endPage<paging.totalPages}">
+                <li class="disabled"><span>…</span></li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                       th:text="${paging.totalPages}"></a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}">Next</a></li>
+        </ul>
+    </nav>
 
 <script th:inline="javascript">
     let hrefRows = document.querySelectorAll(".hrefRow");
@@ -94,6 +123,15 @@
     const afterParam = document.querySelectorAll(".afterParam");
     let period = document.querySelector(".currentPeriod").innerText;
     let url = document.location.href;
+    afterParam.forEach(param=>{
+        let period = "period="+[[${param.period}]];
+        let value = [[${param.period}]]
+        if (param.dataset.val == value){
+            console.log(period)
+            param.classList.add("active");
+        }else{
+        }
+    });
     afterParam.forEach((param)=>{
         param.addEventListener("click", ()=>{
             if (url.includes("?")){
@@ -110,6 +148,7 @@
             }
         })
     })
+
     let afterCode = document.querySelectorAll(".afterCode");
     afterCode.forEach(code=>{
         code.addEventListener("click",()=>{

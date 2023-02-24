@@ -65,9 +65,7 @@
         <div>환불 답변</div>
         <div th:text="${refund.reply}"></div>
     </div>
-<!--    <a th:href="@{'refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}">수정하기</a>-->
-
-    <form th:action="@{'/refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}" method="POST">
+    <form name="modify" th:action="@{'/refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}" method="POST">
         <div>
             <label for="rfDet">상태 변경</label>
             <select name="rfDet" id="rfDet" required>
@@ -76,13 +74,24 @@
                     <option th:value="${rfCode.detCode}" th:text="${rfCode.detName}"></option>
                 </th:block>
             </select>
+            <th:block th:if="${refund.rfDet.equals('rf4') || refund.rfDet.equals('rf5') || refund.rfDet.equals('rf6')}">
+                <button id="cancelBtn" type="button">결제 취소 진행</button>
+            </th:block>
         </div>
-        <label for="reply">환불 요청 답변</label>
-        <textarea required name="reply" id="reply" cols="30" rows="10"></textarea>
+        <div>
+            <label for="reply">환불 요청 답변</label>
+            <textarea required name="reply" id="reply" cols="30" rows="10"></textarea>
+        </div>
         <button type="submit">등록</button>
         <button type="reset">초기화</button>
     </form>
 
-
+<!--    <th:block th:if="${refund.rfDet.equals")}"-->
+<script th:inline="javascript">
+    const cancelBtn = document.querySelector("#cancelBtn");
+    cancelBtn.addEventListener("click",()=>{
+        document.open("/refund/admin/"+[[${refund.refundId}]]+"/payments/cancel.do","cancel", "width=600, height=400, left=50%, top=50%");
+    })
+</script>
 </div>
 </html>
