@@ -15,4 +15,5 @@ public interface OrderDetailMapper {
     // id -> orderId
     int insertOne(OrderDetailDto orderDetail);
     // dto -> orderDetail
+    int deleteByOrderId(String orderId);
 }

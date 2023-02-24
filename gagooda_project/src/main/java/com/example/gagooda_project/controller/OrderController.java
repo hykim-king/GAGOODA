@@ -34,6 +34,8 @@ public class OrderController {
     public String adminList(@SessionAttribute UserDto loginUser,
                             PagingDto paging,
                             HttpServletRequest req,
+                            HttpSession session,
+                            @SessionAttribute(required = false) String msg,
                             @RequestParam(name = "oDet", required = false, defaultValue = "") String oDet,
                             @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
                             @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
@@ -43,6 +45,11 @@ public class OrderController {
                             Model model){
 
         log.info("req.getParameterMap:"+req.getParameterMap());
+        String adminMsg = "";
+        if (session.getAttribute(msg) != null){
+            adminMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -61,6 +68,7 @@ public class OrderController {
                 model.addAttribute("oCodeList", oCodeList);
                 model.addAttribute("paging",paging);
                 model.addAttribute("oCount", oCount);
+                model.addAttribute("msg",msg);
 //                model.addAttribute("allCount",allRfCnt);
                 return "order/admin/list";
             }
@@ -72,8 +80,43 @@ public class OrderController {
         }
         return "refund/admin/list";
     }
+    @PostMapping("/admin/modify.do")
+    public String adminModify( @RequestParam(required = true, name="orderIdHidden") List<String> orderIdList,
+                               @RequestParam(required = true, name="oDetHidden") List<String> oDetList,
+                               HttpSession session){
+        int register = 0;
+        log.info("ORDERIDLIST: "+orderIdList);
+        log.info("ODETLIST: "+oDetList);
+        try{
+            register = orderService.adminModify(orderIdList, oDetList);
+            log.info("1.register 끝");
 
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        log.info("register value: "+register);
+        if(register>0){
+            log.info("2.register 성공");
+            session.setAttribute("msg","주문상태 변경에 성공하였습니다.");
+            return "redirect:/order/admin/list.do";
+        }else{
+            log.info("3.register 실패");
+            session.setAttribute("msg","주문 상태 변경에 실패하였습니다.");
+            return "redirect:/order/admin/list.do";
+        }
 
+    }
+    @GetMapping("/admin/{orderId}/detail.do")
+    public String adminDetail(@PathVariable String orderId,
+                              Model model){
+        OrderDto order = orderService.selectOne(orderId);
+        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        DeliveryDto delivery = orderService.selectDelivery(orderId);
+        model.addAttribute("order",order);
+        model.addAttribute("orderDetailList",orderDetailList);
+        model.addAttribute("delivery", delivery);
+        return "/order/admin/detail";
+    }
 
 //    사용자 주문 목록
     @GetMapping("/user_yes/mypage/list.do")
@@ -93,6 +136,7 @@ public class OrderController {
             model.addAttribute("orderList",orderList);
             model.addAttribute("paging",paging);
             model.addAttribute("oCodeList",oCodeList);
+            model.addAttribute("dates",dates);
             log.info("paging.toString(): "+paging.toString());
         }catch(Exception e){
             log.error(e.getMessage());

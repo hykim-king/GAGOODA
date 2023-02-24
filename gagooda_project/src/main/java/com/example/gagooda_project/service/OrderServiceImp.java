@@ -63,7 +63,6 @@ public class OrderServiceImp implements OrderService {
             }
         }
        if(delivery != null){
-           System.out.println("Service에서 delivery 넘어오나?: "+delivery);
            register += deliveryMapper.insertOne(delivery);
            for(String cartNum: cartList){
                int cartId = Integer.parseInt(cartNum);
@@ -112,9 +111,10 @@ public class OrderServiceImp implements OrderService {
         if(!searchFilter.get("oDet").equals("")){
             String oDet = searchFilter.get("oDet").toString();
             List<String> oList = new ArrayList<>(Arrays.asList(oDet.split(",")));
+            System.out.println("oList: "+oList);
             String oDetF = "'"+String.join("','", oList)+"'";
             System.out.println("oDetF: "+oDetF);
-            searchFilter.put("rfDet", oDetF);
+            searchFilter.put("oDet", oDetF);
         }
         if(!searchFilter.get("searchWord").equals("")){
             String keyword = "%"+searchFilter.get("searchWord")+"%";
@@ -139,5 +139,23 @@ public class OrderServiceImp implements OrderService {
     @Override
     public int countPageAll(Map<String, Object> searchFilter) {
         return orderMapper.countPageAll(searchFilter);
+    }
+
+    @Transactional
+    @Override
+    public int adminModify(List<String> orderIdList, List<String> oDetList) {
+        int register = 0;
+        System.out.println("adminModify 서비스에 도달!");
+        for (int i=0; i<orderIdList.size(); i++){
+            for(int j=0; j<oDetList.size(); j++){
+                if(i==j){
+                    System.out.println("adminModify orderId: "+orderIdList.get(i));
+                    System.out.println("adminModify oDet: "+oDetList.get(j));
+                   register += orderMapper.updateStatus(orderIdList.get(i),oDetList.get(j));
+                }
+            }
+        }
+        System.out.println("adminModify register: "+register);
+        return register;
     }
 }

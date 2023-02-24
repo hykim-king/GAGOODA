@@ -18,4 +18,5 @@ public interface OrderService {
     List<CommonCodeDto> showDetCodeList(String mstCode);
     List<OrderDto> showOrderList(Map<String,Object> searchFilter);
     int countPageAll(Map<String,Object> searchFilter);
+    int adminModify(List<String> orderIdList, List<String> oDetList);
 }

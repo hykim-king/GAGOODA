@@ -33,6 +33,9 @@
     <delete id="deleteByStatus">
         DELETE FROM order_db WHERE o_det=#{oDet};
     </delete>
+    <delete id="deleteById">
+        DELETE FROM order_db WHERE order_id=#{orderId};
+    </delete>
     <select id="listAll" resultMap="orderMap">
         SELECT * FROM order_db
     </select>
