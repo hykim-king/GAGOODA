@@ -59,4 +59,10 @@
     <select id="listByProductCodeAll" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry WHERE product_code=#{productCode}
     </select>
+    <select id="countByUserId" resultType="java.lang.Integer" >
+        SELECT COUNT(*) FROM product_inquiry WHERE user_id=#{userId}
+    </select>
+    <select id="listByUserId" resultMap="productInquiryMap" >
+        SELECT * FROM product_inquiry WHERE user_id=#{userId}
+    </select>
 </mapper>
