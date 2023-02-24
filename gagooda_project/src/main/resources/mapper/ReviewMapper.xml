@@ -13,6 +13,10 @@
                      column="user_id"
                      select="com.example.gagooda_project.mapper.UserMapper.findById"
                      fetchType="lazy"/>
+         <collection property="imgList"
+                    column="img_code"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    fetchType="lazy"/>
     </resultMap>
     <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
         INSERT INTO
@@ -20,7 +24,7 @@
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{content}, #{imgCode})
     </insert>
     <update id="updateOne" parameterType="ReviewDto">
-        UPDATE review SET rate=#{rate}, content=#{content} WHERE review_id=#{reviewId}
+        UPDATE review SET rate=#{rate}, content=#{content}, img_code=#{imgCode} WHERE review_id=#{reviewId}
     </update>
     <delete id="deleteOne">
         DELETE FROM review WHERE review_id=#{id}

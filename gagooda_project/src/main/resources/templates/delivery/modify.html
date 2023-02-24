@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>배송 정보 업데이트</title>
+</head>
+<div layout:fragment="myPageContent">
+    <h2>관리자 배송 정보 업데이트</h2>
+    <form action="/delivery/admin/modify.do" method="post"  enctype="multipart/form-data">
+        <div>
+            <div th:text="'주문 ID : '+${delivery.orderId}" th:readonly="true"></div>
+        </div>
+        <div>
+            <label for="userId">주문자 ID</label>
+            <input type="text" name="userId" id="userId" th:value="${delivery.userId}" th:readonly="true">
+        </div>
+        <div>
+            <label for="userName">주문자 이름</label>
+            <input type="text" name="userName" id="userName" th:value="${delivery.userName}" required th:readonly="true">
+        </div>
+        <div>
+            <label for="userEmail">주문자 이메일</label>
+            <input type="text" name="userEmail" id="userEmail" th:value="${delivery.userEmail}" required th:readonly="true">
+        </div>
+        <div>
+            <label for="userPhone">주문자 전화번호</label>
+            <input type="text" name="userPhone" id="userPhone" th:value="${delivery.userPhone}" required th:readonly="true">
+        </div>
+        <div>
+            <label for="invoice">운송장</label>
+            <input type="text" name="invoice" id="invoice" th:value="${delivery.invoice}" >
+        </div>
+        <div>
+            <label for="startDate">배송 시작일</label>
+            <input type="date" id="startDate" name="startDate" th:value="${#calendars.format(delivery.startDate, 'yyyy-MM-dd')}" >
+        </div>
+        <div>
+            <label for="endDate">배송 완료일</label>
+            <input type="date" id="endDate" name="endDate" th:value="${#calendars.format(delivery.endDate, 'yyyy-MM-dd')}" >
+        </div>
+        <div>
+            <select name="dDet">
+                <option value="d0"> 주문 확인 </option>
+                <option value="d1"> 배송 준비 </option>
+                <option value="d2"> 배송 중 </option>
+                <option value="d3"> 배송 완료 </option>
+            </select>
+        </div>
+
+        <input type="hidden" name="orderId" th:value="${delivery.orderId}">
+        <div>
+            <button type="submit">저장하기</button>
+            <a th:href="@{'delete.do'}" >삭제하기</a>
+        </div>
+    </form>
+
+    <script>
+
+    </script>
+</div>
+</html>

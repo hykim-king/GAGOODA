@@ -138,7 +138,7 @@
             console.log('본인인증 성공');
             $.ajax({
                 type: 'POST',
-                url: 'user/signup.do',
+                url: '/certifications/'+ response.imp_uid,
                 dataType:'json',
                 data: {'imp_uid' : response.imp_uid},
             });

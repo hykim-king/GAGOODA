@@ -16,8 +16,8 @@
           <option value="" selected disabled>검색 분류 선택</option>
           <option value="all">전체</option>
           <option value="order_id">주문번호</option>
-          <option value="uname">신청자명</option>
-          <option value="phone">신청자 전화번호</option>
+          <option value="user_name">주문자 이름</option>
+          <option value="user_email">주문자 이메일</option>
         </select>
         <input type="text" id="searchWord" name="searchWord">
       </label>
@@ -32,7 +32,7 @@
       </label>
       <div class="d-flex">
         <span>진행 상태 :</span>
-        <label><input type="checkbox" name="dDet" id="d0" value="d0" > 주문 완료 </label>
+        <label><input type="checkbox" name="dDet" id="d0" value="d0" > 주문 확인 </label>
         <label><input type="checkbox" name="dDet" id="d1" value="d1" > 배송 준비 </label>
         <label><input type="checkbox" name="dDet" id="d2" value="d2" > 배송 중 </label>
         <label><input type="checkbox" name="dDet" id="d3" value="d3" > 배송 완료 </label>
@@ -41,20 +41,20 @@
     <button type="submit" class="btn btn-outline-secondary">검색</button>
     <button name="reset" type="reset">초기화</button>
   </form>
-  <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
+  <h3>배송 현황 목록 <span th:if="${deliveryList != null && !deliveryList.isEmpty() }" th:text="${deliveryList.size()}"></span></h3>
   <table>
     <thead>
     <tr>
       <!--            <th>No.</th>-->
-      <th>작성자</th>
       <th>주문 ID</th>
-      <th>상세 주문 ID</th>
-      <th>옵션 상품 ID</th>
-      <th>주문 가격</th>
-      <th>환불 요청 가격</th>
-      <th>환불 진행 상태</th>
-      <th>환불 신청일</th>
-      <th>최근 상태 변경일</th>
+      <th>주문자 ID</th>
+      <th>주문자 이름</th>
+      <th>주문자 이메일</th>
+      <th>주문자 전화번호</th>
+      <th>운송장</th>
+      <th>배송 시작일</th>
+      <th>배송 완료일</th>
+      <th>배송 상태</th>
     </tr>
     </thead>
     <tbody>
@@ -72,23 +72,24 @@
     <!--                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>-->
     <!--            </tr>-->
     <!--        </th:block>-->
-    <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}">
-      <tr class="hrefRow" th:data-refund="${refund.refundId}">
-        <td th:text="${refund.uname}"></td>
-        <td th:text="${refund.orderId}"></td>
-        <td th:text="${refund.orderDetailId}"></td>
-        <td th:text="${refund.orderDetailDto.optionCode}"></td>
-        <td th:text="${refund.orderDetailDto.price}"></td>
-        <td th:text="${refund.cancelAmount}"></td>
-        <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
-        <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
-        <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
+    <th:block th:if="${deliveryCount >= 0}" th:each="delivery : ${deliveryList}">
+      <tr>
+        <td th:text="${delivery.orderId}"></td>
+        <td th:text="${delivery.userId}"></td>
+        <td th:text="${delivery.userName}"></td>
+        <td th:text="${delivery.userEmail}"></td>
+        <td th:text="${delivery.userPhone}"></td>
+        <td th:text="${delivery.invoice}"></td>
+        <td th:text="${#calendars.format(delivery.startDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#calendars.format(delivery.endDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${delivery.DDetDto.detName}"></td>
+        <td><button type="button" th:onclick="|location.href='@{/delivery/admin/{orderId}/modify.do (orderId=${delivery.orderId})}'|">수정하기</button></td>
       </tr>
     </th:block>
     <!--            </th:block>-->
     </tbody>
   </table>
-  <th:block th:unless="${refundCount >= 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
+  <th:block th:unless="${deliveryCount >= 0}"><div>배송 내역이 존재하지 않습니다.</div></th:block>
   <!--pagination-->
   <nav aria-label="Page navigation ">
     <ul class="pagination">
@@ -102,15 +103,6 @@
   </nav>
   <!--pagination end--------------->
   <script th:inline="javascript">
-    let hrefRows = document.querySelectorAll(".hrefRow");
-    hrefRows.forEach((row)=>{
-      row.addEventListener('click',()=>{
-        console.log(row)
-        let targetHref = "http://"+ document.location.host + "/refund/admin/" + row.dataset.refund +"/detail.do";
-        console.log(targetHref)
-        document.location.href =  targetHref;
-      })
-    })
     const forms = document.forms.searchForm;
     console.log(forms);
     forms.searchDiv.onchange = (qualifiedName, value)=>{

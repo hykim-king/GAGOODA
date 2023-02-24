@@ -284,6 +284,19 @@
 
         function init() {
             const pInquiryForm = document.forms["pInquiryForm"];
+            const pageBtns= document.getElementById("ajaxContent").querySelectorAll(".uk-pagination a");
+            pageBtns.forEach((btn)=>{
+                btn.onclick=async (e)=>{
+                    e.preventDefault();
+                    let btnUrl=e.target.href;
+                    let queryString=btnUrl.split("?")[1];
+                    let url="/reply/[[${boardNo}]]/list.do?"+queryString;
+                    const resp = await fetch(url);
+                    const html=await resp.text();
+                    document.getElementById("ajaxContent").innerHTML = html;
+                    init();
+                }
+            });
             if(pInquiryForm != null) {
                 pInquiryForm.onsubmit = function (e) {
                     registerPInquiry(e, pInquiryForm);

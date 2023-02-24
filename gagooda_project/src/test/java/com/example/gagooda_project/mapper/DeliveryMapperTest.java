@@ -16,7 +16,7 @@ class DeliveryMapperTest {
     @Test
     void insertOne() {
         DeliveryDto delivery = new DeliveryDto();
-        delivery.setInvoice(1357);
+        delivery.setInvoice("1357");
         delivery.setRequest("안전배송");
         delivery.setDDet("d0");
         delivery.setOrderId("1");
@@ -27,7 +27,7 @@ class DeliveryMapperTest {
     void updateOne() {
         DeliveryDto delivery = new DeliveryDto();
 //        delivery.setDeliveryId(1);
-        delivery.setInvoice(1234);
+        delivery.setInvoice("1234");
         delivery.setRequest("빠른배송");
         delivery.setDDet("d0");
         delivery.setOrderId("1");

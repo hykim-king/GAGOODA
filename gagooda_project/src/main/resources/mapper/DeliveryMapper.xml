@@ -32,16 +32,20 @@
                             d_det=#{dDet}
                             WHERE order_id=#{orderId}
     </insert>
+
     <insert id="insertOne">
         INSERT INTO delivery (order_id, user_id, user_name, user_email, user_phone, request)
         VALUES (#{orderId},#{userId},#{userName},#{userEmail},#{userPhone},#{request})
     </insert>
+
     <delete id="deleteOne">
         DELETE FROM delivery WHERE order_id = #{orderId}
     </delete>
+
     <select id="findByOrderId" resultMap="deliveryMap">
         SELECT * FROM delivery WHERE order_id=#{orderId}
     </select>
+
     <select id="listAll" resultMap="deliveryMap" parameterType="hashmap">
         SELECT * FROM delivery
         <where>

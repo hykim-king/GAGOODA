@@ -77,8 +77,11 @@
         LEFT JOIN category_conn cc
         ON product.product_code = cc.product_code
         <where>
-            <if test="map.get('categoryId')!=null and !map.get('categoryId').isEmpty()">
-                AND cc.category_id = ${map.get("categoryId")}
+            <if test="map.get('categoryIdList')!=null and !map.get('categoryIdList').isEmpty()">
+                AND cc.category_id in
+                <foreach item="det" index="index" collection="map.get('categoryIdList')"
+                         open="(" separator="," close=")">#{det}
+                </foreach>
             </if>
             <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
                 AND product.p_det in

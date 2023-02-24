@@ -29,6 +29,7 @@ public interface ProductService {
             HashSet<String> categoryIdList,
             List<String> imgToDelete,
             UserDto loginUser,
-            String imgPath
+            String imgPath,
+            List<String> optionToDeleteList
     );
 }
