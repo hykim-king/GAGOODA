@@ -1,6 +1,7 @@
 package com.example.gagooda_project.service;
 
 import com.example.gagooda_project.dto.CartDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.mapper.CartMapper;
 import org.springframework.stereotype.Service;
 
@@ -54,5 +55,13 @@ public class CartServiceImp implements CartService {
     @Override
     public int registerOne(CartDto cart) {
         return cartMapper.insertOne(cart);
+    }
+
+    public List<CartDto> cartList(PagingDto paging, int userId) {
+        int totalRows = cartMapper.count(paging, userId);
+        paging.setRows(4);
+        paging.setOrderField("cart_id");
+        paging.setTotalRows(totalRows);
+        return cartMapper.pageAll(paging, userId);
     }
 }
