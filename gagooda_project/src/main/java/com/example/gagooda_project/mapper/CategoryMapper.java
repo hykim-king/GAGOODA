@@ -8,9 +8,9 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
-    CategoryDto findById(int categoryId);
+    CategoryDto findById(String categoryId);
 
-    List<CategoryDto> listByParentId(int parentId);
+    List<CategoryDto> listByParentId(String parentId);
 
     int insertOne(CategoryDto categoryDto);
 

@@ -5,30 +5,12 @@
       layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${searchWord}+' 검색결과'"></title>
 </head>
 <div layout:fragment="content">
-    <h5 th:if="${parentCategory != null}">
-        <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${parentCategory.categoryId})}"
-           th:text="${parentCategory.cname}"></a>
-    </h5>
-    <h1 th:text="${category.cname}"></h1>
-    <ul th:if="${childList != null and !childList.isEmpty()}">
-        <li th:if="${realCategoryId.length() > 1}">
-            <a th:if="${realCategoryId.equals(category.categoryId)}"
-               th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
-               style="font-weight:bold;">전체</a>
-            <a th:unless="${realCategoryId.equals(category.categoryId)}"
-               th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}">전체</a>
-        </li>
-        <li th:each="child:${childList}">
-            <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
-               th:text="${child.cname}" style="font-weight:bold;"
-               th:if="${realCategoryId.equals(child.categoryId)}"></a>
-            <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
-               th:text="${child.cname}" th:unless="${realCategoryId.equals(child.categoryId)}"></a>
-        </li>
-    </ul>
+    <h1>
+        '<span th:text="${searchWord}"></span>'에 대한 검색결과 <span th:text="${paging.totalRows}"></span>건
+    </h1>
     <th:block th:each="product:${productList}">
         <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}">
             <div>
@@ -40,6 +22,7 @@
             <p th:text="${product.getSalesPc()}"></p>
         </a>
     </th:block>
+
     <ul class="uk-pagination uk-flex-center">
         <th:block th:if="${paging.startPage>1}">
             <li>

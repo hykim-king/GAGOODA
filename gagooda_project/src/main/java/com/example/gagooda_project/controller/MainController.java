@@ -11,11 +11,16 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MainController {
@@ -83,6 +88,57 @@ public class MainController {
             model.addAttribute("categories", firstCategories);
         }
 
-        return "index";
+        return "order/mainpage";
+    }
+
+    @PostMapping("/search_results.do")
+    public String searchResults(
+            @RequestParam String searchWord,
+            HttpSession session
+    ) {
+        String encodedParam = null;
+        try {
+            encodedParam = URLEncoder.encode(searchWord, "UTF-8");
+            System.out.println(searchWord);
+            if(searchWord.isBlank()) {
+                return "redirect:/";
+            } else {
+                return "redirect:/search_results.do?searchWord="+encodedParam;
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            session.setAttribute("msg", "검색 결과를 가져오는데에 문제가 있었습니다.");
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/search_results.do")
+    public String searchResults(
+            @RequestParam String searchWord,
+            Model model,
+            PagingDto paging,
+            HttpServletRequest req,
+            @SessionAttribute(required = false) String msg,
+            HttpSession session
+    ) {
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
+        try {
+            paging.setRows(20);
+            if (paging.getOrderField() == null) paging.setOrderField("mod_date");
+            paging.setQueryString(req.getParameterMap());
+            Map<String, Object> map = new HashMap<>();
+            map.put("searchWord", "'%"+searchWord+"%'");
+            List<ProductDto> productList = productService.pagingProduct(paging, map);
+            model.addAttribute("paging", paging);
+            model.addAttribute("productList", productList);
+            model.addAttribute("searchWord", searchWord);
+            return "search_result";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
+        }
     }
 }

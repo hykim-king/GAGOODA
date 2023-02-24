@@ -187,6 +187,7 @@ public class ProductServiceImp implements ProductService {
                         imgPath+"/product", i + 1);
                 imageList.add(image);
             }
+
             // imageList에 있는 모든 이미지들을 순번을 다시 매겨서 DB에 저장
             for (int i = 0; i < imageList.size(); i++) {
                 imageList.get(i).setSeq(i+1);

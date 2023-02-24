@@ -73,7 +73,7 @@ public class ProductController {
             Model model,
             HttpSession session,
             @SessionAttribute(required = false) String msg,
-            @PathVariable int categoryId,
+            @PathVariable String categoryId,
             PagingDto paging,
             HttpServletRequest req
     ) {
@@ -85,15 +85,32 @@ public class ProductController {
         paging.setRows(16);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
-        model.addAttribute("paging", paging);
 
         Map<String, Object> map = new HashMap<>();
-        List<Integer> categoryIdList = new ArrayList<>();
+        List<String> categoryIdList = new ArrayList<>();
         categoryIdList.add(categoryId);
         map.put("categoryIdList", categoryIdList);
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+            model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
+
+            model.addAttribute("realCategoryId", categoryId);
+            if (categoryId.length() == 3) {
+                CategoryDto category = categoryService.selectOne(categoryId);
+                categoryId = category.getParentId();
+            }
+
+            CategoryDto category = categoryService.selectOne(categoryId);
+            model.addAttribute("category", category);
+
+            List<CategoryDto> childList = categoryService.showChildCategories(categoryId);
+            model.addAttribute("childList", childList);
+
+            if (category.getParentId() != null) {
+                CategoryDto parentCategory = categoryService.selectOne(category.getParentId());
+                model.addAttribute("parentCategory", parentCategory);
+            }
             return "/product/category_list";
         } catch (Exception e) {
             e.printStackTrace();
