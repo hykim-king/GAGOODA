@@ -1,9 +1,6 @@
 package com.example.gagooda_project.service;
 
-import com.example.gagooda_project.dto.CartDto;
-import com.example.gagooda_project.dto.CommonCodeDto;
-import com.example.gagooda_project.dto.ODetDto;
-import com.example.gagooda_project.dto.OrderDto;
+import com.example.gagooda_project.dto.*;
 
 import java.util.List;
 
@@ -12,4 +9,6 @@ public interface MyPageService {
     List<ODetDto> countByUserIdAndStatus(int userId);
     List<CommonCodeDto> showDetCodeList(String mstCode);
     List<OrderDto> orderList(int userId, int dates);
+    List<OrderDto> orderList(PagingDto paging, int userId, int dates);
+    List<CartDto> cartList(PagingDto paging, int userId);
 }
