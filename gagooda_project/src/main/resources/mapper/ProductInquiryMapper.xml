@@ -36,8 +36,9 @@
         DELETE FROM product_inquiry WHERE p_inquiry_id=#{pInquiryId}
     </delete>
     <select id="listByProductCode" resultMap="productInquiryMap" parameterType="pagingDto">
-        SELECT * FROM product_inquiry WHERE product_code=#{productCode} ORDER BY ${orderField} ${direct}
-        LIMIT #{startRow}, #{rows}
+        SELECT * FROM product_inquiry WHERE product_code=#{productCode}
+                                      ORDER BY ${paging.orderField} ${paging.direct}
+                                      LIMIT #{paging.startRow}, #{paging.rows}
     </select>
     <select id="listAll" resultMap="productInquiryMap">
         SELECT * FROM product_inquiry

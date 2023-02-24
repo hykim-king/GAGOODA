@@ -29,10 +29,10 @@ public class ProductInquiryController {
         private int state = 0; //0:실패 1:성공 (statusCode: 400(badRequest), 500(db통신 오류), 405(Method 오류))
     }
 
-    @GetMapping("/list.do")
+    @GetMapping("/{productCode}/list.do")
     public String list(Model model,
                        PagingDto paging,
-                       @RequestParam(required = true, name = "productCode") String productCode,
+                       @PathVariable(name = "productCode") String productCode,
                        @SessionAttribute(required = false) String msg,
                        HttpSession session,
                        @SessionAttribute(required = false) UserDto loginUser,

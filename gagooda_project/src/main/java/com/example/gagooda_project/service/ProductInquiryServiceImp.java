@@ -27,6 +27,8 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
 
     public List<ProductInquiryDto> showInquiries(String productCode, PagingDto paging){
         int totalRows = productInquiryMapper.countByPInquiryId(productCode, paging);
+        paging.setRows(10);
+        if (paging.getOrderField() == null) paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
         return productInquiryMapper.listByProductCode(productCode,paging);
     }
@@ -44,6 +46,8 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     @Override
     public List<ProductInquiryDto> showProductInquiries(PagingDto paging) {
         int totalRows = productInquiryMapper.count(paging);
+        paging.setRows(10);
+        if (paging.getOrderField() == null) paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
         return productInquiryMapper.pageAll(paging);
     }

@@ -31,6 +31,7 @@ public class MainController {
         this.categoryService = categoryService;
         this.productService = productService;
     }
+
     @GetMapping("/mainpage.do")
     public String main(HttpServletRequest req,
                        Model model){
@@ -64,6 +65,32 @@ public class MainController {
         return "/errorHandler";
     }
 
+    @GetMapping("/dev")
+    public String devMain(
+            @SessionAttribute(required = false) String msg,
+            HttpSession session,
+            Model model
+    ) {
+        if (msg != null) {
+            System.out.println(msg);
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
+
+        // 카테고리 나열
+        List<CategoryDto> firstCategories = null;
+        try {
+            firstCategories = categoryService.showCategoriesAt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (firstCategories != null) {
+            model.addAttribute("categories", firstCategories);
+        }
+        return "index";
+    }
+
     @GetMapping("/")
     public String main(
             @SessionAttribute(required = false) String msg,
@@ -87,7 +114,6 @@ public class MainController {
         if (firstCategories != null) {
             model.addAttribute("categories", firstCategories);
         }
-
         return "order/mainpage";
     }
 
