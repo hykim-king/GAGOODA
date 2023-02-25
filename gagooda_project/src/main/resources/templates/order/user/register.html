@@ -34,9 +34,6 @@
           method="post" onsubmit="return validateForm();">
         <!--배송지 입력란-->
             <label for="myAddressList">다른 배송지</label>
-            <div id="newAddressListContainer">
-                <th:block th:include="/order/user/newAddressList"></th:block>
-            </div>
             <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
                 <option disabled selected="selected" th:text="'----선택-----'"></option>
                 <th:block th:each="address:${addressList}">
@@ -177,35 +174,6 @@
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
-
-        const newAddressRegisterContainer = document.getElementById("newAddressRegisterContainer");
-        function init(){
-            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
-            newAddressRegisterForm.onsubmit=function(e){
-                console.log("newAddressForm register!")
-                registerAddress(e, newAddressRegisterForm);
-            }
-        }
-        init();
-        async function registerAddress(e, newAddressRegisterForm){
-            e.preventDefault();
-            let url="/order/user_yes/addressRegister.do";
-            const formData = new FormData(newAddressRegisterForm);
-            const resp = await fetch(url,{method:"POST",body:formData});
-            const json = await resp.json();
-            console.log("json.state: "+json.state);
-            if(json.state==1){
-                await loadNewAddress();
-            }
-        }
-        async function loadNewAddress(){
-            const resp = await fetch("/order/user_yes/addressList.do");
-            const html = await resp.text()
-            newAddressRegisterContainer.innerHTML = html;
-            init();
-
-
-        }
         const currentAddressList = document.querySelectorAll(".add");
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
