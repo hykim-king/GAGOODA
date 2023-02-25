@@ -8,50 +8,50 @@
   <title>사용자 배송지 입력</title>
 </head>
 <div layout:fragment="myPageContent">
-<h2>사용자 배송지 입력</h2>
-<form action="/address/user_yes/mypage/register.do" class="container mt-5" style="width: 40%; margin-bottom: 200px" method="post"  enctype="multipart/form-data">
-  <div>
-    <label for="userId" th:text="${session.loginUser.userId}"></label>
-    <input type="text" name="userId" id="userId" th:value="${session.loginUser.userId}" readonly>
+<h2 class="text-center my-4">사용자 배송지 입력</h2>
+  <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
+
+  <form action="/address/user_yes/mypage/register.do" class="container mt-5" style="width: 40%; margin-bottom: 200px" method="post"  enctype="multipart/form-data">
+
+
+  <div class="my-3">
+    <label for="aname"  class="form-label">주소지 이름</label>
+    <input type="text" name="aname"  class="form-control form-control-lg" id="aname" required>
   </div>
-  <div>
-    <label for="aname">주소지 이름</label>
-    <input type="text" name="aname" id="aname" required>
+    <label for="postCode"  class="form-label">우편번호</label>
+    <div class="input-group my-1">
+      <input type="button" style="background-color: #FFFAF5; color: #B68C68" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn input-group-text">
+      <input type="text" name="postCode" class="form-control form-control-lg" id="postCode" required>
   </div>
-  <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
-  <div>
-    <label for="postCode">우편번호</label>
-    <input type="text" name="postCode" id="postCode" required>
+  <div class="my-3">
+    <label for="address"  class="form-label">주소</label>
+    <input type="text" name="address" class="form-control form-control-lg" id="address" required>
   </div>
-  <div>
-    <label for="address">주소</label>
-    <input type="text" name="address" id="address" required>
+  <div class="my-3">
+    <label for="addressDetail"  class="form-label">상세주소</label>
+    <input type="text" name="addressDetail" class="form-control form-control-lg" id="addressDetail" required>
   </div>
-  <div>
-    <label for="addressDetail">상세주소</label>
-    <input type="text" name="addressDetail" id="addressDetail" required>
+  <div class="my-3">
+    <label for="receiverName"  class="form-label">수령인 이름</label>
+    <input type="text" name="receiverName" class="form-control form-control-lg" id="receiverName" required>
   </div>
-  <div>
-    <label for="receiverName">수령인 이름</label>
-    <input type="text" name="receiverName" id="receiverName" required>
-  </div>
-  <fieldset>
-    <label for="receiverPhone">수령인 전화번호</label>
-    <input type="text" id="receiverPhone" name="receiverPhone" required>
+  <fieldset class="my-3">
+    <label for="receiverPhone"  class="form-label">수령인 전화번호</label>
+    <input type="text" id="receiverPhone" class="form-control form-control-lg" name="receiverPhone" required>
   </fieldset>
 
-  <div>
-    <label for="home">기본 배송지 설정 여부</label>
+  <div class="my-3">
+    <label for="home"  class="form-label">기본배송지 설정 여부</label>
     <input type="checkbox" name="home" id="home" value="1">
   </div>
-  <div>
-    <label for="elevator">엘레베이터 유무 여부</label>
+  <div class="my-3">
+    <label for="elevator"  class="form-label">엘레베이터 유무 여부</label>
     <input type="checkbox" name="elevator" id="elevator" value="1">
   </div>
+    <input type="hidden" name="userId" id="userId" class="form-control form-control-lg" th:value="${session.loginUser.userId}" readonly>
 
 
-  <button type="submit">저장하기</button>
-  <a href="#">취소하기</a>
+  <button type="submit"  style="background-color: #FFFAF5; color: #B68C68">저장하기</button>
 </form>
 
 

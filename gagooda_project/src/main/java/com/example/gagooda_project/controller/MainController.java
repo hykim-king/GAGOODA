@@ -120,7 +120,7 @@ public class MainController {
         if (firstCategories != null) {
             model.addAttribute("categories", firstCategories);
         }
-        return "/mainpage";
+        return "mainpage";
     }
 
     @PostMapping("/search_results.do")
