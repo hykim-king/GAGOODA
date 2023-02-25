@@ -21,7 +21,6 @@
             <th scope="col">문의 제목</th>
             <th scope="col">문의 작성일</th>
             <th scope="col">답변여부</th>
-            <th scope="col"></th>
             <th scope="col">문의확인/삭제</th>
         </thead>
         <tbody>
@@ -36,7 +35,6 @@
                 </th:block>
                 <th:block th:if="${p.getReply() == null}">
                     <td>미답변</td>
-                    <td> </td>
                 </th:block>
                 <td>
                     <button class="btn text-white" type="button" style="background-color: #B68C68;" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">자세히</button>
@@ -55,51 +53,56 @@
                                 <div class="modal-footer">
                                     <th:block th:if="${p.getReply() != null}">
                                         <p class="text-center" th:text="${p.getReply()}">답글</p>
-                                        <p class="fs-6 text-secondary" th:text="${p.getReplyDate()}">답글작성일</p>
+                                        <p class="fs-6 text-secondary" th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd')}">답글작성일</p>
                                     </th:block>
                                     <th:block th:if="${p.getReply() == null}">
                                         <p class="text-center">아직 작성된 답변이 없습니다.</p>
                                     </th:block>
+
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <button type="button" class="btn ms-3" th:onclick=|removePInquiryWindow(${p.PInquiryId})| style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee; " >삭제하기</button>
+
                 </td>
                 <input type="hidden" name="PInquiryId" th:value="${p.PInquiryId}">
                 <input type="hidden" name="userId" th:value="${p.userId}">
             </tr>
         </tbody>
     </table>
+
 <div>
     <!--페이지네이션-->
-    <nav>
-        <ul class="uk-pagination uk-flex-center">
+    <nav aria-label="Page navigation example" class="pt-3">
+        <ul class="pagination d-flex justify-content-center">
+            <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
+                <a class="page-link text-black-50" aria-label="Previous" th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span aria-hidden="true">&laquo;</span></a>
+            </li>
             <th:block th:if="${paging.startPage>1}">
-                <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span uk-pagination-previous></span></a>
+                <li class="page-item">
+                    <a class="page-link"  th:href="@{${paging.queryString}(page=1)}">1</a>
                 </li>
-                <li>
-                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
-                </li>
-                <li>...</li>
+                <li class="page-link"><span>...</span></li>
             </th:block>
-            <li th:each="i:${#numbers.sequence(paging.startPage, paging.endPage)}"
-                th:classappend="${(i==paging.page)?'uk-disabled':''}">
-                <a th:href="@{${paging.queryString}(page=${i})}"
-                   th:classappend="${(i==paging.page)?'uk-text-primary uk-text-bold':''}" th:text="${i}"></a>
+
+            <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                th:classappend="${(i==paging.page)?'disaled':''}">
+                <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
+                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
             </li>
             <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li>...</li>
+                <li class="page-item"><span>...</span></li>
                 <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
                        th:text="${paging.totalPages}"></a>
                 </li>
-                <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.nextPage})}"><span uk-pagination-next></span></a>
-                </li>
             </th:block>
+
+            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}" aria-label="Next" ><span aria-hidden="true">&raquo;</span></a>
+            </li>
         </ul>
     </nav>
     <!--페이지네이션end-->

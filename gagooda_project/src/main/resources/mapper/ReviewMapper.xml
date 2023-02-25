@@ -50,4 +50,12 @@
     <select id="listByProductCodeAll" resultMap="reviewMap">
         SELECT * FROM review WHERE product_code=#{productCode}
     </select>
+    <select id="pageAll" resultMap="reviewMap" parameterType="pagingDto" >
+        SELECT * FROM review
+        ORDER BY ${orderField} ${direct}
+        LIMIT #{startRow}, #{rows}
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="pagingDto" >
+        SELECT count(*) FROM review
+    </select>
 </mapper>

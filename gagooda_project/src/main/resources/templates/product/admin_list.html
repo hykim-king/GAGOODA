@@ -96,32 +96,38 @@
         <p th:if="${productList.isEmpty()}" class="text-center">해당 조건을 충족하는 상품이 존재하지 않습니다.</p>
     </div>
     <th:block th:if="${!productList.isEmpty()}">
-        <ul class="uk-pagination uk-flex-center">
-            <th:block th:if="${paging.startPage>1}">
-                <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span uk-pagination-previous></span></a>
+        <!--페이지네이션-->
+        <nav aria-label="Page navigation example" class="pt-3">
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
+                    <a class="page-link text-black-50" aria-label="Previous" th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span aria-hidden="true">&laquo;</span></a>
                 </li>
-                <li>
-                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
+                <th:block th:if="${paging.startPage>1}">
+                    <li class="page-item">
+                        <a class="page-link"  th:href="@{${paging.queryString}(page=1)}" style="color: #B68C68">1</a>
+                    </li>
+                    <li class="page-item"><span>...</span></li>
+                </th:block>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                    th:classappend="${(i==paging.page)?'disaled':''}">
+                    <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
+                       th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
                 </li>
-                <li>...</li>
-            </th:block>
-            <li th:each="i:${#numbers.sequence(paging.startPage, paging.endPage)}"
-                th:classappend="${(i==paging.page)?'uk-disabled':''}">
-                <a th:href="@{${paging.queryString}(page=${i})}"
-                   th:classappend="${(i==paging.page)?'uk-text-primary uk-text-bold':''}" th:text="${i}"></a>
-            </li>
-            <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li>...</li>
-                <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                       th:text="${paging.totalPages}"></a>
+                <th:block th:if="${paging.endPage<paging.totalPages}">
+                    <li class="page-item"><span>...</span></li>
+                    <li>
+                        <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                           th:text="${paging.totalPages}" style="color: #B68C68"></a>
+                    </li>
+                </th:block>
+
+                <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                    <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}" aria-label="Next" ><span aria-hidden="true">&raquo;</span></a>
                 </li>
-                <li>
-                    <a th:href="@{${paging.queryString}(page=${paging.nextPage})}"><span uk-pagination-next></span></a>
-                </li>
-            </th:block>
-        </ul>
+            </ul>
+        </nav>
+        <!--페이지네이션end-->
     </th:block>
 
 

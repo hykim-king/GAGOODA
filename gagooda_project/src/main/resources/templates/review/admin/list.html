@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>상품문의</title>
+</head>
+<div layout:fragment="content">
+    <div class="container" >
+    <h2>상품 문의</h2>
+        <form action="/product_inquiry/admin/list.do" method="post">
+            <table class="table table-striped table-hover table-bordered table-sm">
+            <thead>
+            <tr>
+                <th scope="col" >문의ID</th>
+                <th scope="col" >사용자ID</th>
+                <th scope="col" >문의유형</th>
+                <th scope="col" >상품CODE</th>
+                <th scope="col" >제목</th>
+                <th scope="col" >작성일</th>
+                <th scope="col" >공개여부</th>
+                <th scope="col" >답변여부</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr th:each="p:${adminList}" >
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getPInquiryId()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getUserId()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getCommonCodeDto().getDetName()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getProductCode()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${p.getTitle()}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]" th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:onclick="location.href = [[@{'/product_inquiry/admin/{pInquiryId}/detail.do' (pInquiryId=${p.getPInquiryId()})}]]">
+                    <th:block th:if="${p.isSecret()}">
+                        <p>비공개</p>
+                    </th:block>
+                    <th:block th:if="${!p.isSecret()}">
+                        <p>공개</p>
+                    </th:block>
+                </td>
+                <td>
+                    <th:block th:if="${p.getReply() == null}">
+                        <p class="text-danger">미답변</p>
+<!--                            <a th:href="@{'/product_inquiry/admin/register.do?pInquiryId={pInquiryId}'(pInquiryId=${p.getPInquiryId()})}">답변등록</a>-->
+                        <!-- Button trigger modal -->
+<!--                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">-->
+<!--                            답변등록-->
+<!--                        </button>-->
+
+                        <!-- Modal -->
+
+<!--                        <script>-->
+<!--                            $(function(){-->
+<!--                               $('.reply_register').on('submit', function (e){-->
+<!--                                   e.preventDefault()-->
+<!--                                   var pInquiryId = $('#pInquiryId').val();-->
+<!--                                   var reply = $('#reply').val();-->
+<!--                                   $.ajax({-->
+<!--                                       url: "/product_inquiry/admin/register.do",-->
+<!--                                       method: "POST",-->
+<!--                                       data: {pInquiryId,reply},-->
+<!--                                       success: function(data){-->
+<!--                                           alert("Successfully submitted.")-->
+<!--                                       }-->
+<!--                                   });-->
+<!--                               });-->
+<!--                            });-->
+<!--                        </script>-->
+                    </th:block>
+                    <th:block th:if="${p.getReply() != null}">
+                        <p>답변</p>
+                    </th:block>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+        </form>
+        <!--페이지네이션-->
+        <nav aria-label="Page navigation example" class="pt-3">
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
+                    <a class="page-link text-black-50" aria-label="Previous" th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span aria-hidden="true">&laquo;</span></a>
+                </li>
+                <th:block th:if="${paging.startPage>1}">
+                    <li class="page-item">
+                        <a class="page-link"  th:href="@{${paging.queryString}(page=1)}">1</a>
+                    </li>
+                    <li class="page-link"><span>...</span></li>
+                </th:block>
+
+                <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                    th:classappend="${(i==paging.page)?'disaled':''}">
+                    <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
+                       th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
+                </li>
+                <th:block th:if="${paging.endPage<paging.totalPages}">
+                    <li class="page-item"><span>...</span></li>
+                    <li>
+                        <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                           th:text="${paging.totalPages}"></a>
+                    </li>
+                </th:block>
+
+                <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                    <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}" aria-label="Next" ><span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>
+        </nav>
+        <!--페이지네이션end-->
+    </div>
+</div>
+</html>
