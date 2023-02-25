@@ -246,6 +246,7 @@ public class OrderController {
     public String addressRegister(@SessionAttribute UserDto loginUser,
                                   AddressDto address){
         int newId = 0;
+        newId = orderService.newAddressId(address);
 
         return null;
     }
@@ -254,8 +255,8 @@ public class OrderController {
     public String addressList(@SessionAttribute UserDto loginUser,
                               AddressDto address,
                               Model model){
-//        List<AddressDto> addressList = addressService.
-
+//        List<AddressDto> addressList = addressService
+        return null;
     }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")
