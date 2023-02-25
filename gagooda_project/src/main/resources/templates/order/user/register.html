@@ -34,6 +34,9 @@
           method="post" onsubmit="return validateForm();">
         <!--배송지 입력란-->
             <label for="myAddressList">다른 배송지</label>
+            <div id="newAddressListContainer">
+                <th:block th:include="/order/user/newAddressList"></th:block>
+            </div>
             <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
                 <option disabled selected="selected" th:text="'----선택-----'"></option>
                 <th:block th:each="address:${addressList}">
@@ -192,11 +195,14 @@
             const json = await resp.json();
             console.log("json.state: "+json.state);
             if(json.state==1){
-                await showNewAddress();
+                await loadNewAddress();
             }
         }
-        async function showNewAddress(){
-            console.log("새로운 주소 보여주자.")
+        async function loadNewAddress(){
+            const resp = await fetch("/order/user_yes/addressList.do");
+            const html = await resp.text()
+            newAddressRegisterContainer.innerHTML = html;
+            init();
 
 
         }

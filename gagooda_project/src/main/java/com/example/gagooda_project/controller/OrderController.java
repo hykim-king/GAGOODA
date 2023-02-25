@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.AddressService;
 import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +22,16 @@ import java.util.*;
 public class OrderController {
     private OrderService orderService;
     private CartService cartService;
+    private AddressService addressService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public OrderController(OrderService orderService,
-                           CartService cartService){
+                           CartService cartService,
+                           AddressService addressService){
         this.cartService = cartService;
         this.orderService = orderService;
+        this.addressService = addressService;
     }
 
     @GetMapping("/admin/list.do")
@@ -241,8 +245,17 @@ public class OrderController {
     @PostMapping("/user_yes/addressRegister.do")
     public String addressRegister(@SessionAttribute UserDto loginUser,
                                   AddressDto address){
-        int register = 0;
+        int newId = 0;
+
         return null;
+    }
+    /*새 배송지 등록 리스트*/
+    @GetMapping("/user_yes/addressList.do")
+    public String addressList(@SessionAttribute UserDto loginUser,
+                              AddressDto address,
+                              Model model){
+//        List<AddressDto> addressList = addressService.
+
     }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")

@@ -38,7 +38,6 @@
             <th scope="col">상품정보</th>
             <th scope="col">주문가격</th>
             <th scope="col">주문상태</th>
-            <th scope="col">유저아이디</th>
             <th scope="col">주문 관리</th>
         </thead>
         <tbody>
@@ -57,7 +56,6 @@
                 </td>
                 <td th:text="${order.totalPrice}+'원'"></td>
                 <td th:text="${oCodeList[order.oDet.substring(1)].detName}"></td>
-                <td th:text="${order.userId}"></td>
                 <td>
                     <!--배송 완료이고, enddate가 있으면 조건 check => today's date - enddate >30 일 때, disable-->
                     <button class="btn text-white" type="button" style="background-color: #B68C68;" th:onclick="location.href=[[@{'/delivery/user_yes/mypage/{orderId}/detail.do'(orderId=${order.orderId})}]]">배송 조회</button>
