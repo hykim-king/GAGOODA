@@ -65,7 +65,7 @@ public class MainController {
         return "/errorHandler";
     }
 
-    @GetMapping("/dev")
+    @GetMapping("/admin/dev")
     public String devMain(
             @SessionAttribute(required = false) String msg,
             HttpSession session,
