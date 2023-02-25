@@ -23,6 +23,9 @@ public class ProductDto {
     private Date modDate; // 수정일 mod_date NN
     private int modId; // 수정자 mod_id NN
 
+    private double avgRate; // 상품 관련 평균 평점
+    private int reviewNum; // 상품 관련 평균
+    private int orderNum; // 상품 주문 수
     private List<ImageDto> imageList;
     private List<ImageDto> infoImageList;
     private List<OptionProductDto> optionProductList;

@@ -56,6 +56,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th>No.</th>
                 <th>상품 코드</th>
                 <th>상품명</th>
                 <th>판매처</th>
@@ -68,8 +69,9 @@
             </tr>
             </thead>
             <tbody>
-            <th:block th:each="product : ${productList}">
+            <th:block th:each="product, num : ${productList}" th:if="${!productList.isEmpty()}">
                 <tr>
+                    <td th:text="${num.count}"></td>
                     <td th:text="${product.productCode}"></td>
                     <td th:text="${product.pname}"></td>
                     <td th:text="${product.place}"></td>
@@ -91,47 +93,50 @@
             </th:block>
             </tbody>
         </table>
+        <p th:if="${productList.isEmpty()}" class="text-center">해당 조건을 충족하는 상품이 존재하지 않습니다.</p>
     </div>
-    <ul class="uk-pagination uk-flex-center">
-        <th:block th:if="${paging.startPage>1}">
-            <li>
-                <a th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span uk-pagination-previous></span></a>
+    <th:block th:if="${!productList.isEmpty()}">
+        <ul class="uk-pagination uk-flex-center">
+            <th:block th:if="${paging.startPage>1}">
+                <li>
+                    <a th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span uk-pagination-previous></span></a>
+                </li>
+                <li>
+                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
+                </li>
+                <li>...</li>
+            </th:block>
+            <li th:each="i:${#numbers.sequence(paging.startPage, paging.endPage)}"
+                th:classappend="${(i==paging.page)?'uk-disabled':''}">
+                <a th:href="@{${paging.queryString}(page=${i})}"
+                   th:classappend="${(i==paging.page)?'uk-text-primary uk-text-bold':''}" th:text="${i}"></a>
             </li>
-            <li>
-                <a th:href="@{${paging.queryString}(page=1)}">1</a>
-            </li>
-            <li>...</li>
-        </th:block>
-        <li th:each="i:${#numbers.sequence(paging.startPage, paging.endPage)}"
-            th:classappend="${(i==paging.page)?'uk-disabled':''}">
-            <a th:href="@{${paging.queryString}(page=${i})}"
-               th:classappend="${(i==paging.page)?'uk-text-primary uk-text-bold':''}" th:text="${i}"></a>
-        </li>
-        <th:block th:if="${paging.endPage<paging.totalPages}">
-            <li>...</li>
-            <li>
-                <a th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                   th:text="${paging.totalPages}"></a>
-            </li>
-            <li>
-                <a th:href="@{${paging.queryString}(page=${paging.nextPage})}"><span uk-pagination-next></span></a>
-            </li>
-        </th:block>
-    </ul>
-
+            <th:block th:if="${paging.endPage<paging.totalPages}">
+                <li>...</li>
+                <li>
+                    <a th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                       th:text="${paging.totalPages}"></a>
+                </li>
+                <li>
+                    <a th:href="@{${paging.queryString}(page=${paging.nextPage})}"><span uk-pagination-next></span></a>
+                </li>
+            </th:block>
+        </ul>
+    </th:block>
 
 
     <script th:inline="javascript">
         console.log("[[${paging.startPage}]]");
         console.log("[[${paging.endPage}]]");
-        const table = document.getElementById("table")main;
+        const table = document.getElementById("table");
         const selects = table.querySelectorAll("select");
         selects.forEach(select => {
-            select.onclick=()=>getValue(select.id);
+            select.onclick = () => getValue(select.id);
         });
+
         function getValue(id) {
             const select = document.getElementById(id);
-            const value = document.getElementById(id+"_stock");
+            const value = document.getElementById(id + "_stock");
             value.innerText = select.value;
         }
 
