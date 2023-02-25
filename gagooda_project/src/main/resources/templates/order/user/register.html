@@ -28,7 +28,9 @@
         </div>
     </div>
     <!--주문 form -->
-    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"
+<!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
+<!--          method="post" onsubmit="return validateForm();">-->
+    <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
           method="post" onsubmit="return validateForm();">
         <!--배송지 입력란-->
             <label for="myAddressList">다른 배송지</label>
@@ -228,13 +230,43 @@
                 alert("배송지를 선택해 주세요.")
                 return false;
             }else{
-                return confirm("상품들을 결제하시겠습니까?")
+                confirm("상품들을 결제하시겠습니까?");
+                requestPay(); // 결제 함수를 호출
+                // return confirm("상품들을 결제하시겠습니까?");
             }
         }
 
 
 
-
+        // 아임포트 결제 API
+        const IMP = window.IMP;  // 아임포트 정의
+        IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드 등록
+        // 주문 등록 버튼(submit) 이벤트를 막고, 누르면 결제창으로 이동
+        function requestPay() {
+            const IMP = window.IMP;  // 아임포트 정의
+            IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드 등록.
+            let orderForm = document.forms["orderRegisterForm"];
+            IMP.request_pay({
+                pg: "html5_inicis",
+                pay_method: "card",
+                merchant_uid: orderForm.orderId.value,
+                name: "결제 테스트(일정 기간 후 승인 취소됩니다.)", // name에는 주문의 무엇을 넘기면 좋을까요잉,,
+                amount: 100,
+                buyer_email: orderForm.userEmail.value,
+                buyer_tel: orderForm.userPhone.value,
+                buyer_name: orderForm.userName.value,
+                buy_addr: orderForm.address.value + ", " + orderForm.addressDetail.value,
+                buyer_postcode: orderForm.postCode.value,
+            }, function (resp) { // callback
+                if (resp.success) { // 결제 성공 시
+                    console.log("결제가 완료되었습니다.");
+                    orderForm.setAttribute("action","/order/user_yes/register.do"); // form의 action attribute에 url 지정
+                    orderForm.submit(); // 제출
+                } else {
+                    alert("에러 메시지:" + resp.error_msg)
+                }
+            });
+        }
 
     </script>
 
