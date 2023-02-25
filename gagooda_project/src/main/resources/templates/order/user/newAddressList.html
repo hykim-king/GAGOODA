@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div>
+    <label for="postCode">우편 번호</label>
+    <input readonly type="text" id="postCode" name="postCode" class="add" th:value="${address.postCode}" pattern="[0-9]{5}">
+</div>
+<div>
+    <label for="address">주소</label>
+    <input readonly type="text" id="address" name="address" class="add" th:value="${address.address}">
+</div>
+<div>
+    <label for="addressDetail">상세 주소</label>
+    <input readonly type="text" id="addressDetail" name="addressDetail" class="add" th:value="${address.addressDetail}">
+</div>
+<div>
+    <label for="receiverName">수령인 이름</label>
+    <input readonly type="text" id="receiverName" name="receiverName" class="add" th:value="${address.receiverName}">
+</div>
+<div>
+    <label for="receiverPhone">수령인 전화번호</label>
+    <input readonly type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${address.receiverPhone}" pattern="[0-9]{11}">
+</div>
+<div>
+    <label for="elevator">엘리베이터 유무</label>
+    <input readonly type="text" id="elevator" name="elevator" class="add" th:value="${address.elevator}">
+</div>
+</html>

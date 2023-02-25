@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.AddressService;
 import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +22,16 @@ import java.util.*;
 public class OrderController {
     private OrderService orderService;
     private CartService cartService;
+    private AddressService addressService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public OrderController(OrderService orderService,
-                           CartService cartService){
+                           CartService cartService,
+                           AddressService addressService){
         this.cartService = cartService;
         this.orderService = orderService;
+        this.addressService = addressService;
     }
 
     @GetMapping("/admin/list.do")
@@ -239,10 +243,45 @@ public class OrderController {
     }
     /*주문 등록 새 배송지 등록*/
     @PostMapping("/user_yes/addressRegister.do")
-    public String addressRegister(@SessionAttribute UserDto loginUser,
-                                  AddressDto address){
+    public @ResponseBody int addressRegister(@SessionAttribute UserDto loginUser,
+                                             AddressDto address,
+                                             HttpSession session){
         int register = 0;
-        return null;
+        int addressId;
+        try{
+            register = addressService.register(address);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        if(register >0 ){
+            addressId = address.getAddressId();
+            session.setAttribute("addressId",addressId);
+            session.setAttribute("msg","새로운 배송지가 등록되었습니다.");
+        }else{
+            session.setAttribute("msg","배송지 등록에 실패하였습니다. 다시 시도해주세요.");
+        }
+        return register;
+    }
+    /*새 배송지 등록 리스트*/
+    @GetMapping("/user_yes/addressList.do")
+    public @ResponseBody String addressList(@SessionAttribute UserDto loginUser,
+                                            @SessionAttribute int addressId,
+                                            HttpSession session,
+                                            @SessionAttribute(required = false) String msg,
+                                            Model model){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
+        AddressDto address = null;
+        try{
+            address = addressService.selectOne(addressId);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        model.addAttribute("address",address);
+        return "/order/user/newAddressList";
     }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")

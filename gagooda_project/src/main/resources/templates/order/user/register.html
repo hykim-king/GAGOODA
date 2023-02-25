@@ -174,32 +174,6 @@
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
-
-        const newAddressRegisterContainer = document.getElementById("newAddressRegisterContainer");
-        function init(){
-            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
-            newAddressRegisterForm.onsubmit=function(e){
-                console.log("newAddressForm register!")
-                registerAddress(e, newAddressRegisterForm);
-            }
-        }
-        init();
-        async function registerAddress(e, newAddressRegisterForm){
-            e.preventDefault();
-            let url="/order/user_yes/addressRegister.do";
-            const formData = new FormData(newAddressRegisterForm);
-            const resp = await fetch(url,{method:"POST",body:formData});
-            const json = await resp.json();
-            console.log("json.state: "+json.state);
-            if(json.state==1){
-                await showNewAddress();
-            }
-        }
-        async function showNewAddress(){
-            console.log("새로운 주소 보여주자.")
-
-
-        }
         const currentAddressList = document.querySelectorAll(".add");
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
