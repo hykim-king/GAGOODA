@@ -32,6 +32,7 @@ public class MyPageServiceImp implements MyPageService {
     @Override
     public List<CartDto> cartList(PagingDto paging, int userId) {
         int totalRows = cartMapper.count(paging, userId);
+        paging.setDirect("ASC");
         paging.setRows(4);
         paging.setOrderField("cart_id");
         paging.setTotalRows(totalRows);

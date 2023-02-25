@@ -53,9 +53,9 @@
         <span><a href="#" style="text-decoration: none; color: #000">+ 더보기</a></span>
     </div>
     <hr style="margin-top: 0; background : #B68C68; height: 5px">
-    <div class="d-flex" style="justify-content: space-around">
+    <div class="d-flex" style="justify-content: start;">
         <th:block th:each="cart:${cartList}">
-            <div style="width: 250px; height: 250px">
+            <div style="width: 250px; height: 250px; margin: 0 15px">
                 <img style="width: 240px; height: 240px;" th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
                 <div>
                     <p style="margin: 0;" th:text="${cart.optionProduct.opname}"></p>
