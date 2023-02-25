@@ -9,8 +9,8 @@
 </head>
 <div layout:fragment="myPageContent">
     <div class="d-flex">
-        <h2 class="my-4 me-3" >문의수</h2>
-        <h2 class="my-4" th:text="${mypageList.size()}"></h2>
+        <h2 class="my-4 me-3" >상품 문의</h2>
+        <h2 class="my-4" th:text="${mypageList.size()+'건'}"></h2>
     </div>
     <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
 
@@ -39,10 +39,10 @@
                     <td> </td>
                 </th:block>
                 <td>
-                    <button class="btn text-white" type="button" style="background-color: #B68C68;" data-bs-toggle="modal" data-bs-target="#exampleModal">자세히</button>
+                    <button class="btn text-white" type="button" style="background-color: #B68C68;" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">자세히</button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" th:id="${'exampleModal'+p.PInquiryId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
