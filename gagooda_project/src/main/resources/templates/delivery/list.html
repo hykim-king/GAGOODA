@@ -41,8 +41,11 @@
     <button type="submit" class="btn btn-outline-secondary">검색</button>
     <button name="reset" type="reset">초기화</button>
   </form>
-  <h3>배송 현황 목록 <span th:if="${deliveryList != null && !deliveryList.isEmpty() }" th:text="${deliveryList.size()}"></span></h3>
-  <table>
+  <h3 class="my-4">배송 현황 목록 <span th:if="${deliveryList != null && !deliveryList.isEmpty() }" th:text="${deliveryList.size()}"></span></h3>
+
+  <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
+
+  <table class="table">
     <thead>
     <tr>
       <!--            <th>No.</th>-->
@@ -72,7 +75,7 @@
     <!--                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>-->
     <!--            </tr>-->
     <!--        </th:block>-->
-    <th:block th:if="${deliveryCount >= 0}" th:each="delivery : ${deliveryList}">
+    <th:block th:if="${deliveryCount >= 0}" th:each="delivery : ${deliveryList}" >
       <tr>
         <td th:text="${delivery.orderId}"></td>
         <td th:text="${delivery.userId}"></td>
