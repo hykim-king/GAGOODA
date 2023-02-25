@@ -8,6 +8,7 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
+    <h1>주문</h1>
     <div>배송지 입력란</div>
     <button type="button" name="setAddressBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">새로운 배송지입력</button>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -79,7 +80,7 @@
             </div>
             <!--주문할 상품 정보들-->
             <th:block th:each="cartItem:${cartList}">
-                <input type="text" th:value="${cartItem.cartId}" name="cartItem" readonly>
+                <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
             </th:block>
             <fieldset>
                 <legend>카트 정보들</legend>
@@ -97,15 +98,15 @@
                             <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
                                  style="width: 50px; height:50px; object-fit: cover">
 
-                            <input type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
+                            <input class="form-control-plaintext" type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
                                    id="orderDetail.productCode" placeholder="productCode" readonly>
-                            <input type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
+                            <input class="form-control-plaintext" type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
                                    id="orderDetail.optionCode" placeholder="optionCode" readonly>
                         </td>
-                        <td><input type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
+                        <td><input class="form-control-plaintext" type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
                                    readonly></td>
                         <td>
-                            <input type="number" th:value="${cart.optionProduct.price * cart.cnt}"
+                            <input class="form-control-plaintext" type="number" th:value="${cart.optionProduct.price * cart.cnt}"
                                    name="orderDetail.totalPrice" id="orderDetail.totalPrice" readonly>
                         </td>
                     </tr>
@@ -117,13 +118,13 @@
             <fieldset>
                 <legend>총 결제 정보</legend>
                 <div>
-                    <label for="totalCnt">상품 총 수량</label>
-                    <input th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
+                    <label for="totalCnt" class="col-sm-2 col-form-label">상품 총 수량</label>
+                    <input class="form-control-plaintext" th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
                            required readonly>
                 </div>
                 <div>
-                    <label for="totalPrice">상품 총 가격</label>
-                    <input type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
+                    <label for="totalPrice" class="col-sm-2 col-form-label">상품 총 가격</label>
+                    <input class="form-control-plaintext" type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
                            name="totalPrice" id="totalPrice" required readonly>
                 </div>
             </fieldset>
@@ -134,18 +135,18 @@
             <fieldset>
                 <legend>주문자 정보</legend>
                 <div>
-                    <label for="userName">주문자 이름</label>
-                    <input type="text" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
-                    <input type="hidden" th:value="${loginUser.userId}" name="userId" id="userId">
+                    <label for="userName" class="col-sm-2 col-form-label">주문자 이름</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
+                    <input type="hidden"  th:value="${loginUser.userId}" name="userId" id="userId">
                 </div>
                 <div>
-                    <label for="userPhone">주문자 전화번호</label>
-                    <input type="text" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
+                    <label for="userPhone" class="col-sm-2 col-form-label" >주문자 전화번호</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
                            readonly>
                 </div>
                 <div>
-                    <label for="userEmail">주문자 이메일</label>
-                    <input type="text" th:value="${loginUser.email}" name="userEmail" id="userEmail"
+                    <label for="userEmail" class="col-sm-2 col-form-label">주문자 이메일</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.email}" name="userEmail" id="userEmail"
                            readonly>
                 </div>
             </fieldset>
@@ -171,6 +172,32 @@
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
+
+        const newAddressRegisterContainer = document.getElementById("newAddressRegisterContainer");
+        function init(){
+            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
+            newAddressRegisterForm.onsubmit=function(e){
+                console.log("newAddressForm register!")
+                registerAddress(e, newAddressRegisterForm);
+            }
+        }
+        init();
+        async function registerAddress(e, newAddressRegisterForm){
+            e.preventDefault();
+            let url="/order/user_yes/addressRegister.do";
+            const formData = new FormData(newAddressRegisterForm);
+            const resp = await fetch(url,{method:"POST",body:formData});
+            const json = await resp.json();
+            console.log("json.state: "+json.state);
+            if(json.state==1){
+                await showNewAddress();
+            }
+        }
+        async function showNewAddress(){
+            console.log("새로운 주소 보여주자.")
+
+
+        }
         const currentAddressList = document.querySelectorAll(".add");
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
@@ -204,31 +231,7 @@
                 return confirm("상품들을 결제하시겠습니까?")
             }
         }
-        const newAddressRegisterContainer = document.getElementById("newAddressRegisterContainer");
-        function init(){
-            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
-            newAddressRegisterForm.onsubmit=function(e){
-                console.log("newAddressForm register!")
-                registerAddress(e, newAddressRegisterForm);
-            }
-        }
-        init();
-        async function registerAddress(e, newAddressRegisterForm){
-            e.preventDefault();
-            let url="/order/user_yes/addressRegister.do";
-            const formData = new FormData(newAddressRegisterForm);
-            const resp = await fetch(url,{method:"POST",body:formData});
-            const json = await resp.json();
-            console.log("json.state: "+json.state);
-            if(json.state==1){
-                await showNewAddress();
-            }
-        }
-        async function showNewAddress(){
-            console.log("새로운 주소 보여주자.")
 
-
-        }
 
 
 
