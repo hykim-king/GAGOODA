@@ -89,13 +89,13 @@
             <th:block th:include="refund/user/newAddress"></th:block>
         </div>
 
-<!--        <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">-->
-<!--        <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">-->
-<!--        <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">-->
-<!--        <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">-->
-<!--        <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">-->
-<!--        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">-->
-<!--        <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">-->
+        <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
+        <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">
+        <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">
+        <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">
+        <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">
+        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">
+        <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
 
     </fieldset>
     <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit">신청하기</button>
@@ -190,19 +190,19 @@
                 }
                 console.log(addressMap);
                 console.log(addressMap.get("addressId"));
-                currentAddressList[0].value = addressMap.get("addressId");
+                currentAddressList[0].innerText = addressMap.get("addressId");
                 realAddressList[0].value = addressMap.get("addressId");
-                currentAddressList[1].value = addressMap.get("postCode");
+                currentAddressList[1].innerText = addressMap.get("postCode");
                 realAddressList[1].value = addressMap.get("postCode");
-                currentAddressList[2].value = addressMap.get("address");
+                currentAddressList[2].innerText = addressMap.get("address");
                 realAddressList[2].value = addressMap.get("address");
-                currentAddressList[3].value = addressMap.get("addressDetail");
+                currentAddressList[3].innerText = addressMap.get("addressDetail");
                 realAddressList[3].value = addressMap.get("addressDetail");
-                currentAddressList[4].value = addressMap.get("receiverName");
+                currentAddressList[4].innerText = addressMap.get("receiverName");
                 realAddressList[4].value = addressMap.get("receiverName");
-                currentAddressList[5].value = addressMap.get("receiverPhone");
+                currentAddressList[5].innerText = addressMap.get("receiverPhone");
                 realAddressList[5].value = addressMap.get("receiverPhone");
-                currentAddressList[6].value = addressMap.get("elevator");
+                currentAddressList[6].innerText = addressMap.get("elevator");
                 realAddressList[6].value = addressMap.get("elevator");
             }
 
