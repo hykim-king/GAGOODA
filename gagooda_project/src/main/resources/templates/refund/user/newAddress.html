@@ -16,57 +16,57 @@
 </div>
 
 <th:block th:if="${refundMsg != null && addressId != 0}">
-    <input type="hidden" id="newAddressId" name="addressId" class="add" th:value="${address.addressId}">
+    <span class="add" th:text="${address.addressId}"></span>
     <div>
-        <label for="postCode">우편 번호</label>
-        <input readonly type="text" id="newPostCode" name="postCode" class="add" th:value="${address.postCode}" pattern="[0-9]{5}">
+        <span>우편 번호</span>
+        <span class="add" th:text="${address.postCode}"></span>
     </div>
     <div>
-        <label for="address">주소</label>
-        <input readonly type="text" id="newAddress" name="address" class="add" th:value="${address.address}">
+        <span>주소</span>
+        <span class="add" th:text="${address.address}"></span>
     </div>
     <div>
-        <label for="addressDetail">상세 주소</label>
-        <input readonly type="text" id="newAddressDetail" name="addressDetail" class="add" th:value="${address.addressDetail}">
+        <span>상세 주소</span>
+        <span class="add" th:text="${address.addressDetail}"></span>
     </div>
     <div>
-        <label for="receiverName">수령인 이름</label>
-        <input readonly type="text" id="newReceiverName" name="receiverName" class="add" th:value="${address.receiverName}">
+        <span>수령인 이름</span>
+        <span class="add" th:text="${address.receiverName}"></span>
     </div>
     <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input readonly type="text" id="newReceiverPhone" name="receiverPhone" class="add" th:value="${address.receiverPhone}" pattern="[0-9]{11}">
+        <span>수령인 전화번호</span>
+        <span class="add" th:text="${address.receiverPhone}"></span>
     </div>
     <div>
-        <label for="elevator">엘리베이터 유무</label>
-        <input readonly type="text" id="newElevator" name="elevator" class="add" th:value="${address.elevator}">
+        <span>엘리베이터 유무</span>
+        <span class="add" th:text="${address.elevator}"></span>
     </div>
 </th:block>
 <th:block th:unless="${refundMsg != null && addressId != 0}">
-    <input type="hidden" id="addressId" name="addressId" class="add" th:value="${order.addressId}">
+    <span class="add" th:text="${order.addressId}"></span>
     <div>
-        <label for="postCode">우편 번호</label>
-        <input readonly type="text" id="postCode" name="postCode" class="add" th:value="${order.postCode}" pattern="[0-9]{5}">
+        <span>우편 번호</span>
+        <span class="add" th:text="${order.postCode}"></span>
     </div>
     <div>
-        <label for="address">주소</label>
-        <input readonly type="text" id="address" name="address" class="add" th:value="${order.address}">
+        <span>주소</span>
+        <span class="add" th:text="${order.address}"></span>
     </div>
     <div>
-        <label for="addressDetail">상세 주소</label>
-        <input readonly type="text" id="addressDetail" name="addressDetail" class="add" th:value="${order.addressDetail}">
+        <span>상세 주소</span>
+        <span class="add" th:text="${order.addressDetail}"></span>
     </div>
     <div>
-        <label for="receiverName">수령인 이름</label>
-        <input readonly type="text" id="receiverName" name="receiverName" class="add" th:value="${order.receiverName}">
+        <span>수령인 이름</span>
+        <span class="add" th:text="${order.receiverName}"></span>
     </div>
     <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input readonly type="text" id="receiverPhone" name="receiverPhone" class="add" th:value="${order.receiverPhone}" pattern="[0-9]{11}">
+        <span>수령인 전화번호</span>
+        <span class="add" th:text="${order.receiverPhone}" ></span>
     </div>
     <div>
-        <label for="elevator">엘리베이터 유무</label>
-        <input readonly type="text" id="elevator" name="elevator" class="add" th:value="${order.elevator}">
+        <span>엘리베이터 유무</span>
+        <span class="add" th:text="${order.elevator}"></span>
     </div>
 </th:block>
 </html>
