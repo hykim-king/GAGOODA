@@ -19,10 +19,8 @@
     <th scope="col">우편번호</th>
     <th scope="col">주소</th>
     <th scope="col">상세 주소</th>
-    <th scope="col">수령인 이름</th>
-    <th scope="col">수령인 전화번호</th>
-    <th scope="col">기본 배송지</th>
-    <th scope="col">엘레베이터</th>
+    <th scope="col"  class="text-center">기본 배송지</th>
+    <th scope="col"  class="text-center">엘레베이터</th>
   </thead>
   <tbody>
     <tr th:each="a:${alist}" style="cursor: pointer">
@@ -30,17 +28,17 @@
       <td th:text="${a.postCode}"> </td>
       <td th:text="${a.address}"> </td>
       <td th:text="${a.addressDetail}"> </td>
-      <td th:text="${a.receiverName}"> </td>
-      <td th:text="${a.receiverPhone}"> </td>
 <!--      <td th:text="${a.home}"></td>-->
-      <td th:if="${a.home == true}">O</td>
-      <td th:if="${a.home == false}">X</td>
+      <td class="text-center" th:if="${a.home == true}">O</td>
+      <td class="text-center" th:if="${a.home == false}">X</td>
 <!--      <td th:text="${a.elevator}"> </td>-->
-      <td th:if="${a.elevator == true}">O</td>
-      <td th:if="${a.elevator == false}">X</td>
+      <td class="text-center" th:if="${a.elevator == true}">O</td>
+      <td class="text-center" th:if="${a.elevator == false}">X</td>
       <td><button type="button" class="input-group-text" th:onclick="|location.href='@{/address/user_yes/mypage/modify.do (addressId=${a.addressId})}'|" style="background-color: #FFFAF5; color: #B68C68" >수정하기</button></td>
       <input type="hidden" name="addressId" th:value="${a.addressId}">
       <input type="hidden" name="userId" th:value="${a.userId}">
+      <input type="hidden" name="receiverName" th:value="${a.receiverName}">
+      <input type="hidden" name="receiverPhone" th:value="${a.receiverPhone}">
     </tr>
 
 
