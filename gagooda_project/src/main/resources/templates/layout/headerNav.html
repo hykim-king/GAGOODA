@@ -47,6 +47,9 @@
                                 <li class="nav-item ">
                                     <a class="nav-link text-white" href="/user/user_yes/logout.do">로그아웃</a>
                                 </li>
+                                <li class="nav-item " th:if="${session.loginUser!=null and session.loginUser.GDet.equals('g1')}">
+                                    <a class="nav-link text-white" href="/admin/dev">관리자페이지</a>
+                                </li>
                             </ul>
                         </th:block>
                         <form class="d-flex ms-3" role="search" action="/search_results.do" name="searchBox"

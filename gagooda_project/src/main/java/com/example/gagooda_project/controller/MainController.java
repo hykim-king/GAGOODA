@@ -4,7 +4,6 @@ import com.example.gagooda_project.dto.CategoryDto;
 import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.service.CategoryService;
-import com.example.gagooda_project.service.ProductInquiryService;
 import com.example.gagooda_project.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +46,7 @@ public class MainController {
         } catch (Exception e){
             e.printStackTrace();
         }
-        return "order/mainpage";
+        return "/main/resources/templates/mainpage.html";
     }
 
     @GetMapping("/error.do")
@@ -122,7 +120,7 @@ public class MainController {
         if (firstCategories != null) {
             model.addAttribute("categories", firstCategories);
         }
-        return "order/mainpage";
+        return "mainpage";
     }
 
     @PostMapping("/search_results.do")

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+<!--    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <!-- iamport.payment.js -->
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
+    <link rel="icon" href="/img/main/favicon.png">
+</head>
+<body>
+<header>
+    <th:block th:replace="~{/layout/adminHeaderNav}"></th:block>
+</header>
+<main style="padding-top: 112px">
+    <th:block layout:fragment="content"></th:block>
+</main>
+</body>
+<script th:inline="javascript">
+    if([[${msg}]] != null) {
+        alert([[${msg}]]);
+    }
+</script>
+</html>

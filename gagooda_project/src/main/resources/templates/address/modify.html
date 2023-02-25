@@ -12,36 +12,33 @@
   <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
 
   <form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px">
-  <div>
-    <div th:text="${session.loginUser.userId}" th:readonly="true"></div>
+  <div class="my-3">
+    <label for="aname" class="form-label">주소지 이름</label>
+    <input type="text" name="aname" class="form-control form-control-lg" id="aname" th:value="${address.getAname}" required>
   </div>
-  <div>
-    <label for="aname">주소지 이름</label>
-    <input type="text" name="aname" id="aname" th:value="${address.getAname}" required>
+    <label for="postCode" class="form-label">우편번호</label>
+    <div class="my-1 input-group">
+      <input type="button" style="background-color: #FFFAF5; color: #B68C68" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn input-group-text">
+      <input type="text" name="postCode" class="form-control form-control-lg" id="postCode" th:value="${address.getPostCode}" required th:readonly="true">
   </div>
-  <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
-  <div>
-    <label for="postCode">우편번호</label>
-    <input type="text" name="postCode" id="postCode" th:value="${address.getPostCode}" required th:readonly="true">
+  <div  class="my-3">
+    <label for="address" class="form-label">주소</label>
+    <input type="text" name="address" class="form-control form-control-lg" id="address" th:value="${address.getAddress}" required th:readonly="true">
   </div>
-  <div>
-    <label for="address">주소</label>
-    <input type="text" name="address" id="address" th:value="${address.getAddress}" required th:readonly="true">
+  <div class="my-3">
+    <label for="addressDetail" class="form-label">상세주소</label>
+    <input type="text" name="addressDetail" class="form-control form-control-lg" id="addressDetail" th:value="${address.getAddressDetail}" required>
   </div>
-  <div>
-    <label for="addressDetail">상세주소</label>
-    <input type="text" name="addressDetail" id="addressDetail" th:value="${address.getAddressDetail}" required>
+  <div class="my-3">
+    <label for="receiverName" class="form-label">수령인 이름</label>
+    <input type="text" name="receiverName" class="form-control form-control-lg" id="receiverName" th:value="${address.getReceiverName}" required>
   </div>
-  <div>
-    <label for="receiverName">수령인 이름</label>
-    <input type="text" name="receiverName" id="receiverName" th:value="${address.getReceiverName}" required>
-  </div>
-  <div>
-    <label for="receiverPhone">수령인 전화번호</label>
-    <input type="text" id="receiverPhone" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
+  <div class="my-3">
+    <label for="receiverPhone" class="form-label">수령인 전화번호</label>
+    <input type="text" id="receiverPhone" class="form-control form-control-lg" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
   </div>
 
-  <fieldset>
+  <fieldset class="my-3">
     <legend>기본 배송지 설정 여부</legend>
     <div>
       <label for="homeTrue">맞음</label>
@@ -52,7 +49,7 @@
       <input type="radio" name="home" id="homeFalse" value="0" th:checked="${address.home==false}">
     </div>
   </fieldset>
-  <fieldset>
+  <fieldset class="my-3">
     <legend>엘레베이터 유무 여부</legend>
     <div>
       <label for="elevatorTrue">있음</label>
@@ -67,7 +64,7 @@
   <input type="hidden" name="addressId" th:value="${address.addressId}">
   <input type="hidden" name="userId" th:value="${address.userId}">
   <div>
-    <button type="submit">저장하기</button>
+    <button type="submit" style="background-color: #FFFAF5; color: #B68C68">저장하기</button>
     <a th:href="@{'delete.do' (address_id=${address.addressId}) }" >삭제하기</a>
   </div>
 </form>

@@ -13,10 +13,11 @@
                      column="user_id"
                      select="com.example.gagooda_project.mapper.UserMapper.findById"
                      fetchType="lazy"/>
-         <collection property="imgList"
+        <collection property="imgList"
                     column="img_code"
                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
                     fetchType="lazy"/>
+
     </resultMap>
     <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
         INSERT INTO
