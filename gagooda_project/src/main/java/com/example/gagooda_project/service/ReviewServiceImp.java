@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,7 +76,6 @@ public class ReviewServiceImp implements ReviewService {
             throw new Error("전체적인 오류");
         }
     }
-
     @Override
     public List<ReviewDto> showReviews(PagingDto paging) {
         int totalRows = reviewMapper.count(paging);
@@ -87,5 +88,17 @@ public class ReviewServiceImp implements ReviewService {
     @Override
     public int countByReviews(PagingDto paging) {
         return reviewMapper.count(paging);
+    }
+
+    @Override
+    @Transactional
+    public int delete(ReviewDto review, int reviewId) {
+        List<ImageDto> deleteImageList = imageMapper.listByImgCode(review.getImgCode());
+        for (ImageDto deleteImage : deleteImageList) {
+            File file = new File(deleteImage.getImgPath()+"/review/"+deleteImage.getImgPath());
+            boolean del = file.delete();
+        }
+        reviewMapper.deleteOne(reviewId);
+        return 1;
     }
 }

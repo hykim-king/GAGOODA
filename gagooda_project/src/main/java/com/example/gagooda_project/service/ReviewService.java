@@ -19,6 +19,7 @@ public interface ReviewService {
     int register(List<MultipartFile> imgFileList, ReviewDto review, String imgPath);
 
     List<ReviewDto> showReviews (PagingDto paging);
-
     int countByReviews (PagingDto paging);
+    @Transactional
+    int delete(ReviewDto review, int reviewId);
 }

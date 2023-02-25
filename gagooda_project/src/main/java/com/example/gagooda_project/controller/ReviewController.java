@@ -110,7 +110,7 @@ public class ReviewController {
         ReviewDto review = reviewService.selectOne(reviewId);
         try {
             if (loginUser.getUserId() == review.getReviewId()) {
-                int delete = reviewService.remove(reviewId);
+                int delete = reviewService.delete(review, reviewId);
             } else {
                 session.setAttribute("msg","삭제할 권한이 없습니다.");
             }
