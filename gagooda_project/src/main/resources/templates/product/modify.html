@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/adminLayout}">
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.productCode}+' 상품 수정'"></title>
@@ -119,7 +119,7 @@
         <button type="button" name="moreOptBtn">옵션추가</button>
         <br>
         <h1>카테고리</h1>
-        <fieldset name="existedCategoryContainer">
+        <fieldset name="existedCategoryContainer" class="existedCategoryContainer">
             <legen>기존 카테고리</legen>
             <h4>삭제 할 카테고리는 체크를 헤제 주세요</h4>
             <th:block th:each="categoryConn:${categoryConnList}">
@@ -242,7 +242,7 @@
             fieldset.id = "img" + imgNum;
             fieldset.innerHTML = `
             <label for="image">이미지:</label>
-            <input type="file" id="image" name="imageFile">
+            <input type="file" id="image" name="imageFile" required>
             <button type="button" onclick="document.getElementById('img${imgNum}').remove()">삭제</button>
         `;
 
@@ -254,7 +254,7 @@
             fieldset.id = "infoImg" + imgNum;
             fieldset.innerHTML = `
             <label for="infoImages">상세 정보 이미지:</label>
-            <input type="file" id="infoImages" name="infoImageFile">
+            <input type="file" id="infoImages" name="infoImageFile" required>
             <button type="button" onclick="document.getElementById('infoImg${imgNum}').remove()">삭제</button>
         `;
             infoImages.append(fieldset);
@@ -290,7 +290,49 @@
         }
 
         productForm.onsubmit = (e) => {
-            nameset();
+            if (checkNum(e)) {
+                nameset();
+            }
+        }
+
+        function checkNum(e) {
+            let submit = true;
+            const alreadyImg = document.querySelectorAll(".already-images input[type=checkbox]");
+            const alreadyImgChecked = document.querySelectorAll(".already-images input[type=checkbox]:checked");
+            const alreadyImgFiles = document.querySelectorAll(".images input[type=file]");
+            if (alreadyImg.length === alreadyImgChecked.length && alreadyImgFiles.length === 0) {
+                e.preventDefault();
+                submit = false;
+                alert("상품 사진은 한개 이상 있어야 합니다.");
+            }
+
+            const alreadyInfo = document.querySelectorAll(".already-infoimages input[type=checkbox]");
+            const alreadyInfoChecked = document.querySelectorAll(".already-infoimages input[type=checkbox]:checked");
+            const alreadyInfoFiles = document.querySelectorAll(".infoImages input[type=file]");
+            if (alreadyInfo.length === alreadyInfoChecked.length && alreadyInfoFiles.length === 0) {
+                e.preventDefault();
+                submit = false;
+                alert("상품 설명 사진은 한개 이상 있어야 합니다.");
+            }
+
+            const options = document.querySelectorAll(".option-products input[type=checkbox]");
+            const optionsChecked = document.querySelectorAll(".option-products input[type=checkbox]:checked");
+            const optionProducts = document.querySelectorAll(".option-products .optionProduct");
+            if (options.length === optionsChecked.length && optionProducts.length === 0) {
+                e.preventDefault();
+                submit = false;
+                alert("옵션 상품은 한개 이상 있어야 합니다.");
+            }
+
+            const existedCategoryChecked = document.querySelectorAll(".existedCategoryContainer input[type=checkbox]:checked");
+            const categories = document.querySelectorAll(".categoryContainer .categories");
+            if (existedCategoryChecked.length === 0 && categories.length === 0) {
+                e.preventDefault();
+                submit = false;
+                alert("카테고리는 한개 이상 연결돼야 합니다..");
+            }
+
+            return submit;
         }
 
         function nameset() {
