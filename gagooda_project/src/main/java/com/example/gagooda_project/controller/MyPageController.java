@@ -36,14 +36,15 @@ public class MyPageController {
     @GetMapping("/user_yes/main.do")
     public String myPageMain(@SessionAttribute UserDto loginUser,
                              Model model,
-                             HttpServletRequest req,
-                             PagingDto paging) {
+                             HttpServletRequest req) {
         try {
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
+            PagingDto paging = new PagingDto();
             List<OrderDto> orderList = myPageService.orderList(paging, loginUser.getUserId(), 30);
             myPageDetList = myPageDetList.subList(0, 4);
-            List<CartDto> cartList = myPageService.cartList(paging, loginUser.getUserId());
+            PagingDto paging2 = new PagingDto();
+            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId());
             Map<String, String> detName = new HashMap<>();
             Map<String, Integer> count = new HashMap<>();
             for (CommonCodeDto myPageDet : myPageDetList) {

@@ -12,10 +12,11 @@
         <h2 class="text-center mb-5">리뷰 등록</h2>
         <div class="mx-auto" style="width: 50%">
             <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
-            <input type="text" name="productCode" id="productCode" th:value="${productCode}">
+            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
             <div class="mb-3">
+                <label for="optionCode" class="form-label">상품명</label>
                 <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
-                    <option value="">상품 옵션</option>
+                    <option value="" disabled>상품 옵션</option>
                     <th:block th:each="optionProduct:${optionProductList}">
                         <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
                     </th:block>
