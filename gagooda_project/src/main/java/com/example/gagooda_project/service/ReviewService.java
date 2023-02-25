@@ -17,4 +17,7 @@ public interface ReviewService {
     List<OptionProductDto> showOptionProduct(String productCode);
     @Transactional
     int register(List<MultipartFile> imgFileList, ReviewDto review, String imgPath);
+
+    @Transactional
+    int delete(ReviewDto review, int reviewId);
 }
