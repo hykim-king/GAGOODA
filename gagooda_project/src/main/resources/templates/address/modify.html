@@ -9,7 +9,7 @@
 </head>
 <div layout:fragment="myPageContent">
 <h2>사용자 배송지 수정</h2>
-<form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data">
+<form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px">
   <div>
     <div th:text="${session.loginUser.userId}" th:readonly="true"></div>
   </div>
