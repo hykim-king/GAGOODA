@@ -73,7 +73,8 @@
                 <tr>
                     <td th:text="${num.count}"></td>
                     <td th:text="${product.productCode}"></td>
-                    <td th:text="${product.pname}"></td>
+                    <td><a th:href="@{'/product/admin/{productCode}/modify.do'(productCode=${product.productCode})}"
+                           th:text="${product.pname}"></a></td>
                     <td th:text="${product.place}"></td>
                     <td>
                         <label>
