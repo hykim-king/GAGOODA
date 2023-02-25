@@ -10,6 +10,7 @@ import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.PagedDataList;
 import com.siot.IamportRestClient.response.Payment;
+import jakarta.mail.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -122,7 +123,6 @@ public class RefundController {
         String reType;
         String detailimgPath;
         int seq = 1;
-
 
         if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
@@ -266,6 +266,7 @@ public class RefundController {
                             @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
                             Model model){
         log.info("req.getParameterMap:"+req.getParameterMap());
+        log.info("requestUri:" +req.getRequestURI());
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -295,11 +296,14 @@ public class RefundController {
 
     @GetMapping("admin/{refundId}/detail.do")
     public String adminDetail(@PathVariable int refundId,
+                              HttpSession session,
+                              HttpServletRequest req,
                               @SessionAttribute UserDto loginUser,
                               Model model){
         try{
             RefundDto refund = refundServiceImp.selectOne(refundId);
             if(loginUser.getGDet().equals("g1")){
+                session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
                 model.addAttribute("refund", refund);
                 model.addAttribute("rfCodeList", allRfList);
@@ -340,35 +344,42 @@ public class RefundController {
     }
     //결제 취소 GET
     @GetMapping("admin/payments/cancel.do")
-    public String cancelPaymentByIamUid(
+    public String cancelPaymentByIamUid(HttpSession session,
                                         Model model,
                                         @SessionAttribute UserDto loginUser){
-//        try{
-//            if(loginUser.getGDet().equals("g1")){
-//                RefundDto refund = refundServiceImp.selectOne(refundId);
-//                model.addAttribute("refund", refund);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
+        try{
+            Object cancelRespObj = session.getAttribute("cancelResp");
+            IamportResponse<Payment> cancelResp = (IamportResponse<Payment>) session.getAttribute("cancelResp");
+            model.addAttribute("cancelResp",cancelResp);
+        }catch (Exception e){
+            model.addAttribute("fail","fail");
+            e.printStackTrace();
+        }
         return "refund/admin/cancelOrder";
     }
     //결제 취소 POST
     @PostMapping("admin/payments/cancel.do")
-    public String cancelPaymentByIamUid(RefundDto refund,
-                                        @SessionAttribute UserDto loginUser/*,
-                                        @PathVariable int refundId*/){
+    public IamportResponse<Payment> cancelPaymentByIamUid(OrderDto order,
+                                        String reason,
+                                        HttpSession session,
+                                        HttpServletRequest req,
+                                        @SessionAttribute UserDto loginUser){
         IamportResponse<Payment> cancelResp = null;
+        String url = req.getRequestURI();
         try{
             if (loginUser.getGDet().equals("g1") /*&& refund.getRefundId() == refundId*/){
-                CancelData cancelData = new CancelData(refund.getOrderId(), false);
-                cancelData.setReason(refund.getReason());
+                if(reason == null){
+                    reason = "주문 취소";
+                }
+                CancelData cancelData = new CancelData(order.getOrderId(), false, BigDecimal.valueOf(order.getTotalPrice()) );
+                cancelData.setReason(reason);
                 cancelResp = iamportClient.cancelPaymentByImpUid(cancelData);
+                session.setAttribute("cancelResp", cancelResp.getResponse());
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return "redirect:/refund/admin/payments/cancel.do";
+        return cancelResp;
     }
 
 
