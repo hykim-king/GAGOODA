@@ -13,7 +13,15 @@
                      column="user_id"
                      select="com.example.gagooda_project.mapper.UserMapper.findById"
                      fetchType="lazy"/>
-        <collection property="imgList"
+         <association property="optionProduct"
+                     column="option_code"
+                     select="com.example.gagooda_project.mapper.OptionProductMapper.findById"
+                     fetchType="lazy"/>
+         <association property="productDto"
+                     column="product_code"
+                     select="com.example.gagooda_project.mapper.ProductMapper.findById"
+                     fetchType="lazy"/>
+         <collection property="imgList"
                     column="img_code"
                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
                     fetchType="lazy"/>
@@ -50,5 +58,13 @@
     </select>
     <select id="listByProductCodeAll" resultMap="reviewMap">
         SELECT * FROM review WHERE product_code=#{productCode}
+    </select>
+    <select id="pageAll" resultMap="reviewMap" parameterType="pagingDto" >
+        SELECT * FROM review
+        ORDER BY ${orderField} ${direct}
+        LIMIT #{startRow}, #{rows}
+    </select>
+    <select id="count" resultType="java.lang.Integer" parameterType="pagingDto" >
+        SELECT count(*) FROM review
     </select>
 </mapper>

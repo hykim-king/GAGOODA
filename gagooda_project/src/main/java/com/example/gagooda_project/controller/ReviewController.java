@@ -120,4 +120,28 @@ public class ReviewController {
         }
         return "redirect:/review/list.do?productCode=" + review.getProductCode();
     }
+
+    // admin
+    @GetMapping("/admin/list.do")
+    public String adminList(Model model,
+                            @SessionAttribute UserDto loginUser,
+                            PagingDto paging){
+        int check = 0;
+        try {
+            List<ReviewDto> reviewList = reviewService.showReviews(paging);
+            int count = reviewService.countByReviews(paging);
+            model.addAttribute("reviewList", reviewList);
+            model.addAttribute("paging", paging);
+            model.addAttribute("count", count);
+            check = 1;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (check > 0){
+            return "/review/admin/list";
+        } else {
+            return "/errorHandler";
+        }
+
+    }
 }

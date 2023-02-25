@@ -3,6 +3,7 @@ package com.example.gagooda_project.service;
 import com.example.gagooda_project.StaticMethods;
 import com.example.gagooda_project.dto.ImageDto;
 import com.example.gagooda_project.dto.OptionProductDto;
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ReviewDto;
 import com.example.gagooda_project.mapper.ImageMapper;
 import com.example.gagooda_project.mapper.OptionProductMapper;
@@ -72,5 +73,19 @@ public class ReviewServiceImp implements ReviewService {
             e.printStackTrace();
             throw new Error("전체적인 오류");
         }
+    }
+
+    @Override
+    public List<ReviewDto> showReviews(PagingDto paging) {
+        int totalRows = reviewMapper.count(paging);
+        paging.setRows(10);
+        if (paging.getOrderField() == null) paging.setOrderField("reg_date");
+        paging.setTotalRows(totalRows);
+        return reviewMapper.pageAll(paging);
+    }
+
+    @Override
+    public int countByReviews(PagingDto paging) {
+        return reviewMapper.count(paging);
     }
 }

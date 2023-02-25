@@ -24,4 +24,8 @@ public interface ReviewMapper {
     int countByProductCode(String productCode);
 
     List<ReviewDto> listByProductCodeAll(String productCode);
+
+    List<ReviewDto> pageAll (PagingDto paging);
+
+    int count (PagingDto paging);
 }

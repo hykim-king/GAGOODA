@@ -19,4 +19,5 @@ public class ReviewDto {
     private UserDto user;
     private OptionProductDto optionProduct;
     private List<ImageDto> imgList;
+    private ProductDto productDto;
 }
