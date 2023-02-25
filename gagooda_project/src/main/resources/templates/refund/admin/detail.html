@@ -97,7 +97,7 @@
         let popup =  window.open("/refund/admin/payments/cancel.do","cancel", "width=600, height=400, resizable = no");
         setTimeout(function (){
                 popup.document.querySelector("#orderId").value = orderId;
-                popup.document.querySelector("#totalPrice").value = cancelAmount;
+                popup.document.querySelector("#cancelAmount").value = 100; // 지금은 100원만 결제해서 이걸로. /*cancelAmount;*/
                 popup.document.querySelector("#reason").value = detName;
             },500)
 

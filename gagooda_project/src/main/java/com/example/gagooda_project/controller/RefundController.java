@@ -344,42 +344,47 @@ public class RefundController {
     }
     //결제 취소 GET
     @GetMapping("admin/payments/cancel.do")
-    public String cancelPaymentByIamUid(HttpSession session,
-                                        Model model,
-                                        @SessionAttribute UserDto loginUser){
-        try{
-            Object cancelRespObj = session.getAttribute("cancelResp");
-            IamportResponse<Payment> cancelResp = (IamportResponse<Payment>) session.getAttribute("cancelResp");
-            model.addAttribute("cancelResp",cancelResp);
-        }catch (Exception e){
-            model.addAttribute("fail","fail");
-            e.printStackTrace();
+    public String cancelPaymentByIamUid(@SessionAttribute UserDto loginUser){
+        if(loginUser.getGDet().equals("g1")){
+            return "refund/admin/cancelOrder";
+        }else{
+            return "mainpage";
         }
-        return "refund/admin/cancelOrder";
     }
     //결제 취소 POST
     @PostMapping("admin/payments/cancel.do")
-    public IamportResponse<Payment> cancelPaymentByIamUid(OrderDto order,
+    public int cancelPaymentByIamUid(String orderId,
+                                        Integer cancelAmount,
                                         String reason,
                                         HttpSession session,
                                         HttpServletRequest req,
                                         @SessionAttribute UserDto loginUser){
         IamportResponse<Payment> cancelResp = null;
-        String url = req.getRequestURI();
+        int code = 1000;
         try{
             if (loginUser.getGDet().equals("g1") /*&& refund.getRefundId() == refundId*/){
                 if(reason == null){
                     reason = "주문 취소";
                 }
-                CancelData cancelData = new CancelData(order.getOrderId(), false, BigDecimal.valueOf(order.getTotalPrice()) );
+                CancelData cancelData = new CancelData(orderId, false, BigDecimal.valueOf(cancelAmount) );
                 cancelData.setReason(reason);
+                log.info("orderId: "+orderId);
+                log.info("cancelAmount: "+cancelAmount);
+                log.info("reason: "+reason);
+                log.info("cancelData: " + cancelData);
                 cancelResp = iamportClient.cancelPaymentByImpUid(cancelData);
-                session.setAttribute("cancelResp", cancelResp.getResponse());
+                log.info("cancelResp: "+ cancelResp);
+                log.info("cancelResp.getResponse: "+ cancelResp.getResponse());
+                log.info("cancelResp.getMessage: "+cancelResp.getMessage());
+                log.info("cancelResp.getCode: "+cancelResp.getCode());
+//                session.setAttribute("msg",cancelResp.getMessage());
+                code = cancelResp.getCode();
+                return code;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return cancelResp;
+        return code;
     }
 
 
