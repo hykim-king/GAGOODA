@@ -9,18 +9,25 @@
 </head>
 <div layout:fragment="content">
     <body>
-    <form action="/user/login.do" method="post">
-        <div>
-            <label for="email">이메일</label>
-            <input type="text" id="email" name="email">
+    <form action="/user/login.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px">
+        <div class="mx-auto" >
+            <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
         </div>
 
-        <div>
-            <label for="pw">비밀번호</label>
-            <input type="password" id="pw" name="pw">
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control form-control-lg" id="email" name="email" required>
         </div>
 
-        <button type="submit" class="btn btn-outline-success">로그인</button>
+        <div class="mb-3">
+            <label for="pw" class="form-label">비밀번호</label>
+            <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
+        </div>
+
+        <div class="mb-3">
+            <input type="submit" class="form-control form-control-lg text-white my-5" value="로그인" style="background-color: #B68C68;">
+        </div>
+
     </form>
     </body>
 </div>

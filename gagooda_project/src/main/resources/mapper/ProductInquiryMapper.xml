@@ -22,6 +22,10 @@
                      column="pi_det"
                      select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
                      fetchType="lazy"/>
+        <association property="productDto"
+                     column="product_code"
+                     select="com.example.gagooda_project.mapper.ProductMapper.findById"
+                     fetchType="lazy"/>
     </resultMap>
 
     <insert id="insertOne" useGeneratedKeys="true" keyProperty="pInquiryId">

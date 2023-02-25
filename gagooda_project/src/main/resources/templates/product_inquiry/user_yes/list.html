@@ -1,26 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<h4>문의수</h4><h4 th:text="${mypageList.size()}"></h4>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/mypageLayout}">
+<head>
+    <meta charset="UTF-8">
+    <title>내 상품문의</title>
+</head>
+<div layout:fragment="myPageContent">
+    <div class="d-flex">
+        <h2 class="my-4 me-3" >상품 문의</h2>
+        <h2 class="my-4" th:text="${mypageList.size()+'건'}"></h2>
+    </div>
+    <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
+
+    <table class="table">
+        <thead>
+            <th scope="col">문의유형</th>
+            <th scope="col">상품</th>
+            <th scope="col">문의 제목</th>
+            <th scope="col">문의 작성일</th>
+            <th scope="col">답변여부</th>
+            <th scope="col"></th>
+            <th scope="col">문의확인/삭제</th>
+        </thead>
+        <tbody>
+            <tr th:unless="${mypageList.isEmpty()}" th:each="p:${mypageList}" style="cursor: pointer">
+                <span th:if="${mypageList.isEmpty()}">해당 상품에는 문의가 없습니다.</span>
+                <td th:text="${p.getCommonCodeDto().getDetName()}"> </td>
+                <td th:text="${p.getProductDto().getPname()}"> </td>
+                <td th:text="${p.getTitle()}"> </td>
+                <td th:text="${#dates.format(p.getRegDate(), 'yyyy-MM-dd')}"></td>
+                <th:block th:if="${p.getReply() != null}">
+                    <td>답변</td>
+                </th:block>
+                <th:block th:if="${p.getReply() == null}">
+                    <td>미답변</td>
+                    <td> </td>
+                </th:block>
+                <td>
+                    <button class="btn text-white" type="button" style="background-color: #B68C68;" data-bs-toggle="modal" th:data-bs-target="${'#exampleModal'+p.PInquiryId}">자세히</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" th:id="${'exampleModal'+p.PInquiryId}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="${p.getTitle()}"></h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p th:text="${p.getContent()}">
+                                </div>
+                                <div class="modal-footer">
+                                    <th:block th:if="${p.getReply() != null}">
+                                        <p class="text-center" th:text="${p.getReply()}">답글</p>
+                                        <p class="fs-6 text-secondary" th:text="${p.getReplyDate()}">답글작성일</p>
+                                    </th:block>
+                                    <th:block th:if="${p.getReply() == null}">
+                                        <p class="text-center">아직 작성된 답변이 없습니다.</p>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn ms-3" th:onclick=|removePInquiryWindow(${p.PInquiryId})| style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee; " >삭제하기</button>
+                </td>
+                <input type="hidden" name="PInquiryId" th:value="${p.PInquiryId}">
+                <input type="hidden" name="userId" th:value="${p.userId}">
+            </tr>
+        </tbody>
+    </table>
 <div>
-    <span th:if="${mypageList.isEmpty()}">해당 상품에는 문의가 없습니다.</span>
-    <ul th:unless="${mypageList.isEmpty()}">
-        <li th:each="p:${mypageList}">
-            <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
-            <p th:text="${p.getPInquiryId()}">문의ID</p>
-            <p th:text="${p.getUser().getUname()}">사용자이름</p>
-            <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
-            <p th:text="${p.getRegDate()}">문의작성일</p>
-            <p th:text="${p.getTitle()}">문의제목</p>
-            <p th:text="${p.getContent()}">문의내용</p>
-            <th:block th:if="${p.getReply() != null}">
-                <p th:text="${p.getReply()}">답글</p>
-                <p th:text="${p.getReplyDate()}">답글작성일</p>
-            </th:block>
-            <button type="button"
-                    th:onclick=|removePInquiryWindow(${p.PInquiryId})|
-                    th:if="${session.loginUser != null and session.loginUser.userId == p.userId}">삭제</button>
-        </li>
-    </ul>
     <!--페이지네이션-->
     <nav>
         <ul class="uk-pagination uk-flex-center">
@@ -51,5 +103,6 @@
         </ul>
     </nav>
     <!--페이지네이션end-->
+</div>
 </div>
 </html>

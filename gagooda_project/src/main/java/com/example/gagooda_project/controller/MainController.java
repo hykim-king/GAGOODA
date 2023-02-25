@@ -106,7 +106,15 @@ public class MainController {
         // 카테고리 나열
         List<CategoryDto> firstCategories = null;
         try {
-            firstCategories = categoryService.showCategoriesAt(1);
+            PagingDto recentPaging = new PagingDto();
+            // 보여줄 상품의 개수
+            recentPaging.setRows(10);
+            // 정렬 기준
+            recentPaging.setOrderField("mod_date");
+            // 정렬 방향
+            recentPaging.setDirect("DESC");
+            List<ProductDto> recentProduct = productService.pagingProduct(recentPaging, new HashMap<>());
+            model.addAttribute("recentProduct",recentProduct);
         } catch (Exception e) {
             e.printStackTrace();
         }
