@@ -129,6 +129,4 @@ public class DeliveryController {
             return "redirect:/delivery/admin/"+orderId+"/modify.do";
         }
     }
-
-
 }

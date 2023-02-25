@@ -8,8 +8,10 @@
   <title>사용자 배송지 수정</title>
 </head>
 <div layout:fragment="myPageContent">
-<h2>사용자 배송지 수정</h2>
-<form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px">
+<h2 class="text-center my-4">사용자 배송지 수정</h2>
+  <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
+
+  <form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px">
   <div>
     <div th:text="${session.loginUser.userId}" th:readonly="true"></div>
   </div>
