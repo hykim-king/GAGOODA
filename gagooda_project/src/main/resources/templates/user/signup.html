@@ -91,29 +91,24 @@
         } = response;
 
         if (success) {
-            console.log('본인인증 성공');
-            $.ajax({
-                type: 'POST',
-                url: '/certifications/'+ response.imp_uid,
-                dataType:'json',
-                data: {'imp_uid' : response.imp_uid},
-            });
+            console.log('본인인증 성공')
             console.log(response.imp_uid);
+            jQuery.ajax({
+                url: "/user/certifications.do",
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                data: JSON.stringify({ imp_uid: response.imp_uid }),
+                success: function (data) {
+                    JSON.parse(data)
+                },
+                error: function(e) {
+                    console.log(e)
+                }
+            });
         } else {
             console.log(`본인인증 실패: ${error_msg}`);
         }
     }
-
-    // app.use(bodyParser.json());
-    // // "/certifications"에 대한 POST 요청을 처리하는 controller
-    // app.post("/certifications", async (request, response) => {
-    //     // request의 body에서 imp_uid 추출
-    //     const { imp_uid } = request.body;
-    //     console.log(imp_uid);
-    // })
-
-
-
 
 </script>
 </div>
