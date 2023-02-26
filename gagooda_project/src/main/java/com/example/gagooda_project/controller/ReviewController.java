@@ -144,4 +144,25 @@ public class ReviewController {
         }
 
     }
+
+    @GetMapping("/admin/{reviewId}/detail.do")
+    public String adminDetail(@SessionAttribute UserDto loginUser,
+                              @PathVariable int reviewId,
+                              Model model
+                       ){
+        int detail = 0;
+        System.out.println(reviewId);
+        try {
+            ReviewDto review = reviewService.selectOne(reviewId);
+            model.addAttribute("review",review);
+            detail = 1;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        if (detail > 0){
+            return "/review/admin/detail";
+        } else  {
+            return "/errorHandler";
+        }
+    }
 }
