@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/adminLayout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰디테일</title>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+        <h2>
+            <span th:text="${reviewId}"></span>.번 리뷰 상세 페이지
+        </h2>
+        <div class="mb-3 row d">
+            <label for="reviewId" class="col-sm-2 col-form-label">리뷰ID</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="reviewId" th:value="${reviewId}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="nickname" class="col-sm-2 col-form-label">사용자닉네임</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="nickname" th:value="${review.getUser().getUname()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="rate" class="col-sm-2 col-form-label">평점</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="rate" th:value="${review.getRate()}">
+            </div>
+        </div>
+        <th:block th:if="${review.getImgList() != null}">
+        <div class="mb-3 row" th:each="img:${review.getImgList()}">
+            <p>이미지</p>
+                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}">
+        </div>
+        </th:block>
+        <div class="mb-3 row">
+            <label for="product" class="col-sm-2 col-form-label">상품</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="product" th:value="${review.getProductDto().getPname()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="option" class="col-sm-2 col-form-label">옵션</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="option" th:value="${review.getOptionProduct().getOpname()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="content" class="col-sm-2 col-form-label">내용</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="content" th:value="${review.getContent()}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="regDate" class="col-sm-2 col-form-label">작성일</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="regDate" th:value="${#dates.format(review.getRegDate(), 'yyyy-MM-dd HH:mm')}">
+            </div>
+        </div>
+    </div>
+</div>
+</html>

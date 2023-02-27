@@ -15,6 +15,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.View;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -333,6 +338,20 @@ public class UserController {
             return "redirect:"+previousUrl;
         }
     }
+
+
+    @PostMapping("/certifications.do")
+    public @ResponseBody String certifications(@RequestBody Map<String, Object> param) throws IOException {
+        System.out.println(param);
+        String imp_uid = (String) param.get("imp_uid");
+
+        String token = userService.getToken();
+
+        String user_info = userService.getCertifications(imp_uid, token);
+
+        return user_info;
+    }
+
 
 }
 
