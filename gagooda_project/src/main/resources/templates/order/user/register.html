@@ -29,6 +29,12 @@
             </div>
         </div>
     </div>
+    <div id="addressListContainer">
+        <th:block th:include="/order/user/newAddressList"></th:block>
+    </div>
+    <!--주문 form -->
+    <!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
+    <!--          method="post" onsubmit="return validateForm();">-->
     <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
           method="post" onsubmit="return validateForm();">
         <input type="hidden" id="addressId" name="addressId" class="realAdd">
@@ -51,7 +57,7 @@
             <th:block th:each="cartItem:${cartList}">
                 <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
             </th:block>
-            <h3 class="mt-4">주문할 상품 정보</h3>
+            <h3 class="ms-2 mt-4">주문할 상품 정보</h3>
             <div>
                 <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
                 <table class="table">
@@ -90,7 +96,7 @@
             <!--주문 정보-->
             <div >
                 <!--주문자 정보-->
-                <h3 class="mt-4">주문자 정보</h3>
+                <h3 class="ms-2 mt-4">주문자 정보</h3>
                 <div>
                     <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
                     <div class="ms-3 my-3">
@@ -110,7 +116,7 @@
                     </div>
                 </div>
                 <!--총 결제 정보-->
-                <h3 class="mt-4">총 결제 정보</h3>
+                <h3 class="ms-2 mt-4">총 결제 정보</h3>
                 <div>
                     <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
                     <div class="ms-3 my-3">
@@ -144,14 +150,9 @@
         <input type="hidden" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
                id="imgPath" placeholder="imgPath" readonly>
         <!--대표 주문 사진 정하기 end----------------------------->
+        <!--결제전 주의사항-->
         <button type="submit">제출</button>
     </form>
-    <!--주문 form -->
-<!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
-<!--          method="post" onsubmit="return validateForm();">-->
-    <div id="addressListContainer">
-        <th:block th:include="/order/user/newAddressList"></th:block>
-    </div>
     <!--주문 form end---------------->
     <script th:inline="javascript">
         //새로운 배송지 AJAX
