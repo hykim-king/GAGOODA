@@ -9,9 +9,10 @@
 </head>
 <div layout:fragment="content">
     <h1>주문</h1>
-    <div>배송지 입력란</div>
+    <h2>배송지 입력</h2>
     <button type="button" name="setAddressBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">새로운 배송지입력</button>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,50 +28,21 @@
             </div>
         </div>
     </div>
+    <div id="addressListContainer">
+        <th:block th:include="/order/user/newAddressList"></th:block>
+    </div>
     <!--주문 form -->
 <!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
 <!--          method="post" onsubmit="return validateForm();">-->
     <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
           method="post" onsubmit="return validateForm();">
-        <!--배송지 입력란-->
-            <label for="myAddressList">다른 배송지</label>
-            <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
-                <option disabled selected="selected" th:text="'----선택-----'"></option>
-                <th:block th:each="address:${addressList}">
-                    <th:block th:if="${address.home == true}">
-                        <option th:value="${address.addressId}" th:text="'기본:' + ${address}"
-                                th:data-address="${address}"></option>
-                    </th:block>
-                    <th:block th:unless="${address.home == true}">
-                        <option th:value="${address.addressId}" th:text="${address}" th:data-address="${address}"></option>
-                    </th:block>
-                </th:block>
-            </select>
-            <input type="hidden" id="addressId" name="addressId" class="add">
-            <div>
-                <label for="postCode">우편 번호</label>
-                <input type="text" id="postCode" name="postCode" class="add" readonly th:required="required" >
-            </div>
-            <div>
-                <label for="address">주소</label>
-                <input type="text" id="address" name="address" class="add" readonly th:required="required">
-            </div>
-            <div>
-                <label for="addressDetail">상세 주소</label>
-                <input type="text" id="addressDetail" name="addressDetail" class="add" readonly th:required="required">
-            </div>
-            <div>
-                <label for="receiverName">수령인 이름</label>
-                <input type="text" id="receiverName" name="receiverName" class="add" readonly th:required="required">
-            </div>
-            <div>
-                <label for="receiverPhone">수령인 전화번호</label>
-                <input type="text" id="receiverPhone" name="receiverPhone" class="add" readonly th:required="required">
-            </div>
-            <div>
-                <label for="elevator">엘리베이터 유무</label>
-                <input type="text" id="elevator" name="elevator" class="add" readonly th:required="required">
-            </div>
+        <input type="hidden" id="addressId" name="addressId" class="realAdd">
+        <input type="hidden" id="postCode" name="postCode" class="realAdd" th:required="required" >
+        <input type="hidden" id="address" name="address" class="realAdd" th:required="required">
+        <input type="hidden" id="addressDetail" name="addressDetail" class="realAdd"  th:required="required">
+        <input type="hidden" id="receiverName" name="receiverName" class="realAdd"  th:required="required">
+        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realAdd"  th:required="required">
+        <input type="hidden" id="elevator" name="elevator" class="realAdd" th:required="required">
 
         <!--배송지 입력란 end-->
         <div class="orderDetail">
@@ -174,10 +146,57 @@
     </form>
     <!--주문 form end---------------->
     <script th:inline="javascript">
+        //새로운 배송지 AJAX
+        const addressListContainer = document.getElementById("addressListContainer");
+        //load newAddressRegisterForm; function init()
+        function init(){
+            const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
+            newAddressRegisterForm.onsubmit=function(e){
+                console.log("newAddress onsubmit버튼이 눌렸습니다.");
+                registerAddress(e,newAddressRegisterForm);
+            }
+        }
+        init();
+
+        async function registerAddress(e, newAddressRegisterForm){
+            e.preventDefault();
+            let url = "/order/user_yes/addressRegister.do";
+            const formData = new FormData(newAddressRegisterForm);
+            const resp = await fetch(url, {method:"POST",body:formData});
+            const address = await resp.json();
+            console.log("resp.url: "+resp.url);
+            console.log("json: "+address);
+            if(address !=null){
+                realAddressList[0].value = address.addressId;
+                realAddressList[1].value = address.postCode;
+                realAddressList[2].value = address.address;
+                realAddressList[3].value = address.addressDetail;
+                realAddressList[4].value = address.receiverName;
+                realAddressList[5].value = address.receiverPhone;
+                realAddressList[6].value = address.elevator;
+                await loadAddressList();
+            }
+        }
+
+        async function loadAddressList(){
+            const resp = await fetch("/order/user_yes/addressList.do");
+            const html = await resp.text();
+            console.log("html: "+html);
+            addressListContainer.innerHTML=html;
+            console.log("addressListContainer.innerHTML: "+addressListContainer.innerHTML);
+            console.log("addressListContainer.innerText: "+addressListContainer.innerText);
+
+        }
+
+        //선택된 배송지 input에 data 보여주기
         const currentAddressList = document.querySelectorAll(".add");
+        currentAddressList.forEach(currentAddress=>{
+            console.log("currentAddressList: "+currentAddress);
+        })
+        const realAddressList = document.querySelectorAll(".realAdd");
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
-            // document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
+            document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
             //console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
             let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
             let addressMap = new Map();
@@ -195,6 +214,13 @@
             currentAddressList[4].value = addressMap.get("receiverName");
             currentAddressList[5].value = addressMap.get("receiverPhone");
             currentAddressList[6].value = addressMap.get("elevator");
+            realAddressList[0].value = addressMap.get("addressId");
+            realAddressList[1].value = addressMap.get("postCode");
+            realAddressList[2].value = addressMap.get("address");
+            realAddressList[3].value = addressMap.get("addressDetail");
+            realAddressList[4].value = addressMap.get("receiverName");
+            realAddressList[5].value = addressMap.get("receiverPhone");
+            realAddressList[6].value = addressMap.get("elevator");
         }
 
         function validateForm(){
