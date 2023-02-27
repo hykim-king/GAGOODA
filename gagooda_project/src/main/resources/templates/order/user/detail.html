@@ -29,10 +29,10 @@
         <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
         <table class="table mt-0">
             <thead>
-                <th class="text-center" scope="col">순번</th>
+                <th scope="col" class="text-center">순번</th>
                 <th scope="col">상품정보</th>
-                <th class="text-center" scope="col">수량</th>
-                <th class="text-center" scope="col">가격</th>
+                <th scope="col" class="text-center">수량</th>
+                <th scope="col" class="text-center">가격</th>
             </thead>
             <tbody>
                 <tr class="align-middle" th:each="orderDetail, stat :${orderDetailList}">
@@ -56,7 +56,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="d-flex flex-column align-items-end mx-5">
+        <div class="d-flex flex-column align-items-end pt-3 px-5"  style="background-color: #FFFAF5">
             <div class="mb-3">
                 <b>총 주문 금액:</b> <span name="totalPrice" id="totalPrice" th:text="${order.totalPrice}"></span>원
             </div>
@@ -95,11 +95,11 @@
             </div>
         </div>
         <div class="m-2">
-            <th:block th:if="${order.elevator == 1}">
+            <th:block th:if="${order.elevator == true}">
                 <label style="font-weight: bold; ">엘레베이터: </label>
                 <span th:text="' 있음'"></span>
             </th:block>
-            <th:block th:if="${order.elevator == 0}">
+            <th:block th:if="${order.elevator == false}">
                 <label style="font-weight: bold;">엘레베이터: </label>
                <span th:text="'없음'"></span>
             </th:block>

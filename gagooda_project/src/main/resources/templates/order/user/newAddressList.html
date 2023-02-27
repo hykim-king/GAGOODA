@@ -16,7 +16,7 @@
 <h3>배송지 입력란</h3>
 <th:block th:if="${addressId != 0 && address !=null}">
     <div>
-        <input type="text" id="nAddressId" name="addressId" class="add">
+        <input type="hidden" id="nAddressId" name="addressId" class="add">
     </div>
     <div>
         <label for="postCode">우편 번호</label>
@@ -45,7 +45,7 @@
 </th:block>
 <th:block th:unless="${addressId != 0 && address != null}">
     <div>
-        <input type="text" id="addressId" name="addressId" class="add">
+        <input type="hidden" id="addressId" name="addressId" class="add">
     </div>
     <div>
         <label for="postCode">우편 번호</label>
