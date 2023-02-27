@@ -6,6 +6,7 @@ import com.example.gagooda_project.service.ImageServiceImp;
 import com.example.gagooda_project.service.OrderServiceImp;
 import com.example.gagooda_project.service.RefundServiceImp;
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.PagedDataList;
@@ -21,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -64,17 +66,10 @@ public class RefundController {
         }
         try {
             paging.setQueryString(req.getParameterMap());
-            List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
             List<RefundDto> refundList = refundServiceImp.showUserRefundList(loginUser.getUserId(), period, startDate, endDate, detCode, paging);
             int userRefundCount = refundServiceImp.showCountByUser(loginUser.getUserId(), period, startDate, endDate, detCode);
-            Map<String, Integer> orderDetailCountMap = new HashMap<>();
-            for (RefundDto refund : refundList) {
-                orderDetailCountMap.put(refund.getOrderId(), refundServiceImp.CountByOrderId(refund.getOrderId()));
-            }
             model.addAttribute("refundList", refundList);
-            model.addAttribute("rfDetList", rfDetList);
             model.addAttribute("userRefundCount", userRefundCount);
-            model.addAttribute("orderDetailCountMap", orderDetailCountMap);
             model.addAttribute("paging", paging);
         } catch (Exception e) {
             e.printStackTrace();
@@ -315,28 +310,17 @@ public class RefundController {
         return "/index";
     }
 
-    @PostMapping("admin/{refundId}/modify.do")
-    public String adminModify(@PathVariable int refundId,
-                              @SessionAttribute UserDto loginUser,
-                              RefundDto refund){
-        int register = 0;
-        try{
-            if(refund.getRefundId() == refundId && loginUser.getGDet().equals("g1")){
-                register = refundServiceImp.modifyOne(refund, "admin");
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return "redirect:/refund/admin/"+refundId+"/detail.do";
-    }
-
     //임시 결제 페이지
     @GetMapping("user_yes/{orderId}/payments/temp.do")
     public String paymentsTemp(@PathVariable String orderId,
                                Model model){
         try{
             OrderDto order = orderServiceImp.selectOne(orderId);
+            IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid("imp_969193682313");
+            IamportResponse<PagedDataList<Payment>> allPaymentsResp = iamportClient.paymentsByStatus("all");
             model.addAttribute("order", order);
+            model.addAttribute("payment", paymentResp.getResponse());
+            model.addAttribute("allPayments", allPaymentsResp.getResponse());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -353,16 +337,17 @@ public class RefundController {
     }
     //결제 취소 POST
     @PostMapping("admin/payments/cancel.do")
-    public int cancelPaymentByIamUid(String orderId,
+    @ResponseBody
+    public Payment cancelPaymentByIamUid(String orderId,
                                         Integer cancelAmount,
                                         String reason,
                                         HttpSession session,
                                         HttpServletRequest req,
                                         @SessionAttribute UserDto loginUser){
         IamportResponse<Payment> cancelResp = null;
-        int code = 1000;
+        int code = 1;
         try{
-            if (loginUser.getGDet().equals("g1") /*&& refund.getRefundId() == refundId*/){
+            if (loginUser.getGDet().equals("g1")){
                 if(reason == null){
                     reason = "주문 취소";
                 }
@@ -379,14 +364,29 @@ public class RefundController {
                 log.info("cancelResp.getCode: "+cancelResp.getCode());
 //                session.setAttribute("msg",cancelResp.getMessage());
                 code = cancelResp.getCode();
-                return code;
+                return cancelResp.getResponse();
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return code;
+        return null;
     }
 
+    // 결제 조회 POST
+    @PostMapping("/admin/payments/find.do")
+    @ResponseBody
+    public Payment paymentByImpUid(String impUid,
+                                                    @SessionAttribute UserDto loginUser){
+        try{
+            if(loginUser.getGDet().equals("g1")){
+                IamportResponse<Payment> paymentResponse = iamportClient.paymentByImpUid(impUid);
+                return paymentResponse.getResponse();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }

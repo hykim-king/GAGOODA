@@ -17,61 +17,151 @@
 <div>
 
 </div>
-<h3 style="border-bottom: 3px solid ;border-color: rgb(183,140,104);">주문 정보</h3>
-<table class="table">
-    <thead>
+<h3 class="mt-5">주문 정보</h3>
+<hr style="margin-top: 0; background : #b68c68; height: 5px">
+
+<!--<table class="table">-->
+<!--    <thead>-->
+<!--        <tr>-->
+<!--            <th>주문인</th>-->
+<!--            <th>주문 날짜</th>-->
+<!--            <th>주문 번호</th>-->
+<!--            <th>주문 상품</th>-->
+<!--            <th>총 주문 금액</th>-->
+<!--        </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--        <tr>-->
+<!--            <td th:text="${order.userName}"></td>-->
+<!--            <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>-->
+<!--            <td th:text="${order.orderId}"></td>-->
+<!--            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>-->
+<!--            <td th:text="${order.totalPrice}"></td>-->
+<!--        </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+    <table class="table">
         <tr>
-            <th>주문인</th>
-            <th>주문 날짜</th>
-            <th>주문 번호</th>
-            <th>주문 상품</th>
-            <th>총 주문 금액</th>
+            <th class="col-2">주문인</th>
+            <td class="col-10" th:text="${order.userName}"></td>
         </tr>
-    </thead>
-    <tbody>
         <tr>
-            <td th:text="${order.userName}"></td>
+            <th>주문 날짜</th>
             <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+        <tr>
+            <th>주문 번호</th>
             <td th:text="${order.orderId}"></td>
+        </tr>
+        <tr>
+            <th>주문 상품</th>
             <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>
+        </tr>
+        <tr>
+            <th>총 주문 금액</th>
             <td th:text="${order.totalPrice}"></td>
         </tr>
-    </tbody>
-</table>
-<h3>환불 요청 정보</h3>
-<ul>
-    <li>수령인 : <span th:text="${refund.receiverName}"></span></li>
-    <li>수령인 연락처 : <span th:text="${refund.receiverPhone}"></span></li>
-    <li>환불 대상 상품 : <span th:text="${refund.orderDetailDto.optionName}"></span></li>
-    <li>환불 요청 금액 : <span th:text="${refund.cancelAmount}"></span></li>
-    <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>
-    <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>
-    <li >주소 : <span th:text=" ${'('+refund.postCode+') '+refund.address } "></span><span th:text="${refund.addressDetail}"></span></li>
-    <li th:if="${refund.imageList} != null">첨부 이미지
-        <th:block th:each="img:${refund.imageList}">
-            <img th:src="@{'/img/refund/{imgPath}' (imgPath=${img.imgPath}) }" alt="refundRequestImg" style="width: 400px; height: 400px; object-fit: cover;">
-        </th:block>
-    </li>
-</ul>
+    </table>
 
-<h3>환불 처리 정보</h3>
-<ul>
-    <li>환불 처리 현황 : <span th:text="${refund.rfrDetDto.detName}"></span></li>
-    <li>
-        <th:block th:if="${refund.reply != null}" >
-            <div th:text="${refund.reply}"></div>
-        </th:block>
-        <th:block th:unless="${refund.reply != null}">
-            <div> 아직 답변이 달리지 않았습니다. </div>
-        </th:block>
-    </li>
-</ul>
-<th:block th:if="${refund.rfDet.equals('rf0')}">
-    <form th:action="@{'/refund/user_yes/mypage/{refundId}/modify.do' (refundId = ${refund.refundId})}" method="post">
-        <button type="submit" >환불 요청 취소</button>
-    </form>
-</th:block>
-<a th:href="@{'/refund/user_yes/mypage/list.do'}">목록으로</a>
+<h3 class="mt-5">환불 요청 정보</h3>
+<hr style="margin-top: 0; background : #b68c68; height: 5px">
+<!--<ul>-->
+<!--    <li>수령인 : <span th:text="${refund.receiverName}"></span></li>-->
+<!--    <li>수령인 연락처 : <span th:text="${refund.receiverPhone}"></span></li>-->
+<!--    <li>환불 대상 상품 : <span th:text="${refund.orderDetailDto.optionName}"></span></li>-->
+<!--    <li>환불 요청 금액 : <span th:text="${refund.cancelAmount}"></span></li>-->
+<!--    <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>-->
+<!--    <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>-->
+<!--    <li >주소 : <span th:text=" ${'('+refund.postCode+') '+refund.address } "></span><span th:text="${refund.addressDetail}"></span></li>-->
+<!--    <li th:if="${refund.imageList} != null">첨부 이미지-->
+<!--        <th:block th:each="img:${refund.imageList}">-->
+<!--            <img th:src="@{'/img/refund/{imgPath}' (imgPath=${img.imgPath}) }" alt="refundRequestImg" style="width: 400px; height: 400px; object-fit: cover;">-->
+<!--        </th:block>-->
+<!--    </li>-->
+<!--</ul>-->
+    <table class="table">
+        <tr>
+            <th class="col-2">수령인</th>
+            <td class="col-10" th:text="${refund.receiverName}"></td>
+        </tr>
+        <tr>
+            <th>수령인 연락처</th>
+            <td th:text="${refund.receiverPhone}"></td>
+        </tr>
+        <tr>
+            <th class="align-middle">환불 대상 상품</th>
+            <td>
+                <th:block th:if="${!refund.orderDetailDto.imageList.isEmpty() && refund.orderDetailDto.imageList != null}">
+                    <img th:src="@{'/img/product/{file}' (file=${refund.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
+                </th:block>
+                <span th:text="${refund.orderDetailDto.optionName}"></span>
+            </td>
+        </tr>
+        <tr>
+            <th>환불 요청 금액</th>
+            <td th:text="${refund.cancelAmount}"></td>
+        </tr>
+        <tr>
+            <th>환불 요청 유형</th>
+            <td th:text="${refund.rfrDetDto.detName}"></td>
+        </tr>
+        <tr>
+            <th>환불 요청 사유</th>
+            <td th:text="${refund.reason}"></td>
+        </tr>
+        <tr th:if="${refund.imageList != null && !refund.imageList.isEmpty()}">
+            <th>첨부 이미지</th>
+            <td>
+                <th:block th:each="img:${refund.imageList}">
+                    <img th:src="@{'/img/refund/{imgPath}' (imgPath=${img.imgPath}) }" alt="refundRequestImg" style="width: 400px; height: 400px; object-fit: cover;">
+                </th:block>
+            </td>
+        </tr>
+    </table>
 
+<h3 class="mt-5">환불 처리 정보</h3>
+<hr style="margin-top: 0; background : #b68c68; height: 5px">
+<!--<ul>-->
+<!--    <li>환불 처리 현황 : <span th:text="${refund.rfDetDto.detName}"></span></li>-->
+<!--    <li>-->
+<!--        <th:block th:if="${refund.reply != null}" >-->
+<!--            <div th:text="${refund.reply}"></div>-->
+<!--        </th:block>-->
+<!--        <th:block th:unless="${refund.reply != null}">-->
+<!--            <div> 아직 답변이 달리지 않았습니다. </div>-->
+<!--        </th:block>-->
+<!--    </li>-->
+<!--</ul>-->
+    <table class="table">
+        <tr>
+            <th class="col-2">환불 처리 현황</th>
+            <td class="10" th:text="${refund.rfDetDto.detName}"></td>
+        </tr>
+        <tr>
+            <th>답변</th>
+            <td>
+                <th:block th:if="${refund.reply != null}" >
+                    <div th:text="${refund.reply}"></div>
+                </th:block>
+                <th:block th:unless="${refund.reply != null}">
+                    <div> 아직 답변이 달리지 않았습니다. </div>
+                </th:block>
+            </td>
+        </tr>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        <th:block th:if="${refund.rfDet.equals('rf0')}">
+            <form th:action="@{'/refund/user_yes/mypage/{refundId}/modify.do' (refundId = ${refund.refundId})}" method="post">
+                <button class="btn" type="submit" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">환불 요청 취소</button>
+            </form>
+        </th:block>
+        <a class="btn text-white ms-3 backBtn" href="javascript:void(0)" onclick="goBack()" style="background-color: #B68C68;">목록으로</a>
+    </div>
+    <script th:inline="javascript">
+            function goBack(){
+                window.history.back();
+            }
+    </script>
 </div>
 </html>
