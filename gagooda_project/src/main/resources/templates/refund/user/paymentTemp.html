@@ -8,6 +8,7 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
+    <div th:text="${payment.cancelAmount}"></div>
     <button onclick="requestPay()">결제하기</button>
     <div>
         고유번호(imp_uid):
@@ -30,6 +31,21 @@
         <label>취소 사유<input type="text" name="reason"></label>
         <button id="cancelBtn" type="submit">환불 신청</button>
     </form>
+
+    <div>
+        <span>결제 정보 조회</span>
+        <input id="paymentInput" type="text">
+        <button id="paymentBtn" type="button" onclick="findPayment()">조회하기</button>
+        <div id="payment"></div>
+    </div>
+    <div th:each="payments: ${allPayments.list}">
+        <div th:text="${payments.name}"></div>
+        <div th:text="${payments.status}"></div>
+        <div th:text="${payments.amount}"></div>
+        <div th:text="${payments.buyerName}"></div>
+        <div th:text="${payments.buyerTel}"></div>
+        <div>-----</div>
+    </div>
 
     <script th:inline="javascript">
         // 결제 금액, 구매자 이메일, 이름
@@ -73,13 +89,26 @@
             });
         }
 
-        // let cancelBtn = document.querySelector("#cancelBtn");
-        // cancelBtn.addEventListener("click",async function(e){
-        //     const resp = await fetch("/refund/admin/payments/cancel.do",{method:"POST"});
-        //     console.log(resp);
-        //     const respJson = resp.json();
-        //     console.log(respJson);
-        // })
+        async function findPayment(){
+            let paymentInput = document.querySelector("#paymentInput");
+            let paymentBtn = document.querySelector("#paymentBtn");
+            let payment = document.querySelector("#payment");
+
+            let impUid = paymentInput.value;
+            let url = "/refund/admin/payments/find.do";
+            let formData = new FormData();
+            formData.set("impUid", impUid)
+            const resp = await fetch(url, {method: "post", body: formData})
+            console.log(resp)
+            // console.log(resp.text())
+            const respJson = await resp.json();
+            console.log(respJson);
+            // console.log(respJson.)
+            console.log(respJson.name);
+            console.log(respJson.amount);
+            console.log(respJson.merchantUid);
+            payment.innerText = respJson;
+        }
     </script>
 </div>
 </html>

@@ -7,101 +7,135 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<div layout:fragment="content">
-<div>
-    <h1>환불 반품 신청서</h1>
-    <a href="#">엑스(주문 상세 페이지로 이동)</a>
-</div>
-    <th:block th:if="${refundMsg !=null}">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong th:text="${session.loginUser.uname} + 님."></strong>
-            <p th:text="${refundMsg}"></p>
-            <p><span th:text="${order.orderId}"></span> 번 주문에 대한 환불 요청이 <strong th:text="${refundCount}"></strong> 건 검색됩니다. </p>
-            <p>해당 주문에 대한 상세 물품이 이미 환불 진행중이라면, 전체 환불은 등록되지 않습니다. </p>
-            <p>환불 요청이 없음에도 등록이 진행되지 않는다면, 고객센터에 문의해주십시오.</p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </th:block>
+<div layout:fragment="myPageContent">
 
-<h2>환불 반품 신청</h2>
-<h3>주문 정보</h3>
-<div>주문인: <span th:text="${order.userName}"></span></div>
-<div>주문날짜: <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span></div>
-<div>주문번호: <span th:text="${order.orderId}"></span></div>
-<div>주문 상품명: <span th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></span></div>
-<div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>
-
-
-<form name="refundRegister" id="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
-    <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
-    <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
-    <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
-    <input type="hidden" id="phone" name="phone" th:value="${order.userPhone}">
-<!--    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
-    <fieldset>
-        <legend>환불 정보</legend>
         <div>
-            <label for="orderDetailId">환불 대상 상품</label>
-            <select name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
-                <option value="" selected disabled>환불 대상을 선택해주세요.</option>
-                <th:block th:each="orderDetail : ${order.orderDetailList}">
-                <option th:text="${orderDetail.optionName+'( 환불 예상 금액:'+orderDetail.totalPrice+')'}" th:value="${orderDetail.orderDetailId}" th:data-amount="${orderDetail.totalPrice}"></option>
-                </th:block>
-            </select>
+            <h1>환불 반품 신청서</h1>
+            <hr style="margin-top: 0; background : #b68c68; height: 5px">
+            <a class="d-flex justify-content-end text-decoration-none text-black" href="javascript:void(0)" onclick="goBack()">뒤로가기</a>
+            <script>
+                function goBack(){
+                    window.history.back();
+                }
+            </script>
         </div>
-        <div>
-            <div>신청 유형</div>
-            <input type="radio" id="refundType" name="reType" value="true" required>
-            <label for="refundType">환불</label>
-            <input type="radio" id="exchangeType" name="reType" value="false" required>
-            <label for="exchangeType">교환</label>
-        </div>
-        <div>
-            <label for="cancelAmount">환불 금액</label>
-            <span></span>
-            <input type="text" id="cancelAmount" name="cancelAmount" readonly>
-        </div>
-        <div>
-            <label>첨부 이미지
-                <input type="file" name="imgFileList">
-            </label>
+            <th:block th:if="${refundMsg !=null}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong th:text="${session.loginUser.uname} + 님."></strong>
+                    <p th:text="${refundMsg}"></p>
+                    <p><span th:text="${order.orderId}"></span> 번 주문에 대한 환불 요청이 <strong th:text="${refundCount}"></strong> 건 검색됩니다. </p>
+                    <p>해당 주문은 이미 환불 진행 중인 상품입니다. </p>
+                    <p>환불 요청이 없음에도 등록이 진행되지 않는다면 고객센터에 문의해주십시오.</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </th:block>
 
-        </div>
-        <div>
-            <label for="rfrDet">환불 사유 카테고리</label>
-            <select name="rfrDet" id="rfrDet" required>
-                <option value="" selected disabled>요청 유형을 선택해주세요.</option>
-                <option value="rfr0">단순 변심</option>
-                <option value="rfr1">상품 문제</option>
-                <option value="rfr2">배송 문제</option>
-                <option value="rfr3">기타</option>
-            </select>
-        </div>
-        <div>
-            <label for="reason">상세 환불 사유</label>
-            <textarea id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
-        </div>
-    </fieldset>
+    <div class="container" style="width: 50%; margin-bottom: 200px">
+<!--        <h2>환불 반품 신청</h2>-->
+        <h4 class="mt-5 mb-3">주문 정보</h4>
+<!--        <div>주문인: <span th:text="${order.userName}"></span></div>-->
+<!--        <div>주문날짜: <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span></div>-->
+<!--        <div>주문번호: <span th:text="${order.orderId}"></span></div>-->
+<!--        <div>주문 상품명: <span th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></span></div>-->
+<!--        <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>-->
+        <table class="table table-borderless" style="border: 1px solid #d4d9df">
+            <tr>
+                <th>주문인</th>
+                <td th:text="${order.userName}"></td>
+            </tr>
+            <tr>
+                <th>주문날짜</th>
+                <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></td>
+            </tr>
+            <tr>
+                <th>주문번호</th>
+                <td th:text="${order.orderId}"></td>
+            </tr>
+            <tr>
+                <th>주문 상품명</th>
+                <td th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></td>
+            </tr>
+            <tr>
+                <th>총 주문 금액</th>
+                <td th:text="${order.totalPrice}"></td>
+            </tr>
 
-    <fieldset>
-        <legend>환불 물품 수거지 주소</legend>
-        <div id="loadAddressList">
-            <th:block th:include="refund/user/newAddress"></th:block>
-        </div>
+        </table>
 
-        <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
-        <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">
-        <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">
-        <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">
-        <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">
-        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">
-        <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
 
-    </fieldset>
-    <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit">신청하기</button>
-    <button name="refundReset" type="reset">초기화</button>
+        <form name="refundRegister" id="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
+            <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
+            <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
+            <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
+            <input type="hidden" id="phone" name="phone" th:value="${order.userPhone}">
+        <!--    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
+            <fieldset class="mt-5">
+                <legend>환불 정보</legend>
+                <div>
+                    <label for="orderDetailId">환불 대상 상품</label>
+                    <select class="form-select" name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
+                        <option value="" selected disabled>환불 대상을 선택해주세요.</option>
+                        <th:block th:each="orderDetail : ${order.orderDetailList}">
+                        <option th:text="${orderDetail.optionName+' (환불 예상 금액: '+orderDetail.totalPrice+')'}" th:value="${orderDetail.orderDetailId}" th:data-amount="${orderDetail.totalPrice}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div>신청 유형</div>
+                <div class="d-flex">
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="radio" id="refundType" name="reType" value="true" required>
+                        <label class="form-check-label" for="refundType">환불</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="exchangeType" name="reType" value="false" required>
+                        <label class="form-check-label" for="exchangeType">교환</label>
+                    </div>
+                </div>
+                <div>
+                    <label for="cancelAmount">환불 금액</label>
+                    <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
+                </div>
+                <div>
+                    <label for="imgFileList" class="form-label">첨부 이미지</label>
+                    <input class="form-control" type="file" name="imgFileList" id="imgFileList">
 
-</form>
+                </div>
+                <div>
+                    <label for="rfrDet">환불 사유 카테고리</label>
+                    <select class="form-select" name="rfrDet" id="rfrDet" required>
+                        <option value="" selected disabled>요청 유형을 선택해주세요.</option>
+                        <option value="rfr0">단순 변심</option>
+                        <option value="rfr1">상품 문제</option>
+                        <option value="rfr2">배송 문제</option>
+                        <option value="rfr3">기타</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="reason">상세 환불 사유</label>
+                    <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset class="mt-5">
+                <legend>환불 물품 수거지 주소</legend>
+                <div id="loadAddressList">
+                    <th:block th:include="refund/user/newAddress"></th:block>
+                </div>
+
+                <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
+                <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">
+                <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">
+                <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">
+                <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">
+                <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">
+                <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
+
+            </fieldset>
+            <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">신청하기</button>
+            <button name="refundReset" type="reset" class="btn text-white" style="background-color: #B68C68;">초기화</button>
+
+        </form>
+    </div>
 
         <div class="modal fade" id="addressBtn" tabindex="-1" aria-labelledby="addressTitle" aria-hidden="true">
             <div class="modal-dialog">
@@ -113,49 +147,46 @@
                     <div class="modal-body">
                         <form action="javascript:void(0)" id="addressRegister" method="POST" name="addressRegister">
                             <input type="hidden" name="newCheck" value="new">
-                            <div>
-                                <label for="userId" th:text="${session.loginUser.userId}"></label>
-                                <input type="hidden" name="userId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
-                            </div>
+                            <input type="hidden" name="userId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
                             <div>
                                 <label for="newAname">주소지 이름</label>
-                                <input type="text" name="aname" id="newAname" required>
+                                <input class="form-control" type="text" name="aname" id="newAname" required>
                             </div>
-                            <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn">
+                            <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn btn d-flex justify-content-end" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">
                             <div>
                                 <label for="newPostCode">우편번호</label>
-                                <input type="number" name="postCode" id="newPostCode" required>
+                                <input class="form-control" type="number" name="postCode" id="newPostCode" required>
                             </div>
                             <div>
                                 <label for="newAddress">주소</label>
-                                <input type="text" name="address" id="newAddress" required>
+                                <input class="form-control" type="text" name="address" id="newAddress" required>
                             </div>
                             <div>
                                 <label for="newAddressDetail">상세주소</label>
-                                <input type="text" name="addressDetail" id="newAddressDetail" required>
+                                <input class="form-control" type="text" name="addressDetail" id="newAddressDetail" required>
                             </div>
                             <div>
                                 <label for="newReceiverName">수령인 이름</label>
-                                <input type="text" name="receiverName" id="newReceiverName" required>
+                                <input class="form-control" type="text" name="receiverName" id="newReceiverName" required>
                             </div>
                             <fieldset>
                                 <label for="newReceiverPhone">수령인 전화번호</label>
-                                <input type="number" id="newReceiverPhone" name="receiverPhone" maxlength="11" required>
+                                <input class="form-control" type="number" id="newReceiverPhone" name="receiverPhone" maxlength="11" required>
                             </fieldset>
 
-                            <div>
-                                <label for="newHome">기본 배송지 설정 여부</label>
-                                <input type="checkbox" name="home" id="newHome" value="1">
+                            <div class="form-check">
+                                <label class="form-check-label" for="newHome">기본 배송지 설정 여부</label>
+                                <input class="form-check-input" type="checkbox" name="home" id="newHome" value="1">
                             </div>
-                            <div>
-                                <label for="newElevator">엘레베이터 유무 여부</label>
-                                <input type="checkbox" name="elevator" id="newElevator" value="1">
+                            <div class="form-check">
+                                <label class="form-check-label" for="newElevator">엘레베이터 유무 여부</label>
+                                <input class="form-check-input" type="checkbox" name="elevator" id="newElevator" value="1">
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary closeBtn" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" form="addressRegister" name="addressSubmit" class="btn btn-primary" onclick="newAddressSubmit()">등록하기</button>
+                        <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">닫기</button>
+                        <button type="button" form="addressRegister" name="addressSubmit" class="btn text-white" style="background-color: #B68C68;" onclick="newAddressSubmit()">등록하기</button>
                     </div>
                 </div>
             </div>
