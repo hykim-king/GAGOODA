@@ -64,10 +64,9 @@
   <input type="hidden" name="addressId" id="addressId" th:value="${address.addressId}">
   <input type="hidden" name="userId" th:value="${address.userId}">
   <div>
-    <button type="submit" style="background-color: #FFFAF5; color: #B68C68">저장하기</button>
-    <button type="button" class="text-white" th:href="@{'delete.do' (address_id=${address.addressId}) }"
-            th:text="삭제하기" style="background-color: #B68C68;" th:onclick="deleteCheck()"></button>
-
+    <button type="submit" class="input-group-text" style="background-color: #FFFAF5; color: #B68C68; display: inline-block" th:text="저장하기"></button>
+    <button type="button" class="text-white input-group-text" th:href="@{'delete.do' (address_id=${address.addressId}) }"
+            th:text="삭제하기" style="background-color: #B68C68; display: inline-block;" th:onclick="deleteCheck()"></button>
   </div>
 </form>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
