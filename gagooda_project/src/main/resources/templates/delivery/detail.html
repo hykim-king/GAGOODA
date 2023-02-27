@@ -8,38 +8,47 @@
   <title>배송 목록</title>
 </head>
 <div layout:fragment="myPageContent">
-  <h2>배송 목록</h2>
+  <h2  class="text-center my-4">배송 목록</h2>
+  <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
 
-  <table>
-    <thead>
-    <th>order_id</th>
-    <th>user_id</th>
-    <th>user_name</th>
-    <th>user_email</th>
-    <th>user_phone</th>
-    <th>invoice</th>
-    <th>start_date</th>
-    <th>end_date</th>
-    <th>request</th>
-    <th>d_det</th>
-    </thead>
-    <tbody>
-    <tr th:each="d:${delivery}" style="cursor: pointer">
-      <td th:text="${d.orderId}"> </td>
-      <td th:text="${d.userId}"> </td>
-      <td th:text="${d.userName}"> </td>
-      <td th:text="${d.userEmail}"> </td>
-      <td th:text="${d.userPhone}"> </td>
-      <td th:text="${d.invoice}"> </td>
-      <td th:text="${d.startDate}"> </td>
-      <td th:text="${d.endDate}"> </td>
-      <td th:text="${d.request}"></td>
-      <td th:text="${d.dDet}"> </td>
-    </tr>
-    </tbody>
+  <div class="container mt-5" style="width: 40%; margin-bottom: 200px">
+    <div class="my-3">
+      <label for="orderId" class="form-label">주문자 아이디</label>
+      <input type="text" name="orderId" class="form-control form-control-lg" id="orderId" th:value="${delivery.orderId}" readonly required>
+    </div>
+    <div class="my-3">
+      <label for="userName" class="form-label">주문자 이름</label>
+      <input type="text" name="userName" class="form-control form-control-lg" id="userName" th:value="${delivery.userName}" readonly required>
+    </div>
+    <div class="my-3">
+      <label for="userEmail" class="form-label">주문자 이메일</label>
+      <input type="text" name="userEmail" class="form-control form-control-lg" id="userEmail" th:value="${delivery.userEmail}" readonly required>
+    </div>
+    <div class="my-3">
+      <label for="userPhone" class="form-label">주문자 전화번호</label>
+      <input type="text" name="userPhone" class="form-control form-control-lg" id="userPhone" th:value="${delivery.userPhone}" readonly required>
+    </div>
+    <div class="my-3">
+      <label for="invoice" class="form-label">운송장 번호</label>
+      <input type="text" name="invoice" class="form-control form-control-lg" id="invoice" th:value="${delivery.invoice}" readonly>
+    </div>
+    <div class="my-3">
+      <label for="startDate" class="form-label">배송 시작일</label>
+      <input type="date" name="startDate" class="form-control form-control-lg" id="startDate" th:value="${#calendars.format(delivery.startDate, 'yyyy-MM-dd')}" readonly>
+    </div>
+    <div class="my-3">
+      <label for="endDate" class="form-label">배송 완료일</label>
+      <input type="date" name="endDate" class="form-control form-control-lg" id="endDate" th:value="${#calendars.format(delivery.endDate, 'yyyy-MM-dd')}" readonly>
+    </div>
+    <div class="my-3">
+      <label for="request" class="form-label">배송 요청 사항</label>
+      <input type="text" name="request" class="form-control form-control-lg" id="request" th:value="${delivery.request}" readonly>
+    </div>
+    <div class="my-3">
+      <label for="dDet" class="form-label">배송 상태</label>
+      <input type="text" name="dDet" class="form-control form-control-lg" id="dDet" th:value="${delivery.dDet}" readonly>
+    </div>
 
-
-
-
+    <input type="hidden" name="userId" id="userId" th:value="${delivery.userId}">
 </div>
 </html>
