@@ -35,7 +35,7 @@
                 <h5 class="mt-0" th:text="'평점 : '+${review.rate}"></h5>
                 <p th:text="${review.content}"></p>
                 <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
-                <a th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:href="@{'user_yes/delete.do' (reviewId=${review.reviewId})}">삭제</a>
+                <button type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
             </div>
             <div class="d-flex container-sm" style="height: 100%;">
                 <div class="vr"></div>
@@ -46,5 +46,13 @@
             </div>
         </div>
     </th:block>
+    <script th:inline="javascript">
+        function deleteReview(reviewId) {
+            let result = confirm("해당 리뷰를 삭제하시겠습니까 ?");
+            if (result == true) {
+                location.href = "user_yes/delete.do?reviewId="+reviewId;
+            }
+        }
+    </script>
 </div>
 </html>
