@@ -127,14 +127,13 @@ public class CartController {
             CartDto cart,
             HttpSession session
     ) {
-        System.out.println(loginUser);
-        System.out.println(cart);
         int insert = 0;
         if (loginUser.getUserId() == cart.getUserId()) {
             try {
                 OptionProductDto optionProduct = optionProductService.selectOne(cart.getOptionCode());
                 if (cart.getCnt() > optionProduct.getStock()) {
-                    session.setAttribute("msg", "장바구니에 담는데 문제가 있었습니다.");
+                    session.setAttribute("msg", "존재하는 수량을 초과하는 양입니다. (상품 수량: "
+                            +optionProduct.getStock()+")");
                     return "redirect:/product/" + cart.getProductCode() + "/detail.do";
                 }
                 CartDto cartIn = cartServiceImp.selectOne(loginUser.getUserId(), cart.getOptionCode());

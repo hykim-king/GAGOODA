@@ -32,7 +32,13 @@ public class MainController {
 
     @GetMapping("/mainpage.do")
     public String main(HttpServletRequest req,
-                       Model model){
+                       Model model,
+                       @SessionAttribute(required = false) String msg,
+                       HttpSession session){
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
         try{
             PagingDto recentPaging = new PagingDto();
             // 보여줄 상품의 개수
@@ -70,7 +76,6 @@ public class MainController {
             Model model
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
         }
@@ -96,11 +101,9 @@ public class MainController {
             Model model
     ) {
         if (msg != null) {
-            System.out.println(msg);
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
         }
-
         // 카테고리 나열
         List<CategoryDto> firstCategories = null;
         try {

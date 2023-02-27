@@ -25,9 +25,10 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         System.out.println(method);
         if(loginUser_obj==null) {
             session.setAttribute("msg", "로그인 후 이용 가능한 서비스 입니다.");
-            if (method.equals("GET")) {
-                System.out.println("GET 들어옴");
-                session.setAttribute("getUri", url);
+            if (request.getMethod().equals("GET")) {
+                session.setAttribute("getUrl", url);
+            } else {
+                session.setAttribute("postUrl", true);
             }
             response.sendRedirect("/user/login.do");
             return false;

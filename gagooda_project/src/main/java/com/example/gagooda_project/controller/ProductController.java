@@ -24,18 +24,24 @@ public class ProductController {
     private final CommonCodeService commonCodeService;
     private final ProductInquiryService productInquiryService;
     private final CategoryConnService categoryConnService;
+    private final OptionProductService optionProductService;
+    private final CartService cartService;
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductController(ProductService productService,
                              CategoryService categoryService,
                              CommonCodeService commonCodeService,
                              ProductInquiryService productInquiryService,
-                             CategoryConnService categoryConnService) {
+                             CategoryConnService categoryConnService,
+                             OptionProductService optionProductService,
+                             CartService cartService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
         this.productInquiryService = productInquiryService;
         this.categoryConnService = categoryConnService;
+        this.optionProductService = optionProductService;
+        this.cartService = cartService;
     }
 
     @Value("${img.upload.path}")
@@ -50,7 +56,6 @@ public class ProductController {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
-            System.out.println(msg);
         }
         List<ProductDto> productList = null;
         try {
@@ -80,7 +85,6 @@ public class ProductController {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
-            System.out.println(msg);
         }
         paging.setRows(16);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
@@ -128,7 +132,6 @@ public class ProductController {
             @SessionAttribute(required = false) UserDto loginUser,
             PagingDto paging
     ) {
-        System.out.println("msg " + msg);
         if (msg != null) {
             model.addAttribute("msg", msg);
             session.removeAttribute("msg");
@@ -136,8 +139,8 @@ public class ProductController {
         try {
             ProductDto product = productService.selectOne(productCode);
             List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
-//            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            log.info("paging for Product Inquiry: "+paging);
             model.addAttribute("paging", paging);
             model.addAttribute("product", product);
             model.addAttribute("plist", plist);
@@ -160,7 +163,6 @@ public class ProductController {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
-            System.out.println(msg);
         }
         if (loginUser.getGDet().equals("g1")) {
             try {
@@ -223,7 +225,6 @@ public class ProductController {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
-            System.out.println(msg);
         }
         paging.setRows(20);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
@@ -292,7 +293,6 @@ public class ProductController {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
-            System.out.println(msg);
         }
         if (loginUser.getGDet().equals("g1")) {
             try {
@@ -340,6 +340,34 @@ public class ProductController {
         } else {
             session.setAttribute("msg", "접근 권한이 없습니다.");
             return "redirect:/";
+        }
+    }
+
+    @PostMapping("/user_yes/order.do")
+    public String order(
+            @SessionAttribute UserDto loginUser,
+            CartDto cart,
+            HttpSession session
+    ) {
+        if(loginUser.getUserId() == cart.getUserId()) {
+            try {
+                OptionProductDto optionProduct = optionProductService.selectOne(cart.getOptionCode());
+                if (optionProduct.getStock() < cart.getCnt()) {
+                    session.setAttribute("msg", "존재하는 수량을 초과하는 양입니다. (상품 수량: "
+                            +optionProduct.getStock()+")");
+                    return "redirect:/product/" + cart.getProductCode() + "/detail.do";
+                } else {
+                    int insert = cartService.registerOne(cart);
+                    return "redirect:/order/user_yes/register.do?orderCartIds="+cart.getCartId();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                session.setAttribute("msg", "장바구니에 담는데 문제가 있었습니다.");
+                return "redirect:/product/" + cart.getProductCode() + "/detail.do";
+            }
+        } else {
+            session.setAttribute("msg", "올바른 계정으로 로그인 해 주세요.");
+            return "redirect:/product/"+cart.getProductCode()+"/detail.do";
         }
     }
 

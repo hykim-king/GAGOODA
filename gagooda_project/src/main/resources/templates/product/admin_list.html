@@ -98,36 +98,7 @@
     </div>
     <th:block th:if="${!productList.isEmpty()}">
         <!--페이지네이션-->
-        <nav aria-label="Page navigation example" class="pt-3">
-            <ul class="pagination d-flex justify-content-center">
-                <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
-                    <a class="page-link text-black-50" aria-label="Previous" th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span aria-hidden="true">&laquo;</span></a>
-                </li>
-                <th:block th:if="${paging.startPage>1}">
-                    <li class="page-item">
-                        <a class="page-link"  th:href="@{${paging.queryString}(page=1)}" style="color: #B68C68">1</a>
-                    </li>
-                    <li class="page-item"><span>...</span></li>
-                </th:block>
-
-                <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
-                    th:classappend="${(i==paging.page)?'disaled':''}">
-                    <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
-                       th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
-                </li>
-                <th:block th:if="${paging.endPage<paging.totalPages}">
-                    <li class="page-item"><span>...</span></li>
-                    <li>
-                        <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                           th:text="${paging.totalPages}" style="color: #B68C68"></a>
-                    </li>
-                </th:block>
-
-                <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
-                    <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}" aria-label="Next" ><span aria-hidden="true">&raquo;</span></a>
-                </li>
-            </ul>
-        </nav>
+        <th:block th:include="~{pagination}"></th:block>
         <!--페이지네이션end-->
     </th:block>
 

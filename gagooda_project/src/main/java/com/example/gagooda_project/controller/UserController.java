@@ -4,7 +4,11 @@ import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.UserService;
 import com.example.gagooda_project.service.UserServiceImp;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.mockito.internal.matchers.ArrayEquals;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/{gDet}/signup.do")
     public String signup(
@@ -63,7 +68,18 @@ public class UserController {
     @GetMapping("/login.do")
     public String login(@SessionAttribute(required = false) String msg,
                         HttpSession session,
-                        Model model) {
+                        Model model,
+                        HttpServletRequest req) {
+        String previousUrl = req.getHeader("referer");
+        if (
+                previousUrl.contains("signup.do") ||
+                previousUrl.contains("findpw.do") ||
+                previousUrl.contains("password_reset.do")
+        ){
+            previousUrl = null;
+        }
+
+        session.setAttribute("previousUrl", previousUrl);
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
@@ -77,13 +93,22 @@ public class UserController {
             HttpSession session,
             String email,
             String pw,
-            @SessionAttribute(required = false) String getUri
+            @SessionAttribute(required = false) String getUrl,
+            @SessionAttribute(required = false) boolean postUrl,
+            @SessionAttribute(required = false) String previousUrl
     ) {
         try {
             UserDto user = userService.login(email, pw);
             session.setAttribute("loginUser", user);
             session.removeAttribute("getUri");
-            if (getUri != null) return "redirect:"+getUri;
+            session.removeAttribute("previousUrl");
+            if (!postUrl) {
+                if (getUrl != null) return "redirect:" + getUrl;
+            } else {
+                session.removeAttribute("postUrl");
+                session.setAttribute("msg", "다시 한번 더 입력해 주세요");
+            }
+            if (previousUrl != null) return "redirect:"+previousUrl;
             if (user == null) {
                 session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
                 return "redirect:/user/login.do";
@@ -293,10 +318,20 @@ public class UserController {
     @GetMapping("/user_yes/logout.do")
     public String logout(
             @SessionAttribute UserDto loginUser,
-            HttpSession session
+            HttpSession session,
+            HttpServletRequest req
     ) {
         session.removeAttribute("loginUser");
-        return "redirect:/";
+        String previousUrl = req.getHeader("referer");
+        if (
+                previousUrl.contains("signup.do") ||
+                previousUrl.contains("findpw.do") ||
+                previousUrl.contains("password_reset.do")
+        ){
+            return "redirect:/";
+        } else {
+            return "redirect:"+previousUrl;
+        }
     }
 
 }
