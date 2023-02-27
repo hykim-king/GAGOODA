@@ -33,22 +33,46 @@ public class ReviewController {
 
     @GetMapping("/list.do")
     public String list(Model model,
-                       @RequestParam(name = "productCode", required = false) String productCode) {
-        List<ReviewDto> reviewList = reviewService.reviewList(productCode);
-        model.addAttribute("reviewList", reviewList);
-        System.out.println(reviewList);
-        return "/review/list";
+                       @RequestParam(name = "productCode", required = false) String productCode,
+                       HttpSession session,
+                       @SessionAttribute(required = false) String msg) {
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
+        try {
+            List<ReviewDto> reviewList = reviewService.reviewList(productCode);
+            model.addAttribute("reviewList", reviewList);
+            return "/review/list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/";
+        }
+
     }
 
     @GetMapping("/user_yes/{productCode}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
+                           @SessionAttribute(required = false) String msg,
                            @PathVariable(required = true, name = "productCode") String productCode,
+                           HttpSession session,
                            Model model
     ) {
-        List<OptionProductDto> optionProductList = reviewService.showOptionProduct(productCode);
-        model.addAttribute("optionProductList",optionProductList);
-        model.addAttribute("productCode",productCode);
-        return "/review/register";
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
+        try {
+            List<OptionProductDto> optionProductList = reviewService.showOptionProduct(productCode);
+            model.addAttribute("optionProductList",optionProductList);
+            model.addAttribute("productCode",productCode);
+            return "/review/register";
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("msg","리뷰를 등록할 수 없습니다.");
+            return "/review/list";
+        }
+
     }
 
     // localhost:8888/review/user_yes/register.do?optionCode=HA00G01EEU_GY
@@ -56,6 +80,7 @@ public class ReviewController {
     @PostMapping("/user_yes/register.do")
     public String register(ReviewDto review,
                            @RequestParam(name = "imgFile") List<MultipartFile> imgFileList,
+                           HttpSession session,
                            @SessionAttribute UserDto loginUser) {
         int register = 0;
         if (loginUser.getUserId() == review.getUserId()) {
@@ -66,26 +91,40 @@ public class ReviewController {
             }
         }
         if (register > 0) {
+            session.setAttribute("msg","리뷰 등록에 성공하였습니다.");
             return "redirect:/review/list.do?productCode=" + review.getProductCode();
-//            return "redirect:/review/list.do?productCode=" + review.getProductCode();
         } else {
+            session.setAttribute("msg","리뷰 등록에 실패하였습니다.");
             return "redirect:/review/user_yes/"+review.getProductCode()+"/register.do";
-//            return "redirect:/review/user_yes/register.do?productCode="+review.getProductCode();
         }
     }
     @GetMapping("/user_yes/modify.do")
     public String modify( @SessionAttribute UserDto loginUser,
                           @RequestParam (name = "reviewId") int reviewId,
+                          @SessionAttribute(required = false) String msg,
+                          HttpSession session,
                           Model model) {
-        ReviewDto review = reviewService.selectOne(reviewId);
-        List<OptionProductDto> optionProductList = reviewService.showOptionProduct(review.getProductCode());
-        model.addAttribute("review",review);
-        model.addAttribute("optionProductList",optionProductList);
-        return "/review/modify";
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
+        try {
+            ReviewDto review = reviewService.selectOne(reviewId);
+            List<OptionProductDto> optionProductList = reviewService.showOptionProduct(review.getProductCode());
+            model.addAttribute("review",review);
+            model.addAttribute("optionProductList",optionProductList);
+            return "/review/modify";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/review/list";
+        }
     }
     @PostMapping("/user_yes/modify.do")
     public String modify(ReviewDto review,
 //                         @RequestParam(name = "imgFile")List<ImageDto> imageList,
+                         @SessionAttribute(required = false) String msg,
+                         HttpSession session,
                          @SessionAttribute UserDto loginUser) {
         int modify = 0;
         if (loginUser.getUserId() == review.getUserId()) {
@@ -96,8 +135,10 @@ public class ReviewController {
             }
         }
         if (modify > 0) {
+            session.setAttribute("msg","리뷰 수정이 성공했습니다.");
             return "redirect:/review/list.do?productCode=" + review.getProductCode();
         } else {
+            session.setAttribute("msg", "리뷰 수정을 실패하였습니다.");
             return "redirect:/review/user_yes/modify.do" + review.getReviewId();
         }
     }
@@ -105,12 +146,26 @@ public class ReviewController {
     @GetMapping("/user_yes/delete.do")
     public String remove( @RequestParam(name = "reviewId") int reviewId,
                           @SessionAttribute UserDto loginUser,
-                          HttpSession session
+                          @SessionAttribute(required = false) String msg,
+                          HttpSession session,
+                          Model model
                           ) {
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
         ReviewDto review = reviewService.selectOne(reviewId);
         try {
-            if (loginUser.getUserId() == review.getReviewId()) {
+            if (loginUser.getUserId() == review.getUserId()) {
                 int delete = reviewService.delete(review, reviewId);
+                if (delete > 0) {
+                    session.setAttribute("msg","성공적으로 삭제하였습니다.");
+                    return "redirect:/review/list.do?productCode=" + review.getProductCode();
+                } else {
+                    session.setAttribute("msg","삭제를 실패하였습니다.");
+                    return "redirect:/review/list";
+                }
             } else {
                 session.setAttribute("msg","삭제할 권한이 없습니다.");
             }

@@ -13,7 +13,6 @@ public interface ReviewService {
     ReviewDto selectOne(int reviewId);
     int insertOne(ReviewDto dto);
     int updateOne(ReviewDto dto);
-    int remove(int reviewId);
     List<OptionProductDto> showOptionProduct(String productCode);
     @Transactional
     int register(List<MultipartFile> imgFileList, ReviewDto review, String imgPath);

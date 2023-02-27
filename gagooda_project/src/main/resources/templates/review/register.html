@@ -36,9 +36,18 @@
                 <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
             </div>
             <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="submit">등록</button>
+                <button class="btn btn-primary" type="reset">취소</button>
+                <button class="btn btn-primary" type="submit" onclick="registerReview()">등록</button>
             </div>
         </div>
     </form>
+    <script>
+        function registerReview() {
+            let result = confirm("리뷰를 등록하시겠습니까 ?");
+            if (result == true) {
+                location.href = "review/list.do?productCode="+document.getElementById("productCode").value;
+            }
+        }
+    </script>
 </div>
 </html>

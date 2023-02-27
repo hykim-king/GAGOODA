@@ -50,11 +50,6 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public int remove(int reviewId) {
-        return reviewMapper.deleteOne(reviewId);
-    }
-
-    @Override
     public List<OptionProductDto> showOptionProduct(String productCode) {
         return optionProductMapper.listByProductCode(productCode);
     }
