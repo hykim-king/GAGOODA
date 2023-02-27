@@ -8,6 +8,7 @@ import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.CartServiceImp;
 import com.example.gagooda_project.service.MyPageService;
 import com.example.gagooda_project.service.OrderService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.websocket.Session;
 import org.springframework.stereotype.Controller;
@@ -34,19 +35,16 @@ public class MyPageController {
 
     @GetMapping("/user_yes/main.do")
     public String myPageMain(@SessionAttribute UserDto loginUser,
-                             Model model) {
+                             Model model,
+                             HttpServletRequest req) {
         try {
-            List<CartDto> cartList = myPageService.listByUserId(loginUser.getUserId());
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
-            List<OrderDto> orderList = myPageService.orderList(loginUser.getUserId(), 30);
-            if (!orderList.isEmpty()) {
-                orderList = orderList.subList(0,4);
-            }
-            if (!cartList.isEmpty()) {
-                cartList = cartList.subList(0,4);
-            }
+            PagingDto paging = new PagingDto();
+            List<OrderDto> orderList = myPageService.orderList(paging, loginUser.getUserId(), 30);
             myPageDetList = myPageDetList.subList(0, 4);
+            PagingDto paging2 = new PagingDto();
+            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId());
             Map<String, String> detName = new HashMap<>();
             Map<String, Integer> count = new HashMap<>();
             for (CommonCodeDto myPageDet : myPageDetList) {
@@ -61,6 +59,7 @@ public class MyPageController {
             for (ODetDto oDet : oDetList) {
                 count.put(oDet.getODet(), oDet.getCount());
             }
+            model.addAttribute("paging",paging);
             model.addAttribute("orderList",orderList);
             model.addAttribute("detName",detName);
             model.addAttribute("count",count);

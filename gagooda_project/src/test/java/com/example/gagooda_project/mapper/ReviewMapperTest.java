@@ -39,7 +39,7 @@ class ReviewMapperTest {
         review.setUserId(1);
         review.setOptionCode("PDT001_001");
         review.setProductCode("PDT001");
-        review.setRate(4.5);
+        review.setRate(4);
         review.setContent("test");
         review.setRegDate(new Date());
         review.setImgCode("review_1");
@@ -49,7 +49,7 @@ class ReviewMapperTest {
     @Test
     void updateOne() {
         ReviewDto review = reviewMapper.findById(1);
-        review.setRate(0.1);
+        review.setRate(1);
         review.setContent("bad");
         reviewMapper.updateOne(review);
     }

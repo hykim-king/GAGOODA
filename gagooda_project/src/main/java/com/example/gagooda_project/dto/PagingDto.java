@@ -62,6 +62,8 @@ public class PagingDto {
             if(this.startPage<1)this.startPage=1;
             this.endPage=this.totalPages;
         }
+        if(this.endPage<1)this.endPage=1;
+        if(this.totalPages<1)this.totalPages=1;
         this.next= this.page != this.totalPages;
         this.prev= this.page > 1;
         this.nextPage=this.page+1;

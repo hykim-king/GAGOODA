@@ -25,5 +25,6 @@ public class ProductInquiryDto {
     private UserDto user;
     private OptionProductDto optionProductDto;
     private CommonCodeDto commonCodeDto;
+    private ProductDto productDto;
     private List<OptionProductDto> optionProductList;
 }

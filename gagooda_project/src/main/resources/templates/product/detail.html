@@ -218,10 +218,10 @@
                                 <div>
                                     <div id="ajaxRegister">
                                         <th:block th:if="${session.loginUser != null}"
-                                                  th:insert="/product_inquiry/user_yes/register"></th:block>
+                                                  th:insert="~{/product_inquiry/user_yes/register}"></th:block>
                                     </div>
                                     <div id="ajaxContent">
-                                        <th:block th:insert="/product_inquiry/list"></th:block>
+                                        <th:block th:insert="~{/product_inquiry/list}"></th:block>
                                     </div>
                                 </div>
                                 <!--                            <th:block th:insert="/product_inquiry/list"></th:block>-->
@@ -284,6 +284,19 @@
 
         function init() {
             const pInquiryForm = document.forms["pInquiryForm"];
+            const pageBtns= document.getElementById("ajaxContent").querySelectorAll(".uk-pagination a");
+            pageBtns.forEach((btn)=>{
+                btn.onclick=async (e)=>{
+                    e.preventDefault();
+                    let btnUrl=e.target.href;
+                    let queryString=btnUrl.split("?")[1];
+                    let url="/product_inquiry/"+[[${product.productCode}]]+"/list.do?"+queryString;
+                    const resp = await fetch(url);
+                    const html=await resp.text();
+                    document.getElementById("ajaxContent").innerHTML = html;
+                    init();
+                }
+            });
             if(pInquiryForm != null) {
                 pInquiryForm.onsubmit = function (e) {
                     registerPInquiry(e, pInquiryForm);
@@ -328,7 +341,7 @@
         }
 
         async function loadPInquiryList() {
-            const listUrl = "/product_inquiry/list.do?productCode=" + [[${product.productCode}]];
+            const listUrl = "/product_inquiry/"+[[${product.productCode}]]+"/list.do";
             const resp = await fetch(listUrl);
             const html = await resp.text();
             document.getElementById("ajaxContent").innerHTML = html;

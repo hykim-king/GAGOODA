@@ -1,6 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.AddressService;
 import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,19 +22,24 @@ import java.util.*;
 public class OrderController {
     private OrderService orderService;
     private CartService cartService;
+    private AddressService addressService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public OrderController(OrderService orderService,
-                           CartService cartService){
+                           CartService cartService,
+                           AddressService addressService){
         this.cartService = cartService;
         this.orderService = orderService;
+        this.addressService = addressService;
     }
 
     @GetMapping("/admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
                             PagingDto paging,
                             HttpServletRequest req,
+                            HttpSession session,
+                            @SessionAttribute(required = false) String msg,
                             @RequestParam(name = "oDet", required = false, defaultValue = "") String oDet,
                             @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
                             @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
@@ -43,6 +49,11 @@ public class OrderController {
                             Model model){
 
         log.info("req.getParameterMap:"+req.getParameterMap());
+        String adminMsg = "";
+        if (session.getAttribute(msg) != null){
+            adminMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -61,6 +72,7 @@ public class OrderController {
                 model.addAttribute("oCodeList", oCodeList);
                 model.addAttribute("paging",paging);
                 model.addAttribute("oCount", oCount);
+                model.addAttribute("msg",msg);
 //                model.addAttribute("allCount",allRfCnt);
                 return "order/admin/list";
             }
@@ -72,8 +84,52 @@ public class OrderController {
         }
         return "refund/admin/list";
     }
+    @PostMapping("/admin/modify.do")
+    public String adminModify( @RequestParam(required = true, name="orderIdHidden") List<String> orderIdList,
+                               @RequestParam(required = true, name="oDetHidden") List<String> oDetList,
+                               HttpSession session){
+        int register = 0;
+        log.info("ORDERIDLIST: "+orderIdList);
+        log.info("ODETLIST: "+oDetList);
+        try{
+            register = orderService.adminModify(orderIdList, oDetList);
+            log.info("1.register 끝");
 
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        log.info("register value: "+register);
+        if(register>0){
+            log.info("2.register 성공");
+            session.setAttribute("msg","주문상태 변경에 성공하였습니다.");
+            return "redirect:/order/admin/list.do";
+        }else{
+            log.info("3.register 실패");
+            session.setAttribute("msg","주문 상태 변경에 실패하였습니다.");
+            return "redirect:/order/admin/list.do";
+        }
 
+    }
+    @GetMapping("/admin/{orderId}/detail.do")
+    public String adminDetail(@PathVariable String orderId,
+                              Model model,
+                              HttpSession session,
+                              @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
+        OrderDto order = orderService.selectOne(orderId);
+        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        DeliveryDto delivery = orderService.selectDelivery(orderId);
+        List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+        model.addAttribute("order",order);
+        model.addAttribute("orderDetailList",orderDetailList);
+        model.addAttribute("delivery", delivery);
+        model.addAttribute("oCodeList",oCodeList);
+        return "/order/admin/detail";
+    }
 
 //    사용자 주문 목록
     @GetMapping("/user_yes/mypage/list.do")
@@ -81,7 +137,14 @@ public class OrderController {
                        PagingDto paging,
                        HttpServletRequest req,
                        @RequestParam(name = "dates", defaultValue = "7", required = false) int dates,
-                       @SessionAttribute UserDto loginUser){
+                       @SessionAttribute UserDto loginUser,
+                       HttpSession session,
+                       @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         log.info("req.getParameterMap(): "+req.getParameterMap());
         log.info("nameS:" + req.getParameterNames());
         System.out.println(paging);
@@ -93,6 +156,7 @@ public class OrderController {
             model.addAttribute("orderList",orderList);
             model.addAttribute("paging",paging);
             model.addAttribute("oCodeList",oCodeList);
+            model.addAttribute("dates",dates);
             log.info("paging.toString(): "+paging.toString());
         }catch(Exception e){
             log.error(e.getMessage());
@@ -107,19 +171,40 @@ public class OrderController {
     @GetMapping("/user_yes/mypage/{orderId}/detail.do")
     public String detail(@SessionAttribute(required = true) UserDto loginUser,
                          @PathVariable String orderId,
-                         Model model){
-        OrderDto order = orderService.selectOne(orderId);
-        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
-        DeliveryDto delivery = orderService.selectDelivery(orderId);
-        model.addAttribute("order",order);
-        model.addAttribute("orderDetailList",orderDetailList);
-        model.addAttribute("delivery", delivery);
+                         Model model,
+                         HttpSession session,
+                         @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
+        try{
+            OrderDto order = orderService.selectOne(orderId);
+            List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+            DeliveryDto delivery = orderService.selectDelivery(orderId);
+            List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+            model.addAttribute("order",order);
+            model.addAttribute("orderDetailList",orderDetailList);
+            model.addAttribute("delivery", delivery);
+            model.addAttribute("oCodeList",oCodeList);
+        }catch(Exception exception){
+            log.error(exception.getMessage());
+        }
+
         return "/order/user/detail";
     }
     /*사용자 주문 취소로 주문 상태 수정*/
     @GetMapping("/user_yes/mypage/{orderId}/modify.do")
     public String modify(@SessionAttribute(required = true) UserDto loginUser,
-                         @PathVariable String orderId){
+                         @PathVariable String orderId,
+                         HttpSession session,
+                         @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         int modify = 0;
         String oDet = "o5";
         try{
@@ -140,7 +225,14 @@ public class OrderController {
     @GetMapping("/user_yes/{orderId}/complete.do")
     public String complete(@SessionAttribute(required=true) UserDto loginUser,
                            @PathVariable String orderId,
-                           Model model){
+                           Model model,
+                           HttpSession session,
+                           @SessionAttribute(required = false) String msg){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         OrderDto order=orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
         int itemCount = orderDetailList.size();
@@ -148,6 +240,48 @@ public class OrderController {
         model.addAttribute("orderDetailList",orderDetailList);
         model.addAttribute("itemCount",itemCount);
         return "/order/user/complete";
+    }
+    /*주문 등록 새 배송지 등록*/
+    @PostMapping("/user_yes/addressRegister.do")
+    public @ResponseBody int addressRegister(@SessionAttribute UserDto loginUser,
+                                             AddressDto address,
+                                             HttpSession session){
+        int register = 0;
+        int addressId;
+        try{
+            register = addressService.register(address);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        if(register >0 ){
+            addressId = address.getAddressId();
+            session.setAttribute("addressId",addressId);
+            session.setAttribute("msg","새로운 배송지가 등록되었습니다.");
+        }else{
+            session.setAttribute("msg","배송지 등록에 실패하였습니다. 다시 시도해주세요.");
+        }
+        return register;
+    }
+    /*새 배송지 등록 리스트*/
+    @GetMapping("/user_yes/addressList.do")
+    public @ResponseBody String addressList(@SessionAttribute UserDto loginUser,
+                                            @SessionAttribute int addressId,
+                                            HttpSession session,
+                                            @SessionAttribute(required = false) String msg,
+                                            Model model){
+        String orderMsg = "";
+        if (session.getAttribute(msg) != null){
+            orderMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
+        AddressDto address = null;
+        try{
+            address = addressService.selectOne(addressId);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        model.addAttribute("address",address);
+        return "/order/user/newAddressList";
     }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")

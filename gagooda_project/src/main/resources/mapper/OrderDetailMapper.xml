@@ -13,6 +13,9 @@
                      column="product_code"
                      fetchType="lazy"/>
     </resultMap>
+    <delete id="deleteByOrderId">
+        DELETE from order_detail WHERE order_id = #{orderId}
+    </delete>
 
     <!--  List<OrderDetailDto> findByOrderId(int id);  -->
     <select id="findByOrderId" resultMap="orderDetailMap" >

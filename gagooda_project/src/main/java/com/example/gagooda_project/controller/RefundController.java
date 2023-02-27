@@ -5,6 +5,12 @@ import com.example.gagooda_project.service.AddressServiceImp;
 import com.example.gagooda_project.service.ImageServiceImp;
 import com.example.gagooda_project.service.OrderServiceImp;
 import com.example.gagooda_project.service.RefundServiceImp;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.request.CancelData;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.PagedDataList;
+import com.siot.IamportRestClient.response.Payment;
+import jakarta.mail.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -15,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Controller
@@ -29,11 +36,14 @@ public class RefundController {
     @Value("${img.upload.path}")
     private String imgPath;
 
+    private final IamportClient iamportClient;
+
     public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp,ImageServiceImp imageServiceImp,AddressServiceImp addressServiceImp) {
         this.refundServiceImp = refundServiceImp;
         this.orderServiceImp = orderServiceImp;
         this.imageServiceImp = imageServiceImp;
         this.addressServiceImp = addressServiceImp;
+        this.iamportClient = new IamportClient("5625884002542635", "V1vlsxRPO59Ty3xDEKlhf2W7gkv2dMU4Hld8EFXYvuDedHnF3kRWvX1gqt9DNsg6GQSmoz2D76iogdnU");
     }
 
     @GetMapping("user_yes/mypage/list.do")
@@ -114,7 +124,6 @@ public class RefundController {
         String detailimgPath;
         int seq = 1;
 
-
         if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
                 /* 환불, 교환 체크하여 이름 지정 */
@@ -126,27 +135,7 @@ public class RefundController {
                     detailimgPath = imgPath + "/exchange";
                 }
                 /* 등록 */
-                if (refund.getOrderDetailId() == -1){ // 주문 상품 전체 등록
-                    OrderDto order = orderServiceImp.selectOne(orderId);
-                    List<RefundDto> checkList = null;
-                    if(order.getOrderDetailList() !=null){ // 주문의 상세 주문이 null이 아니면
-                        for(OrderDetailDto orderDetail : order.getOrderDetailList()){ // 주문 상세를 각각 조회해서
-                            checkList = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId()); // 해당 주문상세 번호로 등록된 refund 목록을 가져오고
-                            if (checkList != null){  // 등록된 refund가 있으면
-                                refund.setOrderDetailId(orderDetail.getOrderDetailId());
-                                refund.setCancelAmount(orderDetail.getPrice());
-                                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
-                            }else{
-                                refund.setOrderDetailId(orderDetail.getOrderDetailId());
-                                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
-                            }
-                        }
-                        session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
-                        return "redirect:/refund/user_yes/mypage/list.do";
-                    }
-                }else{ // 단건 등록
-                    register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
-                }
+                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
                 if (register > 0) { // 성공했을 시
                     session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
                     return "redirect:/refund/user_yes/mypage/"+refund.getRefundId()+"/detail.do";
@@ -277,6 +266,7 @@ public class RefundController {
                             @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate,
                             Model model){
         log.info("req.getParameterMap:"+req.getParameterMap());
+        log.info("requestUri:" +req.getRequestURI());
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -306,11 +296,14 @@ public class RefundController {
 
     @GetMapping("admin/{refundId}/detail.do")
     public String adminDetail(@PathVariable int refundId,
+                              HttpSession session,
+                              HttpServletRequest req,
                               @SessionAttribute UserDto loginUser,
                               Model model){
         try{
             RefundDto refund = refundServiceImp.selectOne(refundId);
             if(loginUser.getGDet().equals("g1")){
+                session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
                 model.addAttribute("refund", refund);
                 model.addAttribute("rfCodeList", allRfList);
@@ -335,6 +328,63 @@ public class RefundController {
             e.printStackTrace();
         }
         return "redirect:/refund/admin/"+refundId+"/detail.do";
+    }
+
+    //임시 결제 페이지
+    @GetMapping("user_yes/{orderId}/payments/temp.do")
+    public String paymentsTemp(@PathVariable String orderId,
+                               Model model){
+        try{
+            OrderDto order = orderServiceImp.selectOne(orderId);
+            model.addAttribute("order", order);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "refund/user/paymentTemp";
+    }
+    //결제 취소 GET
+    @GetMapping("admin/payments/cancel.do")
+    public String cancelPaymentByIamUid(@SessionAttribute UserDto loginUser){
+        if(loginUser.getGDet().equals("g1")){
+            return "refund/admin/cancelOrder";
+        }else{
+            return "mainpage";
+        }
+    }
+    //결제 취소 POST
+    @PostMapping("admin/payments/cancel.do")
+    public int cancelPaymentByIamUid(String orderId,
+                                        Integer cancelAmount,
+                                        String reason,
+                                        HttpSession session,
+                                        HttpServletRequest req,
+                                        @SessionAttribute UserDto loginUser){
+        IamportResponse<Payment> cancelResp = null;
+        int code = 1000;
+        try{
+            if (loginUser.getGDet().equals("g1") /*&& refund.getRefundId() == refundId*/){
+                if(reason == null){
+                    reason = "주문 취소";
+                }
+                CancelData cancelData = new CancelData(orderId, false, BigDecimal.valueOf(cancelAmount) );
+                cancelData.setReason(reason);
+                log.info("orderId: "+orderId);
+                log.info("cancelAmount: "+cancelAmount);
+                log.info("reason: "+reason);
+                log.info("cancelData: " + cancelData);
+                cancelResp = iamportClient.cancelPaymentByImpUid(cancelData);
+                log.info("cancelResp: "+ cancelResp);
+                log.info("cancelResp.getResponse: "+ cancelResp.getResponse());
+                log.info("cancelResp.getMessage: "+cancelResp.getMessage());
+                log.info("cancelResp.getCode: "+cancelResp.getCode());
+//                session.setAttribute("msg",cancelResp.getMessage());
+                code = cancelResp.getCode();
+                return code;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return code;
     }
 
 

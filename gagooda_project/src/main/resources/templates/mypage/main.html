@@ -53,13 +53,13 @@
         <span><a href="#" style="text-decoration: none; color: #000">+ 더보기</a></span>
     </div>
     <hr style="margin-top: 0; background : #B68C68; height: 5px">
-    <div class="d-flex" style="justify-content: space-around">
+    <div class="d-flex" style="justify-content: start;">
         <th:block th:each="cart:${cartList}">
-            <div>
-                <img th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
-                <div style="display: flex; justify-content: space-between; margin: 0 10px;">
-                    <span th:text="${cart.optionProduct.opname}"></span>
-                    <span th:text="${cart.optionProduct.price} + '원'"></span>
+            <div style="width: 250px; height: 250px; margin: 0 15px">
+                <img style="width: 240px; height: 240px;" th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
+                <div>
+                    <p style="margin: 0;" th:text="${cart.optionProduct.opname}"></p>
+                    <p style="margin: 0;" th:text="${cart.optionProduct.price} + '원'"></p>
                 </div>
             </div>
         </th:block>

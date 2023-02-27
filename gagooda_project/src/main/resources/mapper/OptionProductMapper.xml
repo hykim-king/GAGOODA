@@ -25,9 +25,14 @@
     <delete id="deleteByProductCode">
         DELETE FROM option_product WHERE product_code=#{productCode}
     </delete>
+    <delete id="deleteById">
+        DELETE FROM option_product WHERE option_code=#{optionCode}
+    </delete>
 
     <select id="findById" resultMap="optionProductMap">
         SELECT * FROM option_product WHERE option_code=#{id}
     </select>
+
+
 
 </mapper>

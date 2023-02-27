@@ -32,7 +32,7 @@
                                 <td th:text="${i+1}"></td>
                                 <td class="checkBox"><input type="checkbox" name="checkList" class="checkList" checked th:value="${cartList[i].cartId}"></td>
                                 <td>
-                                    <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImgCode() +'_1.png'})}"
+                                    <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImageList().get(0).imgPath})}"
                                          style="width: 100px;">
                                     <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getOptionProduct().getOpname()}"></a>
                                 </td>

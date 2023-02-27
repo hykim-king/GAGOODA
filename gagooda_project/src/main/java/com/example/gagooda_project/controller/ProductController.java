@@ -73,7 +73,7 @@ public class ProductController {
             Model model,
             HttpSession session,
             @SessionAttribute(required = false) String msg,
-            @PathVariable int categoryId,
+            @PathVariable String categoryId,
             PagingDto paging,
             HttpServletRequest req
     ) {
@@ -85,15 +85,32 @@ public class ProductController {
         paging.setRows(16);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
-        model.addAttribute("paging", paging);
 
         Map<String, Object> map = new HashMap<>();
-        List<Integer> categoryIdList = new ArrayList<>();
+        List<String> categoryIdList = new ArrayList<>();
         categoryIdList.add(categoryId);
         map.put("categoryIdList", categoryIdList);
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+            model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
+
+            model.addAttribute("realCategoryId", categoryId);
+            if (categoryId.length() == 3) {
+                CategoryDto category = categoryService.selectOne(categoryId);
+                categoryId = category.getParentId();
+            }
+
+            CategoryDto category = categoryService.selectOne(categoryId);
+            model.addAttribute("category", category);
+
+            List<CategoryDto> childList = categoryService.showChildCategories(categoryId);
+            model.addAttribute("childList", childList);
+
+            if (category.getParentId() != null) {
+                CategoryDto parentCategory = categoryService.selectOne(category.getParentId());
+                model.addAttribute("parentCategory", parentCategory);
+            }
             return "/product/category_list";
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,11 +135,10 @@ public class ProductController {
         }
         try {
             ProductDto product = productService.selectOne(productCode);
-            paging.setRows(10);
-            if (paging.getOrderField() == null) paging.setOrderField("mod_date");
-//            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
-            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
+            List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+//            List<ProductInquiryDto> plist = productInquiryService.showAllInquiries(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            model.addAttribute("paging", paging);
             model.addAttribute("product", product);
             model.addAttribute("plist", plist);
             model.addAttribute("commonCodeList", commonCodeList);
@@ -201,12 +217,17 @@ public class ProductController {
             Model model,
             PagingDto paging,
             HttpServletRequest req,
-            HttpSession session
+            HttpSession session,
+            @SessionAttribute(required = false) String msg
     ){
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
         paging.setRows(20);
         if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         paging.setQueryString(req.getParameterMap());
-        model.addAttribute("paging", paging);
         Map<String, Object> map = new HashMap<>();
         if (categoryIdList != null) {
             map.put("categoryIdList", categoryIdList);
@@ -223,6 +244,7 @@ public class ProductController {
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
             model.addAttribute("productList", productList);
+            model.addAttribute("paging", paging);
 
             Map<String, String> detDict = commonCodeService.showNames("p");
             model.addAttribute("detDict", detDict);
@@ -297,23 +319,22 @@ public class ProductController {
             HttpSession session,
             @PathVariable String productCode,
             ProductDto product,
-            @RequestParam(name = "category") HashSet<String> categoryIdList,
+            @RequestParam(required = false, name = "category") HashSet<String> categoryIdList,
             @RequestParam(required = false, name = "imageFile") List<MultipartFile> imageFileList,
             @RequestParam(required = false, name = "infoImageFile") List<MultipartFile> infoImageFileList,
             @RequestParam(required = false, name = "imgToDelete") List<String> imgToDelete,
-            @RequestParam(required = false, name = "optionUpdateList") List<OptionProductDto> optionUpdateList,
             @RequestParam(required = false, name = "optionToDelete") List<String> optionToDeleteList
     ) {
         if (loginUser.getGDet().equals("g1")) {
             try {
-                log.info("optionUpdateList printlog: "+optionUpdateList);
-                log.info("optionToDeleteList printlog: "+optionToDeleteList);
-//                int modify = productService.modifyOne(product, imageFileList, infoImageFileList,
-//                        categoryIdList, imgToDelete, loginUser, imgPath);
-//                log.info("modify 성공: "+modify);
+                int modify = productService.modifyOne(product, imageFileList, infoImageFileList,
+                        categoryIdList, imgToDelete, loginUser, imgPath, optionToDeleteList);
+                log.info("modify 성공: "+modify);
+                session.setAttribute("msg", "성공적으로 수정 되었습니다.");
                 return "redirect:/product/admin/product_list.do";
             } catch (Exception | Error e) {
                 e.printStackTrace();
+                session.setAttribute("msg", "수정 중 오류가 있었습니다.");
                 return "redirect:/product/admin/"+productCode+"/modify.do";
             }
         } else {

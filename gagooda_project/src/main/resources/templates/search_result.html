@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${searchWord}+' 검색결과'"></title>
+</head>
+<div layout:fragment="content">
+    <h1>
+        '<span th:text="${searchWord}"></span>'에 대한 검색결과 <span th:text="${paging.totalRows}"></span>건
+    </h1>
+    <th:block th:each="product:${productList}">
+        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}">
+            <div>
+                <img th:src="@{'/img/product/{file}'(file=${product.imageList[0].imgPath})}"
+                     style="width: 200px; height: 200px; object-fit: cover;">
+            </div>
+            <p th:text="${product.getProductCode()}"></p>
+            <p th:text="${product.getPname()}"></p>
+            <p th:text="${product.getSalesPc()}"></p>
+        </a>
+    </th:block>
+
+    <ul class="uk-pagination uk-flex-center">
+        <th:block th:if="${paging.startPage>1}">
+            <li>
+                <a th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span uk-pagination-previous></span></a>
+            </li>
+            <li>
+                <a th:href="@{${paging.queryString}(page=1)}">1</a>
+            </li>
+            <li>...</li>
+        </th:block>
+        <li th:each="i:${#numbers.sequence(paging.startPage, paging.endPage)}"
+            th:classappend="${(i==paging.page)?'uk-disabled':''}">
+            <a th:href="@{${paging.queryString}(page=${i})}"
+               th:classappend="${(i==paging.page)?'uk-text-primary uk-text-bold':''}" th:text="${i}"></a>
+        </li>
+        <th:block th:if="${paging.endPage<paging.totalPages}">
+            <li>...</li>
+            <li>
+                <a th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                   th:text="${paging.totalPages}"></a>
+            </li>
+            <li>
+                <a th:href="@{${paging.queryString}(page=${paging.nextPage})}"><span uk-pagination-next></span></a>
+            </li>
+        </th:block>
+    </ul>
+</div>
+</html>

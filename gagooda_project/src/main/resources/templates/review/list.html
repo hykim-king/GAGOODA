@@ -16,12 +16,35 @@
             <option value="">평점 낮은순</option>
         </select>
     </div>
+<!--    <th:block th:each="review:${reviewList}">-->
+<!--        아이디<p th:text="${review.user.nickname}+'님의 리뷰입니다.'"></p>-->
+<!--        평점<p th:text="${review.rate}"></p>-->
+<!--        등록날짜<p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>-->
+<!--        내용<p th:text="${review.content}"></p>-->
+<!--        <th:block th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">-->
+<!--            <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" style="width: 100px; height: 100px;">-->
+<!--        </th:block>-->
+<!--        <a th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:href="@{'user_yes/delete.do' (reviewId=${review.reviewId})}">삭제</a>-->
+<!--    </th:block>-->
     <th:block th:each="review:${reviewList}">
-        아이디<p th:text="${review.user.nickname}+'님의 리뷰입니다.'"></p>
-        평점<p th:text="${review.rate}"></p>
-        등록날짜<p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
-        내용<p th:text="${review.content}"></p>
-        <button>삭제</button>
+        <div class="d-flex position-relative border mb-3" style="width: 600px;">
+            <th:bolck th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">
+                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 100px; height: 100px;">
+            </th:bolck>
+            <div class="container-sm">
+                <h5 class="mt-0" th:text="'평점 : '+${review.rate}"></h5>
+                <p th:text="${review.content}"></p>
+                <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
+                <a th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:href="@{'user_yes/delete.do' (reviewId=${review.reviewId})}">삭제</a>
+            </div>
+            <div class="d-flex container-sm" style="height: 100%;">
+                <div class="vr"></div>
+                <div>
+                    <p th:text="${review.user.nickname} + '님의 리뷰입니다.'"></p>
+                    <p th:text="'상품명 : '+${review.optionCode}"></p>
+                </div>
+            </div>
+        </div>
     </th:block>
 </div>
 </html>

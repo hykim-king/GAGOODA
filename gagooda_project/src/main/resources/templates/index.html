@@ -2,7 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/adminLayout}">
 <head>
     <meta charset="UTF-8">
     <title>GAGOODA</title>
@@ -58,6 +58,7 @@
         <li><a th:href="@{ '/refund/user_yes/mypage/{refundId}/detail.do' (refundId=1) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
         <li><a href="/refund/admin/list.do">관리자 리스트(로그인)</a></li>
         <li><a href="/refund/admin/1/detail.do">관리자 상세(로그인)</a></li>
+        <li><a th:href="@{'/refund/user_yes/{orderId}/payments/temp.do' (orderId='00010')}">임시 결제 창(로그인)</a></li>
     </ul>
 
     <h2>양한나</h2>
@@ -69,6 +70,7 @@
     <ul>
         <h4>관리자</h4>
         <li><a href="/product_inquiry/admin/list.do">상품 문의 리스트</a></li>
+        <li><a href="/review/admin/list.do">리뷰 리스트</a></li>
     </ul>
 </div>
 </body>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div layout:fragment="content">
+    <button onclick="requestPay()">결제하기</button>
+    <div>
+        고유번호(imp_uid):
+        <span class="imp_uid"></span>
+    </div>
+    <div>
+        주문번호(merchant_uid):
+        <span class="merchant_uid"></span>
+    </div>
+    <div>
+        결제 금액:
+        <span class="paid_amount"></span>
+    </div>
+
+    <form action="/refund/admin/payments/cancel.do" method="post">
+<!--        <label>아임포트 고유번호<input type="text" name="impUid"></label>-->
+        <label>주문 고유번호<input type="text" name="orderId"></label>
+        <label>취소 금액<input type="number" name="cancelAmount"></label>
+<!--        <label>취소 가능 잔액<input type="number" name="checksum"></label>-->
+        <label>취소 사유<input type="text" name="reason"></label>
+        <button id="cancelBtn" type="submit">환불 신청</button>
+    </form>
+
+    <script th:inline="javascript">
+        // 결제 금액, 구매자 이메일, 이름
+        const priceAmount = [[${order.totalPrice}]];
+        const buyerMemberEmail = [[${order.userEmail}]];
+        const buyerMemberName = [[${order.userName}]]
+        const merchantUid = [[${order.orderId}]]+"";
+        const buyerMemberPhone = [[${order.userPhone}]];
+        const buyerMemberPostCode = [[${order.postCode}]];
+        const buyerMemberAddress = [[${order.address}]] + [[${order.addressDetail}]];
+        console.log(priceAmount, merchantUid, buyerMemberAddress, buyerMemberPhone)
+
+        const IMP = window.IMP;
+        IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드
+
+        function requestPay() {
+            IMP.request_pay({ //param
+                pg: "html5_inicis",
+                pay_method: "card",
+                merchant_uid: "test"+new Date().getTime(),
+                name: "스프링 부트 결제 테스트", // name에는 주문의 무엇을 넘기면 좋을까요잉,,
+                amount: 100,
+                buyer_email: buyerMemberEmail,
+                buyer_tel: buyerMemberPhone,
+                buyer_name: buyerMemberName,
+                buy_addr: buyerMemberAddress,
+                buyer_postcode: buyerMemberPostCode
+            }, async function (resp) { // callback
+                if (resp.success) {
+                    alert("결제가 완료되었습니다.")
+                    console.log(`응답 객체 정보: ${resp.toString()}`)
+                    const impUid = document.querySelector(".imp_uid");
+                    const merchantUid = document.querySelector(".merchant_uid")
+                    const paidAmount = document.querySelector(".paid_amount")
+                    impUid.innerText = resp.imp_uid;
+                    merchantUid.innerText = resp.merchant_uid;
+                    paidAmount.innerText = resp.paid_amount;
+                } else {
+                    alert("결제에 실패했습니다." + "에러코드: " + resp.errorCode + "에러 메시지:" + resp.error_msg)
+                }
+            });
+        }
+
+        // let cancelBtn = document.querySelector("#cancelBtn");
+        // cancelBtn.addEventListener("click",async function(e){
+        //     const resp = await fetch("/refund/admin/payments/cancel.do",{method:"POST"});
+        //     console.log(resp);
+        //     const respJson = resp.json();
+        //     console.log(respJson);
+        // })
+    </script>
+</div>
+</html>

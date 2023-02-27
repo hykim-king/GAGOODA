@@ -80,4 +80,53 @@ public class DeliveryController {
         }
         return "delivery/list";
     }
+
+    @GetMapping("admin/{orderId}/modify.do")
+    public String modifyOne(@SessionAttribute UserDto loginUser,
+                            Model model,
+                            @PathVariable String orderId){
+        DeliveryDto delivery = deliveryService.selectByOrderId(orderId);
+        model.addAttribute("delivery",delivery);
+        return "delivery/modify";
+    }
+
+    @PostMapping("admin/modify.do")
+    public String modifyOne(DeliveryDto delivery,
+                            @SessionAttribute UserDto loginUser) {
+        int modify = 0;
+        System.out.println("여기까진옴");
+        try{
+            if (loginUser.getGDet().equals("g1")) {
+                System.out.println("잘들어옴");
+                modify = deliveryService.modifyOne(delivery);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(modify>0) {
+            return "redirect:/delivery/admin/list.do";
+        } else {
+            return "redirect:/delivery/admin"+delivery.getOrderId()+"/modify.do";
+        }
+    }
+
+    @GetMapping("/admin/{orderId}/delete.do")
+    public String removeOne(@PathVariable String orderId,
+                            @SessionAttribute UserDto loginUser) {
+        int remove = 0;
+        try{
+            System.out.println("여기까진 오냐");
+            if(loginUser.getGDet().equals("g1")) {
+                System.out.println("여긴 왜 안와");
+                remove = deliveryService.removeOne(orderId);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if(remove>0) {
+            return "redirect:/delivery/admin/list.do";
+        } else {
+            return "redirect:/delivery/admin/"+orderId+"/modify.do";
+        }
+    }
 }

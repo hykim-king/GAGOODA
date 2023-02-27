@@ -8,19 +8,31 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
-    <!--주문 form -->
-    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"
-          method="post" onsubmit="return validateForm();">
-        <!--주문 번호 생성-->
-        <div>
-            <label for="orderId"></label>
-            <input type="text" id="orderId" name="orderId"
-                   th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
+    <h1>주문</h1>
+    <div>배송지 입력란</div>
+    <button type="button" name="setAddressBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">새로운 배송지입력</button>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">새로운 배송지 입력</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
+                    <th:block th:include="/order/user/newAddress"></th:block>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
+            </div>
         </div>
+    </div>
+    <!--주문 form -->
+<!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
+<!--          method="post" onsubmit="return validateForm();">-->
+    <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
+          method="post" onsubmit="return validateForm();">
         <!--배송지 입력란-->
-        <fieldset>
-            <legend>배송지 입력란</legend>
-            <button type="button" name="setAddressBtn">새로운 배송지입력</button>
             <label for="myAddressList">다른 배송지</label>
             <select id="myAddressList" name="myAddressList" onchange="selectedAddress()">
                 <option disabled selected="selected" th:text="'----선택-----'"></option>
@@ -60,13 +72,17 @@
                 <input type="text" id="elevator" name="elevator" class="add" readonly th:required="required">
             </div>
 
-
-        </fieldset>
         <!--배송지 입력란 end-->
         <div class="orderDetail">
+            <!--주문 번호 생성-->
+            <div>
+                <label for="orderId">주문번호: </label>
+                <input type="text" id="orderId" name="orderId"
+                       th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
+            </div>
             <!--주문할 상품 정보들-->
             <th:block th:each="cartItem:${cartList}">
-                <input type="text" th:value="${cartItem.cartId}" name="cartItem" readonly>
+                <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
             </th:block>
             <fieldset>
                 <legend>카트 정보들</legend>
@@ -84,15 +100,15 @@
                             <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
                                  style="width: 50px; height:50px; object-fit: cover">
 
-                            <input type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
+                            <input class="form-control-plaintext" type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
                                    id="orderDetail.productCode" placeholder="productCode" readonly>
-                            <input type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
+                            <input class="form-control-plaintext" type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
                                    id="orderDetail.optionCode" placeholder="optionCode" readonly>
                         </td>
-                        <td><input type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
+                        <td><input class="form-control-plaintext" type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
                                    readonly></td>
                         <td>
-                            <input type="number" th:value="${cart.optionProduct.price * cart.cnt}"
+                            <input class="form-control-plaintext" type="number" th:value="${cart.optionProduct.price * cart.cnt}"
                                    name="orderDetail.totalPrice" id="orderDetail.totalPrice" readonly>
                         </td>
                     </tr>
@@ -104,13 +120,13 @@
             <fieldset>
                 <legend>총 결제 정보</legend>
                 <div>
-                    <label for="totalCnt">상품 총 수량</label>
-                    <input th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
+                    <label for="totalCnt" class="col-sm-2 col-form-label">상품 총 수량</label>
+                    <input class="form-control-plaintext" th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
                            required readonly>
                 </div>
                 <div>
-                    <label for="totalPrice">상품 총 가격</label>
-                    <input type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
+                    <label for="totalPrice" class="col-sm-2 col-form-label">상품 총 가격</label>
+                    <input class="form-control-plaintext" type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
                            name="totalPrice" id="totalPrice" required readonly>
                 </div>
             </fieldset>
@@ -121,18 +137,18 @@
             <fieldset>
                 <legend>주문자 정보</legend>
                 <div>
-                    <label for="userName">주문자 이름</label>
-                    <input type="text" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
-                    <input type="hidden" th:value="${loginUser.userId}" name="userId" id="userId">
+                    <label for="userName" class="col-sm-2 col-form-label">주문자 이름</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
+                    <input type="hidden"  th:value="${loginUser.userId}" name="userId" id="userId">
                 </div>
                 <div>
-                    <label for="userPhone">주문자 전화번호</label>
-                    <input type="text" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
+                    <label for="userPhone" class="col-sm-2 col-form-label" >주문자 전화번호</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
                            readonly>
                 </div>
                 <div>
-                    <label for="userEmail">주문자 이메일</label>
-                    <input type="text" th:value="${loginUser.email}" name="userEmail" id="userEmail"
+                    <label for="userEmail" class="col-sm-2 col-form-label">주문자 이메일</label>
+                    <input type="text" class="form-control-plaintext" th:value="${loginUser.email}" name="userEmail" id="userEmail"
                            readonly>
                 </div>
             </fieldset>
@@ -188,13 +204,43 @@
                 alert("배송지를 선택해 주세요.")
                 return false;
             }else{
-                return confirm("상품들을 결제하시겠습니까?")
+                confirm("상품들을 결제하시겠습니까?");
+                requestPay(); // 결제 함수를 호출
+                // return confirm("상품들을 결제하시겠습니까?");
             }
         }
 
 
 
-
+        // 아임포트 결제 API
+        const IMP = window.IMP;  // 아임포트 정의
+        IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드 등록
+        // 주문 등록 버튼(submit) 이벤트를 막고, 누르면 결제창으로 이동
+        function requestPay() {
+            const IMP = window.IMP;  // 아임포트 정의
+            IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드 등록.
+            let orderForm = document.forms["orderRegisterForm"];
+            IMP.request_pay({
+                pg: "html5_inicis",
+                pay_method: "card",
+                merchant_uid: orderForm.orderId.value,
+                name: "결제 테스트(일정 기간 후 승인 취소됩니다.)", // name에는 주문의 무엇을 넘기면 좋을까요잉,,
+                amount: 100,
+                buyer_email: orderForm.userEmail.value,
+                buyer_tel: orderForm.userPhone.value,
+                buyer_name: orderForm.userName.value,
+                buy_addr: orderForm.address.value + ", " + orderForm.addressDetail.value,
+                buyer_postcode: orderForm.postCode.value,
+            }, function (resp) { // callback
+                if (resp.success) { // 결제 성공 시
+                    console.log("결제가 완료되었습니다.");
+                    orderForm.setAttribute("action","/order/user_yes/register.do"); // form의 action attribute에 url 지정
+                    orderForm.submit(); // 제출
+                } else {
+                    alert("에러 메시지:" + resp.error_msg)
+                }
+            });
+        }
 
     </script>
 

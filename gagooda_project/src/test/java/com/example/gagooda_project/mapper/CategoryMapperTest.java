@@ -14,12 +14,12 @@ class CategoryMapperTest {
 
     @Test
     void findById() {
-        categoryMapper.findById(1);
+        categoryMapper.findById("1");
     }
 
     @Test
     void listByParentId() {
-        System.out.println(categoryMapper.listByParentId(1));
+        System.out.println(categoryMapper.listByParentId("1"));
     }
 
     @Test

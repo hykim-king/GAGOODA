@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface CategoryService {
     List<CategoryDto> showCategoriesAt(int lvl);
-    List<CategoryDto> showChildCategories(int parentId);
-    CategoryDto selectOne(int categoryId);
+    List<CategoryDto> showChildCategories(String parentId);
+    CategoryDto selectOne(String categoryId);
     List<CategoryDto> categoryMerge(List<String> categoryIdList);
     List<CategoryDto> showAll();
     Map<String, String> categoryDict(int lvl);
