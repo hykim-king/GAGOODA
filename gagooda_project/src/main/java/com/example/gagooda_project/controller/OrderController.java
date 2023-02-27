@@ -184,10 +184,12 @@ public class OrderController {
             List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
             DeliveryDto delivery = orderService.selectDelivery(orderId);
             List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+            int rfCount = orderService.countRefund(orderId);
             model.addAttribute("order",order);
             model.addAttribute("orderDetailList",orderDetailList);
             model.addAttribute("delivery", delivery);
             model.addAttribute("oCodeList",oCodeList);
+            model.addAttribute("rfCount",rfCount);
         }catch(Exception exception){
             log.error(exception.getMessage());
         }

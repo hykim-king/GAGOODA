@@ -18,12 +18,14 @@ public class OrderServiceImp implements OrderService {
     private CartMapper cartMapper;
     private AddressMapper addressMapper;
     private CommonCodeMapper commonCodeMapper;
+    private RefundMapper refundMapper;
     public OrderServiceImp(OrderMapper orderMapper,
                            OrderDetailMapper orderDetailMapper,
                            DeliveryMapper deliveryMapper,
                            CartMapper cartMapper,
                            AddressMapper addressMapper,
-                           CommonCodeMapper commonCodeMapper
+                           CommonCodeMapper commonCodeMapper,
+                           RefundMapper refundMapper
                            ){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
@@ -31,6 +33,7 @@ public class OrderServiceImp implements OrderService {
         this.cartMapper = cartMapper;
         this.addressMapper = addressMapper;
         this.commonCodeMapper = commonCodeMapper;
+        this.refundMapper = refundMapper;
     }
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId,int dates) {
@@ -160,6 +163,11 @@ public class OrderServiceImp implements OrderService {
         return register;
     }
 
+    @Override
+    public int countRefund(String orderId) {
+        return refundMapper.countByOrderId(orderId);
+
+    }
 
 
 }

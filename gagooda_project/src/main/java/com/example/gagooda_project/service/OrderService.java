@@ -19,4 +19,5 @@ public interface OrderService {
     List<OrderDto> showOrderList(Map<String,Object> searchFilter);
     int countPageAll(Map<String,Object> searchFilter);
     int adminModify(List<String> orderIdList, List<String> oDetList);
+    int countRefund(String orderId);
 }
