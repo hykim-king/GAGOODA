@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  <!-- iamport.payment.js -->
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  
+</head>
+<body>
+  <button onclick="requestPay()">결제하기</button>
+  <button onclick="cancelPay()">환불하기</button>
+
+  <p id="test"></p>
+  <script>
+    const IMP = window.IMP;
+    IMP.init("imp76481216")
+
+    const accessToken = await _getIamportToken();
+
+    function requestPay(){
+      IMP.request_pay({
+        pg: 'html5_inicis',  // 사용할 결제사?
+        pay_method : 'card',  // 결제 유형
+        merchant_uid: '1114', // 주문번호? 상품번호?
+        name: '우유 한 팩',  // 주문 상품 이름
+        amount: 100,  // 결제 가격
+        buyer_email: 'kkhs224@naver.com',  
+        buyer_name: '테스트 테스트팀',
+        buyer_tel: '010-9478-9782',
+        buy_addr: '서울특별시 ~~~',
+        buyer_postcode: '123-456'
+      }, function(resp){  // callback
+        if (resp.success){
+          console.log("성공",resp);
+          test = document.getElementById("test")
+          test.innerText = resp.imp_uid + resp.merchant_uid;
+        } else{
+          console.log(`실패 ${resp.error_msg}`);
+        }
+      });
+    }
+
+    
+  </script>
+</body>
+</html>
+
+
+<!-- 
+  {success: true, imp_uid: 'imp_204103699105', pay_method: 'card', merchant_uid: '1112', name: '우유 한 팩', …}
+apply_num:"30019524"
+bank_name:null
+buyer_addr:""
+buyer_email:"kkhs224@naver.com"
+buyer_name:"테스트 테스트팀"
+buyer_postcode:"123-456"
+buyer_tel:"010-9478-9782"
+card_name: "국민KB카드"
+card_number:"527289*********8"
+card_quota:0
+currency:"KRW"
+custom_data: null
+imp_uid:"imp_204103699105"
+merchant_uid: "1112"
+name:"우유 한 팩"
+paid_amount:100
+paid_at:1675952199
+pay_method:"card"
+pg_provider: "html5_inicis"
+pg_tid:"StdpayCARDINIpayTest20230209231639255005"
+pg_type:"payment"
+receipt_url:"https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDINIpayTest20230209231639255005&noMethod=1"
+status:"paid"
+success:true
+
+[[Prototype]]:
+Object
+constructor
+: 
+ƒ Object()
+hasOwnProperty
+: 
+ƒ hasOwnProperty()
+isPrototypeOf
+: 
+ƒ isPrototypeOf()
+propertyIsEnumerable
+: 
+ƒ propertyIsEnumerable()
+toLocaleString
+: 
+ƒ toLocaleString()
+toString
+: 
+ƒ toString()
+valueOf
+: 
+ƒ valueOf()
+__defineGetter__
+: 
+ƒ __defineGetter__()
+__defineSetter__
+: 
+ƒ __defineSetter__()
+__lookupGetter__
+: 
+ƒ __lookupGetter__()
+__lookupSetter__
+: 
+ƒ __lookupSetter__()
+__proto__
+: 
+(...)
+get __proto__
+: 
+ƒ __proto__()
+set __proto__
+: 
+ƒ __proto__()
+
+ -->
