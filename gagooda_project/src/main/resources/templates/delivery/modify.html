@@ -50,15 +50,23 @@
             </select>
         </div>
 
-        <input type="hidden" name="orderId" th:value="${delivery.orderId}">
+        <input type="hidden" name="orderId" id="orderId" th:value="${delivery.orderId}">
         <div>
             <button type="submit">저장하기</button>
-            <a th:href="@{'delete.do'}" >삭제하기</a>
+            <button type="button" th:onclick="deleteCheck()" th:text="삭제하기"></button>
+
         </div>
     </form>
 
     <script>
+        function deleteCheck() {
+            let result = confirm("정말로 삭제하시겠습니까?");
+            if (result==true) {
+                location.href = "delete.do?order_id="+document.getElementById("orderId").value;
+            } else {
 
+            }
+        }
     </script>
 </div>
 </html>

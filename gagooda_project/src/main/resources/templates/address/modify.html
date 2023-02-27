@@ -61,11 +61,12 @@
     </div>
   </fieldset>
 
-  <input type="hidden" name="addressId" th:value="${address.addressId}">
+  <input type="hidden" name="addressId" id="addressId" th:value="${address.addressId}">
   <input type="hidden" name="userId" th:value="${address.userId}">
   <div>
-    <button type="submit" style="background-color: #FFFAF5; color: #B68C68">저장하기</button>
-    <a th:href="@{'delete.do' (address_id=${address.addressId}) }" >삭제하기</a>
+    <button type="submit" class="input-group-text" style="background-color: #FFFAF5; color: #B68C68; display: inline-block" th:text="저장하기"></button>
+    <button type="button" class="text-white input-group-text" th:href="@{'delete.do' (address_id=${address.addressId}) }"
+            th:text="삭제하기" style="background-color: #B68C68; display: inline-block;" th:onclick="deleteCheck()"></button>
   </div>
 </form>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -116,6 +117,15 @@
           document.getElementById("addressDetail").focus();
         }
       }).open();
+    }
+
+    function deleteCheck() {
+      let result = confirm("정말로 삭제하시겠습니까?");
+      if (result==true) {
+        location.href = "delete.do?address_id="+document.getElementById("addressId").value;
+      } else {
+
+      }
     }
   </script>
 </div>
