@@ -186,14 +186,19 @@
                         <div class="tab-content" id="nav-tabContent">
                             <!--상품 상세정보 영역-->
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                 aria-labelledby="nav-home-tab" tabindex="0">
-                                <img class="img-fluid" th:src="@{'/img/product/HA00G01EEU_0.png'}" style="width: 100%;">
+                                 aria-labelledby="nav-home-tab" tabindex="0" style="min-height: 100px;">
+                                <p th:if="${product.infoImageList.isEmpty()}">해당 상품에는 설명이미지가 없습니다.</p>
+                                <img class="img-fluid" th:if="${product.infoImageList != null}"
+                                     th:each="infImg:${product.infoImageList}"
+                                     th:src="@{'/img/product/{imgPath}'(infImg=${infImg.imgPath})}"
+                                     style="width: 100%;">
                             </div>
                             <!--상품 상세정보 영역 end-->
 
                             <!--리뷰 영역-->
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                 aria-labelledby="nav-profile-tab" tabindex="0">...4
+                                 aria-labelledby="nav-profile-tab" tabindex="0" style="min-height: 100px;">
+                                <p th:if="${true}">해당 상품에는 후기가 없습니다.</p>
                             </div>
                             <!--리뷰 영역 end-->
 
@@ -214,7 +219,8 @@
 
                             <!--배송역역 영역-->
                             <div class="tab-pane fade" id="nav-disabled" role="tabpanel"
-                                 aria-labelledby="nav-disabled-tab" tabindex="0">.6..
+                                 aria-labelledby="nav-disabled-tab" tabindex="0" style="min-height: 100px">
+                                .6..
                             </div>
                             <!--배송역역 영역 end-->
 
