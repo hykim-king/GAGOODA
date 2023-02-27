@@ -243,7 +243,7 @@ public class OrderController {
     }
     /*주문 등록 새 배송지 등록*/
     @PostMapping("/user_yes/addressRegister.do")
-    public @ResponseBody int addressRegister(@SessionAttribute UserDto loginUser,
+    public @ResponseBody AddressDto addressRegister(@SessionAttribute UserDto loginUser,
                                              AddressDto address,
                                              HttpSession session){
         int register = 0;
@@ -252,6 +252,7 @@ public class OrderController {
             register = addressService.register(address);
         }catch(Exception e){
             log.error(e.getMessage());
+            address=null;
         }
         if(register >0 ){
             addressId = address.getAddressId();
@@ -259,13 +260,13 @@ public class OrderController {
             session.setAttribute("msg","새로운 배송지가 등록되었습니다.");
         }else{
             session.setAttribute("msg","배송지 등록에 실패하였습니다. 다시 시도해주세요.");
+            address = null;
         }
-        return register;
+        return address;
     }
     /*새 배송지 등록 리스트*/
     @GetMapping("/user_yes/addressList.do")
-    public @ResponseBody String addressList(@SessionAttribute UserDto loginUser,
-                                            @SessionAttribute int addressId,
+    public String addressList(@SessionAttribute UserDto loginUser,
                                             HttpSession session,
                                             @SessionAttribute(required = false) String msg,
                                             Model model){
@@ -275,13 +276,27 @@ public class OrderController {
             session.removeAttribute(msg);
         }
         AddressDto address = null;
+        List<AddressDto> addressList = null;
+        int addressId=0;
         try{
-            address = addressService.selectOne(addressId);
+            if (session.getAttribute("addressId") != null){
+                addressId = (int) session.getAttribute("addressId");
+                log.info("addressId"+session.getAttribute("addressId"));
+                session.removeAttribute("addressId");
+                address = addressService.selectOne(addressId);
+                log.info("newAddress: "+address);
+                model.addAttribute("addressId",addressId);
+                model.addAttribute("address",address);
+            }
+            addressList = orderService.userAddressList(loginUser.getUserId());
+            if(addressList != null){
+                model.addAttribute("addressList", addressList);
+            }
+
         }catch(Exception e){
             log.error(e.getMessage());
         }
-        model.addAttribute("address",address);
-        return "/order/user/newAddressList";
+        return "order/user/newAddressList";
     }
     /*주문 등록 (GET)*/
     @GetMapping("/user_yes/register.do")

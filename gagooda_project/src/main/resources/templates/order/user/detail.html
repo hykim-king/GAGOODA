@@ -7,97 +7,121 @@
     <meta charset="UTF-8">
     <title>주문 상세보기</title>
 </head>
-<div layout:fragment="content">
-    <h2> 주문 상세보기</h2>
+<div layout:fragment="myPageContent">
+    <h1 class="mb-4"> 주문 상세보기</h1>
     <!--주문 일자, 번호, 상태-->
-    <fieldset>
-        <label for="regDate">주문 일자:</label>
-        <span th:text="${#calendars.format(order.regDate,'yyyy-MM-dd')}" id="regDate"></span>
-        <label for="orderId">주문 번호: </label>
-        <span id="orderId"  th:text="${order.orderId}"></span>
-        <label for="oDet">주문 상태: </label>
-        <span id="oDet" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
-    </fieldset>
+
+    <div class="d-flex justify-content-start align-items-center" style="background-color: #FFFAF5; height: 50px; font-weight: bold">
+        <div class="mx-3">
+            주문 일자: <span th:text="${#calendars.format(order.regDate,'yyyy-MM-dd')}" id="regDate"></span>
+        </div>
+        <div class="mx-3">
+            주문 번호: <span id="orderId"  th:text="${order.orderId}"></span>
+        </div>
+        <div class="mx-3">
+            주문 상태: <span id="oDet" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
+        </div>
+    </div>
     <!--주문 일자, 번호, 상태 end----------------->
     <!--상세 주문 물품 리스트-->
-    <fieldset>
-        <table>
+    <h3 class="mt-4">주문 상품 정보</h3>
+    <div>
+        <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+        <table class="table mt-0">
             <thead>
-                <th>순번</th>
-                <th>상품정보</th>
-                <th>수량</th>
-                <th>가격</th>
+                <th scope="col" class="text-center">순번</th>
+                <th scope="col">상품정보</th>
+                <th scope="col" class="text-center">수량</th>
+                <th scope="col" class="text-center">가격</th>
             </thead>
             <tbody>
-                <tr th:each="orderDetail, stat :${orderDetailList}">
-                    <td th:text="|${stat.count}|"></td>
+                <tr class="align-middle" th:each="orderDetail, stat :${orderDetailList}">
+                    <td class="text-center" th:text="|${stat.count}|"></td>
                     <td>
                         <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
                              class="rounded" style="width: 50px; height:50px; object-fit: cover">
                         <span th:text="${orderDetail.optionName}" id="optionName" name="optionName" ></span>
                     </td>
-                    <td th:text="${orderDetail.cnt}"></td>
-                    <td th:text="${orderDetail.totalPrice}"></td>
+                    <td class="text-center" th:text="${orderDetail.cnt}"></td>
+                    <td class="text-center" th:text="${orderDetail.totalPrice}+'원'"></td>
                     <td>
                         <div>
-                            <button >교환</button>
+                            <button class="btn" style="background-color: #B68C68;">교환</button>
+                            <button class="btn" style="background-color: #B68C68;" th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderId}/register.do'(orderId=${order.orderId})}]]">환불</button>
                         </div>
-                        <div>
-                            <button th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderId}/register.do'(orderId=${order.orderId})}]]">환불</button>
+                        <div class="mt-1">
+                            <button class="btn border" style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</button>
                         </div>
-                      </td>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <div>
-            <label for="totalPrice">상품 총 물품 금액</label>
-            <span th:text="${order.totalPrice}" name="totalPrice" id="totalPrice"></span>
-            <label for="paidPrice">총 결제 금액</label>
-            <span text="paidPrice" id="paidPrice" th:value="${order.totalPrice}"></span>
+        <div class="d-flex flex-column align-items-end pt-3 px-5"  style="background-color: #FFFAF5">
+            <div class="mb-3">
+                <b>총 주문 금액:</b> <span name="totalPrice" id="totalPrice" th:text="${order.totalPrice}"></span>원
+            </div>
+            <div class="mb-3">
+                <b>총 결제 금액:</b> <span name="paidPrice" id="paidPrice" th:text="${order.totalPrice}"></span>원
+            </div>
         </div>
-    </fieldset>
+    </div>
     <!--상세 주문 물품 리스트 end------------>
+
     <!--수령인 정보 ----------------------------------------------------->
-    <fieldset>
-        <legend>받는 사람의 정보</legend>
-        <div>
-            <label for="receiverName">받는 사람: </label>
+    <h3 class="mt-4">배송지 정보</h3>
+    <div>
+        <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+        <div class="m-2">
+            <label style="font-weight:bold;">받는 사람: </label>
             <span id="receiverName" name="receiverName" th:text="${order.receiverName}"></span>
         </div>
-        <div>
-            <label for="receiverPhone">연락처: </label>
+        <div class="m-2">
+            <label style="font-weight:bold; ">연락처: </label>
             <span id="receiverPhone" name="receiverPhone" th:text="${order.receiverPhone}" ></span>
         </div>
-        <div>
-            <label>받는 주소: </label>
-            <div>
+        <div class="m-2">
+            <div style="font-weight:bold; ">받는 주소</div>
+            <div class="m-2">
+                <label>우편번호: </label>
                 <span th:text="${order.postCode}"></span>
             </div>
-            <span th:text="${order.address}"></span>
-            <span th:text="${order.addressDetail}"></span>
-
-        </div>
-
-        <div>
-            <label for="elevator">엘레베이터: </label>
-            <span id="elevator" th:text="${order.elevator}" ></span>
-        </div>
-    </fieldset>
-    <!--수령인 정보 end------------------------------------->
-    <!--배달 요청 정보-->
-    <fieldset>
-        <div>
-            <label for="request">배달 요청 사항</label>
-            <div th:if="${delivery.request != null}">
-                <span id="request" th:text="${delivery.request}"></span>
+            <div class="m-2">
+                <label >주소: </label>
+                <span th:text="${order.address}"></span>
+            </div>
+            <div class="m-2">
+                <label >상세 주소: </label>
+                <span th:text="${order.addressDetail}"></span>
             </div>
         </div>
-    </fieldset>
+        <div class="m-2">
+            <th:block th:if="${order.elevator == true}">
+                <label style="font-weight: bold; ">엘레베이터: </label>
+                <span th:text="' 있음'"></span>
+            </th:block>
+            <th:block th:if="${order.elevator == false}">
+                <label style="font-weight: bold;">엘레베이터: </label>
+               <span th:text="'없음'"></span>
+            </th:block>
+
+        </div>
+    </div>
+    <!--수령인 정보 end------------------------------------->
+    <!--배달 요청 정보-->
+    <h3 class="mt-4">배송 요청 사항</h3>
+    <div>
+        <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+        <div th:if="${delivery.request != null}">
+            <span id="request" th:text="${delivery.request}"></span>
+        </div>
+    </div>
     <!--배달 요청 정보 end--------------------------------------------------->
-    <button th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
-    <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
-        <button th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
-    </th:block>
+    <div class="d-flex justify-content-end mt-4 mb-5">
+        <button class="btn mx-3"  style="background-color: #B68C68;" th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
+        <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
+            <button class="btn me-2" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
+        </th:block>
+    </div>
     <script>
         function cancelRecheck(orderId){
             if(confirm("주문을 정말로 취소하시겠습니까?")) {
