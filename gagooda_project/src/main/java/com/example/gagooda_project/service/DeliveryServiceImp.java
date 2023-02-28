@@ -64,15 +64,18 @@ public class DeliveryServiceImp implements DeliveryService{
         PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
         int totalRows = deliveryMapper.countListAll(searchFilter);
         pagingDto.setRows(10);
-        pagingDto.setTotalPages(totalRows);
+        pagingDto.setTotalRows(totalRows);
         if (pagingDto.getOrderField()==null) {
-            pagingDto.setOrderField("reg_date");
+            pagingDto.setOrderField("order_id");
         }
         searchFilter.put("paging",pagingDto);
         return deliveryMapper.listAll(searchFilter);
     }
     @Override
     public int countListAll(Map<String,Object> searchFilter){ return deliveryMapper.countListAll(searchFilter);}
+
+    @Override
+    public int countAll() {return deliveryMapper.countAll();}
 
     @Override
     public int removeOne(String orderId) {

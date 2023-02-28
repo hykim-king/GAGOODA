@@ -15,4 +15,5 @@ public interface DeliveryMapper {
     int countListAll(Map<String, Object> searchFilter);
     int deleteOne(String orderId);
     int insertOne(DeliveryDto delivery);
+    int countAll();
 }

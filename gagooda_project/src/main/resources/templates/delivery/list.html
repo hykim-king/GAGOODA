@@ -43,7 +43,7 @@
   </form>
   <h3 class="my-4">배송 현황 목록 <span th:if="${deliveryList != null && !deliveryList.isEmpty() }" th:text="${deliveryList.size()}"></span></h3>
 
-  <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
+  <hr style="margin-bottom: 0; background : #b68c68; height: 5px">
 
   <table class="table">
     <thead>
@@ -61,20 +61,6 @@
     </tr>
     </thead>
     <tbody>
-    <!--        <th:block th:if="${refundCount >= 0}" th:each="i : ${#numbers.sequence(0, refundCount - 1)}">-->
-    <!--            <tr class="hrefRow" th:data-refund="${refundList[i].refundId}">-->
-    <!--                <td th:text="${i+1}"></td>-->
-    <!--                <td th:text="${refundList[i].uname}"></td>-->
-    <!--                <td th:text="${refundList[i].orderId}"></td>-->
-    <!--                <td th:text="${refundList[i].orderDetailId}"></td>-->
-    <!--                <td th:text="${refundList[i].orderDetailDto.optionCode}"></td>-->
-    <!--                <td th:text="${refundList[i].orderDetailDto.price}"></td>-->
-    <!--                <td th:text="${refundList[i].cancelAmount}"></td>-->
-    <!--                <td th:text="${rfCodeList[refundList[i].rfDet.substring(2)].detName}"></td>-->
-    <!--                <td th:text="${#calendars.format(refundList[i].regDate, 'yyyy-MM-dd')}"></td>-->
-    <!--                <td th:text="${#calendars.format(refundList[i].modDate, 'yyyy-MM-dd')}"></td>-->
-    <!--            </tr>-->
-    <!--        </th:block>-->
     <th:block th:if="${deliveryCount >= 0}" th:each="delivery : ${deliveryList}" >
       <tr>
         <td th:text="${delivery.orderId}"></td>
@@ -89,17 +75,16 @@
         <td><button type="button" th:onclick="|location.href='@{/delivery/admin/{orderId}/modify.do (orderId=${delivery.orderId})}'|">수정하기</button></td>
       </tr>
     </th:block>
-    <!--            </th:block>-->
     </tbody>
   </table>
   <th:block th:unless="${deliveryCount >= 0}"><div>배송 내역이 존재하지 않습니다.</div></th:block>
   <!--pagination-->
-  <nav aria-label="Page navigation ">
+  <nav aria-label="Page navigation" class="d-flex justify-content-center">
     <ul class="pagination">
-      <li class="page-item">
+      <li class="page-item mx-3">
         <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}" th:classappend="${(paging.page==1)?'disabled':''}">Previous</a>
       </li>
-      <li class="page-item">
+      <li class="page-item mx-3">
         <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}" th:classappend="${(!(paging.next))?'disabled':''}">Next</a>
       </li>
     </ul>

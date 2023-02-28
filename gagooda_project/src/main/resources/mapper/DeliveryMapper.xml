@@ -62,8 +62,10 @@
                 AND d_det in (${dDet})
             </if>
         </where>
+        ORDER BY ${paging.orderField} ${paging.direct}
+        LIMIT #{paging.startRow}, #{paging.rows}
     </select>
-    <select id="countListAll" resultType="java.lang.Integer">
+    <select id="countListAll" resultType="java.lang.Integer" parameterType="hashmap">
         SELECT COUNT(*) FROM delivery
         <where>
             <if test="searchDiv != '' and searchWord != ''">
@@ -79,6 +81,9 @@
                 AND d_Det in (${dDet})
             </if>
         </where>
+    </select>
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM delivery
     </select>
 </mapper>
 
