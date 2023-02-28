@@ -40,19 +40,23 @@ public class MainController {
             model.addAttribute("msg", msg);
         }
         try{
-            PagingDto recentPaging = new PagingDto();
+            PagingDto paging = new PagingDto();
             // 보여줄 상품의 개수
-            recentPaging.setRows(10);
+            paging.setRows(10);
             // 정렬 기준
-            recentPaging.setOrderField("mod_date");
+            paging.setOrderField("mod_date");
             // 정렬 방향
-            recentPaging.setDirect("DESC");
-            List<ProductDto> recentProduct = productService.pagingProduct(recentPaging, new HashMap<>());
+            paging.setDirect("DESC");
+            List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
             model.addAttribute("recentProduct",recentProduct);
+
+            paging.setOrderField("order_cnt");
+            List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
+            model.addAttribute("orderedProductList", orderedProductList);
         } catch (Exception e){
             e.printStackTrace();
         }
-        return "/main/resources/templates/mainpage.html";
+        return "mainpage";
     }
 
     @GetMapping("/error.do")
@@ -107,15 +111,19 @@ public class MainController {
         // 카테고리 나열
         List<CategoryDto> firstCategories = null;
         try {
-            PagingDto recentPaging = new PagingDto();
+            PagingDto paging = new PagingDto();
             // 보여줄 상품의 개수
-            recentPaging.setRows(10);
+            paging.setRows(10);
             // 정렬 기준
-            recentPaging.setOrderField("mod_date");
+            paging.setOrderField("mod_date");
             // 정렬 방향
-            recentPaging.setDirect("DESC");
-            List<ProductDto> recentProduct = productService.pagingProduct(recentPaging, new HashMap<>());
+            paging.setDirect("DESC");
+            List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
             model.addAttribute("recentProduct",recentProduct);
+
+            paging.setOrderField("order_cnt");
+            List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
+            model.addAttribute("orderedProductList", orderedProductList);
         } catch (Exception e) {
             e.printStackTrace();
         }

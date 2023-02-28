@@ -76,11 +76,12 @@ public class UserController {
                         Model model,
                         HttpServletRequest req) {
         String previousUrl = req.getHeader("referer");
-        if (
-                previousUrl != null && (
+        if (    previousUrl != null && (
                 previousUrl.contains("signup.do") ||
                 previousUrl.contains("findpw.do") ||
-                previousUrl.contains("password_reset.do"))
+                previousUrl.contains("password_reset.do") ||
+                previousUrl.contains("logout.do")
+                )
         ){
             previousUrl = null;
         }
@@ -108,10 +109,10 @@ public class UserController {
             session.setAttribute("loginUser", user);
             session.removeAttribute("getUri");
             session.removeAttribute("previousUrl");
+            session.removeAttribute("postUrl");
             if (!postUrl) {
                 if (getUrl != null) return "redirect:" + getUrl;
             } else {
-                session.removeAttribute("postUrl");
                 session.setAttribute("msg", "다시 한번 더 입력해 주세요");
             }
             if (previousUrl != null) return "redirect:"+previousUrl;
@@ -327,12 +328,16 @@ public class UserController {
             HttpSession session,
             HttpServletRequest req
     ) {
-        session.removeAttribute("loginUser");
+        if (session != null) {
+            session.invalidate();
+        }
         String previousUrl = req.getHeader("referer");
         if (
                 previousUrl.contains("signup.do") ||
                 previousUrl.contains("findpw.do") ||
-                previousUrl.contains("password_reset.do")
+                previousUrl.contains("password_reset.do") ||
+                previousUrl.contains("user_yes") ||
+                previousUrl.contains("login.do")
         ){
             return "redirect:/";
         } else {

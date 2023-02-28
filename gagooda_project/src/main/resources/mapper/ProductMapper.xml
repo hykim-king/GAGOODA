@@ -13,6 +13,9 @@
         <result column="reg_id" property="regId"/>
         <result column="mod_date" property="modDate"/>
         <result column="mod_id" property="modId"/>
+        <result column="order_cnt" property="orderCnt"/>
+        <result column="review_cnt" property="reviewCnt"/>
+        <result column="avg_rate" property="avgRate"/>
         <collection property="imageList"
                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
                     column="img_code"
@@ -72,6 +75,8 @@
     </select>
     <select id="countForPaging" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM
+        (SELECT final.*, COUNT(od.product_code) order_cnt
+        FROM (SELECT pc.*, COUNT(r.product_code) review_cnt, AVG(r.rate) avg_rate FROM
         (SELECT product.*
         FROM product
         LEFT JOIN category_conn cc
@@ -83,21 +88,31 @@
                          open="(" separator="," close=")">#{det}
                 </foreach>
             </if>
+        </where>
+        GROUP BY product.product_code) as pc
+        LEFT JOIN review r
+        ON pc.product_code = r.product_code
+        GROUP BY pc.product_code) as final
+        LEFT JOIN order_detail od
+        ON final.product_code = od.product_code
+        <where>
             <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
-                AND product.p_det in
+                AND final.p_det in
                 <foreach item="det" index="index" collection="map.get('catDetList')"
                          open="(" separator="," close=")">#{det}
                 </foreach>
             </if>
             <if test="map.get('searchWord')!=null and !map.get('searchWord').isBlank()">
-                AND (product.product_code LIKE ${map.get('searchWord')}
-                OR product.pname LIKE ${map.get('searchWord')})
+                AND (final.product_code LIKE ${map.get('searchWord')}
+                OR final.pname LIKE ${map.get('searchWord')})
             </if>
         </where>
-        GROUP BY product.product_code) as db
+        GROUP BY final.product_code) as db
     </select>
     <select id="pageForPaging" resultMap="productMap">
-        SELECT product.*
+        SELECT final.*, COUNT(od.product_code) order_cnt
+        FROM (SELECT pc.*, COUNT(r.product_code) review_cnt, AVG(r.rate) avg_rate FROM
+        (SELECT product.*
         FROM product
         LEFT JOIN category_conn cc
         ON product.product_code = cc.product_code
@@ -108,18 +123,26 @@
                          open="(" separator="," close=")">#{det}
                 </foreach>
             </if>
+        </where>
+        GROUP BY product.product_code) as pc
+        LEFT JOIN review r
+        ON pc.product_code = r.product_code
+        GROUP BY pc.product_code) as final
+        LEFT JOIN order_detail od
+        ON final.product_code = od.product_code
+        <where>
             <if test="map.get('catDetList')!=null and !map.get('catDetList').isEmpty()">
-                AND product.p_det in
+                AND final.p_det in
                 <foreach item="det" index="index" collection="map.get('catDetList')"
                          open="(" separator="," close=")">#{det}
                 </foreach>
             </if>
             <if test="map.get('searchWord')!=null and !map.get('searchWord').isBlank()">
-                AND (product.product_code LIKE ${map.get('searchWord')}
-                OR product.pname LIKE ${map.get('searchWord')})
+                AND (final.product_code LIKE ${map.get('searchWord')}
+                OR final.pname LIKE ${map.get('searchWord')})
             </if>
         </where>
-        GROUP BY product.product_code
+        GROUP BY final.product_code
         ORDER BY ${paging.orderField} ${paging.direct}
         LIMIT #{paging.startRow}, #{paging.rows}
     </select>
@@ -132,17 +155,17 @@
         LIMIT 8
     </select>
 </mapper>
-<!--
-SELECT p.product_code,
-        COUNT(r.product_code) review_cnt,
-        AVG(r.rate)
-FROM (SELECT product.*
-        FROM product
-        LEFT JOIN category_conn cc
-        ON product.product_code = cc.product_code
-        GROUP BY product.product_code) p
-    LEFT JOIN review r
-    ON p.product_code = r.product_code
-    GROUP BY p.product_code
-    LIMIT 10
--->
+        <!--
+        SELECT p.product_code,
+                COUNT(r.product_code) review_cnt,
+                AVG(r.rate)
+        FROM (SELECT product.*
+                FROM product
+                LEFT JOIN category_conn cc
+                ON product.product_code = cc.product_code
+                GROUP BY product.product_code) p
+            LEFT JOIN review r
+            ON p.product_code = r.product_code
+            GROUP BY p.product_code
+            LIMIT 10
+        -->
