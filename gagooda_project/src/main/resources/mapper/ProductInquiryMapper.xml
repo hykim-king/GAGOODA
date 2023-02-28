@@ -69,5 +69,6 @@
     </select>
     <select id="listByUserId" resultMap="productInquiryMap" >
         SELECT * FROM product_inquiry WHERE user_id=#{userId}
+        ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
 </mapper>

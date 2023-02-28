@@ -5,6 +5,7 @@ import com.example.gagooda_project.dto.ReviewDto;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ReviewMapper {
@@ -25,7 +26,7 @@ public interface ReviewMapper {
 
     List<ReviewDto> listByProductCodeAll(String productCode);
 
-    List<ReviewDto> pageAll (PagingDto paging);
+    List<ReviewDto> pageAll (Map<String, Object> searchFilter);
 
-    int count (PagingDto paging);
+    int count (Map<String, Object> searchFilter);
 }

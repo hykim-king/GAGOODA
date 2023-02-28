@@ -149,7 +149,7 @@ public class ProductInquiryController {
         try{
             if(paging.getOrderField()==null) paging.setOrderField("user_id");
             System.out.println(loginUser.getUserId());
-            List<ProductInquiryDto> mypageList = productInquiryService.showInquiryByUser(loginUser.getUserId());
+            List<ProductInquiryDto> mypageList = productInquiryService.showInquiryByUser(loginUser.getUserId(),paging);
             int count = productInquiryService.numUserId(loginUser.getUserId());
             model.addAttribute("mypageList", mypageList);
             model.addAttribute("count",count);
