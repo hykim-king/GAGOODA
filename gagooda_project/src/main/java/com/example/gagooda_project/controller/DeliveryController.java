@@ -81,8 +81,11 @@ public class DeliveryController {
                 List<CommonCodeDto> dCodeList = deliveryService.showDetCodeList("d");
                 List<DeliveryDto> deliveryList = deliveryService.showDeliveryList(searchFilter);
                 int deliveryCount = deliveryService.countListAll(searchFilter);
+                int allDCnt = deliveryService.countAll();
+                model.addAttribute("allDCnt",allDCnt);
                 model.addAttribute("deliveryList",deliveryList);
                 model.addAttribute("dCodeList",dCodeList);
+                System.out.println("paging for delivery: "+paging);
                 model.addAttribute("paging",paging);
                 model.addAttribute("deliveryCount",deliveryCount);
                 return "delivery/list";

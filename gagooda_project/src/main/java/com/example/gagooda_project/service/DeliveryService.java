@@ -15,6 +15,7 @@ public interface DeliveryService {
     DeliveryDto selectByOrderId(String orderId);
     public List<DeliveryDto> showDeliveryList(Map<String,Object> searchFilter);
     public int countListAll(Map<String,Object> searchFilter);
+    public int countAll();
     public int removeOne(String orderId);
     public List<CommonCodeDto> showDetCodeList(String mstCode);
 

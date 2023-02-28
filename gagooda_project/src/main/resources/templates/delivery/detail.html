@@ -46,7 +46,7 @@
     </div>
     <div class="my-3">
       <label for="dDet" class="form-label">배송 상태</label>
-      <input type="text" name="dDet" class="form-control form-control-lg" id="dDet" th:value="${delivery.dDet}" readonly>
+      <input type="text" name="dDet" class="form-control form-control-lg" id="dDet" th:value="${delivery.DDetDto.detName}" readonly>
     </div>
 
     <input type="hidden" name="userId" id="userId" th:value="${delivery.userId}">

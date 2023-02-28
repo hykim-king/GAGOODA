@@ -111,7 +111,7 @@
          </where>
         ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
-    <select id="countByOrderId" resultType="int">
+    <select id="countByOrderId" resultType="int" parameterType="hashmap">
         SELECT COUNT(*) FROM refund WHERE order_id = #{orderId}
     </select>
     <select id="countAll" resultType="int">
