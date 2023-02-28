@@ -25,7 +25,7 @@
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">평점</label>
-                <input type="number" min="1" max="5" step="1" class="form-control" name="rate" id="rate" required placeholder="1~5점을 주세요 !">
+                <input type="range" min="1" max="5" class="form-control" name="rate" id="rate" required placeholder="1~5점을 주세요 !">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
@@ -36,17 +36,26 @@
                 <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
             </div>
             <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="reset">취소</button>
+                <button class="btn btn-primary" type="reset" onclick="cancel()">취소</button>
                 <button class="btn btn-primary" type="submit" onclick="registerReview()">등록</button>
             </div>
         </div>
     </form>
-    <script>
+    <script th:inline="javascript">
         function registerReview() {
             let result = confirm("리뷰를 등록하시겠습니까 ?");
             if (result == true) {
                 location.href = "review/list.do?productCode="+document.getElementById("productCode").value;
             }
+        }
+        function cancel() {
+            let result = confirm("리뷰 등록을 취소하시겠습니까 ?");
+            if (result == true) {
+                location.href = "/order/user_yes/mypage/"+[[${orderId}]]+"/detail.do";
+            }
+        }
+        function rate() {
+            let rate = document.getElementById("rate")
         }
     </script>
 </div>

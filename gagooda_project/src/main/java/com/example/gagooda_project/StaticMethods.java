@@ -14,6 +14,7 @@ public class StaticMethods {
                                    int seq) throws Exception {
         ImageDto image = null;
         String[] contentsTypes = Objects.requireNonNull(imgFile.getContentType()).split("/");
+        System.out.println("contentsTypes: "+contentsTypes);
         if (contentsTypes[0].equals("image")) {
             String fileName = code + "_" + System.currentTimeMillis() + "_"
                     + (int) (Math.random() * 10000) + "." + contentsTypes[1];

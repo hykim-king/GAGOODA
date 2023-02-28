@@ -33,7 +33,7 @@
             VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{content}, #{imgCode})
     </insert>
     <update id="updateOne" parameterType="ReviewDto">
-        UPDATE review SET rate=#{rate}, content=#{content}, img_code=#{imgCode} WHERE review_id=#{reviewId}
+        UPDATE review SET rate=#{rate}, content=#{content} WHERE review_id=#{reviewId}
     </update>
     <delete id="deleteOne">
         DELETE FROM review WHERE review_id=#{id}
