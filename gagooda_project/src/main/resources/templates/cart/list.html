@@ -6,66 +6,123 @@
 <head>
     <meta charset="UTF-8">
     <title>장바구니 목록</title>
+    <style>
+        /*input[id="allCheck"] + label {*/
+        /*    display: inline-block;*/
+        /*    width: 20px;*/
+        /*    height: 20px;*/
+        /*    background: #ffffff;*/
+        /*    position: relative;*/
+        /*    margin-top: 5px;*/
+        /*    border-radius: 10px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+        /*input[id="checkList"] + label {*/
+        /*    display: inline-block;*/
+        /*    width: 22px;*/
+        /*    height: 22px;*/
+        /*    border:2px solid #B68C68;*/
+        /*    position: relative;*/
+        /*    border-radius: 11px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+        /*input[type="checkbox"]:checked + label::after {*/
+        /*    content:'✔';*/
+        /*    font-size: 12px;*/
+        /*    width: 22px;*/
+        /*    height: 22px;*/
+        /*    text-align: center;*/
+        /*    position: absolute;*/
+        /*    left: 0;*/
+        /*    top:0;*/
+        /*    padding-right: 2px;*/
+        /*}*/
+        /*input[type="checkbox"] {*/
+        /*    display: none;*/
+        /*}*/
+    </style>
 </head>
 <body>
     <div layout:fragment="content">
-        <h1>장바구니 목록</h1>
-        <form th:action method="get">
-            <th:block th:if="${cartList.size() > 0}">
-                <div>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>전체 <span th:text="${cartList.size()}"></span>개</th>
-                            <th>
-                                <input type="checkbox" class="allCheck" checked>
-                            </th>
-                            <th>상품정보</th>
-                            <th>가격</th>
-                            <th>수량</th>
-                            <th>합계</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <th:block th:each="i : ${#numbers.sequence(0, cartList.size()-1)}">
-                            <tr th:data-cart="${cartList[i].cartId}">
-                                <td th:text="${i+1}"></td>
-                                <td class="checkBox"><input type="checkbox" name="checkList" class="checkList" checked th:value="${cartList[i].cartId}"></td>
-                                <td>
-                                    <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImageList().get(0).imgPath})}"
-                                         style="width: 100px;">
-                                    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getOptionProduct().getOpname()}"></a>
-                                </td>
-                                <td>
-                                    <input type="number" th:value="${cartList[i].optionProduct.getPrice()}" readonly style="width: 100px">
-                                </td>
-                                <td class="cntUpdate">
-                                    <input type="number" th:value="${cartList[i].cnt}" name="cntText" class="cntText" style="width: 50px">
-                                </td>
-                                <td>
-                                    <input type="number"  th:value="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" class="priceList" readonly style="width: 100px">
-                                </td>
-                            </tr>
-                        </th:block>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="container">
+            <h3 class="py-5 m-0 text-center">장바구니</h3>
+            <hr>
+            <form th:action method="get">
+                <th:block th:if="${cartList.size() > 0}">
+                    <div class="container text-center">
+                        <b class="text-center">주문하실 상품을 선택해주세요.</b>
+                        <table class="table border-top mt-3">
+                            <thead>
+                                <tr style="background: #B68C68; color: #ffffff">
+                                    <th>전체 <span th:text="${cartList.size()}"></span>개</th>
+                                    <th>
+                                        <input type="checkbox" class="allCheck" id="allCheck" checked>
+                                        <label for="allCheck" class="allCheckLabel"></label>
+                                    </th>
+                                    <th colspan="2">상품정보</th>
+                                    <th>가격</th>
+                                    <th>수량</th>
+                                    <th>합계</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="i : ${#numbers.sequence(0, cartList.size()-1)}">
+                                <tr th:data-cart="${cartList[i].cartId}">
+                                    <td th:text="${i+1}"></td>
+                                    <td class="checkBox">
+                                        <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${cartList[i].cartId}">
+                                        <label for="checkList"></label>
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}">
+                                            <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImageList().get(0).imgPath})}">
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div style="margin-top: 60px;">
+                                            <a class="text-decoration-none" style="color: #000000" th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getOptionProduct().getOpname()}"></a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" id="priceOne" th:value="${cartList[i].optionProduct.getPrice()}" style="display: none;">
+                                        <label for="priceOne" th:text="${cartList[i].optionProduct.getPrice()}" style="margin-top: 60px; border: none; text-align: center; padding: 0;"></label>
+                                    </td>
+                                    <td class="cntUpdate">
+                                        <input type="number" th:value="${cartList[i].cnt}" name="cntText" class="cntText" style="width: 50px; margin-top: 60px; text-align: center; padding: 0;">
+                                    </td>
+                                    <td>
+                                        <input type="number" id="totalPriceOne" th:value="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" class="priceList" style="display: none;">
+                                        <label for="totalPriceOne" th:text="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" style="margin-top: 60px; border: none; text-align: center; padding: 0;"></label>
+                                    </td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div>
-                    <div>총 주문금액: <strong id="totalPrice" class="totalPrice" th:text="${totalPrice}"></strong> 원</div>
-                    <div>총 주문수량: <strong id="totalCnt" class="totalCnt" th:text="${totalCnt}"></strong> 개</div>
-                    <button type="button" class="orderOneBtn" onclick="orderOne()">선택주문</button>
-                    <button type="button" class="orderAllBtn" onclick="orderAll()">전체주문</button>
-                    <button type="button" class="delOneBtn" onclick="cartDelOne()">선택삭제</button>
-                    <button type="button" class="delAllBtn" onclick="cartDelAll()">전체삭제</button>
-                </div>
-            </th:block>
-            <th:block th:if="${cartList.size() == 0}">
-                <span>장바구니가 비었습니다.</span>
-            </th:block>
 
-        </form>
-
+                    <div class="d-block">
+                        <div class="float-start">
+                            <button type="button" class="delOneBtn btn btn-light border" style="width: 100px" onclick="cartDelOne()">선택삭제</button>
+                            <button type="button" class="delAllBtn btn btn-light border" style="width: 100px" onclick="cartDelAll()">전체삭제</button>
+                        </div>
+                        <div class="float-end">
+                            <div>총 주문금액: <strong id="totalPrice" class="totalPrice" style="color: #B68C68" th:text="${totalPrice}"></strong> 원</div>
+                            <div>총 주문수량: <strong id="totalCnt" class="totalCnt" style="color: #B68C68" th:text="${totalCnt}"></strong> 개</div>
+                        </div>
+                    </div>
+                    <div class="d-block text-center mb-5">
+                        <div style="margin-top: 100px">
+                            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px" onclick="orderOne()">선택주문</button>
+                            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px" onclick="orderAll()">전체주문</button>
+                        </div>
+                    </div>
+                </th:block>
+                <th:block th:if="${cartList.size() == 0}">
+                    <span>장바구니가 비었습니다.</span>
+                </th:block>
+            </form>
+        </div>
     </div>
 </body>
 </html>
