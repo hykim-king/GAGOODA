@@ -30,7 +30,6 @@ public class RefundDto {
     private String rfDet;           // 환불처리상태_DET, FK, NN, ( REFUND : COMMON_CODE ) N:1
     private String rfrDet;          // 환불/ 교환사유_DET, rfr_det, FK, NN, ( REFUND : COMMON_CODE ) N:1
     private OrderDto orderDto;  // 주문 DTO
-    private AddressDto addressDto; // 주소 DTO
     private OrderDetailDto orderDetailDto; // 주문 상세 DTO
     private List<ImageDto> imageList;   // 이미지 리스트
     private boolean reType;         // 환불/교환 여부(true: 환불, false:교환)

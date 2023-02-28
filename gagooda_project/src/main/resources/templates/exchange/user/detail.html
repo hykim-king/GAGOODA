@@ -7,37 +7,109 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
 <div layout:fragment="myPageContent">
-    <h2>교환 신청 확인서</h2>
 
-    <h3>교환 신청</h3>
-    <h3>주문 정보</h3>
-    <ul>
-        <li>주문인 : <span th:text="${exchange.uname}"></span></li>
-        <li>주문 날짜 : <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></span></li>
-        <li>주문 번호 : <span th:text="${order.orderId}"></span></li>
-        <li>주문 상품 : <span th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></span></li>
-        <li>총 주문 금액 : <span th:text="${order.totalPrice}"></span></li>
-    </ul>
-    <h3>교환 요청 정보</h3>
-    <ul>
-        <li>수령인 : <span th:text="${exchange.receiverName}"></span></li>
-        <li>수령인 연락처 : <span th:text="${exchange.receiverPhone}"></span></li>
-        <li>교환 대상 상품 : <span th:text="${exchange}"></span></li>
-        <li>교환 요청 수량 : <span th:text="${exchange.cnt}"></span></li>
-        <li>교환 요청 유형 : <span th:text="${rfrDetList[#strings.substring(exchange.rfrDet,3)].detName}"></span></li>
-        <li>교환 요청 사유 : <span th:text="${exchange.reason}"></span></li>
-        <li>주소 : <span th:text=" ${'('+exchange.postCode+') '+exchange.address } "></span><span th:text="${exchange.addressDetail}"></span></li>
-        <li>첨부 이미지 <span th:text="${exchange.imgCode}"></span></li>
-    </ul>
+    <h2>환불 반품 신청 확인서</h2>
+    <h3 class="mt-5">주문 정보</h3>
+    <hr style="margin-top: 0; background : #b68c68; height: 5px">
 
-    <h3>교환 처리 정보</h3>
-    <ul>
-        <li>교환 처리 현황 : <span th:text="${exDetList[#strings.substring(exchange.exDet, 2)].detName}"></span></li>
-        <li></li>
-    </ul>
+    <table class="table">
+        <tr>
+            <th class="col-2">주문인</th>
+            <td class="col-10" th:text="${order.userName}"></td>
+        </tr>
+        <tr>
+            <th>주문 날짜</th>
+            <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
+        </tr>
+        <tr>
+            <th>주문 번호</th>
+            <td th:text="${order.orderId}"></td>
+        </tr>
+        <tr>
+            <th>주문 상품</th>
+            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>
+        </tr>
+        <tr>
+            <th>총 주문 금액</th>
+            <td th:text="${order.totalPrice}"></td>
+        </tr>
+    </table>
 
+    <h3 class="mt-5">환불 요청 정보</h3>
+    <hr style="margin-top: 0; background : #b68c68; height: 5px">
+    <table class="table">
+        <tr>
+            <th class="col-2">수령인</th>
+            <td class="col-10" th:text="${exchange.receiverName}"></td>
+        </tr>
+        <tr>
+            <th>수령인 연락처</th>
+            <td th:text="${exchange.receiverPhone}"></td>
+        </tr>
+        <tr>
+            <th class="align-middle">교환 대상 상품</th>
+            <td>
+                <th:block th:if="${exchange.orderDetailDto.imageList != null}">
+                    <img th:src="@{'/img/product/{file}' (file=${exchange.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
+                </th:block>
+                <span th:text="${exchange.orderDetailDto.optionName}"></span>
+            </td>
+        </tr>
+        <tr>
+            <th>교환 요청 수량</th>
+            <td th:text="${exchange.cnt}"></td>
+        </tr>
+        <tr>
+            <th>교환 요청 유형</th>
+            <td th:text="${exchange.rfrDetDto.detName}"></td>
+        </tr>
+        <tr>
+            <th>교환 요청 사유</th>
+            <td th:text="${exchange.reason}"></td>
+        </tr>
+        <tr th:if="${exchange.imageList != null && !exchange.imageList.isEmpty()}">
+            <th>첨부 이미지</th>
+            <td>
+                <th:block th:each="img:${exchange.imageList}">
+                    <img th:src="@{'/img/exchange/{imgPath}' (imgPath=${img.imgPath}) }" alt="exchangeRequestImg" style="width: 400px; height: 400px; object-fit: cover;">
+                </th:block>
+            </td>
+        </tr>
+    </table>
+
+    <h3 class="mt-5">교환 처리 정보</h3>
+    <hr style="margin-top: 0; background : #b68c68; height: 5px">
+    <table class="table">
+        <tr>
+            <th class="col-2">환불 처리 현황</th>
+            <td class="10" th:text="${exchange.exDetDto.detName}"></td>
+        </tr>
+        <tr>
+            <th>답변</th>
+            <td>
+                <th:block th:if="${exchange.reply != null}" >
+                    <div th:text="${exchange.reply}"></div>
+                </th:block>
+                <th:block th:unless="${exchange.reply != null}">
+                    <div> 아직 답변이 달리지 않았습니다. </div>
+                </th:block>
+            </td>
+        </tr>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        <th:block th:if="${exchange.exDet.equals('ex0')}">
+            <form th:action="@{'/exchange/user_yes/mypage/{exchangeId}/modify.do' (exchangeId = ${exchange.exchangeId})}" method="post">
+                <button class="btn" type="submit" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">교환 요청 취소</button>
+            </form>
+        </th:block>
+        <a class="btn text-white ms-3 backBtn" href="javascript:void(0)" onclick="goBack()" style="background-color: #B68C68;">목록으로</a>
+    </div>
+    <script th:inline="javascript">
+        function goBack(){
+            window.history.back();
+        }
+    </script>
 </div>
-</body>
 </html>

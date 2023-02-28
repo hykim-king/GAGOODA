@@ -1,10 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.service.AddressServiceImp;
-import com.example.gagooda_project.service.ImageServiceImp;
-import com.example.gagooda_project.service.OrderServiceImp;
-import com.example.gagooda_project.service.RefundServiceImp;
+import com.example.gagooda_project.service.*;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -34,17 +31,26 @@ public class RefundController {
     OrderServiceImp orderServiceImp;
     ImageServiceImp imageServiceImp;
     AddressServiceImp addressServiceImp;
+    PaymentServiceImp paymentServiceImp;
+    ExchangeService exchangeService;
     Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     @Value("${img.upload.path}")
     private String imgPath;
 
     private final IamportClient iamportClient;
 
-    public RefundController(RefundServiceImp refundServiceImp, OrderServiceImp orderServiceImp,ImageServiceImp imageServiceImp,AddressServiceImp addressServiceImp) {
+    public RefundController(RefundServiceImp refundServiceImp,
+                            OrderServiceImp orderServiceImp,
+                            ImageServiceImp imageServiceImp,
+                            AddressServiceImp addressServiceImp,
+                            PaymentServiceImp paymentServiceImp,
+                            ExchangeService exchangeService) {
         this.refundServiceImp = refundServiceImp;
         this.orderServiceImp = orderServiceImp;
         this.imageServiceImp = imageServiceImp;
         this.addressServiceImp = addressServiceImp;
+        this.paymentServiceImp = paymentServiceImp;
+        this.exchangeService = exchangeService;
         this.iamportClient = new IamportClient("5625884002542635", "V1vlsxRPO59Ty3xDEKlhf2W7gkv2dMU4Hld8EFXYvuDedHnF3kRWvX1gqt9DNsg6GQSmoz2D76iogdnU");
     }
 
@@ -78,9 +84,9 @@ public class RefundController {
         return "refund/user/list";
     }
 
-    @GetMapping("user_yes/mypage/{orderId}/register.do")
+    @GetMapping("user_yes/mypage/{orderDetailId}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
-                           @PathVariable String orderId,
+                           @PathVariable int orderDetailId,
                            HttpSession session,
                            Model model) {
         String refundMsg = null;
@@ -90,11 +96,13 @@ public class RefundController {
             model.addAttribute("refundMsg", refundMsg);
         }
         try{
-            OrderDto order = orderServiceImp.selectOne(orderId);
-            int refundCount = refundServiceImp.countByOrderId(orderId);
+            OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
+            OrderDto order = orderServiceImp.selectOne(orderDetail.getOrderId());
+            int refundCount = refundServiceImp.countByOrderId(order.getOrderId());
             List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
             AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
 
+            model.addAttribute("orderDetail", orderDetail);
             model.addAttribute("order", order);
             model.addAttribute("refundCount", refundCount);
             model.addAttribute("orderAddress", orderAddress);
@@ -108,41 +116,87 @@ public class RefundController {
 
     }
 
-    @PostMapping("user_yes/mypage/{orderId}/register.do")
+    @PostMapping("user_yes/mypage/{orderDetailId}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
-                           @PathVariable String orderId,
+                           @PathVariable int orderDetailId,
                            HttpSession session,
                            @RequestParam(required = false, name="imgFileList") List<MultipartFile> imgFileList,
+                           @RequestParam(required = false) int cnt,
                            RefundDto refund) {
         int register = 0;
         String reType;
         String detailimgPath;
+        String code;
         int seq = 1;
-
-        if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderId)) {
             try {
-                /* 환불, 교환 체크하여 이름 지정 */
-                if (refund.isReType()){
-                    reType = "refund";
-                    detailimgPath = imgPath + "/refund";
-                }else{
-                    reType = "exchange";
-                    detailimgPath = imgPath + "/exchange";
-                }
-                /* 등록 */
-                register += refundServiceImp.registerOne(refund, imgFileList, detailimgPath, reType, seq);
-                if (register > 0) { // 성공했을 시
-                    session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
-                    return "redirect:/refund/user_yes/mypage/"+refund.getRefundId()+"/detail.do";
-                } else { // 실패했을 시
-                    session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
-                    return "redirect:/refund/user_yes/mypage/"+orderId+"/register.do" ;
+                OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
+                if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderDetail.getOrderId())) {
+                    /* 환불, 교환 체크하여 이름 지정 */
+                    if (refund.isReType()) {
+                        reType = "refund";
+                        detailimgPath = imgPath + "/refund";
+                        /* 등록 */
+                        code = reType + refund.getOrderId() + refund.getOrderDetailId();
+                        refund.setImgCode(code);
+                        register += refundServiceImp.registerOne(refund);
+                        if (register > 0) { // 성공했을 시
+                            if (!imgFileList.isEmpty()){
+                                for (MultipartFile imgFile : imgFileList) {
+                                    imageServiceImp.registerMultipartImage(imgFile, detailimgPath, code, seq);
+                                    seq++;
+                                }
+                            }
+                            seq = 0;
+                            session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                            return "redirect:/refund/user_yes/mypage/" + refund.getRefundId() + "/detail.do";
+                        } else { // 실패했을 시
+                            session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
+                            return "redirect:/refund/user_yes/mypage/" + orderDetailId + "/register.do";
+                        }
+                    } else {
+                        reType = "exchange";
+                        detailimgPath = imgPath + "/exchange";
+                        ExchangeDto exchange = new ExchangeDto();
+                        exchange.setUserId(refund.getUserId());
+                        exchange.setUname(refund.getUname());
+                        exchange.setEmail(refund.getEmail());
+                        exchange.setPhone(refund.getPhone());
+                        exchange.setOrderId(refund.getOrderId());
+                        exchange.setOrderDetailId(refund.getOrderDetailId());
+                        exchange.setAddressId(refund.getAddressId());
+                        exchange.setCnt(cnt);
+                        exchange.setReason(refund.getReason());
+                        exchange.setPostCode(refund.getPostCode());
+                        exchange.setAddress(refund.getAddress());
+                        exchange.setAddressDetail(refund.getAddressDetail());
+                        exchange.setReceiverName(refund.getReceiverName());
+                        exchange.setReceiverPhone(refund.getReceiverPhone());
+                        exchange.setElevator(refund.isElevator());
+                        exchange.setRfrDet(refund.getRfrDet());
+                        /* 등록 */
+                        code = reType + exchange.getOrderId() + exchange.getOrderDetailId();
+                        exchange.setImgCode(code);
+                        register += exchangeService.registerOne(exchange);
+                        if (register > 0) { // 성공했을 시
+                            if (!imgFileList.isEmpty()) {
+                                for (MultipartFile imgFile : imgFileList) {
+                                    imageServiceImp.registerMultipartImage(imgFile, detailimgPath, code, seq);
+                                    seq++;
+                                }
+                            }
+                            seq = 0;
+//                        session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                            return "redirect:/exchange/user_yes/mypage/" + exchange.getExchangeId() + "/detail.do";
+                        } else { // 실패했을 시
+                            session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
+                            return "redirect:/exchange/user_yes/mypage/" + orderDetailId + "/register.do";
+                        }
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        return "redirect:/refund/user_yes/mypage/"+orderId+"/register.do";
+        return "redirect:/refund/user_yes/mypage/"+orderDetailId+"/register.do";
     }
 
     @GetMapping("user_yes/mypage/{refundId}/detail.do")
@@ -296,18 +350,24 @@ public class RefundController {
                               @SessionAttribute UserDto loginUser,
                               Model model){
         try{
-            RefundDto refund = refundServiceImp.selectOne(refundId);
             if(loginUser.getGDet().equals("g1")){
+                RefundDto refund = refundServiceImp.selectOne(refundId);
+                OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
                 session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
+                PaymentDto payment = paymentServiceImp.selectOne(refund.getOrderId());
+                IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
                 model.addAttribute("refund", refund);
+                model.addAttribute("order",order);
                 model.addAttribute("rfCodeList", allRfList);
+                model.addAttribute("payment", paymentResp.getResponse());
                 return "refund/admin/detail";
             }
         }catch (Exception e){
             log.info(e.getMessage());
         }
-        return "/index";
+//        return "redirect:/refund/admin/list.do";
+        return "refund/admin/detail";
     }
 
     //임시 결제 페이지
@@ -338,7 +398,7 @@ public class RefundController {
     //결제 취소 POST
     @PostMapping("admin/payments/cancel.do")
     @ResponseBody
-    public Payment cancelPaymentByIamUid(String orderId,
+    public IamportResponse<Payment> cancelPaymentByIamUid(String orderId,
                                         Integer cancelAmount,
                                         String reason,
                                         HttpSession session,
@@ -364,19 +424,21 @@ public class RefundController {
                 log.info("cancelResp.getCode: "+cancelResp.getCode());
 //                session.setAttribute("msg",cancelResp.getMessage());
                 code = cancelResp.getCode();
-                return cancelResp.getResponse();
+                if (code == 0){
+                    return cancelResp;
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return cancelResp;
     }
 
-    // 결제 조회 POST
+    // 결제 조회 POST --> impUid 저장되어 있으면 어디서든 해당 건에 대한 결제 정보를 조회할 수 있으며, 영수증 url도 포함하고 있어 매출 전표를 볼 수 있다.
     @PostMapping("/admin/payments/find.do")
     @ResponseBody
     public Payment paymentByImpUid(String impUid,
-                                                    @SessionAttribute UserDto loginUser){
+                                   @SessionAttribute UserDto loginUser){
         try{
             if(loginUser.getGDet().equals("g1")){
                 IamportResponse<Payment> paymentResponse = iamportClient.paymentByImpUid(impUid);

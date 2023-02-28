@@ -10,7 +10,7 @@
 <div layout:fragment="myPageContent">
 
         <div>
-            <h1>환불 반품 신청서</h1>
+            <h1>교환/환불 신청서</h1>
             <hr style="margin-top: 0; background : #b68c68; height: 5px">
             <a class="d-flex justify-content-end text-decoration-none text-black" href="javascript:void(0)" onclick="goBack()">뒤로가기</a>
             <script>
@@ -23,9 +23,9 @@
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong th:text="${session.loginUser.uname} + 님."></strong>
                     <p th:text="${refundMsg}"></p>
-                    <p><span th:text="${order.orderId}"></span> 번 주문에 대한 환불 요청이 <strong th:text="${refundCount}"></strong> 건 검색됩니다. </p>
-                    <p>해당 주문은 이미 환불 진행 중인 상품입니다. </p>
-                    <p>환불 요청이 없음에도 등록이 진행되지 않는다면 고객센터에 문의해주십시오.</p>
+                    <p><span th:text="${order.orderId}"></span> 번 주문에 대한 요청이 <strong th:text="${refundCount}"></strong> 건 검색됩니다. </p>
+                    <p>해당 주문은 이미 진행 중인 상품입니다. </p>
+                    <p>교환/환불 요청이 없음에도 등록이 진행되지 않는다면 고객센터에 문의해주십시오.</p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             </th:block>
@@ -63,23 +63,14 @@
         </table>
 
 
-        <form name="refundRegister" id="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderId}/register.do' (orderId = ${order.orderId})}" method="post" enctype="multipart/form-data">
+        <form name="refundRegister" id="refundRegister" th:action="@{'/refund/user_yes/mypage/{orderDetailId}/register.do' (orderDetailId = ${orderDetailId})}" method="post" enctype="multipart/form-data">
             <input type="hidden" id="userId" name="userId" th:value="${order.userId}">
             <input type="hidden" id="uname" name="uname" th:value="${order.userName}">
             <input type="hidden" id="email" name="email" th:value="${order.userEmail}">
             <input type="hidden" id="phone" name="phone" th:value="${order.userPhone}">
-        <!--    <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">-->
+            <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
             <fieldset class="mt-5">
-                <legend>환불 정보</legend>
-                <div>
-                    <label for="orderDetailId">환불 대상 상품</label>
-                    <select class="form-select" name="orderDetailId" id="orderDetailId" onchange="changeOpt()" required>
-                        <option value="" selected disabled>환불 대상을 선택해주세요.</option>
-                        <th:block th:each="orderDetail : ${order.orderDetailList}">
-                        <option th:text="${orderDetail.optionName+' (환불 예상 금액: '+orderDetail.totalPrice+')'}" th:value="${orderDetail.orderDetailId}" th:data-amount="${orderDetail.totalPrice}"></option>
-                        </th:block>
-                    </select>
-                </div>
+                <legend>교환/환불 정보</legend>
                 <div>신청 유형</div>
                 <div class="d-flex">
                     <div class="form-check me-3">
@@ -92,8 +83,17 @@
                     </div>
                 </div>
                 <div>
+                    <label for="orderDetailId">교환/환불 대상 상품</label>
+                    <input type="hidden" th:value="${orderDetail.orderDetailId}" id="orderDetailId" th:data-amount="${orderDetail.totalPrice}" th:data-cnt="${orderDetail.cnt}">
+                    <span class="form-control" th:text="${orderDetail.optionName}"></span>
+                </div>
+                <div class="d-none refundInput">
                     <label for="cancelAmount">환불 금액</label>
                     <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
+                </div>
+                <div class="d-none exchangeInput">
+                    <label for="cnt">교환 수량</label>
+                    <input class="form-control" type="number" id="cnt" name="cnt" th:max="${orderDetail.cnt}" min="1">
                 </div>
                 <div>
                     <label for="imgFileList" class="form-label">첨부 이미지</label>
@@ -131,8 +131,10 @@
                 <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
 
             </fieldset>
-            <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">신청하기</button>
-            <button name="refundReset" type="reset" class="btn text-white" style="background-color: #B68C68;">초기화</button>
+            <div>
+                <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn text-white" style="background-color: #B68C68;">신청하기</button>
+                <button name="refundReset" type="reset" class="btn" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" >초기화</button>
+            </div>
 
         </form>
     </div>
@@ -152,7 +154,9 @@
                                 <label for="newAname">주소지 이름</label>
                                 <input class="form-control" type="text" name="aname" id="newAname" required>
                             </div>
-                            <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn btn d-flex justify-content-end" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">
+                            <div class="d-flex justify-content-end mt-2">
+                                <input type="button" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn btn" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">
+                            </div>
                             <div>
                                 <label for="newPostCode">우편번호</label>
                                 <input class="form-control" type="number" name="postCode" id="newPostCode" required>
@@ -194,6 +198,11 @@
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
+            let newAddressRegister = document.forms.addressRegister;
+            let refundRegister = document.forms.refundRegister;
+            refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;
+            refundRegister.cnt.value = refundRegister.orderDetailId.dataset.cnt;
+
             function changeOpt(){
                 let cancelAmount = document.querySelector("#cancelAmount");
                 console.log(document.getElementById("orderDetailId"));
@@ -205,6 +214,29 @@
                 // console.log("option:"+optTxt);
                 // cancelAmount.value = optTxt.split(":")[1].split(")")[0];
             }
+
+
+            let reType = refundRegister.reType;
+            console.log(reType)
+            reType.forEach(element=>{
+                let refund = document.querySelector(".refundInput");
+                let exchange = document.querySelector(".exchangeInput");
+                element.addEventListener("change",()=>{
+                    console.log(element.value)
+                    console.log(typeof(element.value))
+                    if (element.value === "true"){
+                        refund.classList.remove("d-none")
+                        if (!exchange.classList.contains("d-none")){
+                            exchange.classList.add("d-none")
+                        }
+                    }else{
+                        exchange.classList.remove("d-none")
+                        if (!refund.classList.contains("d-none")){
+                            refund.classList.add("d-none")
+                        }
+                    }
+                })
+            })
 
             const currentAddressList = document.querySelectorAll(".add");
             const realAddressList = document.querySelectorAll(".realValue");
@@ -237,9 +269,7 @@
                 realAddressList[6].value = addressMap.get("elevator");
             }
 
-            let refundRegister = document.forms.refundRegister;
-            let newAddressRegister = document.forms.addressRegister;
-            let addressReg = document.getElementById("addressRegister");
+
 
 
             async function newAddressSubmit(){

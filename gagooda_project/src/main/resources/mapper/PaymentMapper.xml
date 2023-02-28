@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.gagooda_project.mapper.PaymentMapper">
+    <resultMap id="paymentMap" type="PaymentDto">
+        <id column="order_id" property="orderId"/>
+        <result column="imp_uid" property="impUid"/>
+    </resultMap>
+    <insert id="insertOne">
+        INSERT INTO payment (order_id, imp_uid) VALUES(#{orderId}, #{impUid})
+    </insert>
+    <delete id="deleteByOrderId">
+        DELETE payment WHERE order_id = #{orderId}
+    </delete>
+
+    <select id="findByOrderId" resultMap="paymentMap">
+        SELECT * FROM payment WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

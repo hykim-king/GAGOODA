@@ -39,15 +39,29 @@
         <div id="payment"></div>
     </div>
     <div th:each="payments: ${allPayments.list}">
+        <div>------</div>
         <div th:text="${payments.name}"></div>
         <div th:text="${payments.status}"></div>
         <div th:text="${payments.amount}"></div>
         <div th:text="${payments.buyerName}"></div>
         <div th:text="${payments.buyerTel}"></div>
+        <div th:text="${payments.impUid}"></div>
+        <div th:text="${payments.merchantUid}"></div>
+        <a class="receiptA" href="javascript:void(0)" th:data-url="${payments.receiptUrl}">영수증</a>
         <div>-----</div>
     </div>
 
     <script th:inline="javascript">
+        let receiptA = document.querySelectorAll(".receiptA");
+        receiptA.forEach(elements=>{
+            let i = 0;
+            elements.onclick=()=>{
+                window.open(elements.dataset.url, "receipt", "width=450, height=600, resizable=no");
+            }
+            i++;
+
+        })
+
         // 결제 금액, 구매자 이메일, 이름
         const priceAmount = [[${order.totalPrice}]];
         const buyerMemberEmail = [[${order.userEmail}]];

@@ -20,37 +20,151 @@
                      column="order_id"
                      select="com.example.gagooda_project.mapper.OrderMapper.findById"
                      fetchType="lazy"/>
-        <association property="addressDto"
-                     column="address_id"
-                     select="com.example.gagooda_project.mapper.AddressMapper.findById"
+        <association property="exDetDto"
+                     column="ex_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
                      fetchType="lazy"/>
+        <association property="rfrDetDto"
+                     column="rfr_det"
+                     select="com.example.gagooda_project.mapper.CommonCodeMapper.findByDetCode"
+                     fetchType="lazy"/>
+        <association property="orderDetailDto"
+                     column="order_detail_Id"
+                     select="com.example.gagooda_project.mapper.OrderDetailMapper.findById"
+                     fetchType="lazy"/>
+        <collection property="imageList"
+                    column="img_code"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    fetchType="lazy"/>
     </resultMap>
-    <update id="updateOne">
-        UPDATE exchange SET reply=#{reply}, mod_date=NOW(), ex_det=#{exDet} WHERE exchange_id = #{exchangeId}
-    </update>
-    <insert id="insertOne" keyProperty="exchangeId" useGeneratedKeys="true">
+<!--    <update id="updateOne">-->
+<!--        UPDATE exchange SET reply=#{reply}, mod_date=NOW(), ex_det=#{exDet} WHERE exchange_id = #{exchangeId}-->
+<!--    </update>-->
+<!--    <insert id="insertOne" keyProperty="exchangeId" useGeneratedKeys="true">-->
+<!--        INSERT INTO exchange (user_id, uname, email, phone, order_detail_id, order_id, address_id, cnt, reason,-->
+<!--                              post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)-->
+<!--        VALUES (#{userId},#{uname},#{email},#{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cnt}, #{reason}, #{postCode},-->
+<!--                #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})-->
+<!--    </insert>-->
+<!--    <select id="pageAll" resultMap="exchangeMap">-->
+<!--        SELECT * FROM exchange-->
+<!--             <if test="exDetList != null">-->
+<!--                WHERE ex_det IN-->
+<!--                 <foreach collection="exDetList" item="exDet" separator="," open="(" close=")">#{exDet}</foreach>-->
+<!--             </if>-->
+<!--             ORDER BY exchange_id DESC LIMIT 0,10-->
+<!--    </select>-->
+<!--    <select id="findById" resultMap="exchangeMap">-->
+<!--        SELECT * FROM exchange WHERE exchange_id = #{id}-->
+<!--    </select>-->
+<!--    <select id="countByUserIdAndOrderDetailId" resultType="int">-->
+<!--        SELECT COUNT(*) FROM exchange WHERE user_id = #{userId} AND order_detail_id = #{orderDetailId}-->
+<!--    </select>-->
+<!--    <select id="pageByUserAndDate" resultMap="exchangeMap">-->
+<!--        SELECT * FROM exchange WHERE user_id = #{userId}-->
+<!--            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()-->
+<!--            ORDER BY reg_date DESC LIMIT 0,10-->
+<!--    </select>-->
+
+    <insert id="insertOne" useGeneratedKeys="true" keyProperty="exchangeId">
         INSERT INTO exchange (user_id, uname, email, phone, order_detail_id, order_id, address_id, cnt, reason,
-                              post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
-        VALUES (#{userId},#{uname},#{email},#{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cnt}, #{reason}, #{postCode},
+                            post_code, address, address_detail, receiver_name, receiver_phone, elevator, img_code, rfr_det)
+        VALUES (#{userId}, #{uname}, #{email}, #{phone}, #{orderDetailId}, #{orderId}, #{addressId}, #{cnt}, #{reason}, #{postCode},
                 #{address}, #{addressDetail}, #{receiverName}, #{receiverPhone}, #{elevator}, #{imgCode}, #{rfrDet})
     </insert>
-    <select id="pageAll" resultMap="exchangeMap">
-        SELECT * FROM exchange
-             <if test="exDetList != null">
-                WHERE ex_det IN
-                 <foreach collection="exDetList" item="exDet" separator="," open="(" close=")">#{exDet}</foreach>
-             </if>
-             ORDER BY exchange_id DESC LIMIT 0,10
+    <update id="updateOne">
+        UPDATE exchange SET
+        <if test="auth.equals('admin')">reply=#{exchange.reply}, mod_date=NOW(), ex_det=#{exchange.exDet} WHERE exchange_id = #{exchange.exchangeId}</if>
+        <if test="auth.equals('user')">ex_det = "ex1", mod_date=NOW() WHERE exchange_id = #{exchange.exchangeId}</if>
+
+    </update>
+    <select id="pageByUserIdAndDate" resultMap="exchangeMap">
+        SELECT * FROM exchange WHERE user_id = #{userId}
+        <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
+            AND reg_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="startDate != null and endDate != null and startDate.equals(endDate)">
+            AND reg_date LIKE #{startDate}
+        </if>
+        <if test="detCode != null and 'end'.equals(detCode)">
+            AND ex_det IN ('ex1','ex7','ex8')
+        </if>
+        <if test="detCode != null and 'notEnd'.equals(detCode)">
+            AND ex_det NOT IN ('ex1','ex7','ex8')
+        </if>
+        <if test="detCode != null and 'all'.equals(detCode)"/>
+        <if test="period != null">
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+        </if>
+        ORDER BY reg_date DESC LIMIT #{paging.startRow},#{paging.rows}
+    </select>
+    <select id="countByUserIdAndDate" resultType="int">
+        SELECT COUNT(*) FROM exchange WHERE user_id = #{userId}
+        <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
+            AND reg_date BETWEEN #{startDate} AND #{endDate}
+        </if>
+        <if test="startDate != null and endDate != null and startDate.equals(endDate)">
+            AND reg_date LIKE #{startDate}
+        </if>
+        <if test="detCode != null and 'end'.equals(detCode)">
+            AND ex_det IN ('ex1','ex7','ex8')
+        </if>
+        <if test="detCode != null and 'notEnd'.equals(detCode)">
+            AND ex_det NOT IN ('ex1','ex7','ex8')
+        </if>
+        <if test="detCode != null and 'all'.equals(detCode)"/>
+        <if test="period != null">
+            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
+        </if>
     </select>
     <select id="findById" resultMap="exchangeMap">
         SELECT * FROM exchange WHERE exchange_id = #{id}
     </select>
-    <select id="countByUserIdAndOrderDetailId" resultType="int">
-        SELECT COUNT(*) FROM exchange WHERE user_id = #{userId} AND order_detail_id = #{orderDetailId}
+    <select id="pageAll" resultMap="exchangeMap" parameterType="hashmap">
+        SELECT * FROM exchange
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="exDet != ''">
+                AND ex_det in (${exDet})
+            </if>
+        </where>
+        ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
-    <select id="pageByUserAndDate" resultMap="exchangeMap">
-        SELECT * FROM exchange WHERE user_id = #{userId}
-            AND reg_date BETWEEN DATE_SUB(NOW(), INTERVAL #{period} DAY) AND NOW()
-            ORDER BY reg_date DESC LIMIT 0,10
+    <select id="countByOrderId" resultType="int">
+        SELECT COUNT(*) FROM exchange WHERE order_id = #{orderId}
+    </select>
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM exchange
+    </select>
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*) FROM exchange WHERE user_id = #{userId}
+    </select>
+    <select id="countPageAll" resultType="java.lang.Integer" parameterType="hashmap">
+        SELECT COUNT(*) FROM exchange
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+            </if>
+            <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="exDet != ''">
+                AND ex_det in (${exDet})
+            </if>
+        </where>
+    </select>
+    <select id="findByOrderDetailId" resultMap="exchangeMap">
+        SELECT * FROM exchange WHERE order_detail_id = #{orderDetailId}
     </select>
 </mapper>
