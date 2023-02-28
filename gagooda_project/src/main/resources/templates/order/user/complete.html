@@ -13,28 +13,28 @@
     <h2>저희 GAGOODA 쇼핑몰에서 주문해 주셔서 감사합니다!</h2>
 
     <h3>주문하신 상품 목록</h3>
-    <table>
+    <table class="table">
         <thead>
-            <th th:text="'전체 '+${itemCount}+'개'"></th>
-            <th>상품 정보</th>
-            <th>수량</th>
-            <th>주문금액</th>
+            <th scope="col" th:text="'전체 '+${itemCount}+'개'"></th>
+            <th scope="col">상품 정보</th>
+            <th scope="col" class="text-center">수량</th>
+            <th scope="col" class="text-center">주문금액</th>
         </thead>
         <tbody>
-        <tr th:each="orderDetail, stat :${orderDetailList}">
-            <td th:text="|${stat.count}|"></td>
-            <td>
-                <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
-                     style="width: 50px; height:50px; object-fit: cover">
-                <input type="text" th:value="${orderDetail.optionName}" id="optionName" name="optionName" readonly>
-            </td>
-            <td th:text="${orderDetail.cnt}"></td>
-            <td th:text="${orderDetail.totalPrice}"></td>
-        </tr>
+            <tr th:each="orderDetail, stat :${orderDetailList}">
+                <td class="text-center" th:text="|${stat.count}|"></td>
+                <td>
+                    <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
+                         style="width: 50px; height:50px; object-fit: cover">
+                    <input type="text" th:value="${orderDetail.optionName}" id="optionName" name="optionName" readonly>
+                </td>
+                <td class="text-center" th:text="${orderDetail.cnt}"></td>
+                <td class=text-center" th:text="${orderDetail.totalPrice}"></td>
+            </tr>
         </tbody>
     </table>
 
     <h3 th:text="'총 주문금액: '+${totalPrice}"></h3>
-    <button th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 페이지</button>
+    <button class="btn" th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 페이지</button>
 </div>
 </html>

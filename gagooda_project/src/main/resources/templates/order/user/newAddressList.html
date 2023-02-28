@@ -1,76 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<label for="myAddressList">내 배송지 목록</label>
-<select id="myAddressList" name="myAddressList" onchange="selectedAddress()" >
-    <option disabled selected="selected" th:text="'----선택-----'"></option>
-    <th:block th:each="address:${addressList}">
-        <th:block th:if="${address.home == true}">
-            <option th:value="${address.addressId}" th:text="'기본:' + ${address.aname}"
-                    th:data-address="${address}"></option>
+<div class="col">
+    <div class="col-11 mt-4">
+        <select class="form-select mx-3 mb-3 "  id="myAddressList" name="myAddressList" onchange="selectedAddress()" >
+            <option disabled selected="selected" th:text="'----내 배송지 목록 선택-----'"></option>
+            <th:block th:each="address:${addressList}">
+                <th:block th:if="${address.home == true}">
+                    <option th:value="${address.addressId}" th:text="'기본:' + ${address.aname}"
+                            th:data-address="${address}"></option>
+                </th:block>
+                <th:block th:unless="${address.home == true}">
+                    <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+                </th:block>
+            </th:block>
+        </select>
+    </div>
+    <div class="col">
+        <th:block th:if="${addressId != 0 && address !=null}">
+            <div>
+                <input type="hidden" id="nAddressId" name="addressId" class="add">
+            </div>
+            <div class="ms-3 my-3">
+                <label for="postCode" class="form-label">우편 번호</label>
+                <input readonly type="text" id="nPostCode" name="postCode" class="add form-control" th:value="${address.postCode}" pattern="[0-9]{5}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="address" class="form-label">주소</label>
+                <input readonly type="text" id="nAddress" name="address" class="add form-control" th:value="${address.address}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="addressDetail" class="form-label">상세 주소</label>
+                <input readonly type="text" id="nAddressDetail" name="addressDetail" class="add form-control" th:value="${address.addressDetail}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="receiverName" class="form-label">수령인 이름</label>
+                <input readonly type="text" id="nReceiverName" name="receiverName" class="add form-control" th:value="${address.receiverName}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="receiverPhone" class="form-label">수령인 전화번호</label>
+                <input readonly type="text" id="nReceiverPhone" name="receiverPhone" class="add form-control" th:value="${address.receiverPhone}" pattern="[0-9]{11}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="elevator" class="form-label">엘리베이터 유무</label>
+                <input readonly type="text" id="nElevator" name="elevator" class="add form-control" th:value="${address.elevator}">
+            </div>
         </th:block>
-        <th:block th:unless="${address.home == true}">
-            <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+        <th:block th:unless="${addressId != 0 && address != null}">
+            <div>
+                <input type="hidden" id="addressId" name="addressId" class="add form-control">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="postCode" class="form-label">우편 번호</label>
+                <input readonly type="text" id="postCode" name="postCode" class="add form-control" pattern="[0-9]{5}">
+            </div>
+            <div class="ms-3 mb-3" >
+                <label for="address" class="form-label">주소</label>
+                <input readonly type="text" id="address" name="address" class="add form-control" >
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="addressDetail" class="form-label">상세 주소</label>
+                <input readonly type="text" id="addressDetail" name="addressDetail" class="add form-control">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="receiverName" class="form-label">수령인 이름</label>
+                <input readonly type="text" id="receiverName" name="receiverName" class="add form-control" >
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="receiverPhone" class="form-label">수령인 전화번호</label>
+                <input readonly type="text" id="receiverPhone" name="receiverPhone" class="add form-control" pattern="[0-9]{11}">
+            </div>
+            <div class="ms-3 mb-3">
+                <label for="elevator" class="form-label">엘리베이터 유무</label>
+                <input readonly type="text" id="elevator" name="elevator" class="add form-control" >
+            </div>
         </th:block>
-    </th:block>
-</select>
-<h3>배송지 입력란</h3>
-<th:block th:if="${addressId != 0 && address !=null}">
-    <div>
-        <input type="hidden" id="nAddressId" name="addressId" class="add">
     </div>
-    <div>
-        <label for="postCode">우편 번호</label>
-        <input readonly type="text" id="nPostCode" name="postCode" class="add" th:value="${address.postCode}" pattern="[0-9]{5}">
-    </div>
-    <div>
-        <label for="address">주소</label>
-        <input readonly type="text" id="nAddress" name="address" class="add" th:value="${address.address}">
-    </div>
-    <div>
-        <label for="addressDetail">상세 주소</label>
-        <input readonly type="text" id="nAddressDetail" name="addressDetail" class="add" th:value="${address.addressDetail}">
-    </div>
-    <div>
-        <label for="receiverName">수령인 이름</label>
-        <input readonly type="text" id="nReceiverName" name="receiverName" class="add" th:value="${address.receiverName}">
-    </div>
-    <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input readonly type="text" id="nReceiverPhone" name="receiverPhone" class="add" th:value="${address.receiverPhone}" pattern="[0-9]{11}">
-    </div>
-    <div>
-        <label for="elevator">엘리베이터 유무</label>
-        <input readonly type="text" id="nElevator" name="elevator" class="add" th:value="${address.elevator}">
-    </div>
-</th:block>
-<th:block th:unless="${addressId != 0 && address != null}">
-    <div>
-        <input type="hidden" id="addressId" name="addressId" class="add">
-    </div>
-    <div>
-        <label for="postCode">우편 번호</label>
-        <input readonly type="text" id="postCode" name="postCode" class="add" pattern="[0-9]{5}">
-    </div>
-    <div>
-        <label for="address">주소</label>
-        <input readonly type="text" id="address" name="address" class="add" >
-    </div>
-    <div>
-        <label for="addressDetail">상세 주소</label>
-        <input readonly type="text" id="addressDetail" name="addressDetail" class="add">
-    </div>
-    <div>
-        <label for="receiverName">수령인 이름</label>
-        <input readonly type="text" id="receiverName" name="receiverName" class="add" >
-    </div>
-    <div>
-        <label for="receiverPhone">수령인 전화번호</label>
-        <input readonly type="text" id="receiverPhone" name="receiverPhone" class="add" pattern="[0-9]{11}">
-    </div>
-    <div>
-        <label for="elevator">엘리베이터 유무</label>
-        <input readonly type="text" id="elevator" name="elevator" class="add" >
-    </div>
-</th:block>
+
+
+</div>
+
 
 </html>

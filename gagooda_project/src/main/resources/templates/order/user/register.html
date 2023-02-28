@@ -8,151 +8,191 @@
     <title>주문 등록</title>
 </head>
 <div layout:fragment="content">
-    <h1 class="text-center">주문서 작성</h1>
-    <h3 class="text-center mt-2">배송/결제 정보를 정확하게 입력해주세요.</h3>
-    <h3 class="mt-4">배송지 입력</h3>
-    <button type="button" name="setAddressBtn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">새로운 배송지입력</button>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">새로운 배송지 입력</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="container">
+        <h1 class="text-center mt-2">주문서 작성</h1>
+        <h3 class="text-center mt-2">배송/결제 정보를 정확하게 입력해주세요.</h3>
+        <!--배송지 입력-->
+        <h3 class="mt-4">배송지 입력</h3>
+        <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+        <div class="row">
+            <div class="col" id="addressListContainer">
+                <th:block th:include="/order/user/newAddressList"></th:block>
+            </div>
+            <div class="col">
+                <button class="btn mt-4 text-white" type="button" name="setAddressBtn" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop" style="background-color: #B68C68;">새로운 배송지입력</button>
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">새로운 배송지 입력</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
+                                <th:block th:include="/order/user/newAddress"></th:block>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body" th:if="${session.loginUser!=null}" id="newAddressRegisterContainer">
-                    <th:block th:include="/order/user/newAddress"></th:block>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <div class="card container mt-5" style="width: 100%;">
+                    <div class="card-body">
+                        <div class="col fw-semibold" style="font-size: 14px">
+                            배송정보
+                        </div>
+                        <div class="col text-start mt-3" style="font-size: 14px">
+                            <ul>
+                                <li class="mb-3">배송일은 주문하신 상품과 지역 시공 가능 인력을 고려하여 가장 빠른 날짜로 정해집니다.</li>
+                                <li class="mb-3">수도권지역은 기본배송료는 무료</li>
+                                <li class="mb-3">제주, 제주 외 도서지역은 추가 금액이 생길 수 있습니다.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="addressListContainer">
-        <th:block th:include="/order/user/newAddressList"></th:block>
-    </div>
-    <!--주문 form -->
-    <!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
-    <!--          method="post" onsubmit="return validateForm();">-->
-    <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
-          method="post" onsubmit="return validateForm();">
-        <input type="hidden" id="addressId" name="addressId" class="realAdd">
-        <input type="hidden" id="postCode" name="postCode" class="realAdd" th:required="required" >
-        <input type="hidden" id="address" name="address" class="realAdd" th:required="required">
-        <input type="hidden" id="addressDetail" name="addressDetail" class="realAdd"  th:required="required">
-        <input type="hidden" id="receiverName" name="receiverName" class="realAdd"  th:required="required">
-        <input type="hidden" id="receiverPhone" name="receiverPhone" class="realAdd"  th:required="required">
-        <input type="hidden" id="elevator" name="elevator" class="realAdd" th:required="required">
 
-        <!--배송지 입력란 end-->
-        <div class="orderDetail">
-            <!--주문 번호 생성-->
-            <div>
-                <label for="orderId">주문번호: </label>
-                <input type="text" id="orderId" name="orderId"
+        <!--배송지 입력 end----------------------------------------->
+        <!--주문 form -->
+        <!--    <form name="orderRegisterForm" enctype="multipart/form-data" action="/order/user_yes/register.do"-->
+        <!--          method="post" onsubmit="return validateForm();">-->
+        <form name="orderRegisterForm" enctype="multipart/form-data" action="javascript:void(0)"
+              method="post" onsubmit="return validateForm();">
+            <input type="hidden" id="addressId" name="addressId" class="realAdd">
+            <input type="hidden" id="postCode" name="postCode" class="realAdd" th:required="required" >
+            <input type="hidden" id="address" name="address" class="realAdd" th:required="required">
+            <input type="hidden" id="addressDetail" name="addressDetail" class="realAdd"  th:required="required">
+            <input type="hidden" id="receiverName" name="receiverName" class="realAdd"  th:required="required">
+            <input type="hidden" id="receiverPhone" name="receiverPhone" class="realAdd"  th:required="required">
+            <input type="hidden" id="elevator" name="elevator" class="realAdd" th:required="required">
+
+            <!--배송지 입력란 end-->
+            <div class="orderDetail">
+                <!--주문 번호 생성-->
+                <input type="hidden" id="orderId" name="orderId"
                        th:with="today=${#dates.format(#dates.createNow(), 'yyMMddmmss')}" th:value="${today}+${ranString}" readonly>
-            </div>
-            <!--주문할 상품 정보들-->
-            <th:block th:each="cartItem:${cartList}">
-                <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
-            </th:block>
-            <h3 class="ms-2 mt-4">주문할 상품 정보</h3>
-            <div>
-                <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
-                <table class="table">
-                    <thead>
-                    <th scope="col" class="text-center">NO</th>
-                    <th>상품 정보</th>
-                    <th scope="col">수량</th>
-                    <th scope="col">상품별 금액</th>
-                    </thead>
-                    <tbody>
-                    <tr class="align-middle" th:each="cart, stat :${cartList}">
-                        <td class="text-center" th:text="|${stat.count}|"></td>
-                        <td class="d-flex" colspan="2">
-                            <div class="mt-2">
-                                <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
-                                     style="width: 50px; height:50px;object-fit: cover">
-                            </div>
-                            <div class="ms-3" >
-                                <input class="form-control-plaintext" type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
-                                       id="orderDetail.productCode" placeholder="productCode" readonly>
-                                <input class="form-control-plaintext" type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
-                                       id="orderDetail.optionCode" placeholder="optionCode" readonly>
-                            </div>
-                        </td>
-                        <td class="text-center"><input class="form-control-plaintext" type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
-                                                       readonly></td>
-                        <td class="text-center">
-                            <input class="form-control-plaintext" type="number" th:value="${cart.optionProduct.price * cart.cnt}"
-                                   name="orderDetail.totalPrice" id="orderDetail.totalPrice" readonly>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!--주문할 상품 정보들 end--------->
-            <!--주문 정보-->
-            <div >
-                <!--주문자 정보-->
-                <h3 class="ms-2 mt-4">주문자 정보</h3>
+                <!--주문할 상품 정보들-->
+                <th:block th:each="cartItem:${cartList}">
+                    <input type="hidden" th:value="${cartItem.cartId}" name="cartItem" readonly>
+                </th:block>
+                <h3 class="ms-2 mt-4">주문할 상품 정보</h3>
                 <div>
                     <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
-                    <div class="ms-3 my-3">
-                        <label for="userName" class="form-label">주문자 이름</label>
-                        <input type="text" class="form-control" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
-                        <input type="hidden"  th:value="${loginUser.userId}" name="userId" id="userId">
-                    </div>
-                    <div class="ms-3 mb-3">
-                        <label for="userPhone" class="form-label" >주문자 전화번호</label>
-                        <input type="text" class="form-control" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
-                               readonly>
-                    </div>
-                    <div class="ms-3 mb-3">
-                        <label for="userEmail" class="form-label">주문자 이메일</label>
-                        <input type="text" class="form-control" th:value="${loginUser.email}" name="userEmail" id="userEmail"
-                               readonly>
-                    </div>
+                    <table class="table">
+                        <thead>
+                        <th scope="col" class="text-center">NO</th>
+                        <th>상품 정보</th>
+                        <th scope="col">수량</th>
+                        <th scope="col">상품별 금액</th>
+                        </thead>
+                        <tbody>
+                        <tr class="align-middle" th:each="cart, stat :${cartList}">
+                            <td class="text-center" th:text="|${stat.count}|"></td>
+                            <td class="d-flex" colspan="2">
+                                <div class="mt-2">
+                                    <img th:src="@{'/img/product/{file}'(file=${cart.imageList[1].imgPath})}"
+                                         style="width: 50px; height:50px;object-fit: cover">
+                                </div>
+                                <div class="ms-3" >
+                                    <input class="form-control" type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
+                                           id="orderDetail.productCode" placeholder="productCode" readonly>
+                                    <input class="form-control" type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
+                                           id="orderDetail.optionCode" placeholder="optionCode" readonly>
+                                </div>
+                            </td>
+                            <td class="text-center"><input class="form-control-plaintext" type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
+                                                           readonly></td>
+                            <td class="text-center">
+                                <input class="form-control-plaintext" type="number" th:value="${cart.optionProduct.price * cart.cnt}"
+                                       name="orderDetail.totalPrice" id="orderDetail.totalPrice" readonly>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <!--총 결제 정보-->
-                <h3 class="ms-2 mt-4">총 결제 정보</h3>
-                <div>
-                    <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
-                    <div class="ms-3 my-3">
-                        <label for="totalCnt" class="form-label">상품 총 수량</label>
-                        <input class="form-control" th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
-                               required readonly>
+                <!--주문할 상품 정보들 end--------->
+                <!--주문 정보-->
+                <div class="row justify-content-between" >
+                    <!--주문자 정보-->
+                    <div class="col-6" style="background-color: #FFFAF5">
+                        <h3 class="ms-2 mt-4">주문자 정보</h3>
+                        <div>
+                            <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+                            <div class="ms-3 my-3">
+                                <label for="userName" class="form-label">주문자 이름</label>
+                                <input type="text" class="form-control" th:value="${loginUser.uname}" name="userName" id="userName" readonly>
+                                <input type="hidden"  th:value="${loginUser.userId}" name="userId" id="userId">
+                            </div>
+                            <div class="ms-3 mb-3">
+                                <label for="userPhone" class="form-label" >주문자 전화번호</label>
+                                <input type="text" class="form-control" th:value="${loginUser.phone}" name="userPhone" id="userPhone"
+                                       readonly>
+                            </div>
+                            <div class="ms-3 mb-3">
+                                <label for="userEmail" class="form-label">주문자 이메일</label>
+                                <input type="text" class="form-control" th:value="${loginUser.email}" name="userEmail" id="userEmail"
+                                       readonly>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ms-3 mb-3">
-                        <label for="totalPrice" class="form-label">상품 총 가격</label>
-                        <input class="form-control" type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
-                               name="totalPrice" id="totalPrice" required readonly>
+                    <!--총 결제 정보-->
+                    <div class="col-6" style="background-color: #FFFAF5">
+                        <h3 class="ms-2 mt-4">총 결제 정보</h3>
+                        <div>
+                            <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+                            <div class="ms-3 my-3">
+                                <label for="totalCnt" class="form-label">상품 총 수량</label>
+                                <input class="form-control" th:value="${#aggregates.sum(cartList.![cnt])}" type="text" name="totalCnt" id="totalCnt"
+                                       required readonly>
+                            </div>
+                            <div class="ms-3 mb-3">
+                                <label for="totalPrice" class="form-label">상품 총 가격</label>
+                                <input class="form-control" type="text" th:value="${#aggregates.sum(cartList.![optionProduct.price * cnt])}"
+                                       name="totalPrice" id="totalPrice" required readonly>
+                            </div>
+                        </div>
                     </div>
+                    <!--총 결제 정보 end------------------------------>
                 </div>
-                <!--총 결제 정보 end------------------------------>
+                <!--주문 정보 end---------------------------------------------->
             </div>
-            <!--주문 정보 end---------------------------------------------->
-        </div>
-        <!--배송 정보(배송요청)-->
-        <div class="delivery">
-            <fieldset>
-                <legend>배송 요청 사항</legend>
-                <div>
-                    <label for="delivery.request"></label>
-                    <textarea rows="5" cols="30" name="delivery.request" id="delivery.request"
-                              placeholder="ex) 문앞에 두고 가주세요~!"></textarea>
+            <!--배송 정보(배송요청)-->
+            <h3 class="mt-4 ms-2">배송 요청 사항(선택)</h3>
+            <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+            <div class="form-floating mt-3">
+                <textarea class="form-control" rows="5" cols="30" name="delivery.request" id="delivery.request"
+                          style="height: 100px"></textarea>
+                <label for="delivery.request">ex) 문앞에 두고 가주세요~!</label>
+            </div>
+            <!--배송 정보(배송요청) end-->
+            <!--대표 주문 사진 정하기-->
+            <input type="hidden" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
+                   id="imgPath" placeholder="imgPath" readonly>
+            <!--대표 주문 사진 정하기 end----------------------------->
+            <!--결제전 주의사항-->
+            <div class="card container mt-5" style="width: 100%;">
+                <div class="card-body">
+                    <div class="col fw-semibold" style="font-size: 14px">
+                        결제 전 주의사항
+                    </div>
+                    <div class="col text-start mt-3 " style="font-size: 14px">
+                        <ol type="1">
+                            <li class="mb-3">고객의 단순한 변심으로 교환, 반품 및 환불을 요구할 때 수반되는 배송비는 고객님께서 부담하셔야합니다.</li>
+                            <li class="mb-3">상품을 개봉했거나 설치한 후에는 상품의 재판매가 불가능하므로 고객님의 변심에 대한 교환, 반품이 불가능함을 양지해 주시기 바랍니다.</li>
+                        </ol>
+                    </div>
                 </div>
-            </fieldset>
-        </div>
-        <!--배송 정보(배송요청) end-->
-        <!--대표 주문 사진 정하기-->
-        <input type="hidden" th:value="${cartList[0].imageList[0].imgPath}" name="imgPath"
-               id="imgPath" placeholder="imgPath" readonly>
-        <!--대표 주문 사진 정하기 end----------------------------->
-        <!--결제전 주의사항-->
-        <button type="submit">제출</button>
-    </form>
+            </div>
+            <!--submit button-->
+            <div class="d-flex justify-content-end my-5">
+                <button class="btn text-white" type="submit" style="background-color: #B68C68;">제출</button>
+            </div>
+            <!--submit button end------------------------------>
+        </form>
+    </div>
     <!--주문 form end---------------->
     <script th:inline="javascript">
         //새로운 배송지 AJAX
