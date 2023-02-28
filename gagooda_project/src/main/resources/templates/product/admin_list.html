@@ -14,6 +14,21 @@
             <input type="text" name="searchWord" th:value="${searchWord}">
             <button type="submit">검색</button>
         </fieldset>
+        <fieldset>
+            <legend>정렬</legend>
+            <select name="orderField" id="orderField">
+                <option value="review_cnt" th:selected="${(paging.orderField.equals('review_cnt'))?true:false}">리뷰 개수 순</option>
+                <option value="order_cnt" th:selected="${(paging.orderField.equals('order_cnt'))?true:false}">주문 개수 순</option>
+                <option value="avg_rate" th:selected="${(paging.orderField.equals('avg_rate'))?true:false}">평점 순</option>
+                <option value="mod_date" th:selected="${(paging.orderField.equals('mod_date'))?true:false}">날짜 순</option>
+                <option value="product_code" th:selected="${(paging.orderField.equals('product_code'))?true:false}">아이디</option>
+                <option value="pname" th:selected="${(paging.orderField.equals('pname'))?true:false}">이름 순</option>
+            </select>
+            <select name="direct" id="direct">
+                <option value="ASC" th:selected="${(paging.direct.equals('ASC'))?true:false}">오름차순</option>
+                <option value="DESC" th:selected="${(paging.direct.equals('DESC'))?true:false}">내림차순</option>
+                </select>
+        </fieldset>
         <fieldset id="categoryCheck">
             <div>
                 <h3>대분류</h3>

@@ -10,7 +10,7 @@
 </head>
 <div layout:fragment="content">
 
-<form action="/user/signup.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px">
+<form action="/user/signup.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px" name="signupForm">
     <input type="hidden" th:value="${gDet}" name="gDet">
 
     <div class="mx-auto" >
@@ -35,6 +35,9 @@
     <div class="mb-3">
         <label for="check" class="form-label">비밀번호 확인</label>
         <input type="password" class="form-control form-control-lg" id="check" name="check" required>
+    </div>
+    <div>
+        <span style="color: #cc4040"></span>
     </div>
     <label for="phone" class="form-label">전화번호</label>
     <div class="input-group mb-3">
@@ -63,6 +66,16 @@
 </form>
 
 <script>
+    const signupForm = document.forms["signupForm"];
+    const pw = signupForm["pw"];
+    const check = signupForm["check"];
+    function pwcheck() {
+        if (pw.value === check.value) {
+
+        }
+    }
+
+
     var IMP = window.IMP;
     IMP.init("imp61025700");
 
