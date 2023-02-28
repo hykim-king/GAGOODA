@@ -20,26 +20,6 @@
 <h3 class="mt-5">주문 정보</h3>
 <hr style="margin-top: 0; background : #b68c68; height: 5px">
 
-<!--<table class="table">-->
-<!--    <thead>-->
-<!--        <tr>-->
-<!--            <th>주문인</th>-->
-<!--            <th>주문 날짜</th>-->
-<!--            <th>주문 번호</th>-->
-<!--            <th>주문 상품</th>-->
-<!--            <th>총 주문 금액</th>-->
-<!--        </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--        <tr>-->
-<!--            <td th:text="${order.userName}"></td>-->
-<!--            <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>-->
-<!--            <td th:text="${order.orderId}"></td>-->
-<!--            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>-->
-<!--            <td th:text="${order.totalPrice}"></td>-->
-<!--        </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
     <table class="table">
         <tr>
             <th class="col-2">주문인</th>
@@ -65,20 +45,6 @@
 
 <h3 class="mt-5">환불 요청 정보</h3>
 <hr style="margin-top: 0; background : #b68c68; height: 5px">
-<!--<ul>-->
-<!--    <li>수령인 : <span th:text="${refund.receiverName}"></span></li>-->
-<!--    <li>수령인 연락처 : <span th:text="${refund.receiverPhone}"></span></li>-->
-<!--    <li>환불 대상 상품 : <span th:text="${refund.orderDetailDto.optionName}"></span></li>-->
-<!--    <li>환불 요청 금액 : <span th:text="${refund.cancelAmount}"></span></li>-->
-<!--    <li>환불 요청 유형 : <span th:text="${rfrDetList[#strings.substring(refund.rfrDet,3)].detName}"></span></li>-->
-<!--    <li>환불 요청 사유 : <span th:text="${refund.reason}"></span></li>-->
-<!--    <li >주소 : <span th:text=" ${'('+refund.postCode+') '+refund.address } "></span><span th:text="${refund.addressDetail}"></span></li>-->
-<!--    <li th:if="${refund.imageList} != null">첨부 이미지-->
-<!--        <th:block th:each="img:${refund.imageList}">-->
-<!--            <img th:src="@{'/img/refund/{imgPath}' (imgPath=${img.imgPath}) }" alt="refundRequestImg" style="width: 400px; height: 400px; object-fit: cover;">-->
-<!--        </th:block>-->
-<!--    </li>-->
-<!--</ul>-->
     <table class="table">
         <tr>
             <th class="col-2">수령인</th>
@@ -121,17 +87,6 @@
 
 <h3 class="mt-5">환불 처리 정보</h3>
 <hr style="margin-top: 0; background : #b68c68; height: 5px">
-<!--<ul>-->
-<!--    <li>환불 처리 현황 : <span th:text="${refund.rfDetDto.detName}"></span></li>-->
-<!--    <li>-->
-<!--        <th:block th:if="${refund.reply != null}" >-->
-<!--            <div th:text="${refund.reply}"></div>-->
-<!--        </th:block>-->
-<!--        <th:block th:unless="${refund.reply != null}">-->
-<!--            <div> 아직 답변이 달리지 않았습니다. </div>-->
-<!--        </th:block>-->
-<!--    </li>-->
-<!--</ul>-->
     <table class="table">
         <tr>
             <th class="col-2">환불 처리 현황</th>

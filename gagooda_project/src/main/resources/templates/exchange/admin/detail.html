@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div layout:fragment="content">
+    <h3>주문 내역</h3>
+    <th:block th:if="${order != null}">
+        <div>주문 날짜: <span th:text="${order.regDate}"></span></div>
+        <div>주문 번호: <span th:text="${order.orderId}" id="orderId"></span></div>
+        <div>
+            상품명:
+            <th:block th:if="${!order.orderDetailList.isEmpty() && order.orderDetailList != null}">
+                <span th:text="${order.orderDetailList[0].optionName + ' 외'}"></span>
+                <span th:text="${order.orderDetailList.size() -1 + '건'}"></span>
+            </th:block>
+        </div>
+        <div>총 구매 금액: <span th:text="${order.totalPrice}"></span></div>
+        <div>주문인: <span th:text="${order.userName}"></span></div>
+    </th:block>
+
+    <h3>교환 요청 정보</h3>
+    <h4>요청 상품</h4>
+    <div>상품명 <span th:text="${exchange.orderDetailDto.optionName}"></span></div>
+    <div>주문 수량 <span th:text="${exchange.orderDetailDto.cnt}"></span></div>
+    <div>교환 요청 수량 <span th:text="${exchange.cnt}" id="cnt"></span></div>
+    <div>환불 요청 분류 <span th:text="${exchange.rfrDetDto.detName}" id="detName"></span></div>
+    <div>환불 요청 사유 <span th:text="${exchange.reason}"></span></div>
+    <div>첨부 사진
+        <th:block th:if="${!exchange.imageList.isEmpty() && exchange.imageList != null}" th:each="img:${exchange.imageList}">
+            <img th:src="@{'/img/exchange/{imgPath}'(imgPath = ${img.imgPath})}" alt="" style="width: 400px; height: 400px; object-fit: cover;">
+        </th:block>
+    </div>
+
+    <h4>수령인 정보</h4>
+    <div>
+        <div>수령인</div>
+        <div th:text="${exchange.receiverName}"></div>
+    </div>
+    <div>
+        <div>연락처</div>
+        <div th:text="${exchange.receiverPhone}"></div>
+    </div>
+    <div>
+        <div>주소</div>
+        <div>
+            <div th:text="${'('+exchange.postCode+')'+exchange.address}"></div>
+            <div th:text="${exchange.addressDetail}"></div>
+        </div>
+    </div>
+    <div>
+        <div>엘리베이터 유무</div>
+        <div th:if="${exchange.elevator == 1}">유</div>
+        <div th:unless="${exchange.elevator == 1}">무</div>
+    </div>
+
+    <h3>교환 상태 변경</h3>
+    <div>
+        <div>현재 교환 진행 상태</div>
+        <div th:text="${exchange.exDetDto.detName}"></div>
+    </div>
+    <div>
+        <div>교환 답변</div>
+        <div th:text="${exchange.reply}"></div>
+    </div>
+    <form name="modify" th:action="@{'/exchange/admin/{exchangeId}/modify.do' (exchangeId=${exchange.exchangeId})}" method="POST">
+        <div>
+            <label for="exDet">상태 변경</label>
+            <select name="exDet" id="exDet" required>
+                <option value="" selected disabled>변경할 상태를 선택하세요.</option>
+                <th:block th:each="exCode:${exCodeList}">
+                    <option th:value="${exCode.detCode}" th:text="${exCode.detName}"></option>
+                </th:block>
+            </select>
+        </div>
+        <div>
+            <label for="reply">교환 요청 답변</label>
+            <textarea required name="reply" id="reply" cols="30" rows="10"></textarea>
+        </div>
+        <button type="submit">등록</button>
+        <button type="reset">초기화</button>
+    </form>
+
+</div>
+</html>

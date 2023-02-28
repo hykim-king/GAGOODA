@@ -9,17 +9,19 @@
 </head>
 <div layout:fragment="content">
 <h3>주문 내역</h3>
-    <div>주문 날짜: <span th:text="${refund.orderDto.regDate}"></span></div>
-    <div>주문 번호: <span th:text="${refund.orderDto.orderId}" id="orderId"></span></div>
-    <div>
-        상품명:
-        <th:block th:if="${!refund.orderDto.orderDetailList.isEmpty() && refund.orderDto.orderDetailList != null}">
-            <span th:text="${refund.orderDto.orderDetailList[0].optionName + ' 외'}"></span>
-            <span th:text="${refund.orderDto.orderDetailList.size() -1 + '건'}"></span>
-        </th:block>
-    </div>
-    <div>총 구매 금액: <span th:text="${refund.orderDto.totalPrice}"></span></div>
-    <div>주문인: <span th:text="${refund.orderDto.userName}"></span></div>
+    <th:block th:if="${order != null}">
+        <div>주문 날짜: <span th:text="${order.regDate}"></span></div>
+        <div>주문 번호: <span th:text="${order.orderId}" id="orderId"></span></div>
+        <div>
+            상품명:
+            <th:block th:if="${!order.orderDetailList.isEmpty() && order.orderDetailList != null}">
+                <span th:text="${order.orderDetailList[0].optionName + ' 외'}"></span>
+                <span th:text="${order.orderDetailList.size() -1 + '건'}"></span>
+            </th:block>
+        </div>
+        <div>총 구매 금액: <span th:text="${order.totalPrice}"></span></div>
+        <div>주문인: <span th:text="${order.userName}"></span></div>
+    </th:block>
 
     <h3>환불 요청 정보</h3>
     <h4>요청 상품</h4>
@@ -62,6 +64,15 @@
         <div th:text="${refund.rfDetDto.detName}"></div>
     </div>
     <div>
+        <div th:text="${payment.amount}"></div>
+        <div th:if="${payment.cancelHistory != null}" th:each="cancelHis: ${payment.cancelHistory}">
+            <div th:text="${cancelHis.cancelledAt}"></div>
+            <div th:text="${cancelHis.amount}"></div>
+            <div th:text="${cancelHis.reason}"></div>
+            <a class="receiptUrl" href="javascript:void(0)" th:data-receipt="${cancelHis.receiptUrl}">취소 영수증</a>
+        </div>
+    </div>
+    <div>
         <div>환불 답변</div>
         <div th:text="${refund.reply}"></div>
     </div>
@@ -75,7 +86,7 @@
                 </th:block>
             </select>
 <!--            <th:block th:if="${refund.rfDet.equals('rf4') || refund.rfDet.equals('rf5') || refund.rfDet.equals('rf6')}">-->
-            <button id="cancelBtn" type="button">결제 취소 진행</button>
+            <button id="cancelBtn" type="button" onclick="cancelPayments()">결제 취소 진행</button>
 <!--            </th:block>-->
         </div>
         <div>
@@ -92,16 +103,37 @@
     let orderId = document.getElementById("orderId").innerText;
     let cancelAmount = document.getElementById("cancelAmount").innerText;
     let detName = document.getElementById("detName").innerText;
-    cancelBtn.addEventListener("click",()=>{
-        window.name = "adminDetail"
-        let popup =  window.open("/refund/admin/payments/cancel.do","cancel", "width=600, height=400, resizable = no");
-        setTimeout(function (){
-                popup.document.querySelector("#orderId").value = orderId;
-                popup.document.querySelector("#cancelAmount").value = 100; // 지금은 100원만 결제해서 이걸로. /*cancelAmount;*/
-                popup.document.querySelector("#reason").value = detName;
-            },500)
 
+    async function cancelPayments(){ // 결제 취소 AJAX
+        const forms = document.forms.cancel; // POST 요청을 보낼 form
+        const formData = new FormData(forms); // fetch body에 담기 위해 new FormData 에 넣어준다.
+        formData.set("orderId", orderId);
+        formData.set("cancelAmount", "50");
+        formData.set("reason", detName);
+        let url = "/refund/admin/payments/cancel.do"; // 취소 요청을 보낼 POST url
+        const resp = await fetch(url,{method: "POST", body: formData}) // AJAX 시도
+        console.log("resp: "+ resp)
+        // console.log(resp.body)
+        // console.log(await resp.json())
+        const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값, 취소된 객체의 정보를 담고 있음.
+        console.log("respJson: "+respJson)
+        if (respJson.code > 0){
+            console.log(respJson.message);
+            alert (respJson.message);
+        }else if(respJson.code === 0){
+            let totalPrice = [[${refund.orderDto.totalPrice}]]
+            let cancelAmount = [[${refund.cancelAmount}]]
+            alert(totalPrice +" 중 "+ cancelAmount +"원을 결제 취소하였습니다.");
+        }
+    }
+
+    let receiptUrl = document.querySelectorAll(".receiptUrl");
+    receiptUrl.forEach(url=>{
+        url.addEventListener("click",()=>{
+            window.open(url.dataset.receipt, "cancelReceipt", "width=450, height=600, resizable=no")
+        })
     })
 </script>
+
 </div>
 </html>

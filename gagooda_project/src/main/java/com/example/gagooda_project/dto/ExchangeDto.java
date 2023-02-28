@@ -3,6 +3,7 @@ package com.example.gagooda_project.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ExchangeDto {
@@ -29,5 +30,8 @@ public class ExchangeDto {
     private String exDet;           // 교환처리상태_DET, !FK, NN, exchange:common_code = N:1
     private String rfrDet;          // 교환 사유_DET, !FK, NN, exchange:common_code = N:1
     private OrderDto orderDto;
-    private AddressDto addressDto;
+    private OrderDetailDto orderDetailDto; // 주문 상세 DTO
+    private List<ImageDto> imageList;   // 이미지 리스트
+    private CommonCodeDto exDetDto;
+    private CommonCodeDto rfrDetDto;
 }

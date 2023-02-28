@@ -57,25 +57,25 @@
     </th:block>
     <thead>
         <tr>
-            <th scope="col">환불 요청 날짜</th>
-            <th scope="col">주문번호</th>
-            <th scope="col">상품명</th>
-            <th scope="col">환불 금액</th>
-            <th scope="col">처리 현황</th>
+            <th class="text-center" scope="col">환불 요청 날짜</th>
+            <th class="text-center" scope="col">주문번호</th>
+            <th class="text-center" scope="col">상품명</th>
+            <th class="text-center" scope="col">환불 금액</th>
+            <th class="text-center" scope="col">처리 현황</th>
         </tr>
     </thead>
     <tbody>
         <tr th:each="refund:${refundList}" class="hrefRow" th:data-refund="${refund.refundId}" style="cursor: pointer">
-            <td scope="row" style="vertical-align: middle;" th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
-            <td style="vertical-align: middle;" th:text="${refund.orderId}"></td>
+            <td class="text-center" scope="row" style="vertical-align: middle;" th:text="${#calendars.format(refund.regDate,'yyyy-MM-dd')}"></td>
+            <td class="text-center" style="vertical-align: middle;" th:text="${refund.orderId}"></td>
             <td >
                 <th:block th:if="${!refund.orderDetailDto.imageList.isEmpty() && refund.orderDetailDto.imageList != null}">
                     <img th:src="@{'/img/product/{file}' (file=${refund.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
                 </th:block>
-                <span style="vertical-align: middle;" th:text="${refund.orderDetailDto.optionName}"></span>
+                <span style="vertical-align: middle;" th:text="${#strings.abbreviate(refund.orderDetailDto.optionName, 15)}"></span>
             </td>
-            <td style="vertical-align: middle;" th:text="${refund.cancelAmount}"></td>
-            <td style="vertical-align: middle;  color: #B68C68; border-color:#eeeeee;" th:text="${refund.rfDetDto.detName}"></td>
+            <td class="text-center" style="vertical-align: middle;" th:text="${refund.cancelAmount}"></td>
+            <td class="text-center" style="vertical-align: middle;  color: #B68C68; border-color:#eeeeee;" th:text="${refund.rfDetDto.detName}"></td>
         </tr>
     </tbody>
 </table>

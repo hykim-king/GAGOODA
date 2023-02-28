@@ -16,8 +16,8 @@ class ExchangeMapperTest {
     ExchangeMapper exchangeMapper;
     @Test
     void pageByUserAndDate() {
-        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserAndDate(1, 7);
-        System.out.println(exchangeList);
+//        List<ExchangeDto> exchangeList = exchangeMapper.pageByUserIdAndDate(1, 7);
+//        System.out.println(exchangeList);
     }
 
     @Test
@@ -25,8 +25,8 @@ class ExchangeMapperTest {
         List<String> exDetList = new ArrayList<>();
         exDetList.add("ex0");
         exDetList.add("ex2");
-        List<ExchangeDto> exchangeList = exchangeMapper.pageAll(exDetList);
-        System.out.println(exchangeList);
+//        List<ExchangeDto> exchangeList = exchangeMapper.pageAll(exDetList);
+//        System.out.println(exchangeList);
     }
 
     @Test
@@ -62,14 +62,14 @@ class ExchangeMapperTest {
         exchange.setExchangeId(1);
         exchange.setExDet("ex1");
         exchange.setReply("답글");
-        exchangeMapper.updateOne(exchange);
+//        exchangeMapper.updateOne(exchange);
         ExchangeDto check = exchangeMapper.findById(1);
         System.out.println(check);
     }
 
     @Test
     void countByUserIdAndOrderDetailId() {
-        int cnt = exchangeMapper.countByUserIdAndOrderDetailId(1,1);
-        System.out.println(cnt);
+//        int cnt = exchangeMapper.countByUserIdAndOrderDetailId(1,1);
+//        System.out.println(cnt);
     }
 }

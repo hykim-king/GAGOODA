@@ -53,11 +53,16 @@
     </ul>
     <h2>김현섭</h2>
     <ul>
+        <h4>환불</h4>
         <li><a href="/refund/user_yes/mypage/list.do">유저 환불 목록(로그인!!!)</a></li>
         <li><a th:href="@{ '/refund/user_yes/mypage/{orderId}/register.do' (orderId='00010') }">유저 환불 등록폼(로그인 후 가능!)</a></li>
         <li><a th:href="@{ '/refund/user_yes/mypage/{refundId}/detail.do' (refundId=1) }">유저 환불 상세 페이지(로그인 후 가능!)</a></li>
         <li><a href="/refund/admin/list.do">관리자 리스트(로그인)</a></li>
         <li><a href="/refund/admin/1/detail.do">관리자 상세(로그인)</a></li>
+        <h4>교환</h4>
+        <li><a href="/exchange/admin/list.do">관리자 리스트(로그인)</a></li>
+        <li><a href="/exchange/admin/1/detail.do">관리자 상세(로그인)</a></li>
+        <h4>테스트</h4>
         <li><a th:href="@{'/refund/user_yes/{orderId}/payments/temp.do' (orderId='00010')}">임시 결제 창(로그인)</a></li>
     </ul>
 

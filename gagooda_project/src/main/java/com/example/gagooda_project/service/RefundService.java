@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface RefundService {
-    public int registerOne(RefundDto refund, List<MultipartFile> imgFileList, String imgPath,String code,int seq) throws Exception;
+    public int registerOne(RefundDto refund) throws Exception;
 
     public List<RefundDto> showUserRefundList(int id, int period, String startDate, String endDate, String detCode, PagingDto paging);
 

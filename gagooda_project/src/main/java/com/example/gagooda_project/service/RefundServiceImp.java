@@ -19,10 +19,10 @@ public class RefundServiceImp implements RefundService{
     AddressMapper addressMapper;
     CommonCodeMapper commonCodeMapper;
     OrderDetailMapper orderDetailMapper;
+    ExchangeMapper exchangeMapper;
     OrderMapper orderMapper;
     ImageMapper imageMapper;
     Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
-    private static int imgCodeNum = 1000;
 
     public RefundServiceImp(RefundMapper refundMapper, AddressMapper addressMapper, CommonCodeMapper commonCodeMapper, OrderDetailMapper orderDetailMapper, OrderMapper orderMapper, ImageMapper imageMapper) {
         this.refundMapper = refundMapper;
@@ -34,45 +34,20 @@ public class RefundServiceImp implements RefundService{
     }
 
     @Transactional
-    public int registerOne(RefundDto refund, List<MultipartFile> imgFileList,
-                           String imgPath,
-                           String code,
-                           int seq) throws Exception {
+    public int registerOne(RefundDto refund) throws Exception {
         int register = 0;
-        imgCodeNum += 1;
-        code = code + imgCodeNum;
         List<RefundDto> checkRefundList = null;
         // 주문 상세 단건 등록의 경우
         checkRefundList = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
         OrderDto order = orderMapper.findById(refund.getOrderId());
-        if (checkRefundList != null){ // db 조회가 되지만, 상태가 rf1(요청 취소)인 경우
+        if (checkRefundList != null){ // db 조회가 되지만,
             for (RefundDto checkRefund : checkRefundList){
-                if(checkRefund.getRfDet().equals("rf1")){
-                    continue;
-                }else{ // 상태가 rf1(요청 취소) 이외의 코드인 경우
+                if(!checkRefund.getRfDet().equals("rf1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
                     throw new RuntimeException();
                 }
             }
-            for(int i=0; i < imgFileList.size(); i++ ) {
-                MultipartFile imgFile = imgFileList.get(i);
-                if(imgFile!=null && !imgFile.isEmpty()) {
-                    register = imageRegister(imgFile, imgPath, code, i+1);
-                    if (register <= 0){
-                        throw new RuntimeException();
-                    }
-                }
-            }
-            refund.setImgCode(code);
-            register += refundMapper.insertOne(refund);
-        }else{ // db 정보가 없고 처음 등록하는 경우
-            for(int i=0; i < imgFileList.size(); i++ ) {
-                MultipartFile imgFile = imgFileList.get(i);
-                register += imageRegister(imgFile, imgPath, code, i+1);
-                refund.setImgCode(code);
-                register += refundMapper.insertOne(refund);
-                if(register <= 0){throw new RuntimeException();}
-            }
         }
+        register += refundMapper.insertOne(refund);
         return register;
     }
 
@@ -143,11 +118,11 @@ public class RefundServiceImp implements RefundService{
 
     public List<CommonCodeDto> showDetCodeList(String mstCode){ return commonCodeMapper.listByMstCode(mstCode); }
 
-    public int CountByOrderId(String orderId){ return orderDetailMapper.countByOrderId(orderId); }
+    public int countByOrderId(String orderId){ return orderDetailMapper.countByOrderId(orderId); }
 
     public List<RefundDto> selectOrderDetail(int orderDetailId){ return refundMapper.findByOrderDetailId(orderDetailId); }
 
-    public int countByOrderId(String orderId){ return refundMapper.countByOrderId(orderId); }
+    public int countByRefundOrderId(String orderId){ return refundMapper.countByOrderId(orderId); }
 
     public int countAll(){return refundMapper.countAll();}
 
@@ -155,23 +130,6 @@ public class RefundServiceImp implements RefundService{
 
     public int registerAddress(AddressDto address){return addressMapper.insertOne(address);}
 
-    private int imageRegister(MultipartFile imgFile,String imgPath,String code,int seq) throws Exception {
-        int register;
-        String[] contentsTypes = Objects.requireNonNull(imgFile.getContentType()).split("/");
-        if(contentsTypes[0].equals("image")) {
-            String fileName=code+"_"+System.currentTimeMillis()+"_"
-                    +(int)(Math.random()*10000)+"."+contentsTypes[1];
-            Path path= Paths.get(imgPath+"/"+fileName);
-            imgFile.transferTo(path);
-            ImageDto image=new ImageDto();
-            image.setImgPath(fileName);
-            image.setImgCode(code);
-            image.setSeq(seq);
-            register = imageMapper.insertOne(image);
-        } else {
-            throw new Exception("사진파일이 아닙니다.");
-        }
-        return register;
-    }
+    public OrderDetailDto selectOrderDetailByid(int orderDetailId){ return orderDetailMapper.findById(orderDetailId); }
 
 }

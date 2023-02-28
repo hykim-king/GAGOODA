@@ -30,15 +30,18 @@
         let url = "/refund/admin/payments/cancel.do"; // 취소 요청을 보낼 POST url
         const resp = await fetch(url,{method: "POST", body: formData}) // AJAX 시도
         console.log("resp: "+ resp)
+        // console.log(resp.body)
+        // console.log(await resp.json())
         const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값(해당 URL에는 0(성공) 혹은 1(실패)가 반환됨(이외의 값이 존재할 수 있음.)
         console.log("respJson: "+respJson)
+        console.log(respJson.message);
         // window.close();
-        if(respJson > 0){
-            alert("결제 취소 실패")
-        }else{
-            alert("결제 취소 성공")
-        }
-        window.close();
+        // if(respJson > 0){
+        //     alert("결제 취소 실패")
+        // }else{
+        //     alert("결제 취소 성공")
+        // }
+        // window.close();
     }
 
     let closeBtn = document.querySelector("#closeBtn");

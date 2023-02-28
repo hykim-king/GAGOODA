@@ -47,7 +47,7 @@
                     <td>
                         <div>
                             <button class="btn" style="background-color: #B68C68;">교환</button>
-                            <button class="btn" style="background-color: #B68C68;" th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderId}/register.do'(orderId=${order.orderId})}]]">환불</button>
+                            <button class="btn" style="background-color: #B68C68;" th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderDetailId}/register.do'(orderDetailId=${orderDetail.orderDetailId})}]]">환불</button>
                         </div>
                         <div class="mt-1">
                             <button class="btn border" style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</button>

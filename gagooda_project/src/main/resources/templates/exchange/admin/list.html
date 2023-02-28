@@ -9,7 +9,7 @@
 </head>
 <div layout:fragment="content">
     <h2>환불 신청 목록</h2>
-    <form action="/refund/admin/list.do" method="get" id="searchForm" name="searchForm">
+    <form action="/exchange/admin/list.do" method="get" id="searchForm" name="searchForm">
         <div>
             <label class="d-block">검색 키워드 :
                 <select name="searchDiv" id="searchDiv">
@@ -32,21 +32,21 @@
             </label>
             <div class="d-flex">
                 <span>진행 상태 :</span>
-                <label><input type="checkbox" name="rfDet" id="rf0" value="rf0" > 환불 요청 </label>
-                <label><input type="checkbox" name="rfDet" id="rf1" value="rf1" > 환불 요청 취소 </label>
-                <label><input type="checkbox" name="rfDet" id="rf2" value="rf2" > 환불 요청 확인 </label>
-                <label><input type="checkbox" name="rfDet" id="rf3" value="rf3" > 반품 수거 중 </label>
-                <label><input type="checkbox" name="rfDet" id="rf4" value="rf4" > 반품 완료 </label>
-                <label><input type="checkbox" name="rfDet" id="rf5" value="rf5" > 환불 대기 </label>
-                <label><input type="checkbox" name="rfDet" id="rf6" value="rf6" > 환불 보류 </label>
-                <label><input type="checkbox" name="rfDet" id="rf7" value="rf7" > 환불 완료 </label>
-                <label><input type="checkbox" name="rfDet" id="rf8" value="rf8" > 환불 불가 </label>
+                <label><input type="checkbox" name="exDet" id="ex0" value="ex0" > 교환 요청 </label>
+                <label><input type="checkbox" name="exDet" id="ex1" value="ex1" > 교환 요청 취소 </label>
+                <label><input type="checkbox" name="exDet" id="ex2" value="ex2" > 교환 요청 확인 </label>
+                <label><input type="checkbox" name="exDet" id="ex3" value="ex3" > 교환 수거 중 </label>
+                <label><input type="checkbox" name="exDet" id="ex4" value="ex4" > 교환 수거 완료 </label>
+                <label><input type="checkbox" name="exDet" id="ex5" value="ex5" > 교환 배송 중 </label>
+                <label><input type="checkbox" name="exDet" id="ex6" value="ex6" > 교환 배송 완료 </label>
+                <label><input type="checkbox" name="exDet" id="ex7" value="ex7" > 교환 완료 </label>
+                <label><input type="checkbox" name="exDet" id="ex8" value="ex8" > 교환 거절 </label>
             </div>
         </div>
         <button type="submit" class="btn btn-outline-secondary">검색</button>
         <button name="reset" type="reset">초기화</button>
     </form>
-    <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
+    <h3>교환 신청 <span th:if="${exchangeList != null && !exchangeList.isEmpty() }" th:text="${exchangeList.size()}"></span></h3>
     <table>
         <thead>
         <tr>
@@ -54,30 +54,30 @@
             <th>주문 ID</th>
             <th>상세 주문 ID</th>
             <th>옵션 상품 ID</th>
-            <th>주문 가격</th>
-            <th>환불 요청 가격</th>
-            <th>환불 진행 상태</th>
-            <th>환불 신청일</th>
+            <th>주문 상품 수량</th>
+            <th>교환 요청 수량</th>
+            <th>교환 진행 상태</th>
+            <th>교환 신청일</th>
             <th>최근 상태 변경일</th>
         </tr>
         </thead>
         <tbody>
-        <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}">
-            <tr class="hrefRow" th:data-refund="${refund.refundId}">
-                <td th:text="${refund.uname}"></td>
-                <td th:text="${refund.orderId}"></td>
-                <td th:text="${refund.orderDetailId}"></td>
-                <td th:text="${refund.orderDetailDto.optionCode}"></td>
-                <td th:text="${refund.orderDetailDto.price}"></td>
-                <td th:text="${refund.cancelAmount}"></td>
-                <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
-                <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
+        <th:block th:if="${exchangeCount >= 0}" th:each="exchange : ${exchangeList}">
+            <tr class="hrefRow" th:data-exchange="${exchange.exchangeId}">
+                <td th:text="${exchange.uname}"></td>
+                <td th:text="${exchange.orderId}"></td>
+                <td th:text="${exchange.orderDetailId}"></td>
+                <td th:text="${exchange.orderDetailDto.optionCode}"></td>
+                <td th:text="${exchange.orderDetailDto.cnt}"></td>
+                <td th:text="${exchange.cnt}"></td>
+                <td th:text="${exchange.exDetDto.detName}"></td>
+                <td th:text="${#calendars.format(exchange.regDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#calendars.format(exchange.modDate, 'yyyy-MM-dd')}"></td>
             </tr>
         </th:block>
         </tbody>
     </table>
-    <th:block th:unless="${refundCount >= 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
+    <th:block th:unless="${exchangeCount >= 0}"><div>해당 교환 내역이 존재하지 않습니다.</div></th:block>
 
     <!--pagination-->
     <nav class="m-1 d-flex justify-content-center">
@@ -109,32 +109,32 @@
     </nav>
     <!--pagination end--------------->
 
-<script th:inline="javascript">
-    let hrefRows = document.querySelectorAll(".hrefRow");
-    hrefRows.forEach((row)=>{
-        row.addEventListener('click',()=>{
-            console.log(row)
-            let targetHref = "http://"+ document.location.host + "/refund/admin/" + row.dataset.refund +"/detail.do";
-            console.log(targetHref)
-            document.location.href =  targetHref;
+    <script th:inline="javascript">
+        let hrefRows = document.querySelectorAll(".hrefRow");
+        hrefRows.forEach((row)=>{
+            row.addEventListener('click',()=>{
+                console.log(row)
+                let targetHref = "http://"+ document.location.host + "/exchange/admin/" + row.dataset.exchange +"/detail.do";
+                console.log(targetHref)
+                document.location.href =  targetHref;
+            })
         })
-    })
-    const forms = document.forms.searchForm;
-    console.log(forms);
-    forms.searchDiv.onchange = (qualifiedName, value)=>{
-        console.log(forms.searchDiv.value);
-        forms.searchWord.setAttribute("required", value);
-    }
-    forms.dateType.onchange = (qualifiedName, value)=>{
-        forms.startDate.setAttribute("required", value);
-        forms.endDate.setAttribute("required", value);
-    }
-    forms.reset.onclick=()=>{
-        forms.searchWord.removeAttribute("required");
-        forms.startDate.removeAttribute("required");
-        forms.endDate.removeAttribute("required");
-    }
+        const forms = document.forms.searchForm;
+        console.log(forms);
+        forms.searchDiv.onchange = (qualifiedName, value)=>{
+            console.log(forms.searchDiv.value);
+            forms.searchWord.setAttribute("required", value);
+        }
+        forms.dateType.onchange = (qualifiedName, value)=>{
+            forms.startDate.setAttribute("required", value);
+            forms.endDate.setAttribute("required", value);
+        }
+        forms.reset.onclick=()=>{
+            forms.searchWord.removeAttribute("required");
+            forms.startDate.removeAttribute("required");
+            forms.endDate.removeAttribute("required");
+        }
 
-</script>
+    </script>
 </div>
 </html>

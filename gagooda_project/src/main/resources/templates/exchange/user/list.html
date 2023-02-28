@@ -6,63 +6,174 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        button[type=submit]:hover{
+            background-color: #fff;
+            text-decoration-color: #1a1e21;
+        }
+    </style>
 </head>
-<body>
 <div layout:fragment="myPageContent">
     <h2>유저 교환 목록</h2>
-    <div th:text="${session.exchangeMsg}"></div>
-    <h3>교환 내역</h3>
-    <ul>
-        <li><a class="afterParam" th:href="@{ '' (period=7) }">최근 7일 기록 보기</a></li>
-        <li><a class="afterParam" th:href="@{ '' (period=15) }">최근 15일 기록 보기</a></li>
-        <li><a class="afterParam" th:href="@{ '' (period=30) }">최근 1개월 기록 보기</a></li>
-        <li><a class="afterParam" th:href="@{ '' (period=90) }">최근 3개월 기록 보기</a></li>
-        <li><a class="afterParam" th:href="@{ '' (period=365) }">최근 1년 기록 보기</a></li>
-        <li>
-            <form class="afterParam" th:action="@{''}" method="get">
-                <input type="date" name="startDate" id="startDate"> ~
-                <input type="date" name="endDate" id="endDate">
-                <button type="submit">조회</button>
-            </form>
-        </li>
-    </ul>
-    <ul>
-        <li><a th:href="@{ '' }">전체 교환 내역</a></li>
-        <li><a th:href="@{ '' (detCode=notEnd) }">교환 진행 내역</a></li>
-        <li><a th:href="@{ '' (detCode=end) }">교환 완료 내역</a></li>
-    </ul>
+    <span class="currentPeriod" th:text="${param.period}" style="display: none"></span>
+    <div class="d-flex justify-content-between my-3">
+        <ul class="nav ">
+            <!--공통 코드별(진행:ex0,ex2,ex3,ex4,ex5,ex6 / 완료:ex1,ex7,ex8) 선택 조회-->
+            <li class="nav-item "><a class="nav-link afterCode btn" href="javascript:void(0)"  data-val="all" style="text-decoration: none; color:#B68C68;">전체 교환 내역</a></li>
+            <li class="nav-item"><a class="nav-link afterCode" href="javascript:void(0)" data-val="notEnd" style="text-decoration: none; color:#B68C68;">교환 진행 내역</a></li>
+            <li class="nav-item"><a class="nav-link afterCode" href="javascript:void(0)" data-val="end" style="text-decoration: none; color:#B68C68;">교환 완료 내역</a></li>
+            <!--공통 코드별(진행:ex0,ex2,ex3,ex4,ex5,ex6 / 완료:ex1,ex7,ex8) 선택 조회 end-->
+            <li class="nav-link disabled">( 총 <th:block th:text="${userExchangeCount}"></th:block> 건)</li>
+        </ul>
+        <!-- 기간 검색 조회-->
+        <form  th:action="@{ '' }" method="get" class="d-flex align-self-end" style="height: 40px;">
+            <input class="form-control" type="date" name="startDate" id="startDate" required>
+            <span class="mx-2" style="line-height: 40px;"><i class="bi bi-dash"></i></span>
+            <input class="form-control" type="date" name="endDate" id="endDate" required>
+            <button class="btn text-white mx-1 ms-2" type="submit" style="background-color: #B68C68;"><i class="bi bi-search"></i></button>
+        </form>
+        <!-- 기간 검색 조회 end-->
+    </div>
 
-    <h3>교환 신청 내역 총 <th:block th:text="${exchangeList.size()}"></th:block> 건</h3>
-    <table>
+
+    <div class="nav-tabs" >
+        <ul class="nav">
+            <!-- 기간 선택 조회-->
+            <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="7" style="text-decoration: none; color:#B68C68;">7일</a></li>
+            <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="15" style="text-decoration: none; color:#B68C68;">15일</a></li>
+            <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="30" style="text-decoration: none; color:#B68C68;">1개월</a></li>
+            <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="90" style="text-decoration: none; color:#B68C68;">3개월</a></li>
+            <li class="nav-item"><a class="nav-link afterParam" href="javascript:void(0)" data-val="365" style="text-decoration: none; color:#B68C68;">1년</a></li>
+            <!-- 기간 선택 조회 end-->
+        </ul>
+    </div>
+    <hr style="margin-top: 0; background : #b68c68; height: 5px">
+
+    <table class="table table-hover">
         <thead>
         <tr>
-            <th>날짜</th>
-            <th>주문번호</th>
-            <th>상품명</th>
-            <th>교환 수량</th>
-            <th>처리 현황</th>
-            <th></th>
+            <th scope="col" class="text-center">교환 요청 날짜</th>
+            <th scope="col" class="text-center">주문번호</th>
+            <th scope="col" class="text-center">상품명</th>
+            <th scope="col" class="text-center">주문 수량</th>
+            <th scope="col" class="text-center">교환 수량</th>
+            <th scope="col" class="text-center">처리 현황</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="exchange:${exchangeList}">
-            <td th:text="${#calendars.format(exchange.regDate,'yyyy-MM-dd')}"></td>
-            <td th:text="${exchange.orderId}"></td>
-            <td th:text="${optionNameMap[exchange.exchangeId]}"></td>
-            <td th:text="${exchange.cnt}"></td>
-            <td th:text="${exDetList[#strings.substring(exchange.exDet,2)].detName}"></td>
+        <tr th:each="exchange:${exchangeList}" class="hrefRow" th:data-exchange="${exchange.exchangeId}" style="cursor: pointer">
+            <td class="text-center" scope="row" style="vertical-align: middle;" th:text="${#calendars.format(exchange.regDate,'yyyy-MM-dd')}"></td>
+            <td class="text-center" style="vertical-align: middle;" th:text="${exchange.orderId}"></td>
             <td>
-                <th:block th:if="${exchange.exDet.equals('ex0')}">
-                    <a href="#" >교환 요청 취소</a>
+                <th:block th:if="${!exchange.orderDetailDto.imageList.isEmpty() && exchange.orderDetailDto.imageList != null}">
+                    <img th:src="@{'/img/product/{file}' (file=${exchange.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
                 </th:block>
-                <th:block th:unless="${exchange.exDet.equals('ex0')}">
-                    <a th:href="@{ 'exchange/user_yes/mypage/detail.do' (exchangeId=11) }" >교환 내역 확인</a>
-                </th:block>
+                <span style="vertical-align: middle;" th:text="${#strings.abbreviate(exchange.orderDetailDto.optionName, 15) }"></span>
             </td>
+            <td style="vertical-align: middle; text-align: center" th:text="${exchange.orderDetailDto.cnt}"></td>
+            <td style="vertical-align: middle; text-align: center" th:text="${exchange.cnt}"></td>
+            <td class="text-center" style="vertical-align: middle;  color: #B68C68; border-color:#eeeeee;" th:text="${exchange.exDetDto.detName}"></td>
         </tr>
         </tbody>
-
     </table>
+    <th:block th:if="${userExchangeCount == 0}">
+        <h3>환불 내역이 없습니다.</h3>
+    </th:block>
+
+    <!--pagination-->
+    <nav class="m-1 d-flex justify-content-center">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${(!paging.prev)?'disabled':''}">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}">Prev</a></li>
+            <th:block th:if="${paging.startPage>1}">
+                <li>
+                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
+                </li>
+                <li class="disabled"><span>…</span></li>
+            </th:block>
+
+            <li class="page-item" th:each=" i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
+                th:classappend="${(i==paging.page)?'disabled':''}">
+                <a class="page-link" th:classappend="${(i==paging.page)?'text-primary fw-bold':''}"
+                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
+            </li>
+            <th:block th:if="${paging.endPage<paging.totalPages}">
+                <li class="disabled"><span>…</span></li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
+                       th:text="${paging.totalPages}"></a>
+                </li>
+            </th:block>
+            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
+                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}">Next</a></li>
+        </ul>
+    </nav>
+    <!--pagination end--------------->
+
+    <script th:inline="javascript">
+        let hrefRows = document.querySelectorAll(".hrefRow");
+        hrefRows.forEach((row)=>{
+            row.addEventListener('click',()=>{
+                console.log(row)
+                let targetHref = "http://"+ document.location.host + "/exchange/user_yes/mypage/"+ row.dataset.exchange+"/detail.do";
+                console.log(targetHref)
+                document.location.href =  targetHref;
+            })
+        })
+        const afterParam = document.querySelectorAll(".afterParam");
+        let period = document.querySelector(".currentPeriod").innerText;
+        let url = document.location.href;
+        afterParam.forEach(param=>{
+            let period = "period="+[[${param.period}]];
+            let value = [[${param.period}]]
+            if (param.dataset.val == value){
+                console.log(period)
+                param.classList.add("active");
+            }else{
+            }
+        });
+        afterParam.forEach((param)=>{
+            param.addEventListener("click", ()=>{
+                if (url.includes("?")){
+                    if(url.includes("startDate") && url.includes("endDate")){
+                        url = url.replace("startDate="+[[${param.startDate}]]+"&endDate="+[[${param.endDate}]],"");
+                    }
+                    if (url.includes("period")){
+                        document.location.href = url.replace("period="+[[${param.period}]], "period="+param.dataset.val);
+                    }else{
+                        document.location.href = url + "&period="+param.dataset.val;
+                    }
+                }else{
+                    document.location.href = document.location.href + "?period=" + param.dataset.val;
+                }
+            })
+        })
+
+        let afterCode = document.querySelectorAll(".afterCode");
+        afterCode.forEach(code=>{
+            code.addEventListener("click",()=>{
+                if (url.includes("?")){
+                    if (url.includes("detCode")){
+                        document.location.href = url.replace("detCode="+[[${param.detCode}]], "detCode="+code.dataset.val);
+                    }else{
+                        document.location.href = url + "&detCode="+code.dataset.val;
+                    }
+                }else{
+                    document.location.href = document.location.href + "?detCode=" + code.dataset.val;
+                }
+            })
+            if (code.classList.contains("btn")){
+                code.removeAttribute("btn")
+                code.style.color = "B68C68";
+                code.style.removeProperty("background-color");
+            }
+            if ([[${param.detCode}]] && code.dataset.val === [[${param.detCode}]].toString()){
+                code.classList.add("btn");
+                code.style.color = "#ffffff";
+                code.style.backgroundColor = "#B68C68";
+            }
+        })
+    </script>
 </div>
-</body>
 </html>
