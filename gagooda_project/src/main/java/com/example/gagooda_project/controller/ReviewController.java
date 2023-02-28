@@ -2,6 +2,7 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.ReviewService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/review")
@@ -174,24 +177,45 @@ public class ReviewController {
     @GetMapping("/admin/list.do")
     public String adminList(Model model,
                             @SessionAttribute UserDto loginUser,
-                            PagingDto paging){
-        int check = 0;
+                            PagingDto paging,
+                            HttpServletRequest req,
+                            HttpSession session,
+                            @SessionAttribute(required = false) String msg,
+                            @RequestParam(name = "searchDiv", required = false, defaultValue = "") String searchDiv,
+                            @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
+                            @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
+                            @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate){
+        log.info("req.getParameterMap:"+req.getParameterMap());
+        String adminMsg = "";
+        if (session.getAttribute(msg) != null){
+            adminMsg = session.getAttribute(msg).toString();
+            session.removeAttribute(msg);
+        }
         try {
-            List<ReviewDto> reviewList = reviewService.showReviews(paging);
-            int count = reviewService.countByReviews(paging);
-            model.addAttribute("reviewList", reviewList);
-            model.addAttribute("paging", paging);
-            model.addAttribute("count", count);
-            check = 1;
+            if(loginUser.getGDet().equals("g1")) {
+                Map<String, Object> searchFilter = new HashMap<>();
+                paging.setQueryString(req.getParameterMap());
+                searchFilter.put("searchDiv", searchDiv);
+                searchFilter.put("searchWord", searchWord);
+                searchFilter.put("dateType", dateType);
+                searchFilter.put("startDate", startDate);
+                searchFilter.put("endDate", endDate);
+                searchFilter.put("paging", paging);
+                List<ReviewDto> reviewList = reviewService.showReviews(searchFilter);
+                int count = reviewService.countByReviews(searchFilter);
+                model.addAttribute("reviewList", reviewList);
+                model.addAttribute("paging", paging);
+                model.addAttribute("count", count);
+                model.addAttribute("msg", msg);
+                return "/review/admin/list";
+            } else{
+                return "/index";
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
-        if (check > 0){
-            return "/review/admin/list";
-        } else {
-            return "/errorHandler";
-        }
-
+        return "/review/admin/list";
     }
 
     @GetMapping("/admin/{reviewId}/detail.do")

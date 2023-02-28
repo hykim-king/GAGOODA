@@ -33,5 +33,5 @@ public interface ProductInquiryMapper {
 
     int countByUserId (int userId);
 
-    List<ProductInquiryDto> listByUserId(int userId);
+    List<ProductInquiryDto> listByUserId(int userId, PagingDto paging);
 }

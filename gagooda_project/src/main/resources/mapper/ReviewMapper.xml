@@ -59,12 +59,33 @@
     <select id="listByProductCodeAll" resultMap="reviewMap">
         SELECT * FROM review WHERE product_code=#{productCode}
     </select>
-    <select id="pageAll" resultMap="reviewMap" parameterType="pagingDto" >
+    <select id="pageAll" resultMap="reviewMap" parameterType="hashmap" >
         SELECT * FROM review
-        ORDER BY ${orderField} ${direct}
-        LIMIT #{startRow}, #{rows}
+        <where>
+            <if test="searchDiv !='' and searchWord != ''">
+                AND ${searchDiv} LIKE #{searchWord}
+            </if>
+            <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN ${startDate} AND #{endDate}
+            </if>
+            <if test="dateType !='' and startDate != '' and endDate !='' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+        </where>
+        ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
-    <select id="count" resultType="java.lang.Integer" parameterType="pagingDto" >
+    <select id="count" resultType="java.lang.Integer" >
         SELECT count(*) FROM review
+        <where>
+            <if test="searchDiv != '' and searchWord != ''">
+                AND ${searchDiv} LIKE ${searchWord}
+            </if>
+            <if test="dateType !='' and startDate !='' and endDate !='' and !startDate.equals(endDate)">
+                AND ${dateType} BETWEEN #{startDate} AND ${endDate}}
+            </if>
+            <if test="dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
+                AND ${dateType} LIKE #{startDate}
+            </if>
+        </where>
     </select>
 </mapper>

@@ -43,7 +43,7 @@ public interface ProductInquiryService {
     List<ProductInquiryDto> showAllInquiries(String productCode);
 
 //  사용자별 문의리스트
-    List<ProductInquiryDto> showInquiryByUser (int UserId);
+    List<ProductInquiryDto> showInquiryByUser (int UserId, PagingDto paging);
 
     int numUserId(int userId);
 }

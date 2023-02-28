@@ -88,8 +88,12 @@ public class ProductInquiryServiceImp implements ProductInquiryService{
     }
 
     @Override
-    public List<ProductInquiryDto> showInquiryByUser(int userId) {
-        return productInquiryMapper.listByUserId(userId);
+    public List<ProductInquiryDto> showInquiryByUser(int userId, PagingDto paging) {
+        int totalRows = productInquiryMapper.countByUserId(userId);
+        paging.setRows(10);
+        if (paging.getOrderField() == null) paging.setOrderField("reg_date");
+        paging.setTotalRows(totalRows);
+        return productInquiryMapper.listByUserId(userId, paging);
     }
 
     @Override

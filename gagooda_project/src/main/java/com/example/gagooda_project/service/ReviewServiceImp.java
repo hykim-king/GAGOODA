@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReviewServiceImp implements ReviewService {
@@ -129,17 +130,30 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
-    public List<ReviewDto> showReviews(PagingDto paging) {
-        int totalRows = reviewMapper.count(paging);
-        paging.setRows(10);
-        if (paging.getOrderField() == null) paging.setOrderField("reg_date");
-        paging.setTotalRows(totalRows);
-        return reviewMapper.pageAll(paging);
+    public List<ReviewDto> showReviews(Map<String,Object> searchFilter) {
+        if(!searchFilter.get("searchWord").equals("")) {
+            String keyword = "%" + searchFilter.get("searchWord") + "%";
+            searchFilter.put("searchWord",keyword);
+        }
+        if(searchFilter.get("startDate").equals(searchFilter.get("endDate"))) {
+            String equalDate = searchFilter.get("startDate").toString() + "%";
+            searchFilter.put("startDate", equalDate);
+            searchFilter.put("endDate", equalDate);
+        }
+        PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
+        int totalRows = reviewMapper.count(searchFilter);
+        pagingDto.setRows(10);
+        pagingDto.setTotalRows(totalRows);
+        if (pagingDto.getOrderField()==null) {
+            pagingDto.setOrderField("reg_date");
+        }
+        searchFilter.put("paging",pagingDto);
+        return reviewMapper.pageAll(searchFilter);
     }
 
     @Override
-    public int countByReviews(PagingDto paging) {
-        return reviewMapper.count(paging);
+    public int countByReviews(Map<String,Object> searchFilter) {
+        return reviewMapper.count(searchFilter);
     }
 
     @Override
