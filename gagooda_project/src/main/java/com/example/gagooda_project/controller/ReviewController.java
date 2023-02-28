@@ -2,18 +2,13 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.ReviewService;
-import com.example.gagooda_project.service.ReviewServiceImp;
-import com.fasterxml.jackson.datatype.jdk8.OptionalSerializer;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -28,7 +23,6 @@ public class ReviewController {
 
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
-//        this.optionService = optionService;
     }
 
     @GetMapping("/list.do")
@@ -46,15 +40,26 @@ public class ReviewController {
             return "/review/list";
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("msg","리뷰를 불러올 수 없습니다.");
             return "redirect:/";
         }
 
+    }
+
+    @GetMapping("/user_yes/mypage/m_list")
+    public String m_list(Model model,
+                         HttpSession session,
+                         @SessionAttribute UserDto loginUser,
+                         @SessionAttribute(required = false) String msg) {
+
+        return "/review/m_list";
     }
 
     @GetMapping("/user_yes/{productCode}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                            @SessionAttribute(required = false) String msg,
                            @PathVariable(required = true, name = "productCode") String productCode,
+                           @RequestParam(name = "orderId") String orderId,
                            HttpSession session,
                            Model model
     ) {
@@ -64,6 +69,7 @@ public class ReviewController {
         }
         try {
             List<OptionProductDto> optionProductList = reviewService.showOptionProduct(productCode);
+            model.addAttribute("orderId",orderId);
             model.addAttribute("optionProductList",optionProductList);
             model.addAttribute("productCode",productCode);
             return "/review/register";
@@ -117,30 +123,18 @@ public class ReviewController {
             return "/review/modify";
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/review/list";
+            return "redirect:/review/list.do";
         }
     }
     @PostMapping("/user_yes/modify.do")
     public String modify(ReviewDto review,
-//                         @RequestParam(name = "imgFile")List<ImageDto> imageList,
-                         @SessionAttribute(required = false) String msg,
+                         @RequestParam(name = "imgFile", required = false)List<MultipartFile> imageList,
+                         @RequestParam(name = "imgToDelete", required = false) List<String> imgToDeleteList,
                          HttpSession session,
                          @SessionAttribute UserDto loginUser) {
-        int modify = 0;
-        if (loginUser.getUserId() == review.getUserId()) {
-            try {
-                modify = reviewService.updateOne(review);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        if (modify > 0) {
-            session.setAttribute("msg","리뷰 수정이 성공했습니다.");
-            return "redirect:/review/list.do?productCode=" + review.getProductCode();
-        } else {
-            session.setAttribute("msg", "리뷰 수정을 실패하였습니다.");
-            return "redirect:/review/user_yes/modify.do" + review.getReviewId();
-        }
+        log.info("imgToDeleteList: "+imgToDeleteList);
+        reviewService.update(imageList, review, imgPath, imgToDeleteList);
+        return "redirect:/review/list.do?productCode=" + review.getProductCode();
     }
 
     @GetMapping("/user_yes/delete.do")

@@ -77,9 +77,10 @@ public class UserController {
                         HttpServletRequest req) {
         String previousUrl = req.getHeader("referer");
         if (
+                previousUrl != null && (
                 previousUrl.contains("signup.do") ||
                 previousUrl.contains("findpw.do") ||
-                previousUrl.contains("password_reset.do")
+                previousUrl.contains("password_reset.do"))
         ){
             previousUrl = null;
         }

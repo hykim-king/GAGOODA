@@ -10,6 +10,7 @@
         <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/order/user/list.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/order/user" />
         <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/product_inquiry/list.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/product_inquiry" />
         <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/review/admin/list.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/review/admin" />
+        <entry key="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/review/list.html" value="file://$PROJECT_DIR$/gagooda_project/src/main/resources/templates/review" />
       </map>
     </option>
   </component>

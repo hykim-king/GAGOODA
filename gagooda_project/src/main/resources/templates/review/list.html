@@ -6,6 +6,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
+    <style>
+
+    </style>
 </head>
 <div layout:fragment="content">
     <div>
@@ -16,23 +21,16 @@
             <option value="">평점 낮은순</option>
         </select>
     </div>
-<!--    <th:block th:each="review:${reviewList}">-->
-<!--        아이디<p th:text="${review.user.nickname}+'님의 리뷰입니다.'"></p>-->
-<!--        평점<p th:text="${review.rate}"></p>-->
-<!--        등록날짜<p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>-->
-<!--        내용<p th:text="${review.content}"></p>-->
-<!--        <th:block th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">-->
-<!--            <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" style="width: 100px; height: 100px;">-->
-<!--        </th:block>-->
-<!--        <a th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:href="@{'user_yes/delete.do' (reviewId=${review.reviewId})}">삭제</a>-->
-<!--    </th:block>-->
+    <th:block th:if="${reviewList == null or reviewList.isEmpty()}">
+        <p th:text="'등록된 리뷰가 없습니다.'"></p>
+    </th:block>
     <th:block th:each="review:${reviewList}">
         <div class="d-flex position-relative border mb-3" style="width: 600px;">
             <th:bolck th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">
                 <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 100px; height: 100px;">
             </th:bolck>
             <div class="container-sm">
-                <h5 class="mt-0" th:text="'평점 : '+${review.rate}"></h5>
+                <h5 class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 30px"></h5>
                 <p th:text="${review.content}"></p>
                 <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
                 <button type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
@@ -53,6 +51,12 @@
                 location.href = "user_yes/delete.do?reviewId="+reviewId;
             }
         }
+        $(function(){
+            $(".rate").score({
+                starColor:"#b68c68",
+                backgroundColor:"white",
+            });
+        });
     </script>
 </div>
 </html>
