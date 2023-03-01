@@ -49,13 +49,32 @@ public class ReviewController {
 
     }
 
-    @GetMapping("/user_yes/mypage/m_list")
-    public String m_list(Model model,
+    @GetMapping("/user_yes/mypage/mypageList.do")
+    public String mypageList(Model model,
                          HttpSession session,
+                         PagingDto paging,
+                         HttpServletRequest req,
                          @SessionAttribute UserDto loginUser,
                          @SessionAttribute(required = false) String msg) {
-
-        return "/review/m_list";
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
+        try {
+            Map<String, Object> searchFilter = new HashMap<>();
+            paging.setQueryString(req.getParameterMap());
+            searchFilter.put("paging", paging);
+            searchFilter.put("userId",loginUser.getUserId());
+            List<ReviewDto> reviewList = reviewService.showReviews(searchFilter);
+            int count = reviewService.countByReviews(searchFilter);
+            model.addAttribute("reviewList", reviewList);
+            model.addAttribute("paging", paging);
+            model.addAttribute("count", count);
+            System.out.println("reviewList : "+reviewList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "/review/mypageList";
     }
 
     @GetMapping("/user_yes/{productCode}/register.do")
@@ -136,8 +155,14 @@ public class ReviewController {
                          HttpSession session,
                          @SessionAttribute UserDto loginUser) {
         log.info("imgToDeleteList: "+imgToDeleteList);
-        reviewService.update(imageList, review, imgPath, imgToDeleteList);
-        return "redirect:/review/list.do?productCode=" + review.getProductCode();
+        try {
+            reviewService.update(imageList, review, imgPath, imgToDeleteList);
+            return "redirect:/review/user_yes/mypage/mypageList.do";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/review/user_yes/modify.do?reviewId="+review.getReviewId();
+        }
+
     }
 
     @GetMapping("/user_yes/delete.do")

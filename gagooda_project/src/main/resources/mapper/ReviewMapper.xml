@@ -62,14 +62,17 @@
     <select id="pageAll" resultMap="reviewMap" parameterType="hashmap" >
         SELECT * FROM review
         <where>
-            <if test="searchDiv !='' and searchWord != ''">
+            <if test="searchWord != null and searchDiv != null and searchDiv !='' and searchWord != ''">
                 AND ${searchDiv} LIKE #{searchWord}
             </if>
-            <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
+            <if test="dateType != null and startDate != null and endDate !=null and dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
                 AND ${dateType} BETWEEN ${startDate} AND #{endDate}
             </if>
-            <if test="dateType !='' and startDate != '' and endDate !='' and startDate.equals(endDate)">
+            <if test="dateType != null and startDate != null and endDate !=null and dateType !='' and startDate != '' and endDate !='' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="userId != '' and userId != null">
+                AND user_id = #{userId}
             </if>
         </where>
         ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
@@ -77,14 +80,17 @@
     <select id="count" resultType="java.lang.Integer" >
         SELECT count(*) FROM review
         <where>
-            <if test="searchDiv != '' and searchWord != ''">
+            <if test="searchWord != null and searchDiv != null and searchDiv != '' and searchWord != ''">
                 AND ${searchDiv} LIKE ${searchWord}
             </if>
-            <if test="dateType !='' and startDate !='' and endDate !='' and !startDate.equals(endDate)">
+            <if test="dateType != null and startDate != null and endDate != null and dateType !='' and startDate !='' and endDate !='' and !startDate.equals(endDate)">
                 AND ${dateType} BETWEEN #{startDate} AND ${endDate}}
             </if>
-            <if test="dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
+            <if test="dateType != null and startDate != null and endDate != null and dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="userId != '' and userId != null">
+                AND user_id = #{userId}
             </if>
         </where>
     </select>

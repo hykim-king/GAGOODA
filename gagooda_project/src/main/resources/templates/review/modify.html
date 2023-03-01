@@ -35,7 +35,7 @@
                 <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}" id="content" cols="30" rows="3" required></textarea>
             </div>
             <div class="mb-3">
-                <label for="imgFile">이미지 첨부</label>
+                <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
                 <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
                 <div>
                     <th:block th:each="img:${review.imgList}">
@@ -46,10 +46,25 @@
                     </th:block>
                 </div>
             </div>
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="submit">등록</button>
+            <div class="d-grid d-flex gap-2 float-end">
+                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset" onclick="cancel()">취소</button>
+                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit" onclick="modifyReview()">수정</button>
             </div>
         </div>
     </form>
+    <script>
+        function modifyReview() {
+            let result = confirm("리뷰를 수정하시겠습니까 ?");
+            if (result == true) {
+                location.href = "/review/user_yes/mypage/mypageList.do";
+            }
+        }
+        function cancel() {
+            let result = confirm("리뷰 수정을 취소하시겠습니까 ?");
+            if (result == true) {
+                location.href = "/review/user_yes/mypage/mypageList.do"
+            }
+        }
+    </script>
 </div>
 </html>

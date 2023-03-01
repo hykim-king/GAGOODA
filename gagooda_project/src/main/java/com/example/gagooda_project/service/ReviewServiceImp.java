@@ -131,17 +131,20 @@ public class ReviewServiceImp implements ReviewService {
 
     @Override
     public List<ReviewDto> showReviews(Map<String,Object> searchFilter) {
-        if(!searchFilter.get("searchWord").equals("")) {
+        if(searchFilter.get("searchWord") != null && !searchFilter.get("searchWord").equals("")) {
             String keyword = "%" + searchFilter.get("searchWord") + "%";
             searchFilter.put("searchWord",keyword);
         }
-        if(searchFilter.get("startDate").equals(searchFilter.get("endDate"))) {
+        if(searchFilter.get("startDate") != null
+                && searchFilter.get("endDate") != null
+                && searchFilter.get("startDate").equals(searchFilter.get("endDate"))) {
             String equalDate = searchFilter.get("startDate").toString() + "%";
             searchFilter.put("startDate", equalDate);
             searchFilter.put("endDate", equalDate);
         }
         PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
         int totalRows = reviewMapper.count(searchFilter);
+        pagingDto.setDirect("ASC");
         pagingDto.setRows(10);
         pagingDto.setTotalRows(totalRows);
         if (pagingDto.getOrderField()==null) {
