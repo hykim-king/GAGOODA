@@ -20,4 +20,6 @@ public interface OrderService {
     int countPageAll(Map<String,Object> searchFilter);
     int adminModify(List<String> orderIdList, List<String> oDetList);
     int countRefund(String orderId);
+    OptionProductDto selectOptionProduct(String optionCode);
+    int changeStock(int count,String optionCode,String orderId);
 }

@@ -6,11 +6,24 @@
             <option disabled selected="selected" th:text="'----내 배송지 목록 선택-----'"></option>
             <th:block th:each="address:${addressList}">
                 <th:block th:if="${address.home == true}">
-                    <option th:value="${address.addressId}" th:text="'기본:' + ${address.aname}"
-                            th:data-address="${address}"></option>
+                    <option th:value="${address.addressId}" th:text="'기본:' + ${address}"
+                            th:data-addressid="${address.addressId}"
+                            th:data-postcode="${address.postCode}"
+                            th:data-address="${address.address}"
+                            th:data-addressdetail="${address.addressDetail}"
+                            th:data-receivername="${address.receiverName}"
+                            th:data-receiverphone="${address.receiverPhone}"
+                            th:data-elevator="${address.elevator}"></option>
                 </th:block>
                 <th:block th:unless="${address.home == true}">
-                    <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+                    <option th:value="${address.addressId}" th:text="${address}"
+                            th:data-addressid="${address.addressId}"
+                            th:data-postcode="${address.postCode}"
+                            th:data-address="${address.address}"
+                            th:data-addressdetail="${address.addressDetail}"
+                            th:data-receivername="${address.receiverName}"
+                            th:data-receiverphone="${address.receiverPhone}"
+                            th:data-elevator="${address.elevator}"></option>
                 </th:block>
             </th:block>
         </select>

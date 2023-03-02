@@ -40,7 +40,7 @@
                     <td>
                         <img th:src="@{'/img/product/{file}'(file=${orderDetail.imageList[0].imgPath})}"
                              class="rounded" style="width: 50px; height:50px; object-fit: cover">
-                        <span th:text="${orderDetail.optionName}" id="optionName" name="optionName" ></span>
+                        <span th:text="${orderDetail.optionName}" id="optionName"></span>
                     </td>
                     <td class="text-center" th:text="${orderDetail.cnt}"></td>
                     <td class="text-center" th:text="${orderDetail.totalPrice}+'원'"></td>
@@ -50,10 +50,9 @@
                                     th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderDetailId}/register.do'(orderDetailId=${orderDetail.orderDetailId})}]]">교환/환불</button>
                         </div>
                         <div class="mt-1">
-                            <button class="btn border"
-                                    th:classappend="${(#strings.equals(delivery.DDet,'d3'))?'disabled':''}"
-                                    th:onclick="location.href=[[@{'/review/user_yes/{productCode}/register.do'(orderId=${order.orderId},productCode=${orderDetail.productCode})}}]]"
-                               style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</button>
+                            <button class="btn border" style="background-color: #ffffff; color:#b68c68;"
+                                    th:classappend="${!(#strings.equals(delivery.DDet,'d3'))?'disabled':''}"
+                                    th:onclick="location.href=[[@{'/review/user_yes/{productCode}/register.do'(orderId=${order.orderId},productCode=${orderDetail.productCode})}]]">리뷰 작성하기</button>
                         </div>
                     </td>
                 </tr>
@@ -134,7 +133,7 @@
     <!--button group-->
     <div class="d-flex justify-content-end mt-4 mb-5 " >
         <button class="btn mx-3 text-white"  style="background-color: #B68C68;" th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
-        <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
+        <th:block th:if="${!(#strings.equals(order.ODet,'o4')||(#strings.equals(order.ODet,'o5')))}">
             <button class="btn me-2 col-3" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
         </th:block>
     </div>
@@ -151,6 +150,11 @@
                 window.open(url.dataset.receipt, "cancelReceipt", "width=450, height=600, resizable=no")
             })
         })
+        const disabled = document.querySelectorAll(".disabled");
+        for(let i=0; i<disabled.length;i++){
+            disabled[i].style.color = 'lightgrey'
+        }
+
     </script>
 
 </div>

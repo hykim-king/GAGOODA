@@ -97,10 +97,12 @@
                                          style="width: 50px; height:50px;object-fit: cover">
                                 </div>
                                 <div class="ms-3" >
-                                    <input class="form-control" type="text" th:value="${cart.product.pname}" name="orderDetail.productCode"
-                                           id="orderDetail.productCode" placeholder="productCode" readonly>
-                                    <input class="form-control" type="text" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
-                                           id="orderDetail.optionCode" placeholder="optionCode" readonly>
+                                    <span th:text="${cart.product.pname}"></span><br>
+                                    <span th:text="${cart.optionProduct.opname}"></span>
+                                    <input type="hidden" th:value="${cart.product.pname}" name="orderDetail.productCode"
+                                           id="orderDetail.productCode" placeholder="productCode">
+                                    <input type="hidden" th:value="${cart.optionProduct.opname}" name="orderDetail.optionCode"
+                                           id="orderDetail.optionCode" placeholder="optionCode">
                                 </div>
                             </td>
                             <td class="text-center"><input class="form-control-plaintext" type="number" th:value="${cart.cnt}" name="orderDetail.cnt" id="orderDetail.cnt"
@@ -247,31 +249,40 @@
         const realAddressList = document.querySelectorAll(".realAdd");
         function selectedAddress(){
             let addressSlt = document.getElementById("myAddressList");
+            console.log(addressSlt.options[addressSlt.selectedIndex]);
             document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
             //console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
-            let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
-            let addressMap = new Map();
-            for (let add of address){
-                let splitAdd = add.split("=");
-                console.log(splitAdd);
-                addressMap.set(splitAdd[0].trim(),splitAdd[1]);
-            }
-            console.log(addressMap);
-            console.log(addressMap.get("addressId"));
-            currentAddressList[0].value = addressMap.get("addressId");
-            currentAddressList[1].value = addressMap.get("postCode");
-            currentAddressList[2].value = addressMap.get("address");
-            currentAddressList[3].value = addressMap.get("addressDetail");
-            currentAddressList[4].value = addressMap.get("receiverName");
-            currentAddressList[5].value = addressMap.get("receiverPhone");
-            currentAddressList[6].value = addressMap.get("elevator");
-            realAddressList[0].value = addressMap.get("addressId");
-            realAddressList[1].value = addressMap.get("postCode");
-            realAddressList[2].value = addressMap.get("address");
-            realAddressList[3].value = addressMap.get("addressDetail");
-            realAddressList[4].value = addressMap.get("receiverName");
-            realAddressList[5].value = addressMap.get("receiverPhone");
-            realAddressList[6].value = addressMap.get("elevator");
+            let addressId = addressSlt.options[addressSlt.selectedIndex].dataset['addressid'];
+            let postCode = addressSlt.options[addressSlt.selectedIndex].dataset['postcode'];
+            let address = addressSlt.options[addressSlt.selectedIndex].dataset['address'];
+            let addressDetail = addressSlt.options[addressSlt.selectedIndex].dataset['addressdetail'];
+            let receiverName = addressSlt.options[addressSlt.selectedIndex].dataset['receivername'];
+            let receiverPhone = addressSlt.options[addressSlt.selectedIndex].dataset['receiverphone'];
+            let elevator = addressSlt.options[addressSlt.selectedIndex].dataset['elevator'];
+
+            console.log("addressId: "+addressId);
+            console.log("postCode: "+ postCode);
+            console.log("address: "+address);
+            console.log("addressDetail: "+addressDetail);
+            console.log("receiverName: "+receiverName);
+            console.log("receiverPhone: "+receiverPhone);
+            console.log("elevator: "+elevator);
+
+
+            currentAddressList[0].value = addressId;
+            currentAddressList[1].value = postCode;
+            currentAddressList[2].value = address;
+            currentAddressList[3].value = addressDetail;
+            currentAddressList[4].value = receiverName;
+            currentAddressList[5].value = receiverPhone;
+            currentAddressList[6].value = elevator;
+            realAddressList[0].value = addressId;
+            realAddressList[1].value = postCode;
+            realAddressList[2].value = address;
+            realAddressList[3].value = addressDetail;
+            realAddressList[4].value = receiverName;
+            realAddressList[5].value = receiverPhone;
+            realAddressList[6].value = elevator;
         }
 
         function validateForm(){
@@ -315,8 +326,7 @@
                         type:"post",
                         data:{
                             orderId: orderId,
-                            impUid: resp.imp_uid,
-                            oDet:"o2"
+                            impUid: resp.imp_uid
                         },
 
                     });

@@ -7,4 +7,5 @@ public interface PaymentService {
     PaymentDto selectOne(String orderId);
     int register(PaymentDto payment);
     int delete(String orderId);
+    int registerOrderPayment(PaymentDto payment, String orderId, String oDet);
 }
