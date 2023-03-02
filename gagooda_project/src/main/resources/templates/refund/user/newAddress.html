@@ -1,89 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div>
     <div class="d-flex justify-content-end">
-        <div class="d-inline-block d-flex">
-            <select class="form-select-sm me-3" id="myAddressList" onchange="changeAdd()">
-                <option value="" disabled selected>내 배송지 목록</option>
-                <th:block th:if="${addressList != null}" th:each="address:${addressList}">
-                    <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
-                </th:block>
-            </select>
-            <button type="button" class="btn text-white" style="background-color: #B68C68;" data-bs-toggle="modal" data-bs-target="#addressBtn">
-                새 주소 입력
-            </button>
-        </div>
+        <select class="form-select-sm me-3" id="myAddressList" onchange="changeAdd()">
+            <option value="" disabled selected>내 배송지 목록</option>
+            <th:block th:if="${addressList != null}" th:each="address:${addressList}">
+                <option th:value="${address.addressId}" th:text="${address.aname}" th:data-address="${address}"></option>
+            </th:block>
+        </select>
+        <button type="button" class="btn text-white" style="background-color: #B68C68;" data-bs-toggle="modal" data-bs-target="#addressBtn">
+            새 주소 입력
+        </button>
     </div>
-
-</div>
 
 <th:block th:if="${refundMsg != null && addressId != 0}">
-    <span class="add" th:text="${address.addressId}"></span>
-    <div>
-        <span>우편 번호</span>
-        <div class="add form-control" th:text="${address.postCode}"></div>
-    </div>
-    <div>
-        <span>주소</span>
-        <div class="add form-control" th:text="${address.address}"></div>
-    </div>
-    <div>
-        <span>상세 주소</span>
-        <div class="add form-control" th:text="${address.addressDetail}"></div>
-    </div>
-    <div>
-        <span>수령인 이름</span>
-        <div class="add form-control" th:text="${address.receiverName}"></div>
-    </div>
-    <div>
-        <span>수령인 전화번호</span>
-        <div class="add form-control" th:text="${address.receiverPhone}"></div>
-    </div>
-    <div>
-        <span>엘리베이터 유무</span>
-        <th:block th:if="${order.isElevator()}">
-            <input type="checkbox" checked disabled aria-disabled="true">
-            <div class="add" th:text="${order.elevator}"></div>
-        </th:block>
-        <th:block th:unless="${order.isElevator()}">
-            <input type="checkbox" disabled aria-disabled="true">
-            <div class="add" th:text="${order.elevator}"></div>
+        <span class="add d-none" th:text="${address.addressId}"></span>
+        <div>
+            <span>우편 번호</span>
+            <div class="add form-control" th:text="${address.postCode}"></div>
+        </div>
+        <div>
+            <span>주소</span>
+            <div class="add form-control" th:text="${address.address}"></div>
+        </div>
+        <div>
+            <span>상세 주소</span>
+            <div class="add form-control" th:text="${address.addressDetail}"></div>
+        </div>
+        <div>
+            <span>수령인 이름</span>
+            <div class="add form-control" th:text="${address.receiverName}"></div>
+        </div>
+        <div>
+            <span>수령인 전화번호</span>
+            <div class="add form-control" th:text="${address.receiverPhone}"></div>
+        </div>
+        <div>
+            <span>엘리베이터 유무</span>
+            <th:block th:if="${order.isElevator()}">
+                <input type="checkbox" checked disabled aria-disabled="true">
+                <div class="add" th:text="${order.elevator}"></div>
+            </th:block>
+            <th:block th:unless="${order.isElevator()}">
+                <input type="checkbox" disabled aria-disabled="true">
+                <div class="add" th:text="${order.elevator}"></div>
 
-        </th:block>
-    </div>
+            </th:block>
+        </div>
 </th:block>
 <th:block th:unless="${refundMsg != null && addressId != 0}">
-    <span class="add" th:text="${order.addressId}"></span>
-    <div>
-        <span>우편 번호</span>
-        <div class="add form-control" th:text="${order.postCode}"></div>
-    </div>
-    <div>
-        <span>주소</span>
-        <div class="add form-control" th:text="${order.address}"></div>
-    </div>
-    <div>
-        <span>상세 주소</span>
-        <div class="add form-control" th:text="${order.addressDetail}"></div>
-    </div>
-    <div>
-        <span>수령인 이름</span>
-        <div class="add form-control" th:text="${order.receiverName}"></div>
-    </div>
-    <div>
-        <span>수령인 전화번호</span>
-        <div class="add form-control" th:text="${order.receiverPhone}" ></div>
-    </div>
-    <div>
-        <span>엘리베이터 유무</span>
-        <th:block th:if="${order.isElevator()}">
-            <input type="checkbox" checked disabled aria-disabled="true">
-            <div class="add d-none" th:text="${order.elevator}"></div>
-        </th:block>
-        <th:block th:unless="${order.isElevator()}">
-            <input type="checkbox" disabled aria-disabled="true">
-            <div class="add d-none" th:text="${order.elevator}"></div>
-        </th:block>
-    </div>
+        <span class="add d-none" th:text="${order.addressId}" ></span>
+        <div>
+            <span>우편 번호</span>
+            <div class="add form-control" th:text="${order.postCode}" ></div>
+        </div>
+        <div>
+            <span>주소</span>
+            <div class="add form-control" th:text="${order.address}" ></div>
+        </div>
+        <div>
+            <span>상세 주소</span>
+            <div class="add form-control" th:text="${order.addressDetail}" ></div>
+        </div>
+        <div>
+            <span>수령인 이름</span>
+            <div class="add form-control" th:text="${order.receiverName}" ></div>
+        </div>
+        <div>
+            <span>수령인 전화번호</span>
+            <div class="add form-control" th:text="${order.receiverPhone}" ></div>
+        </div>
+        <div>
+            <span>엘리베이터 유무</span>
+            <th:block th:if="${order.isElevator()}">
+                <input type="checkbox" checked disabled aria-disabled="true">
+                <div class="add d-none" th:text="${order.elevator}"></div>
+            </th:block>
+            <th:block th:unless="${order.isElevator()}">
+                <input type="checkbox" disabled aria-disabled="true">
+                <div class="add d-none" th:text="${order.elevator}"></div>
+            </th:block>
+        </div>
 </th:block>
+
 </html>

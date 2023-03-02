@@ -22,11 +22,10 @@
         <div>총 구매 금액: <span th:text="${order.totalPrice}"></span></div>
         <div>주문인: <span th:text="${order.userName}"></span></div>
     </th:block>
-
     <h3>환불 요청 정보</h3>
     <h4>요청 상품</h4>
-    <div>상품명 <span th:text="${refund.orderDetailDto.optionName}"></span></div>
-    <div>주문 수량 <span th:text="${refund.orderDetailDto.cnt}"></span></div>
+    <div>상품명 <span th:text="${orderDetail.optionName}"></span></div>
+    <div>주문 금액 <span th:text="${orderDetail.totalPrice}"></span></div>
     <div>환불 요청 금액 <span th:text="${refund.cancelAmount}" id="cancelAmount"></span></div>
     <div>환불 요청 분류 <span th:text="${refund.rfrDetDto.detName}" id="detName"></span></div>
     <div>환불 요청 사유 <span th:text="${refund.reason}"></span></div>
@@ -63,15 +62,15 @@
         <div>현재 환불 진행 상태</div>
         <div th:text="${refund.rfDetDto.detName}"></div>
     </div>
-    <div>
-        <div th:text="${payment.amount}"></div>
-        <div th:if="${payment.cancelHistory != null}" th:each="cancelHis: ${payment.cancelHistory}">
-            <div th:text="${cancelHis.cancelledAt}"></div>
-            <div th:text="${cancelHis.amount}"></div>
-            <div th:text="${cancelHis.reason}"></div>
-            <a class="receiptUrl" href="javascript:void(0)" th:data-receipt="${cancelHis.receiptUrl}">취소 영수증</a>
-        </div>
-    </div>
+<!--    <div>-->
+<!--        <div th:text="${payment.amount}"></div>-->
+<!--        <div th:if="${payment.cancelHistory != null}" th:each="cancelHis: ${payment.cancelHistory}">-->
+<!--            <div th:text="${cancelHis.cancelledAt}"></div>-->
+<!--            <div th:text="${cancelHis.amount}"></div>-->
+<!--            <div th:text="${cancelHis.reason}"></div>-->
+<!--            <a class="receiptUrl" href="javascript:void(0)" th:data-receipt="${cancelHis.receiptUrl}">취소 영수증</a>-->
+<!--        </div>-->
+<!--    </div>-->
     <div>
         <div>환불 답변</div>
         <div th:text="${refund.reply}"></div>
@@ -117,8 +116,8 @@
         // console.log(await resp.json())
         const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값, 취소된 객체의 정보를 담고 있음.
         console.log("respJson: "+respJson)
-        if (respJson.code > 0){
-            console.log(respJson.message);
+        console.log(respJson.message);
+        if (respJson.code > 0 || respJson.code < 0){
             alert (respJson.message);
         }else if(respJson.code === 0){
             let totalPrice = [[${refund.orderDto.totalPrice}]]
