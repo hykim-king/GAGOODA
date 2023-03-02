@@ -28,7 +28,7 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/list.do")
+    @GetMapping("/list.do") // 상품디테일에 달려 있는 리뷰 리스트
     public String list(Model model,
                        @RequestParam(name = "productCode", required = false) String productCode,
                        HttpSession session,
@@ -43,19 +43,19 @@ public class ReviewController {
             return "/review/list";
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("msg","리뷰를 불러올 수 없습니다.");
+            session.setAttribute("msg", "리뷰를 불러올 수 없습니다.");
             return "redirect:/";
         }
 
     }
 
-    @GetMapping("/user_yes/mypage/mypageList.do")
+    @GetMapping("/user_yes/mypage/mypageList.do") // 마이페이지에 있는 로그인한 유저의 리뷰리스트
     public String mypageList(Model model,
-                         HttpSession session,
-                         PagingDto paging,
-                         HttpServletRequest req,
-                         @SessionAttribute UserDto loginUser,
-                         @SessionAttribute(required = false) String msg) {
+                             HttpSession session,
+                             PagingDto paging,
+                             HttpServletRequest req,
+                             @SessionAttribute UserDto loginUser,
+                             @SessionAttribute(required = false) String msg) {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
@@ -64,20 +64,20 @@ public class ReviewController {
             Map<String, Object> searchFilter = new HashMap<>();
             paging.setQueryString(req.getParameterMap());
             searchFilter.put("paging", paging);
-            searchFilter.put("userId",loginUser.getUserId());
+            searchFilter.put("userId", loginUser.getUserId());
             List<ReviewDto> reviewList = reviewService.showReviews(searchFilter);
             int count = reviewService.countByReviews(searchFilter);
             model.addAttribute("reviewList", reviewList);
             model.addAttribute("paging", paging);
             model.addAttribute("count", count);
-            System.out.println("reviewList : "+reviewList);
+            System.out.println("reviewList : " + reviewList);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return "/review/mypageList";
     }
 
-    @GetMapping("/user_yes/{productCode}/register.do")
+    @GetMapping("/user_yes/{productCode}/register.do") // 상품에 리뷰 등록
     public String register(@SessionAttribute UserDto loginUser,
                            @SessionAttribute(required = false) String msg,
                            @PathVariable(required = true, name = "productCode") String productCode,
@@ -91,13 +91,13 @@ public class ReviewController {
         }
         try {
             List<OptionProductDto> optionProductList = reviewService.showOptionProduct(productCode);
-            model.addAttribute("orderId",orderId);
-            model.addAttribute("optionProductList",optionProductList);
-            model.addAttribute("productCode",productCode);
+            model.addAttribute("orderId", orderId);
+            model.addAttribute("optionProductList", optionProductList);
+            model.addAttribute("productCode", productCode);
             return "/review/register";
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("msg","리뷰를 등록할 수 없습니다.");
+            session.setAttribute("msg", "리뷰를 등록할 수 없습니다.");
             return "/review/list";
         }
 
@@ -105,7 +105,7 @@ public class ReviewController {
 
     // localhost:8888/review/user_yes/register.do?optionCode=HA00G01EEU_GY
 
-    @PostMapping("/user_yes/register.do")
+    @PostMapping("/user_yes/register.do") // 상품에 리뷰 등록
     public String register(ReviewDto review,
                            @RequestParam(name = "imgFile") List<MultipartFile> imgFileList,
                            HttpSession session,
@@ -119,19 +119,20 @@ public class ReviewController {
             }
         }
         if (register > 0) {
-            session.setAttribute("msg","리뷰 등록에 성공하였습니다.");
+            session.setAttribute("msg", "리뷰 등록에 성공하였습니다.");
             return "redirect:/review/list.do?productCode=" + review.getProductCode();
         } else {
-            session.setAttribute("msg","리뷰 등록에 실패하였습니다.");
-            return "redirect:/review/user_yes/"+review.getProductCode()+"/register.do";
+            session.setAttribute("msg", "리뷰 등록에 실패하였습니다.");
+            return "redirect:/review/user_yes/" + review.getProductCode() + "/register.do";
         }
     }
-    @GetMapping("/user_yes/modify.do")
-    public String modify( @SessionAttribute UserDto loginUser,
-                          @RequestParam (name = "reviewId") int reviewId,
-                          @SessionAttribute(required = false) String msg,
-                          HttpSession session,
-                          Model model) {
+
+    @GetMapping("/user_yes/modify.do") // 리뷰아이디에 따른 리뷰 수정
+    public String modify(@SessionAttribute UserDto loginUser,
+                         @RequestParam(name = "reviewId") int reviewId,
+                         @SessionAttribute(required = false) String msg,
+                         HttpSession session,
+                         Model model) {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
@@ -140,38 +141,39 @@ public class ReviewController {
         try {
             ReviewDto review = reviewService.selectOne(reviewId);
             List<OptionProductDto> optionProductList = reviewService.showOptionProduct(review.getProductCode());
-            model.addAttribute("review",review);
-            model.addAttribute("optionProductList",optionProductList);
+            model.addAttribute("review", review);
+            model.addAttribute("optionProductList", optionProductList);
             return "/review/modify";
         } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/review/list.do";
         }
     }
-    @PostMapping("/user_yes/modify.do")
+
+    @PostMapping("/user_yes/modify.do") // 리뷰아이디에 따른 리뷰 수정
     public String modify(ReviewDto review,
-                         @RequestParam(name = "imgFile", required = false)List<MultipartFile> imageList,
+                         @RequestParam(name = "imgFile", required = false) List<MultipartFile> imageList,
                          @RequestParam(name = "imgToDelete", required = false) List<String> imgToDeleteList,
                          HttpSession session,
                          @SessionAttribute UserDto loginUser) {
-        log.info("imgToDeleteList: "+imgToDeleteList);
+        log.info("imgToDeleteList: " + imgToDeleteList);
         try {
             reviewService.update(imageList, review, imgPath, imgToDeleteList);
             return "redirect:/review/user_yes/mypage/mypageList.do";
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/review/user_yes/modify.do?reviewId="+review.getReviewId();
+            return "redirect:/review/user_yes/modify.do?reviewId=" + review.getReviewId();
         }
 
     }
 
-    @GetMapping("/user_yes/delete.do")
-    public String remove( @RequestParam(name = "reviewId") int reviewId,
-                          @SessionAttribute UserDto loginUser,
-                          @SessionAttribute(required = false) String msg,
-                          HttpSession session,
-                          Model model
-                          ) {
+    @GetMapping("/user_yes/delete.do") // 리뷰아이디에 따른 리뷰 삭제
+    public String remove(@RequestParam(name = "reviewId") int reviewId,
+                         @SessionAttribute UserDto loginUser,
+                         @SessionAttribute(required = false) String msg,
+                         HttpSession session,
+                         Model model
+    ) {
         if (msg != null) {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
@@ -182,24 +184,24 @@ public class ReviewController {
             if (loginUser.getUserId() == review.getUserId()) {
                 int delete = reviewService.delete(review, reviewId);
                 if (delete > 0) {
-                    session.setAttribute("msg","성공적으로 삭제하였습니다.");
+                    session.setAttribute("msg", "성공적으로 삭제하였습니다.");
                     return "redirect:/review/list.do?productCode=" + review.getProductCode();
                 } else {
-                    session.setAttribute("msg","삭제를 실패하였습니다.");
+                    session.setAttribute("msg", "삭제를 실패하였습니다.");
                     return "redirect:/review/list";
                 }
             } else {
-                session.setAttribute("msg","삭제할 권한이 없습니다.");
+                session.setAttribute("msg", "삭제할 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("msg","삭제하는 중 오류가 있었습니다.");
+            session.setAttribute("msg", "삭제하는 중 오류가 있었습니다.");
         }
         return "redirect:/review/list.do?productCode=" + review.getProductCode();
     }
 
     // admin
-    @GetMapping("/admin/list.do")
+    @GetMapping("/admin/list.do") // 관리자 페이지 모든 리뷰
     public String adminList(Model model,
                             @SessionAttribute UserDto loginUser,
                             PagingDto paging,
@@ -210,15 +212,15 @@ public class ReviewController {
                             @RequestParam(name = "searchWord", required = false, defaultValue = "") String searchWord,
                             @RequestParam(name = "dateType", required = false, defaultValue = "") String dateType,
                             @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
-                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate){
-        log.info("req.getParameterMap:"+req.getParameterMap());
+                            @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate) {
+        log.info("req.getParameterMap:" + req.getParameterMap());
         String adminMsg = "";
-        if (session.getAttribute(msg) != null){
+        if (session.getAttribute(msg) != null) {
             adminMsg = session.getAttribute(msg).toString();
             session.removeAttribute(msg);
         }
         try {
-            if(loginUser.getGDet().equals("g1")) {
+            if (loginUser.getGDet().equals("g1")) {
                 Map<String, Object> searchFilter = new HashMap<>();
                 paging.setQueryString(req.getParameterMap());
                 searchFilter.put("searchDiv", searchDiv);
@@ -234,32 +236,32 @@ public class ReviewController {
                 model.addAttribute("count", count);
                 model.addAttribute("msg", msg);
                 return "/review/admin/list";
-            } else{
+            } else {
                 return "/index";
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "/review/admin/list";
     }
 
-    @GetMapping("/admin/{reviewId}/detail.do")
+    @GetMapping("/admin/{reviewId}/detail.do") // 관리자페이지 리뷰 상세
     public String adminDetail(@SessionAttribute UserDto loginUser,
                               @PathVariable int reviewId,
                               Model model
-                       ){
+    ) {
         int detail = 0;
         System.out.println(reviewId);
         try {
             ReviewDto review = reviewService.selectOne(reviewId);
-            model.addAttribute("review",review);
+            model.addAttribute("review", review);
             detail = 1;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if (detail > 0){
+        if (detail > 0) {
             return "/review/admin/detail";
-        } else  {
+        } else {
             return "/errorHandler";
         }
     }

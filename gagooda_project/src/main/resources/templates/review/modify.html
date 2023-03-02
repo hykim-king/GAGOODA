@@ -23,16 +23,19 @@
             <div class="mb-3">
                 <label for="productName" class="form-label">상품명</label>
                 <th:block th:each="optionProduct:${optionProductList}">
-                    <input type="text" class="form-control" id="productName" th:value="${optionProduct.getOpname()}" readonly>
+                    <input type="text" class="form-control" id="productName" th:value="${optionProduct.getOpname()}"
+                           readonly>
                 </th:block>
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">평점</label>
-                <input type="number" min="1" max="5" step="1" maxlength="1" class="form-control" name="rate" th:value="${review.rate}" id="rate" required placeholder="1~5점을 주세요 !">
+                <input type="number" min="1" max="5" step="1" maxlength="1" class="form-control" name="rate"
+                       th:value="${review.rate}" id="rate" required placeholder="1~5점을 주세요 !">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
-                <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}" id="content" cols="30" rows="3" required></textarea>
+                <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}"
+                          id="content" cols="30" rows="3" required></textarea>
             </div>
             <div class="mb-3">
                 <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
@@ -47,8 +50,12 @@
                 </div>
             </div>
             <div class="d-grid d-flex gap-2 float-end">
-                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset" onclick="cancel()">취소</button>
-                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit" onclick="modifyReview()">수정</button>
+                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset"
+                        onclick="cancel()">취소
+                </button>
+                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit"
+                        onclick="modifyReview()">수정
+                </button>
             </div>
         </div>
     </form>
@@ -59,6 +66,7 @@
                 location.href = "/review/user_yes/mypage/mypageList.do";
             }
         }
+
         function cancel() {
             let result = confirm("리뷰 수정을 취소하시겠습니까 ?");
             if (result == true) {

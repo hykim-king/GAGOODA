@@ -33,7 +33,8 @@
                 <h5 class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 30px"></h5>
                 <p th:text="${review.content}"></p>
                 <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
-                <button type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}" th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
+                <button type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
+                        th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
             </div>
             <div class="d-flex container-sm" style="height: 100%;">
                 <div class="vr"></div>

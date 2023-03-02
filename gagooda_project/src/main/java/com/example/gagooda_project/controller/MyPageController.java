@@ -33,7 +33,7 @@ public class MyPageController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/user_yes/main.do")
+    @GetMapping("/user_yes/main.do") // 관리자 메인페이지
     public String myPageMain(@SessionAttribute UserDto loginUser,
                              Model model,
                              HttpServletRequest req) {
@@ -41,10 +41,10 @@ public class MyPageController {
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
             PagingDto paging = new PagingDto();
-            List<OrderDto> orderList = myPageService.orderList(paging, loginUser.getUserId(), 30);
+            List<OrderDto> orderList = myPageService.orderList(paging, loginUser.getUserId(), 30); // 주문리스트
             myPageDetList = myPageDetList.subList(0, 4);
             PagingDto paging2 = new PagingDto();
-            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId());
+            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId()); // 카트리스트
             Map<String, String> detName = new HashMap<>();
             Map<String, Integer> count = new HashMap<>();
             for (CommonCodeDto myPageDet : myPageDetList) {
@@ -59,13 +59,13 @@ public class MyPageController {
             for (ODetDto oDet : oDetList) {
                 count.put(oDet.getODet(), oDet.getCount());
             }
-            model.addAttribute("paging",paging);
-            model.addAttribute("orderList",orderList);
-            model.addAttribute("detName",detName);
-            model.addAttribute("count",count);
+            model.addAttribute("paging", paging);
+            model.addAttribute("orderList", orderList);
+            model.addAttribute("detName", detName);
+            model.addAttribute("count", count);
             model.addAttribute("cartList", cartList);
             model.addAttribute("oDetList", oDetList);
-            model.addAttribute("myPageDetList",myPageDetList);
+            model.addAttribute("myPageDetList", myPageDetList);
         } catch (Exception e) {
             e.printStackTrace();
         }

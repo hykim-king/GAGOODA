@@ -15,8 +15,9 @@
         <th:block th:each="det:${myPageDetList}">
             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
                 <span th:text="${det.detName}"></span>
-                <div style="background-color: #a6a6a6; margin: 10px 0; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center;" >
-                    <div style="font-size: x-large; color: #ffffff; font-weight: bold" th:text="${count.get(det.detCode)}"></div>
+                <div style="background-color: #a6a6a6; margin: 10px 0; border-radius: 50%; width: 70px; height: 70px; display: flex; justify-content: center; align-items: center;">
+                    <div style="font-size: x-large; color: #ffffff; font-weight: bold"
+                         th:text="${count.get(det.detCode)}"></div>
                 </div>
             </div>
         </th:block>
@@ -31,16 +32,16 @@
     <hr style="margin-top: 0; background : #B68C68; height: 5px">
     <table class="table">
         <thead>
-            <th scope="col">주문번호</th>
-            <th scope="col">주문날짜</th>
-            <th scope="col">총 결제금액</th>
+        <th scope="col">주문번호</th>
+        <th scope="col">주문날짜</th>
+        <th scope="col">총 결제금액</th>
         </thead>
         <tbody>
-            <tr th:each="order:${orderList}">
-                <td th:text="${order.orderId}"></td>
-                <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${order.totalPrice} + '원'"></td>
-            </tr>
+        <tr th:each="order:${orderList}">
+            <td th:text="${order.orderId}"></td>
+            <td th:text="${#dates.format(order.regDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${order.totalPrice} + '원'"></td>
+        </tr>
         </tbody>
     </table>
     <div class="d-flex" style="justify-content: center">
@@ -56,7 +57,8 @@
     <div class="d-flex" style="justify-content: start;">
         <th:block th:each="cart:${cartList}">
             <div style="width: 250px; height: 250px; margin: 0 15px">
-                <img style="width: 240px; height: 240px;" th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
+                <img style="width: 240px; height: 240px;"
+                     th:src="@{'/img/product/{file}'(file=${cart.product.imageList[0].imgPath})}">
                 <div>
                     <p style="margin: 0;" th:text="${cart.optionProduct.opname}"></p>
                     <p style="margin: 0;" th:text="${cart.optionProduct.price} + '원'"></p>
