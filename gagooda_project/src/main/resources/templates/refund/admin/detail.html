@@ -8,97 +8,225 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-<h3>주문 내역</h3>
-    <th:block th:if="${order != null}">
-        <div>주문 날짜: <span th:text="${order.regDate}"></span></div>
-        <div>주문 번호: <span th:text="${order.orderId}" id="orderId"></span></div>
-        <div>
-            상품명:
-            <th:block th:if="${!order.orderDetailList.isEmpty() && order.orderDetailList != null}">
-                <span th:text="${order.orderDetailList[0].optionName + ' 외'}"></span>
-                <span th:text="${order.orderDetailList.size() -1 + '건'}"></span>
-            </th:block>
-        </div>
-        <div>총 구매 금액: <span th:text="${order.totalPrice}"></span></div>
-        <div>주문인: <span th:text="${order.userName}"></span></div>
-    </th:block>
-    <h3>환불 요청 정보</h3>
-    <h4>요청 상품</h4>
-    <div>상품명 <span th:text="${orderDetail.optionName}"></span></div>
-    <div>주문 금액 <span th:text="${orderDetail.totalPrice}"></span></div>
-    <div>환불 요청 금액 <span th:text="${refund.cancelAmount}" id="cancelAmount"></span></div>
-    <div>환불 요청 분류 <span th:text="${refund.rfrDetDto.detName}" id="detName"></span></div>
-    <div>환불 요청 사유 <span th:text="${refund.reason}"></span></div>
-    <div>첨부 사진
-        <th:block th:if="${!refund.imageList.isEmpty() && refund.imageList != null}" th:each="img:${refund.imageList}">
-            <img th:src="@{'/img/refund/{imgPath}'(imgPath = ${img.imgPath})}" alt="" style="width: 400px; height: 400px; object-fit: cover;">
+<h3>환불 상세 내역</h3>
+    <div>
+        <th:block th:if="${payment != null}">
+            <h4>결제/주문 내역</h4>
+            <table class="table">
+                <thead>
+                <tr class="text-center">
+                    <th colspan="2">결제 내역</th>
+                    <th colspan="2">주문 내역</th>
+                </tr>
+                </thead>
+                <tr>
+                    <th class="col-2">결제 날짜</th>
+                    <td class="col-4" th:text="${#dates.format(payment.paidAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <th class="col-2">주문 날짜</th>
+                    <td class="col-4" th:text="${#dates.format(order.regDate, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제 주문번호</th>
+                    <td class="col-4" id="orderId" th:text="${payment.merchantUid}"></td>
+                    <th class="col-2">주문번호</th>
+                    <td class="col-4" th:text="${order.orderId}"></td>
+                </tr>
+                <tr>
+                    <th class="col-2" >총 결제 금액</th>
+                    <td class="col-4" th:text="${payment.amount}"></td>
+                    <th class="col-2">총 구매 금액</th>
+                    <td class="col-4" th:text="${order.totalPrice}"></td>
+
+                </tr>
+                <tr>
+                    <th class="col-2">결제자</th>
+                    <td class="col-4" th:text="${payment.buyerName}"></td>
+                    <th class="col-2">주문자</th>
+                    <td class="col-4" th:text="${order.userName}"></td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제자 전화번호</th>
+                    <td class="col-4" th:text="${payment.buyerTel}"></td>
+                    <th class="col-2">주문자 전화번호</th>
+                    <td class="col-4" th:text="${order.userPhone}"></td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제자 이메일</th>
+                    <td class="col-4" th:text="${payment.buyerEmail}"></td>
+                    <th class="col-2">주문자 이메일</th>
+                    <td class="col-4" th:text="${order.userEmail}"></td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제 상태</th>
+                    <td class="col-4 paymentStatus" th:data-status="${payment.status}"></td>
+                    <th class="col-2">주문 상품</th>
+                    <td class="col-4">
+                        <th:block th:if="${!order.orderDetailList.isEmpty() && order.orderDetailList != null}">
+                            <span th:text="${order.orderDetailList[0].optionName + ' 등'}"></span>
+                            <span th:text="${order.orderDetailList.size() + '건'}"></span>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제 수단</th>
+                    <td colspan="3" class="col-4" > <span th:text="${payment.payMethod}"></span> <span th:if="${payment.payMethod.equals('point')}">(결제 수단이 point인 경우, 부분 환불이 불가능합니다.)</span></td>
+                </tr>
+                <tr>
+                    <th class="col-2">결제 카드사</th>
+                    <td class="col-4" th:text="${payment.cardName}"></td>
+                </tr>
+            </table>
+
+            <div>
+                <div th:if="${payment.cancelHistory != null}" th:each="cancelHis: ${payment.cancelHistory}">
+                    <h4>결제 취소 정보</h4>
+                    <table class="table">
+                        <tr>
+                            <th class="col-2">결제 취소일</th>
+                            <td class="col-4" th:text="${#dates.format(cancelHis.cancelledAt, 'yyyy-MM-dd') }"></td>
+                        </tr>
+                        <tr>
+                            <th class="col-2">결제 취소 금액 </th>
+                            <td class="col-4" th:text="${cancelHis.amount}"></td>
+                        </tr>
+                        <tr>
+                            <th class="col-2">결제 취소 사유</th>
+                            <td class="col-4" th:text="${cancelHis.reason}"></td>
+                        </tr>
+                        <tr>
+                            <th class="col-2">결제 취소 영수증</th>
+                            <td class="col-4"><span class="btn btn-outline-secondary receiptUrl" th:data-receipt="${cancelHis.receiptUrl}">취소 영수증</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
         </th:block>
+
     </div>
 
-    <h4>수령인 정보</h4>
-    <div>
-        <div>수령인</div>
-        <div th:text="${refund.receiverName}"></div>
-    </div>
-    <div>
-        <div>연락처</div>
-        <div th:text="${refund.receiverPhone}"></div>
-    </div>
-    <div>
-        <div>주소</div>
-        <div>
-            <div th:text="${'('+refund.postCode+')'+refund.address}"></div>
-            <div th:text="${refund.addressDetail}"></div>
-        </div>
-    </div>
-    <div>
-        <div>엘리베이터 유무</div>
-        <div th:if="${refund.elevator == 1}">유</div>
-        <div th:unless="${refund.elevator == 1}">무</div>
-    </div>
+    <h4>환불 요청 상품</h4>
+    <table class="table">
+        <thead>
+            <tr class="text-center">
+                <th colspan="2">환불 요청 상품</th>
+                <th colspan="2">수령인 정보</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="col-2">상품명</th>
+                <td class="col-4" th:text="${orderDetail.optionName}"></td>
+                <th class="col-2">수령인</th>
+                <td class="4" th:text="${refund.receiverName}"></td>
+            </tr>
+            <tr>
+                <th class="col-2">환불 요청 금액</th>
+                <td class="col-4" >
+                    <span id="cancelAmount" th:text="${refund.cancelAmount}"></span>( <span th:text="${'총 주문 금액: '+ order.totalPrice}"></span> )
+                </td>
+                <th class="col-2">수령인 연락처</th>
+                <td class="col-4" th:text="${refund.receiverPhone}"></td>
+            </tr>
+            <tr>
+                <th class="col-2">환불 요청 분류</th>
+                <td class="col-4" th:text="${refund.rfrDetDto.detName}"></td>
+                <th class="col-2">수령인 주소</th>
+                <td class="col-4">
+                    <div>(<span th:text="${refund.postCode}"></span>) <span th:text="${refund.address}"></span></div>
+                    <div th:text="${refund.addressDetail}"></div>
+                </td>
+            </tr>
+            <tr>
+                <th class="col-2">첨부 이미지</th>
+                <td class="col-4">
+                    <th:block th:if="${!refund.imageList.isEmpty() && refund.imageList != null}" th:each="img:${refund.imageList}">
+                        <img th:src="@{'/img/refund/{imgPath}'(imgPath = ${img.imgPath})}" alt="" style="width: 400px; height: 400px; object-fit: cover;">
+                    </th:block>
+                </td>
+                <th class="col-2">엘리베이터 유무</th>
+                <td class="col-4">
+                    <div th:if="${refund.elevator == 1}">O</div>
+                    <div th:unless="${refund.elevator == 1}">X</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-    <h3>환불 상태 변경</h3>
+    <h4>환불 상태 변경</h4>
     <div>
         <div>현재 환불 진행 상태</div>
-        <div th:text="${refund.rfDetDto.detName}"></div>
+        <div id="detName" th:text="${refund.rfDetDto.detName}"></div>
     </div>
-<!--    <div>-->
-<!--        <div th:text="${payment.amount}"></div>-->
-<!--        <div th:if="${payment.cancelHistory != null}" th:each="cancelHis: ${payment.cancelHistory}">-->
-<!--            <div th:text="${cancelHis.cancelledAt}"></div>-->
-<!--            <div th:text="${cancelHis.amount}"></div>-->
-<!--            <div th:text="${cancelHis.reason}"></div>-->
-<!--            <a class="receiptUrl" href="javascript:void(0)" th:data-receipt="${cancelHis.receiptUrl}">취소 영수증</a>-->
-<!--        </div>-->
-<!--    </div>-->
     <div>
         <div>환불 답변</div>
         <div th:text="${refund.reply}"></div>
     </div>
     <form name="modify" th:action="@{'/refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}" method="POST">
         <div>
-            <label for="rfDet">상태 변경</label>
-            <select name="rfDet" id="rfDet" required>
+            <label class="form-label" for="rfDet">상태 변경</label>
+            <select class="form-select-sm" name="rfDet" id="rfDet" required>
                 <option value="" selected disabled>변경할 상태를 선택하세요.</option>
                 <th:block th:each="rfCode:${rfCodeList}">
-                    <option th:value="${rfCode.detCode}" th:text="${rfCode.detName}"></option>
+                    <option class="rfDet" th:value="${rfCode.detCode}" th:text="${rfCode.detName}" th:data-rfNum="${rfCode.detCode.substring(2)}"></option>
                 </th:block>
             </select>
-<!--            <th:block th:if="${refund.rfDet.equals('rf4') || refund.rfDet.equals('rf5') || refund.rfDet.equals('rf6')}">-->
-            <button id="cancelBtn" type="button" onclick="cancelPayments()">결제 취소 진행</button>
-<!--            </th:block>-->
+            <button id="cancelBtn" class="btn btn-outline-primary d-none" type="button" onclick="cancelPayments()">결제 취소 진행</button>
         </div>
         <div>
-            <label for="reply">환불 요청 답변</label>
-            <textarea required name="reply" id="reply" cols="30" rows="10"></textarea>
+            <label class="form-label d-block" for="reply">환불 요청 답변</label>
+            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none"></textarea>
         </div>
-        <button type="submit">등록</button>
-        <button type="reset">초기화</button>
+        <button class="btn btn-outline-primary" type="submit">등록</button>
+        <button class="btn btn-outline-secondary" type="reset">초기화</button>
     </form>
 
 <!--    <th:block th:if="${refund.rfDet.equals")}"-->
 <script th:inline="javascript">
+    /* rfDet 지난 상태 막기 */
+    let rfName = document.querySelectorAll(".rfDet");
+    let rfDet = document.querySelector("#rfDet");
+    let currentRfDet = [[${refund.rfDet}]];
+    console.log(currentRfDet)
+    rfName.forEach(element =>{
+        console.log(element.dataset.rfnum)
+        console.log(currentRfDet.slice(2))
+        if(element.dataset.rfnum < currentRfDet.slice(2)){
+            element.disabled = true;
+        }
+
+    })
+    /* rfDet rf4, rf5, rf6 일 때만 결제 취소 버튼이 등장 */
+    rfDet.addEventListener("change",()=>{
+        let display = document.getElementById("cancelBtn");
+        if(rfDet.value.includes("4") || rfDet.value.includes("5") || rfDet.value.includes("6")){
+            console.log("remove")
+            display.classList.remove("d-none");
+        }else{
+            console.log("add")
+            display.classList.add("d-none");
+        }
+    })
+
+
+    /* 결제 상태 한글로 변환 */
+    let paymentStatus = document.querySelector(".paymentStatus");
+    if (paymentStatus){
+        let statusName = paymentStatus.dataset.status;
+        if(statusName === "cancelled"){
+            paymentStatus.innerText = "결제 취소";
+        }else if(statusName === "paid"){
+            paymentStatus.innerText = "결제 완료";
+        }else if(statusName === "failed"){
+            paymentStatus.innerText = "결제 실패";
+        }else if(statusName === "ready"){
+            paymentStatus.innerText = "미결제";
+        }
+    }
+
+
     const cancelBtn = document.querySelector("#cancelBtn");
+
     let orderId = document.getElementById("orderId").innerText;
     let cancelAmount = document.getElementById("cancelAmount").innerText;
     let detName = document.getElementById("detName").innerText;
@@ -123,9 +251,13 @@
             let totalPrice = [[${refund.orderDto.totalPrice}]]
             let cancelAmount = [[${refund.cancelAmount}]]
             alert(totalPrice +" 중 "+ cancelAmount +"원을 결제 취소하였습니다.");
+            let rfDet = document.getElementById("rfDet");
+            rfDet.value = "rf7";
+            rfDet.disabled = true;
         }
     }
 
+    /* 결제 취소 영수증 팝업 불러오기 */
     let receiptUrl = document.querySelectorAll(".receiptUrl");
     receiptUrl.forEach(url=>{
         url.addEventListener("click",()=>{

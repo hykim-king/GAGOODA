@@ -84,33 +84,7 @@
 </th:block>
 
     <!--pagination-->
-    <nav class="m-1 d-flex justify-content-center">
-        <ul class="pagination">
-            <li class="page-item" th:classappend="${(!paging.prev)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}">Prev</a></li>
-            <th:block th:if="${paging.startPage>1}">
-                <li>
-                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
-                </li>
-                <li class="disabled"><span>…</span></li>
-            </th:block>
-
-            <li class="page-item" th:each=" i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
-                th:classappend="${(i==paging.page)?'disabled':''}">
-                <a class="page-link" th:classappend="${(i==paging.page)?'text-primary fw-bold':''}"
-                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
-            </li>
-            <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li class="disabled"><span>…</span></li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                       th:text="${paging.totalPages}"></a>
-                </li>
-            </th:block>
-            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}">Next</a></li>
-        </ul>
-    </nav>
+    <div th:include="/pagination.html"></div>
     <!--pagination end--------------->
 
 <script th:inline="javascript">

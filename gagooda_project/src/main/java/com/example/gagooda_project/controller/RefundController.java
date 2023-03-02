@@ -366,27 +366,34 @@ public class RefundController {
                               HttpServletRequest req,
                               @SessionAttribute UserDto loginUser,
                               Model model){
+        PaymentDto payment = null;
+        IamportResponse<Payment> paymentResp = null;
         try{
             if(loginUser.getGDet().equals("g1")){
                 RefundDto refund = refundServiceImp.selectOne(refundId);
                 OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
                 OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(refund.getOrderDetailId());
-//                session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
-//                PaymentDto payment = paymentServiceImp.selectOne(refund.getOrderId());
-//                IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
+
+                payment = paymentServiceImp.selectOne(refund.getOrderId());
+                if (payment != null){
+                    paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
+                    if (paymentResp != null){
+                       model.addAttribute("payment", paymentResp.getResponse());
+                    }
+                }
                 model.addAttribute("refund", refund);
                 model.addAttribute("order",order);
                 model.addAttribute("orderDetail", orderDetail);
                 model.addAttribute("rfCodeList", allRfList);
-//                model.addAttribute("payment", paymentResp.getResponse());
+
                 return "refund/admin/detail";
             }
         }catch (Exception e){
             log.info(e.getMessage());
         }
-        return "redirect:/refund/admin/list.do";
-//        return "refund/admin/detail";
+//        return "redirect:/refund/admin/list.do";
+        return "refund/admin/detail";
     }
 
     @PostMapping("admin/{refundId}/modify.do")
@@ -399,7 +406,7 @@ public class RefundController {
             try{
                 modify += refundServiceImp.modifyOne(refund, "admin");
                 if(modify > 0){
-                    return "redirect:/refund/admin/detail.do";
+                    return "redirect:/refund/admin/"+refundId+"/detail.do";
                 }
             }catch (Exception e){
                 e.printStackTrace();
