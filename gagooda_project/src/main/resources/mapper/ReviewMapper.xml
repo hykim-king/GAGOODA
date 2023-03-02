@@ -79,7 +79,7 @@
                 AND ${searchDiv} LIKE #{searchWord}
             </if>
             <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
-                AND ${dateType} BETWEEN ${startDate} AND #{endDate}
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
             </if>
             <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
@@ -94,10 +94,10 @@
         SELECT count(*) FROM review
         <where>
             <if test="searchDiv != '' and searchWord != ''">
-                AND ${searchDiv} LIKE ${searchWord}
+                AND ${searchDiv} LIKE #{searchWord}
             </if>
             <if test="dateType !='' and startDate !='' and endDate !='' and !startDate.equals(endDate)">
-                AND ${dateType} BETWEEN #{startDate} AND ${endDate}}
+                AND ${dateType} BETWEEN #{startDate} AND #{endDate}}
             </if>
             <if test="dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
