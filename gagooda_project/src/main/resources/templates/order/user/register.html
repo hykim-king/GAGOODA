@@ -197,6 +197,8 @@
     <script th:inline="javascript">
         //새로운 배송지 AJAX
         const addressListContainer = document.getElementById("addressListContainer");
+        const orderId = document.getElementById("orderId").value;
+        console.log("orderId: "+ orderId);
         //load newAddressRegisterForm; function init()
         function init(){
             const newAddressRegisterForm = document.forms["newAddressRegisterForm"];
@@ -286,7 +288,6 @@
         }
 
 
-
         // 아임포트 결제 API
         const IMP = window.IMP;  // 아임포트 정의
         IMP.init("imp76481216"); // khs 아임포트 가맹점 식별코드 등록
@@ -309,6 +310,17 @@
             }, function (resp) { // callback
                 if (resp.success) { // 결제 성공 시
                     console.log("결제가 완료되었습니다.");
+                    $.ajax({
+                        url:"/order/user_yes/paymentRegister.do",
+                        type:"post",
+                        data:{
+                            orderId: orderId,
+                            impUid: resp.imp_uid,
+                            oDet:"o2"
+                        },
+
+                    });
+
                     orderForm.setAttribute("action","/order/user_yes/register.do"); // form의 action attribute에 url 지정
                     orderForm.submit(); // 제출
                 } else {
