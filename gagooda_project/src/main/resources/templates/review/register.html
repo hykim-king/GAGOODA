@@ -8,7 +8,8 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-    <form action="/review/user_yes/register.do" method="post" name="reviewForm" enctype="multipart/form-data">
+    <form class="container-sm" action="/review/user_yes/register.do" method="post" name="reviewForm"
+          enctype="multipart/form-data">
         <h2 class="text-center mb-5">리뷰 등록</h2>
         <div class="mx-auto" style="width: 50%">
             <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
@@ -18,14 +19,16 @@
                 <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
                     <option value="" disabled>상품 옵션</option>
                     <th:block th:each="optionProduct:${optionProductList}">
-                        <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
+                        <option th:value="${optionProduct.getOptionCode()}"
+                                th:text="${optionProduct.getOpname()}"></option>
                     </th:block>
                 </select>
                 <div class="invalid-feedback">Example invalid select feedback</div>
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">평점</label>
-                <input type="range" min="1" max="5" class="form-control" name="rate" id="rate" required placeholder="1~5점을 주세요 !">
+                <input type="range" min="1" max="5" class="form-control" name="rate" id="rate" required
+                       placeholder="1~5점을 주세요 !">
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">내용</label>
@@ -35,9 +38,13 @@
                 <label for="imgFile">이미지 첨부</label>
                 <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
             </div>
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="reset" onclick="cancel()">취소</button>
-                <button class="btn btn-primary" type="submit" onclick="registerReview()">등록</button>
+            <div class="d-grid d-flex gap-2 float-end">
+                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset"
+                        onclick="cancel()">취소
+                </button>
+                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit"
+                        onclick="registerReview()">등록
+                </button>
             </div>
         </div>
     </form>
@@ -45,15 +52,17 @@
         function registerReview() {
             let result = confirm("리뷰를 등록하시겠습니까 ?");
             if (result == true) {
-                location.href = "review/list.do?productCode="+document.getElementById("productCode").value;
+                location.href = "review/list.do?productCode=" + document.getElementById("productCode").value;
             }
         }
+
         function cancel() {
             let result = confirm("리뷰 등록을 취소하시겠습니까 ?");
             if (result == true) {
-                location.href = "/order/user_yes/mypage/"+[[${orderId}]]+"/detail.do";
+                location.href = "/order/user_yes/mypage/" + [[${orderId}]] + "/detail.do";
             }
         }
+
         function rate() {
             let rate = document.getElementById("rate")
         }

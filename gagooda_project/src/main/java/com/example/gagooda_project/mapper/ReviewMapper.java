@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface ReviewMapper {
 
-    List<ReviewDto> listByProductCode (String productCode);
+    List<ReviewDto> listByProductCode(String productCode);
 
     List<ReviewDto> listAll();
 
@@ -26,7 +26,7 @@ public interface ReviewMapper {
 
     List<ReviewDto> listByProductCodeAll(String productCode);
 
-    List<ReviewDto> pageAll (Map<String, Object> searchFilter);
+    List<ReviewDto> pageAll(Map<String, Object> searchFilter);
 
-    int count (Map<String, Object> searchFilter);
+    int count(Map<String, Object> searchFilter);
 }

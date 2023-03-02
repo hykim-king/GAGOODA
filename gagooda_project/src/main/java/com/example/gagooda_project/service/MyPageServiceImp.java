@@ -20,13 +20,14 @@ public class MyPageServiceImp implements MyPageService {
         this.orderMapper = orderMapper;
         this.commonCodeMapper = commonCodeMapper;
     }
+
     public List<OrderDto> orderList(PagingDto paging, int userId, int dates) {
-        int totalRows=orderMapper.count(paging,userId,dates);
+        int totalRows = orderMapper.count(paging, userId, dates);
         paging.setRows(4);
         paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
-        System.out.println("pagingDto: "+paging);
-        return orderMapper.pageAll(paging,userId,dates);
+        System.out.println("pagingDto: " + paging);
+        return orderMapper.pageAll(paging, userId, dates);
     }
 
     @Override
