@@ -172,7 +172,8 @@ public class UserServiceImp implements UserService {
 
         Gson gson = new Gson();
 
-        String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
+//        String response = gson.fromJson(br.readLine(), Map.class).get("response").toString();
+        String response = br.readLine();
 
         System.out.println("response : " + response);
 

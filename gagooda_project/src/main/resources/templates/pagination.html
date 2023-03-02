@@ -5,15 +5,16 @@
   <ul class="pagination d-flex justify-content-center">
     <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
       <a class="page-link text-black-50" aria-label="Previous"
-         th:href="@{${paging.queryString}(page=${paging.prevPage})}">
+         th:href="@{${paging.queryString}(page=${paging.prevPage})}"
+         style="color: #B68C68">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
     <th:block th:if="${paging.startPage>1}">
       <li class="page-item" th:classappend="${(1==paging.page)?'disabled':''}">
-        <a class="page-link"  th:href="@{${paging.queryString}(page=1)}">1</a>
+        <a class="page-link" style="color: #B68C68" th:href="@{${paging.queryString}(page=1)}">1</a>
       </li>
-      <li class="page-item"><span>...</span></li>
+      <li class="page-item"><span class="page-link disabled">...</span></li>
     </th:block>
 
     <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
@@ -22,7 +23,7 @@
          th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
     </li>
     <th:block th:if="${paging.endPage<paging.totalPages}">
-      <li class="page-item"><span>...</span></li>
+      <li class="page-item"><span class="page-link disabled">...</span></li>
       <li class="page-item" th:classappend="${(paging.totalPages==paging.page)?'disabled':''}">
         <a class="page-link" style="color: #B68C68" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
            th:text="${paging.totalPages}"></a>

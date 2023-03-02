@@ -6,44 +6,75 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/css/star_rate.css">
+    <script src="/js/star_rate.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <div layout:fragment="content">
-    <h5 th:if="${parentCategory != null}">
-        <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${parentCategory.categoryId})}"
-           th:text="${parentCategory.cname}"></a>
-    </h5>
-    <h1 th:text="${category.cname}"></h1>
-    <ul th:if="${childList != null and !childList.isEmpty()}">
-        <li th:if="${realCategoryId.length() > 1}">
-            <a th:if="${realCategoryId.equals(category.categoryId)}"
-               th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
-               style="font-weight:bold;">전체</a>
-            <a th:unless="${realCategoryId.equals(category.categoryId)}"
-               th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}">전체</a>
-        </li>
-        <li th:each="child:${childList}">
-            <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
-               th:text="${child.cname}" style="font-weight:bold;"
-               th:if="${realCategoryId.equals(child.categoryId)}"></a>
-            <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
-               th:text="${child.cname}" th:unless="${realCategoryId.equals(child.categoryId)}"></a>
-        </li>
-    </ul>
     <div class="container">
-        <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5" >
-            <div class="col mb-3" style="width: 240px;height: 300px;" th:each="product:${productList}">
-                <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}" style="text-decoration: none; color: black">
-                    <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
-                         class="card-img-top rounded mb-3">
-                    <div>
-                        <p class="mb-2" th:text="${product.avgRate}"></p>
-                        <p class="mb-2" th:text="${product.pname}"></p>
-                        <p class="card-text mt-1" th:text="${product.salesPc}+'원'"></p>
+        <h5 th:if="${parentCategory != null}" class="text-center mt-3">
+            <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${parentCategory.categoryId})}"
+               th:text="${parentCategory.cname}"
+               class="page-link" style="color: #B68C68; font-size: 16px;"></a>
+        </h5>
+        <h1 th:text="${category.cname}" class="text-center my-3"></h1>
+        <ul th:if="${childList != null and !childList.isEmpty()}"
+            class="nav nav-tabs justify-content-center gap-3">
+            <li th:if="${realCategoryId.length() > 1}" class="nav-item">
+                <a th:if="${realCategoryId.equals(category.categoryId)}"
+                   th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
+                   class="nav-link active" aria-current="page">전체</a>
+                <a th:unless="${realCategoryId.equals(category.categoryId)}"
+                   th:href="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
+                   class="nav-link" style="color: #B68C68;">전체</a>
+            </li>
+            <li th:each="child:${childList}" class="nav-item">
+                <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
+                   th:text="${child.cname}"
+                   th:if="${realCategoryId.equals(child.categoryId)}"
+                   class="nav-link active" aria-current="page"></a>
+                <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
+                   th:text="${child.cname}" th:unless="${realCategoryId.equals(child.categoryId)}"
+                   class="nav-link" style="color: #B68C68;"></a>
+            </li>
+        </ul>
+        <div class="container mt-4">
+            <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5"
+                 th:each="productList:${productListList}">
+                <div class="col mb-3 card border border-0 position-relative"
+                     style="width: 280px; padding: 0;" th:each="product:${productList}">
+                    <div class="position-absolute d-flex justify-content-center align-items-center"
+                         style="top:5px; right: 5px;">
+                        <a href="">
+                            <!--찜자리-->
+                        </a>
                     </div>
-                </a>
+                    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
+                       style="text-decoration: none; color: black">
+                        <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
+                             class="card-img-top rounded mb-3">
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center">
+                                <div class="star-ratings" style="font-size: 24px;">
+                                    <div class="fill-ratings"
+                                         th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                                        <span>★★★★★</span>
+                                    </div>
+                                    <div class="empty-ratings">
+                                        <span>★★★★★</span>
+                                    </div>
+                                </div>
+                                <span th:text="'('+${product.reviewCnt}+')'"></span>
+                            </div>
+                            <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
+                               th:text="${product.pname}"></p>
+                            <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
+        <th:block th:include="~{pagination}"></th:block>
     </div>
-    <th:block th:include="~{pagination}"></th:block>
 </div>
 </html>

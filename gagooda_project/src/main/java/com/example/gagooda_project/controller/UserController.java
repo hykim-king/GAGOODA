@@ -2,23 +2,16 @@ package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.UserService;
-import com.example.gagooda_project.service.UserServiceImp;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.mockito.internal.matchers.ArrayEquals;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.View;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/user")
@@ -60,7 +53,6 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("************signup :"+signup);
         if (signup > 0) {
             session.setAttribute("msg", "회원가입을 성공적으로 마쳤습니다.");
             return "redirect:/user/login.do";
@@ -347,17 +339,21 @@ public class UserController {
 
 
     @PostMapping("/certifications.do")
-    public @ResponseBody String certifications(@RequestBody Map<String, Object> param) throws IOException {
-        System.out.println(param);
-        String imp_uid = (String) param.get("imp_uid");
+    public @ResponseBody String certifications(
+            @RequestBody Map<String, Object> param
+    ) {
+        try{
+            System.out.println(param);
+            String imp_uid = (String) param.get("imp_uid");
 
-        String token = userService.getToken();
+            String token = userService.getToken();
 
-        String user_info = userService.getCertifications(imp_uid, token);
-
-        return user_info;
+            return userService.getCertifications(imp_uid, token);
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
-
 
 }
 

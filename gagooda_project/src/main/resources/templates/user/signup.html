@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <title>사용자 회원가입</title>
-
 </head>
 <div layout:fragment="content">
 
@@ -22,8 +21,16 @@
     </div>
     <div class="mb-3">
         <label for="uname" class="form-label">이름</label>
-        <input type="text" class="form-control form-control-lg" id="uname" name="uname" required>
+        <input type="text" class="form-control form-control-lg" id="uname" name="uname" required readonly>
     </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">전화번호</label>
+        <input type="text" class="form-control form-control-lg"
+               id="phone" name="phone" required readonly>
+    </div>
+    <button type="button" class="form-control form-control-lg mb-4" onclick="onClickCertification()"
+            style="background-color: #FFFAF5; color: #B68C68" id="basic-addon2"> 본인인증
+    </button>
     <div class="mb-3">
         <label for="nickname" class="form-label">닉네임</label>
         <input type="text" class="form-control form-control-lg" id="nickname" name="nickname" required>
@@ -32,21 +39,17 @@
         <label for="pw" class="form-label">비밀번호</label>
         <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
     </div>
+    <div class="mt-0 mb-2">
+        <ul>
+            <li style="font-size: 12px; color: #3b3b3b;">비밀번호 길이는 최소 8자 이상이어야 합니다.</li>
+        </ul>
+    </div>
     <div class="mb-3">
         <label for="check" class="form-label">비밀번호 확인</label>
         <input type="password" class="form-control form-control-lg" id="check" name="check" required>
     </div>
-    <div>
-        <span style="color: #cc4040"></span>
-    </div>
-    <label for="phone" class="form-label">전화번호</label>
-    <div class="input-group mb-3">
-        <input type="text" class="form-control form-control-lg" id="phone" name="phone" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-        <button type="button" class="input-group-text" onclick="onClickCertification()" style="background-color: #FFFAF5; color: #B68C68"  id="basic-addon2">인증번호 받기</button>
-    </div>
-    <div class="mb-3">
-        <label for="varify" class="form-label">인증번호 입력</label>
-        <input type="text" class="form-control form-control-lg" id="varify" name="varify" required>
+    <div class="mt-0 mb-2">
+        <span id="pwCheckMsg"></span>
     </div>
     <div class="form-check form-check-reverse">
         <input class="form-check-input" type="checkbox" name="" id="private-data" required>
@@ -69,14 +72,46 @@
     const signupForm = document.forms["signupForm"];
     const pw = signupForm["pw"];
     const check = signupForm["check"];
-    function pwcheck() {
-        if (pw.value === check.value) {
+    const phone = signupForm["phone"];
+    const uname = signupForm["uname"];
 
+    signupForm.onsubmit=(e)=>{
+        if (!pwcheck()) {
+            e.preventDefault();
+            alert("비밀번호가 올바르지 않습니다.");
+        }
+        if (uname.value === "" || phone.value === "") {
+            e.preventDefault();
+            alert("본인인증을 먼저 진행해 주세요.");
         }
     }
 
+    pw.addEventListener("change", (e)=>{
+        pwcheck()
+    });
+    check.addEventListener("change", (e)=>{
+        pwcheck()
+    });
 
-    var IMP = window.IMP;
+    function pwcheck() {
+        const pwCheckMsg = document.getElementById("pwCheckMsg");
+        if (pw.value === "") {
+            pwCheckMsg.innerText = "";
+        } else if (pw.value.length < 8) {
+            pwCheckMsg.innerText = "비밀번호가 너무 짧습니다.";
+            pwCheckMsg.setAttribute("style", "color: #e53b3b;");
+        } else if (pw.value !== check.value) {
+            pwCheckMsg.innerText = "비밀번호가 일치하지 않습니다.";
+            pwCheckMsg.setAttribute("style", "color: #e53b3b;");
+        } else {
+            pwCheckMsg.innerText = "비밀번호가 일치합니다.";
+            pwCheckMsg.setAttribute("style", "color: #0f9105;");
+            return true;
+        }
+        return false;
+    }
+
+    const IMP = window.IMP;
     IMP.init("imp61025700");
 
     function onClickCertification() {
@@ -94,9 +129,8 @@
         /* 4. 본인인증 창 호출하기 */
         IMP.certification(data, callback);
     };
-
     /* 3. 콜백 함수 정의하기 */
-    function callback(response) {
+    async function callback(response) {
         const {
             success,
             merchant_uid,
@@ -109,12 +143,19 @@
             jQuery.ajax({
                 url: "/user/certifications.do",
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                data: JSON.stringify({ imp_uid: response.imp_uid }),
+                headers: {"Content-Type": "application/json"},
+                data: JSON.stringify({imp_uid: response.imp_uid}),
                 success: function (data) {
-                    JSON.parse(data)
+                    if (data != null) {
+                        console.log(data);
+                        const object = JSON.parse(data);
+                        uname.value = object.response.name;
+                        phone.value = object.response.phone;
+                    } else {
+                        alert("통신 중 오류가 있었습니다.");
+                    }
                 },
-                error: function(e) {
+                error: function (e) {
                     console.log(e)
                 }
             });

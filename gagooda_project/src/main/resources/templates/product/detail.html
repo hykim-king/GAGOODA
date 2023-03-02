@@ -6,6 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${product.pname}+' 상세페이지'"></title>
+    <link rel="stylesheet" href="/css/star_rate.css">
+    <script src="/js/star_rate.js" defer></script>
 </head>
 <style>
     .displayNone {
@@ -65,6 +67,17 @@
                             <h6 class="card-subtitle text-muted text-start mt-2 mb-3" th:text="${product.productCode}">
                                 GAGOODA</h6>
                             <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="star-ratings" style="font-size: 24px;">
+                                    <div class="fill-ratings" th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                                        <span>★★★★★</span>
+                                    </div>
+                                    <div class="empty-ratings">
+                                        <span>★★★★★</span>
+                                    </div>
+                                </div>
+                                <span th:text="'('+${product.reviewCnt}+')'"></span>
+                            </div>
                         </div>
                     </div>
                     <!--상품명 end-->

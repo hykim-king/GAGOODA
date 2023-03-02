@@ -3,63 +3,76 @@
 <mapper namespace="com.example.gagooda_project.mapper.ReviewMapper">
 
     <resultMap id="reviewMap" type="ReviewDto" autoMapping="true">
-         <result column="review_id" property="reviewId" />
-         <result column="user_id" property="userId" />
-         <result column="option_code" property="optionCode" />
-         <result column="product_code" property="productCode" />
-         <result column="reg_date" property="regDate" />
-         <result column="img_code" property="imgCode" />
-         <association property="user"
+        <result column="review_id" property="reviewId"/>
+        <result column="user_id" property="userId"/>
+        <result column="option_code" property="optionCode"/>
+        <result column="product_code" property="productCode"/>
+        <result column="reg_date" property="regDate"/>
+        <result column="img_code" property="imgCode"/>
+        <association property="user"
                      column="user_id"
                      select="com.example.gagooda_project.mapper.UserMapper.findById"
                      fetchType="lazy"/>
-         <association property="optionProduct"
+        <association property="optionProduct"
                      column="option_code"
                      select="com.example.gagooda_project.mapper.OptionProductMapper.findById"
                      fetchType="lazy"/>
-         <association property="productDto"
+        <association property="productDto"
                      column="product_code"
                      select="com.example.gagooda_project.mapper.ProductMapper.findById"
                      fetchType="lazy"/>
-         <collection property="imgList"
+        <collection property="imgList"
                     column="img_code"
                     select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
                     fetchType="lazy"/>
 
     </resultMap>
     <insert id="insertOne" parameterType="ReviewDto" useGeneratedKeys="true" keyProperty="reviewId">
-        INSERT INTO
-            review ( user_id, option_code, product_code, rate, content, img_code)
-            VALUES ( #{userId}, #{optionCode}, #{productCode}, #{rate}, #{content}, #{imgCode})
+        INSERT INTO review (user_id, option_code, product_code, rate, content, img_code)
+        VALUES (#{userId}, #{optionCode}, #{productCode}, #{rate}, #{content}, #{imgCode})
     </insert>
     <update id="updateOne" parameterType="ReviewDto">
-        UPDATE review SET rate=#{rate}, content=#{content} WHERE review_id=#{reviewId}
+        UPDATE review
+        SET rate=#{rate},
+            content=#{content}
+        WHERE review_id = #{reviewId}
     </update>
     <delete id="deleteOne">
-        DELETE FROM review WHERE review_id=#{id}
+        DELETE
+        FROM review
+        WHERE review_id = #{id}
     </delete>
     <select id="listByProductCode" parameterType="String" resultMap="reviewMap">
-        SELECT * FROM review WHERE product_code= #{productCode}
+        SELECT *
+        FROM review
+        WHERE product_code = #{productCode}
     </select>
-<!--    <select id="pageByProductId" parameterType="String" resultMap="reviewMap">-->
-<!--        SELECT * FROM review WHERE product_code= #{productCode} ORDER BY ${rate} DESC-->
-<!--    </select>-->
+    <!--    <select id="pageByProductId" parameterType="String" resultMap="reviewMap">-->
+    <!--        SELECT * FROM review WHERE product_code= #{productCode} ORDER BY ${rate} DESC-->
+    <!--    </select>-->
     <select id="listAll" resultMap="reviewMap">
-        SELECT * FROM review
+        SELECT *
+        FROM review
     </select>
-<!--    <select id="pageAll" resultMap="reviewMap">-->
-<!--        SELECT * FROM review ORDER BY #{regDate} DESC-->
-<!--    </select>-->
+    <!--    <select id="pageAll" resultMap="reviewMap">-->
+    <!--        SELECT * FROM review ORDER BY #{regDate} DESC-->
+    <!--    </select>-->
     <select id="findById" parameterType="Integer" resultMap="reviewMap">
-        SELECT * FROM review WHERE review_id=#{id}
+        SELECT *
+        FROM review
+        WHERE review_id = #{id}
     </select>
     <select id="countByProductCode" resultType="java.lang.Integer">
-        SELECT COUNT(*) from review WHERE product_code=#{productCode}
+        SELECT COUNT(*)
+        from review
+        WHERE product_code = #{productCode}
     </select>
     <select id="listByProductCodeAll" resultMap="reviewMap">
-        SELECT * FROM review WHERE product_code=#{productCode}
+        SELECT *
+        FROM review
+        WHERE product_code = #{productCode}
     </select>
-    <select id="pageAll" resultMap="reviewMap" parameterType="hashmap" >
+    <select id="pageAll" resultMap="reviewMap" parameterType="hashmap">
         SELECT * FROM review
         <where>
             <if test="searchDiv !='' and searchWord != ''">
@@ -68,13 +81,16 @@
             <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
                 AND ${dateType} BETWEEN ${startDate} AND #{endDate}
             </if>
-            <if test="dateType !='' and startDate != '' and endDate !='' and startDate.equals(endDate)">
+            <if test="dateType !='' and startDate != '' and endDate !='' and !startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="userId != '' and userId != null">
+                AND user_id = #{userId}
             </if>
         </where>
         ORDER BY ${paging.orderField} ${paging.direct} LIMIT #{paging.startRow},#{paging.rows}
     </select>
-    <select id="count" resultType="java.lang.Integer" >
+    <select id="count" resultType="java.lang.Integer">
         SELECT count(*) FROM review
         <where>
             <if test="searchDiv != '' and searchWord != ''">
@@ -85,6 +101,9 @@
             </if>
             <if test="dateType !='' and startDate !='' and endDate !='' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
+            </if>
+            <if test="userId != '' and userId != null">
+                AND user_id = #{userId}
             </if>
         </where>
     </select>

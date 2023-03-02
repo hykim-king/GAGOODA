@@ -8,16 +8,36 @@
     <title>Title</title>
 </head>
 <div layout:fragment="content">
-<th:block th:each="product:${productList}">
-    <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}">
-        <div>
-            <img th:src="@{'/img/product/{file}'(file=${product.getImgCode()+'_0.png'})}"
-                 style="width: 200px; height: 200px; object-fit: cover;">
+    <div class="col mb-3 card border border-0 position-relative"
+         style="width: 280px; padding: 0;" th:each="product:${productList}">
+        <div class="position-absolute d-flex justify-content-center align-items-center"
+             style="top:5px; right: 5px;">
+            <a href="">
+                <!--찜자리-->
+            </a>
         </div>
-        <p th:text="${product.getProductCode()}"></p>
-        <p th:text="${product.getPname()}"></p>
-        <p th:text="${product.getSalesPc()}"></p>
-    </a>
-</th:block>
+        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
+           style="text-decoration: none; color: black">
+            <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
+                 class="card-img-top rounded mb-3">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                    <div class="star-ratings" style="font-size: 24px;">
+                        <div class="fill-ratings"
+                             th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                            <span>★★★★★</span>
+                        </div>
+                        <div class="empty-ratings">
+                            <span>★★★★★</span>
+                        </div>
+                    </div>
+                    <span th:text="'('+${product.reviewCnt}+')'"></span>
+                </div>
+                <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
+                   th:text="${product.pname}"></p>
+                <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+            </div>
+        </a>
+    </div>
 </div>
 </html>

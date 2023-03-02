@@ -41,8 +41,8 @@
   <div class="container pb-5">
     <div class="text-center my-5 pt-3 fs-3"><strong>추천 리스트</strong></div>
     <!--상품 카드 틀, 반복문 돌리세요-->
-    <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5" >
-      <div class="col mb-3" style="width: 240px;height: 300px;" th:each="product:${orderedProductList}">
+    <div class="row row-cols-1 row-cols-md-2 gap-5 d-flex justify-content-center mb-5" >
+      <div class="col mb-3" style="width: 285px;height: 340px;" th:each="product:${orderedProductList}">
         <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}" style="text-decoration: none; color: black">
           <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
                class="card-img-top rounded mb-3">
