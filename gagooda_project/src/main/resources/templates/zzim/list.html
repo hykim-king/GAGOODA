@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+  <meta charset="UTF-8">
+  <title>찜 목록</title>
+  <style>
+    /*input[id="allCheck"] + label {*/
+    /*    display: inline-block;*/
+    /*    width: 20px;*/
+    /*    height: 20px;*/
+    /*    background: #ffffff;*/
+    /*    position: relative;*/
+    /*    margin-top: 5px;*/
+    /*    border-radius: 10px;*/
+    /*    cursor: pointer;*/
+    /*}*/
+    /*input[id="checkList"] + label {*/
+    /*    display: inline-block;*/
+    /*    width: 22px;*/
+    /*    height: 22px;*/
+    /*    border:2px solid #B68C68;*/
+    /*    position: relative;*/
+    /*    border-radius: 11px;*/
+    /*    cursor: pointer;*/
+    /*}*/
+    /*input[type="checkbox"]:checked + label::after {*/
+    /*    content:'✔';*/
+    /*    font-size: 12px;*/
+    /*    width: 22px;*/
+    /*    height: 22px;*/
+    /*    text-align: center;*/
+    /*    position: absolute;*/
+    /*    left: 0;*/
+    /*    top:0;*/
+    /*    padding-right: 2px;*/
+    /*}*/
+    /*input[type="checkbox"] {*/
+    /*    display: none;*/
+    /*}*/
+  </style>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container">
+    <h3 class="py-5 m-0 text-center">찜한 상품 목록</h3>
+    <hr>
+    <form th:action method="get">
+      <th:block th:if="${zzimList.size() > 0}">
+        <div class="container text-center">
+          <div style="margin: 30px 0;">
+            <b class="text-center">선택하신 물품을 장바구니로 보내실 수 있습니다.</b>
+          </div>
+          <table class="table border-top mt-3">
+            <thead>
+            <tr style="background: #B68C68; color: #ffffff">
+              <th>전체 <span th:text="${zzimList.size()}"></span>개</th>
+              <th>
+                <input type="checkbox" class="allCheck" id="allCheck" checked style="cursor: pointer;">
+                <label for="allCheck" class="allCheckLabel"></label>
+              </th>
+              <th colspan="2">상품정보</th>
+              <th>가격</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="i : ${#numbers.sequence(0, zzimList.size()-1)}">
+              <tr th:data="${zzimList[i].zzimId}">
+                <td th:text="${i+1}"></td>
+                <td class="checkBox">
+                  <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${zzimList[i].zzimId}" style="cursor: pointer;">
+                  <label for="checkList"></label>
+                </td>
+                <td style="width: 10%">
+                  <a th:href="@{'/product/{productCode}/detail.do'(productCode=${zzimList[i].getProductCode()})}">
+                    <img th:src="@{'/img/product/{file}'(file=${zzimList[i].product.getImageList().get(0).imgPath})}" style="width: 100%;">
+                  </a>
+                </td>
+                <td>
+                  <div style="margin-top: 20px;">
+                    <a class="text-decoration-none" style="color: #000000;" th:href="@{'/product/{productCode}/detail.do'(productCode=${zzimList[i].getProductCode()})}" th:text="${zzimList[i].getProduct().getPname()}"></a>
+                  </div>
+                </td>
+                <td>
+                  <input type="number" id="priceOne" th:value="${zzimList[i].product.getSalesPc()}" style="display: none;">
+                  <label for="priceOne" th:text="${zzimList[i].product.getSalesPc()}" style="margin-top: 45px; border: none; text-align: center; padding: 0;"></label>
+                </td>
+              </tr>
+            </th:block>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-block">
+          <div class="float-start">
+            <button type="button" class="delOneBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelOne()">선택상품 삭제</button>
+            <button type="button" class="delAllBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelAll()">전체상품 삭제</button>
+          </div>
+        </div>
+        <div class="d-block text-center mb-5">
+          <div style="margin-top: 100px">
+            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>
+            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderAll()">전체상품 장바구니로</button>
+          </div>
+        </div>
+      </th:block>
+      <th:block th:if="${zzimList.size() == 0}">
+        <div class="container" style="margin: 30px 0;">
+          <b class="text-center">찜한 상품이 없습니다...</b>
+        </div>
+      </th:block>
+    </form>
+  </div>
+</div>
+</body>
+</html>
+
+<script>
+  const allCheck = document.querySelector(".allCheck");
+  const checkList = document.querySelector(".checkList");
+  const list = document.querySelectorAll(".checkList");
+
+  allCheck.onclick = () => {
+    if (allCheck.checked) {
+      for (let i=0; i<list.length; i++) {
+        list[i].checked = true;
+      }
+    } else {
+      for (let j=0; j<list.length; j++) {
+        list[j].checked = false;
+      }
+    }
+    changeEvent();
+  }
+
+  document.querySelectorAll('.checkBox').forEach((item) => (
+          item.querySelector('.checkList').onclick = () => {
+            allCheck.checked = false;
+            changeEvent();
+          }
+  ))
+
+  document.querySelectorAll('.cntUpdate').forEach((item) => (
+          item.querySelector('input[name="cntText"]').onchange = () => {
+            if (item.querySelector('input[name="cntText"]') != "") cartUpdate();
+            changeEvent();
+          })
+  )
+
+
+  function cartUpdate() {
+    const query = 'input[name="cntText"]'
+    const selectedElements = document.querySelectorAll(query)
+
+    const selectedElementsCnt = selectedElements.length;
+
+    const arr = new Array(selectedElementsCnt);
+
+    document.querySelectorAll('input[name="cntText"]').forEach(function(v, i) {
+      arr[i] = v.value;
+    });
+
+    const form = document.createElement('form');
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', '/cart/user_yes/mypage/update.do');
+
+    var input1 = document.createElement('input');
+    input1.setAttribute("type", "hidden");
+    input1.setAttribute("name", "cartCnts");
+    input1.setAttribute("value", arr);
+    form.appendChild(input1);
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  function cartDelAll() {
+    const query = 'input[name="checkList"]'
+    const selectedElements = document.querySelectorAll(query)
+
+    const selectedElementsCnt = selectedElements.length;
+
+    if (selectedElementsCnt == 0) {
+      alert("삭제할 항목이 없습니다.");
+      return false;
+    } else {
+      if (confirm("정말로 전체삭제하시겠습니까?")) {
+        const form = document.createElement('form');
+        form.setAttribute('method', 'post');
+        form.setAttribute('action', '/cart/user_yes/mypage/deleteAll.do');
+        document.body.appendChild(form);
+        form.submit();
+        changeEvent();
+      }
+    }
+  }
+
+  function cartDelOne() {
+    const query = 'input[name="checkList"]:checked'
+    const selectedElements = document.querySelectorAll(query)
+
+    const selectedElementsCnt = selectedElements.length;
+
+    if (selectedElementsCnt == 0) {
+      alert("삭제할 항목을 선택해주세요.");
+      return false;
+    } else {
+      if (confirm("정말로 삭제하시겠습니까?")) {
+        //배열생성
+        const arr = new Array(selectedElementsCnt);
+
+        document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+          arr[i] = v.value;
+        });
+
+        const form = document.createElement('form');
+        form.setAttribute('method', 'post');        //Post 메소드 적용
+        form.setAttribute('action', '/cart/user_yes/mypage/deleteOne.do');
+
+        var input1 = document.createElement('input');
+        input1.setAttribute("type", "hidden");
+        input1.setAttribute("name", "cartIds");
+        input1.setAttribute("value", arr);
+        form.appendChild(input1);
+        console.log(form);
+        document.body.appendChild(form);
+        form.submit();
+        changeEvent();
+      }
+    }
+  }
+
+  function orderOne() {
+    const query = 'input[name="checkList"]:checked';
+    const selectedElements = document.querySelectorAll(query);
+    const selectedElementsCnt = selectedElements.length;
+
+    if (selectedElementsCnt == 0) {
+      alert("주문할 상품이 없습니다.");
+      return false;
+    } else {
+      const arr = new Array(selectedElementsCnt);
+
+      document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+        arr[i] = v.value;
+      });
+
+      const form = document.createElement('form');
+      form.setAttribute('method', 'get');        //Post 메소드 적용
+      form.setAttribute('action', '/order/user_yes/register.do');
+
+      var input1 = document.createElement('input');
+      input1.setAttribute("type", "hidden");
+      input1.setAttribute("name", "orderCartIds");
+      input1.setAttribute("value", arr);
+      form.appendChild(input1);
+      console.log(form);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+
+  function orderAll() {
+    const query = 'input[name="checkList"]'
+    const selectedElements = document.querySelectorAll(query)
+    const selectedElementsCnt = selectedElements.length;
+
+    if (selectedElementsCnt == 0) {
+      alert("주문할 상품이 없습니다.");
+      return false;
+    } else {
+      allCheck.checked = true;
+
+      for (let i=0; i<list.length; i++) {
+        list[i].checked = true;
+      }
+
+      const arr = new Array(selectedElementsCnt);
+
+      document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+        arr[i] = v.value;
+      });
+
+      const form = document.createElement('form');
+      form.setAttribute('method', 'get');        //Post 메소드 적용
+      form.setAttribute('action', '/order/user_yes/register.do');
+
+      var input1 = document.createElement('input');
+      input1.setAttribute("type", "hidden");
+      input1.setAttribute("name", "orderCartIds");
+      input1.setAttribute("value", arr);
+      form.appendChild(input1);
+      console.log(form);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  }
+</script>

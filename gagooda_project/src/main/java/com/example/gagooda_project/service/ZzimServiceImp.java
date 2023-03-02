@@ -6,6 +6,8 @@ import com.example.gagooda_project.mapper.UserMapper;
 import com.example.gagooda_project.mapper.ZzimMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ZzimServiceImp implements ZzimService{
     ZzimMapper zzimMapper;
@@ -30,5 +32,10 @@ public class ZzimServiceImp implements ZzimService{
     @Override
     public ZzimDto selectOne(int userId, String productCode) {
         return zzimMapper.findByProductCodeAndUserId(productCode,userId);
+    }
+
+    @Override
+    public List<ZzimDto> listByUserId(int userId) {
+        return zzimMapper.findByUserId(userId);
     }
 }
