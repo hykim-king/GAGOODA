@@ -39,12 +39,12 @@ public class RefundServiceImp implements RefundService{
         List<RefundDto> checkRefundList = null;
         // 주문 상세 단건 등록의 경우
         checkRefundList = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
-        OrderDto order = orderMapper.findById(refund.getOrderId());
         if (checkRefundList != null){ // db 조회가 되지만,
             for (RefundDto checkRefund : checkRefundList){
                 if(!checkRefund.getRfDet().equals("rf1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
                     throw new RuntimeException();
                 }
+                register +=1 ;
             }
         }
         register += refundMapper.insertOne(refund);
@@ -76,11 +76,6 @@ public class RefundServiceImp implements RefundService{
             List<String> rfList = new ArrayList<>(Arrays.asList(rfDet.split(",")));
             String rfDetF = "'"+String.join("','", rfList)+"'";
             searchFilter.put("rfDet", rfDetF);
-        }
-        if(searchFilter.get("searchDiv").equals("all")){
-            String allCol = "refund_id OR user_id OR uname OR email OR phone OR order_detail_id OR order_id " +
-                    "OR reason OR post_code OR address OR address_detail OR receiver_name OR receiver_phone";
-            searchFilter.put("searchDiv", allCol);
         }
         if(!searchFilter.get("searchWord").equals("")){
             String keyword = "%"+searchFilter.get("searchWord")+"%";

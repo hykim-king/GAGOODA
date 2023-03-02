@@ -30,34 +30,27 @@
                 </div>
             </th:block>
 
-    <div class="container" style="width: 50%; margin-bottom: 200px">
-<!--        <h2>환불 반품 신청</h2>-->
+    <div class="container mb-5" >
         <h4 class="mt-5 mb-3">주문 정보</h4>
-<!--        <div>주문인: <span th:text="${order.userName}"></span></div>-->
-<!--        <div>주문날짜: <span th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></span></div>-->
-<!--        <div>주문번호: <span th:text="${order.orderId}"></span></div>-->
-<!--        <div>주문 상품명: <span th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></span></div>-->
-<!--        <div>주문 총 금액: <span th:text="${order.totalPrice}"></span></div>-->
-        <table class="table table-borderless" style="border: 1px solid #d4d9df">
+        <hr style="margin-top: 0; background : #b68c68; height: 5px">
+        <table class="table">
             <tr>
-                <th>주문인</th>
-                <td th:text="${order.userName}"></td>
+                <th class="col-2">주문인</th>
+                <td class="col-4" th:text="${order.userName}"></td>
+                <th class="col-2">주문날짜</th>
+                <td class="col-4" th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></td>
             </tr>
             <tr>
-                <th>주문날짜</th>
-                <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd') }"></td>
+                <th class="col-2">주문 상품명</th>
+                <td class="col-4" th:text="${order.orderDetailList[0].optionName}+' 등 '+ ${order.orderDetailList.size()} + '건'"></td>
+                <th class="col-2">총 주문 금액</th>
+                <td class="col-4" th:text="${order.totalPrice}"></td>
             </tr>
             <tr>
                 <th>주문번호</th>
                 <td th:text="${order.orderId}"></td>
-            </tr>
-            <tr>
-                <th>주문 상품명</th>
-                <td th:text="${order.orderDetailList[0].optionName}+' 외 '+ ${order.orderDetailList.size() -1} + '건'"></td>
-            </tr>
-            <tr>
-                <th>총 주문 금액</th>
-                <td th:text="${order.totalPrice}"></td>
+                <th class="col-2"></th>
+                <td class="col-4"></td>
             </tr>
 
         </table>
@@ -70,56 +63,68 @@
             <input type="hidden" id="phone" name="phone" th:value="${order.userPhone}">
             <input type="hidden" id="orderId" name="orderId" th:value="${order.orderId}">
             <fieldset class="mt-5">
-                <legend>교환/환불 정보</legend>
-                <div>신청 유형</div>
-                <div class="d-flex">
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" id="refundType" name="reType" value="true" required>
-                        <label class="form-check-label" for="refundType">환불</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" id="exchangeType" name="reType" value="false" required>
-                        <label class="form-check-label" for="exchangeType">교환</label>
-                    </div>
-                </div>
-                <div>
-                    <label for="orderDetailId">교환/환불 대상 상품</label>
-                    <input type="hidden" th:value="${orderDetail.orderDetailId}" id="orderDetailId" th:data-amount="${orderDetail.totalPrice}" th:data-cnt="${orderDetail.cnt}">
-                    <span class="form-control" th:text="${orderDetail.optionName}"></span>
-                </div>
-                <div class="d-none refundInput">
-                    <label for="cancelAmount">환불 금액</label>
-                    <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
-                </div>
-                <div class="d-none exchangeInput">
-                    <label for="cnt">교환 수량</label>
-                    <input class="form-control" type="number" id="cnt" name="cnt" th:max="${orderDetail.cnt}" min="1">
-                </div>
-                <div>
-                    <label for="imgFileList" class="form-label">첨부 이미지</label>
-                    <input class="form-control" type="file" name="imgFileList" id="imgFileList">
+                <div class="flex-column">
+                    <legend>교환/환불 정보</legend>
+                    <hr style="margin-top: 0; background : #b68c68; height: 5px">
+                    <div class="d-flex justify-content-around">
+                        <div class="col-5">
+                            <div>신청 유형</div>
+                            <div class="d-flex mt-1">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" id="refundType" name="reType" value="true" required>
+                                    <label class="form-check-label" for="refundType">환불</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="exchangeType" name="reType" value="false" required>
+                                    <label class="form-check-label" for="exchangeType">교환</label>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <label for="orderDetailId">교환/환불 대상 상품</label>
+                                <input type="hidden" th:value="${orderDetail.orderDetailId}" id="orderDetailId" th:data-amount="${orderDetail.totalPrice}" th:data-cnt="${orderDetail.cnt}">
+                                <span class="form-control" th:text="${orderDetail.optionName}"></span>
+                            </div>
+                            <div class="d-none refundInput mt-1">
+                                <label for="cancelAmount">환불 금액</label>
+                                <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
+                            </div>
+                            <div class="d-none exchangeInput mt-1">
+                                <label for="cnt">교환 수량</label>
+                                <input class="form-control" type="number" id="cnt" name="cnt" th:max="${orderDetail.cnt}" min="1">
+                            </div>
+                            <div class="mt-1">
+                                <label for="imgFileList" class="form-label">첨부 이미지</label>
+                                <input class="form-control" type="file" name="imgFileList" id="imgFileList">
+                            </div>
+                            <div class="mt-1">
+                                <label for="rfrDet">교환/환불 사유 카테고리</label>
+                                <select class="form-select" name="rfrDet" id="rfrDet" required>
+                                    <option value="" selected disabled>요청 유형을 선택해주세요.</option>
+                                    <option value="rfr0">단순 변심</option>
+                                    <option value="rfr1">상품 문제</option>
+                                    <option value="rfr2">배송 문제</option>
+                                    <option value="rfr3">기타</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div>
+                                <label for="reason">상세 환불 사유</label>
+                                <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+                            </div>
+                        </div>
 
-                </div>
-                <div>
-                    <label for="rfrDet">환불 사유 카테고리</label>
-                    <select class="form-select" name="rfrDet" id="rfrDet" required>
-                        <option value="" selected disabled>요청 유형을 선택해주세요.</option>
-                        <option value="rfr0">단순 변심</option>
-                        <option value="rfr1">상품 문제</option>
-                        <option value="rfr2">배송 문제</option>
-                        <option value="rfr3">기타</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="reason">상세 환불 사유</label>
-                    <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+                    </div>
                 </div>
             </fieldset>
 
             <fieldset class="mt-5">
                 <legend>환불 물품 수거지 주소</legend>
-                <div id="loadAddressList">
-                    <th:block th:include="refund/user/newAddress"></th:block>
+                <hr style="margin-top: 0; background : #b68c68; height: 5px">
+                <div>
+                    <div id="loadAddressList" class="col-10 m-auto">
+                        <th:block th:include="refund/user/newAddress"></th:block>
+                    </div>
                 </div>
 
                 <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
@@ -131,9 +136,8 @@
                 <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
 
             </fieldset>
-            <div>
-                <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn text-white" style="background-color: #B68C68;">신청하기</button>
-                <button name="refundReset" type="reset" class="btn" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" >초기화</button>
+            <div class="d-flex justify-content-end">
+                <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn text-white me-2" style="background-color: #B68C68;">신청하기</button>
             </div>
 
         </form>
@@ -215,7 +219,7 @@
                 // cancelAmount.value = optTxt.split(":")[1].split(")")[0];
             }
 
-
+            /* 교환/환불 radio 클릭에 따라 해당 input 보여주기 */
             let reType = refundRegister.reType;
             console.log(reType)
             reType.forEach(element=>{
@@ -238,6 +242,7 @@
                 })
             })
 
+            /* 새 주소 등록 후 등록 주소 input 창에 넣기 */
             const currentAddressList = document.querySelectorAll(".add");
             const realAddressList = document.querySelectorAll(".realValue");
             function changeAdd(){
@@ -271,7 +276,7 @@
 
 
 
-
+            /* 모달창 새 주소 등록폼 제출 */
             async function newAddressSubmit(){
                 newAddressRegister.addressSubmit.onsubmit=(e)=>{e.preventDefault()};
 
@@ -298,7 +303,7 @@
                 newAddressRegister.newCheck.value = "isNew";
                 console.log("newAddress submit click!!");
 
-                let url="/refund/user_yes/mypage/"+[[${order.orderId}]]+"/addressRegister.do";
+                let url="/refund/user_yes/mypage/"+[[${orderDetail.orderId}]]+"/addressRegister.do";
                 const form = new FormData(newAddressRegister);
                 const resp = await fetch(url,{
                     method: 'POST',
@@ -320,7 +325,7 @@
 
             async function loadNewAddress(){
                 let loadForm = document.querySelector("#loadAddressList")
-                let loadUrl = "/refund/user_yes/mypage/"+[[${order.orderId}]]+"/addressList.do";
+                let loadUrl = "/refund/user_yes/mypage/"+[[${orderDetail.orderId}]]+"/addressList.do";
                 const response = await fetch(loadUrl);
                 const addressHtml = await response.text();
                 console.log("load$$$$");
@@ -328,7 +333,7 @@
                 loadForm.innerHTML = addressHtml;
             }
 
-
+            /* 우편번호 API */
             function DaumPostcode() {
                 new daum.Postcode({
                     oncomplete: function(data) {
@@ -377,21 +382,21 @@
                 }).open();
             }
 
-            // async function registerAddress(){
-            //     let url="/address/user_yes/mypage/register.do";
-            //     const form = new FormData(newAddressRegister);
-            //     const response = await fetch(url,{
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/x-www-form-urlencoded',
-            //         },
-            //         redirect: 'follow',
-            //         body: form,
-            //     })
-            //
-            //     let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
-            //     console.log(commits)
-            // }
+            async function registerAddress(){
+                let url="/address/user_yes/mypage/register.do";
+                const form = new FormData(newAddressRegister);
+                const response = await fetch(url,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    redirect: 'follow',
+                    body: form,
+                })
+
+                let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
+                console.log(commits)
+            }
         </script>
 </div>
 </html>

@@ -107,10 +107,10 @@ public class ExchangeController {
             }
         }
         if (modify > 0) {
-            session.setAttribute("refundMsg", "교환 요청이 성공적으로 취소되었습니다.");
+//            session.setAttribute("exchangeMsg", "교환 요청이 성공적으로 취소되었습니다.");
             return "redirect:/exchange/user_yes/mypage/list.do";
         } else {
-            session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
+//            session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
             return "redirect:/exchange/user_yes/mypage/detail.do/"+exchangeId;
         }
     }

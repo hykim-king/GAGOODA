@@ -14,10 +14,9 @@
             <label class="d-block">검색 키워드 :
                 <select name="searchDiv" id="searchDiv">
                     <option value="" selected disabled>검색 분류 선택</option>
-                    <option value="all">전체</option>
                     <option value="order_id">주문번호</option>
-                    <option value="uname">신청자명</option>
-                    <option value="phone">신청자 전화번호</option>
+                    <option value="uname">주문자명</option>
+                    <option value="phone">주문자 전화번호</option>
                 </select>
                 <input type="text" id="searchWord" name="searchWord">
             </label>
@@ -44,10 +43,10 @@
             </div>
         </div>
         <button type="submit" class="btn btn-outline-secondary">검색</button>
-        <button name="reset" type="reset">초기화</button>
+        <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
     </form>
     <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
-    <table>
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>작성자</th>
@@ -62,8 +61,8 @@
         </tr>
         </thead>
         <tbody>
-        <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}">
-            <tr class="hrefRow" th:data-refund="${refund.refundId}">
+        <th:block th:if="${refundCount >= 0}" th:each="refund : ${refundList}" >
+            <tr class="hrefRow" th:data-refund="${refund.refundId}" th:data-rfDet="${refund.rfDet}">
                 <td th:text="${refund.uname}"></td>
                 <td th:text="${refund.orderId}"></td>
                 <td th:text="${refund.orderDetailId}"></td>
@@ -116,9 +115,22 @@
             console.log(row)
             let targetHref = "http://"+ document.location.host + "/refund/admin/" + row.dataset.refund +"/detail.do";
             console.log(targetHref)
-            document.location.href =  targetHref;
+            let refundId = row.dataset.refund;
+            let rfDet = row.dataset.rfdet;
+            console.log("refundData:", rfDet);
+            // document.location.href =  targetHref;
         })
     })
+    /* 비동기 rf 상태 수정 */
+    async function modifyRf(refundId, rfDet){
+        let url = "http://"+document.location.host+"refund/admin/"+refundId+"/modify.do"
+        let modifyForm = new FormData();
+        modifyForm.set("refundId", refundId);
+        modifyForm.set("rfDet", rfDet);
+        const resp = await fetch(url)
+    }
+
+
     const forms = document.forms.searchForm;
     console.log(forms);
     forms.searchDiv.onchange = (qualifiedName, value)=>{
