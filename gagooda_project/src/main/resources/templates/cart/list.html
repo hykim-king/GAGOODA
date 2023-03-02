@@ -50,13 +50,15 @@
             <form th:action method="get">
                 <th:block th:if="${cartList.size() > 0}">
                     <div class="container text-center">
-                        <b class="text-center">주문하실 상품을 선택해주세요.</b>
+                        <div style="margin: 30px 0;">
+                            <b class="text-center">주문하실 상품을 선택해주세요.</b>
+                        </div>
                         <table class="table border-top mt-3">
                             <thead>
                                 <tr style="background: #B68C68; color: #ffffff">
                                     <th>전체 <span th:text="${cartList.size()}"></span>개</th>
                                     <th>
-                                        <input type="checkbox" class="allCheck" id="allCheck" checked>
+                                        <input type="checkbox" class="allCheck" id="allCheck" checked style="cursor: pointer;">
                                         <label for="allCheck" class="allCheckLabel"></label>
                                     </th>
                                     <th colspan="2">상품정보</th>
@@ -70,29 +72,32 @@
                                 <tr th:data-cart="${cartList[i].cartId}">
                                     <td th:text="${i+1}"></td>
                                     <td class="checkBox">
-                                        <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${cartList[i].cartId}">
+                                        <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${cartList[i].cartId}" style="cursor: pointer;">
                                         <label for="checkList"></label>
                                     </td>
-                                    <td style="width: 20%;">
+                                    <td style="width: 10%">
                                         <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}">
-                                            <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImageList().get(0).imgPath})}">
+                                            <img th:src="@{'/img/product/{file}'(file=${cartList[i].product.getImageList().get(0).imgPath})}" style="width: 100%;">
                                         </a>
                                     </td>
                                     <td>
-                                        <div style="margin-top: 60px;">
-                                            <a class="text-decoration-none" style="color: #000000" th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getOptionProduct().getOpname()}"></a>
+                                        <div style="margin-top: 20px;">
+                                            <a class="text-decoration-none" style="color: #000000;" th:href="@{'/product/{productCode}/detail.do'(productCode=${cartList[i].getProductCode()})}" th:text="${cartList[i].getProduct().getPname()}"></a>
+                                            <div style="margin-top: 30px; font-size: small">
+                                                옵션: <span th:text="${cartList[i].getOptionProduct().getOptionCode()}"></span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
                                         <input type="number" id="priceOne" th:value="${cartList[i].optionProduct.getPrice()}" style="display: none;">
-                                        <label for="priceOne" th:text="${cartList[i].optionProduct.getPrice()}" style="margin-top: 60px; border: none; text-align: center; padding: 0;"></label>
+                                        <label for="priceOne" th:text="${cartList[i].optionProduct.getPrice()}" style="margin-top: 45px; border: none; text-align: center; padding: 0;"></label>
                                     </td>
                                     <td class="cntUpdate">
-                                        <input type="number" th:value="${cartList[i].cnt}" name="cntText" class="cntText" style="width: 50px; margin-top: 60px; text-align: center; padding: 0;">
+                                        <input type="number" th:value="${cartList[i].cnt}" name="cntText" class="cntText" style="width: 50px; margin-top: 45px; text-align: center; padding: 0;">
                                     </td>
                                     <td>
                                         <input type="number" id="totalPriceOne" th:value="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" class="priceList" style="display: none;">
-                                        <label for="totalPriceOne" th:text="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" style="margin-top: 60px; border: none; text-align: center; padding: 0;"></label>
+                                        <label for="totalPriceOne" th:text="${cartList[i].getOptionProduct().getPrice()*cartList[i].cnt}" style="margin-top: 45px; border: none; text-align: center; padding: 0;"></label>
                                     </td>
                                 </tr>
                             </th:block>
@@ -100,26 +105,27 @@
                         </table>
                     </div>
 
-
                     <div class="d-block">
                         <div class="float-start">
-                            <button type="button" class="delOneBtn btn btn-light border" style="width: 100px" onclick="cartDelOne()">선택삭제</button>
-                            <button type="button" class="delAllBtn btn btn-light border" style="width: 100px" onclick="cartDelAll()">전체삭제</button>
+                            <button type="button" class="delOneBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelOne()">선택상품 삭제</button>
+                            <button type="button" class="delAllBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelAll()">전체상품 삭제</button>
                         </div>
-                        <div class="float-end">
+                        <div class="float-end" style="font-size: large">
                             <div>총 주문금액: <strong id="totalPrice" class="totalPrice" style="color: #B68C68" th:text="${totalPrice}"></strong> 원</div>
                             <div>총 주문수량: <strong id="totalCnt" class="totalCnt" style="color: #B68C68" th:text="${totalCnt}"></strong> 개</div>
                         </div>
                     </div>
                     <div class="d-block text-center mb-5">
                         <div style="margin-top: 100px">
-                            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px" onclick="orderOne()">선택주문</button>
-                            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px" onclick="orderAll()">전체주문</button>
+                            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 주문</button>
+                            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderAll()">전체상품 주문</button>
                         </div>
                     </div>
                 </th:block>
                 <th:block th:if="${cartList.size() == 0}">
-                    <span>장바구니가 비었습니다.</span>
+                    <div class="container" style="margin: 30px 0;">
+                        <b class="text-center">장바구니가 비었습니다...</b>
+                    </div>
                 </th:block>
             </form>
         </div>
