@@ -52,7 +52,7 @@
                         <div class="mt-1">
                             <button class="btn border"
                                     th:classappend="${(#strings.equals(delivery.DDet,'d3'))?'disabled':''}"
-                                    th:onclick="location.href=[[@{'/review/user_yes/{productCode}/register.do'(productCode=${orderDetail.productCode})}}]]"
+                                    th:onclick="location.href=[[@{'/review/user_yes/{productCode}/register.do'(orderId=${order.orderId},productCode=${orderDetail.productCode})}}]]"
                                style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</button>
                         </div>
                     </td>
