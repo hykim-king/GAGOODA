@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>커뮤니티 등록</title>
+</head>
+<div layout:fragment="content">
+    <h1> 커뮤니티 사진 등록</h1>
+    <form>
+        <div class="mb-3">
+            <label for="imgFile">이미지 첨부</label>
+            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
+        </div>
+    </form>
+</div>
+</html>

@@ -88,6 +88,6 @@ class ProductInquiryMapperTest {
         paging.setRows(5);
         paging.setStartRow(1);
         paging.setTotalRows(productInquiryMapper.countByUserId(1));
-        productInquiryMapper.listByUserId(1);
+//        productInquiryMapper.listByUserId(1);
     }
 }

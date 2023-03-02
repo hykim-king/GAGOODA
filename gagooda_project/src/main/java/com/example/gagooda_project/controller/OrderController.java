@@ -1,11 +1,12 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.service.AddressService;
-import com.example.gagooda_project.service.CartService;
-import com.example.gagooda_project.service.OrderService;
-import com.example.gagooda_project.service.PaymentService;
+import com.example.gagooda_project.service.*;
 import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.response.IamportResponse;
+import com.siot.IamportRestClient.response.PagedDataList;
+import com.siot.IamportRestClient.response.Payment;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -25,15 +26,24 @@ public class OrderController {
     private OrderService orderService;
     private CartService cartService;
     private AddressService addressService;
+    private PaymentService paymentService;
+
+    private final IamportClient iamportClient;
+    private DeliveryService deliveryService;
 
     private Logger log= LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public OrderController(OrderService orderService,
                            CartService cartService,
-                           AddressService addressService){
+                           AddressService addressService,
+                           PaymentServiceImp paymentServiceImp,
+                           DeliveryService deliveryService){
         this.cartService = cartService;
         this.orderService = orderService;
         this.addressService = addressService;
+        this.paymentService = paymentServiceImp;
+        this.deliveryService = deliveryService;
+        this.iamportClient = new IamportClient("5625884002542635", "V1vlsxRPO59Ty3xDEKlhf2W7gkv2dMU4Hld8EFXYvuDedHnF3kRWvX1gqt9DNsg6GQSmoz2D76iogdnU");
     }
 
     @GetMapping("/admin/list.do")
@@ -186,12 +196,13 @@ public class OrderController {
             List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
             DeliveryDto delivery = orderService.selectDelivery(orderId);
             List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
-            int rfCount = orderService.countRefund(orderId);
+            PaymentDto payment = paymentService.selectOne(orderId);
+            IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
             model.addAttribute("order",order);
             model.addAttribute("orderDetailList",orderDetailList);
             model.addAttribute("delivery", delivery);
             model.addAttribute("oCodeList",oCodeList);
-            model.addAttribute("rfCount",rfCount);
+            model.addAttribute("payment",paymentResp.getResponse());
         }catch(Exception exception){
             log.error(exception.getMessage());
         }
@@ -353,7 +364,8 @@ public class OrderController {
 
             @RequestParam(required = false, name="delivery.request") String request,
             @RequestParam(required = true, name="cartItem") List<String> cartList,
-            HttpSession session
+            HttpSession session,
+            Model model
             ){
         System.out.println(order);
         System.out.println(cartList);
@@ -414,5 +426,36 @@ public class OrderController {
             return "redirect:/order/user_yes/register.do";
         }
 
+    }
+
+    @PostMapping("/user_yes/paymentRegister.do")
+    public void paymentRegister(@RequestParam("orderId") String orderId,
+                               @RequestParam("impUid") String impUid,
+                                HttpSession session){
+        log.info("paymentRegister에서 넘어온 orderId: "+orderId);
+        log.info("paymentRegister에서 넘어온 impUid: "+impUid);
+
+        PaymentDto payment = new PaymentDto();
+        payment.setOrderId(orderId);
+        payment.setImpUid(impUid);
+        int register = 0;
+        int modify = 0;
+        try{
+            register = paymentService.register(payment);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        if(register >0){
+            try{
+                String oDet = "o1";
+                modify = orderService.modifyOne(orderId,oDet);
+                System.out.println("status update: "+ modify);
+            }catch(Exception e){
+                log.error(e.getMessage());
+            }
+            session.setAttribute("msg","결제가 성공적으로 이루어졌습니다.");
+        }else{
+            session.setAttribute("msg","결제에 실패하였습니다.");
+        }
     }
 }

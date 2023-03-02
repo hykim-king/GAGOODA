@@ -50,8 +50,10 @@
                                     th:onclick="location.href=[[@{'/refund/user_yes/mypage/{orderDetailId}/register.do'(orderDetailId=${orderDetail.orderDetailId})}]]">교환/환불</button>
                         </div>
                         <div class="mt-1">
-                            <a class="btn border" th:href="@{'/review/user_yes/{productCode}/register.do'(orderId=${order.orderId},productCode=${orderDetail.productCode})}"
-                               style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</a>
+                            <button class="btn border"
+                                    th:classappend="${(#strings.equals(delivery.DDet,'d3'))?'disabled':''}"
+                                    th:onclick="location.href=[[@{'/review/user_yes/{productCode}/register.do'(productCode=${orderDetail.productCode})}}]]"
+                               style="background-color: #ffffff; color: #b68c68;">리뷰 작성하기</button>
                         </div>
                     </td>
                 </tr>
@@ -62,7 +64,12 @@
                 <b>총 주문 금액:</b> <span id="totalPrice" th:text="${order.totalPrice}"></span>원
             </div>
             <div class="mb-3">
-                <b>총 결제 금액:</b> <span id="paidPrice" th:text="${order.totalPrice}"></span>원
+                <th:block th:if="${payment.amount != null}">
+                    <b>총 결제 금액:</b> <span id="pPaidPrice" th:text="${payment.amount}"></span>원
+                </th:block>
+                <th:block th:unless="${payment.amount != null}">
+                    <b>총 결제 금액:</b> <span id="paidPrice" th:text="${order.totalPrice}"></span>원
+                </th:block>
             </div>
         </div>
     </div>
@@ -116,11 +123,19 @@
     </tr>
     </table>
     <!--수령인 정보 end------------------------------------->
+    <!--카드 영수증-->
+    <h3 class="mt-4">결제영수증 정보</h3>
+    <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+    <div class="d-flex justify-content-between align-items-center pt-3" style="background-color: #FFFAF5; height: 80px;">
+        <span class="ms-3">해당 주문건에 대해 구매 카드 영수증 확인이 가능합니다.</span>
+        <a class="receiptUrl btn text-white me-3" href="javascript:void(0)" th:data-receipt="${payment.receiptUrl}" style="background-color: #B68C68;">카드 영수증</a>
+
+    </div>
     <!--button group-->
-    <div class="d-flex justify-content-end mt-4 mb-5">
-        <button class="btn mx-3"  style="background-color: #B68C68;" th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
+    <div class="d-flex justify-content-end mt-4 mb-5 " >
+        <button class="btn mx-3 text-white"  style="background-color: #B68C68;" th:onclick="location.href=[[@{'/order/user_yes/mypage/list.do'}]]">주문 목록 돌아가기</button>
         <th:block th:if="${!(#strings.equals(order.oDet,'o4')||(#strings.equals(order.oDet,'o5')))}">
-            <button class="btn me-2" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
+            <button class="btn me-2 col-3" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" th:onclick="cancelRecheck([[${order.orderId}]])">주문 취소 요청</button>
         </th:block>
     </div>
     <!--button group end--------------------------------------->
@@ -130,6 +145,12 @@
                 location.href = '/order/user_yes/mypage/' + orderId + '/modify.do'
             }
         }
+        let receiptUrl = document.querySelectorAll(".receiptUrl");
+        receiptUrl.forEach(url=>{
+            url.addEventListener("click",()=>{
+                window.open(url.dataset.receipt, "cancelReceipt", "width=450, height=600, resizable=no")
+            })
+        })
     </script>
 
 </div>
