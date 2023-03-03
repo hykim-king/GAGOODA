@@ -108,7 +108,16 @@
                                         id="optionCode" required onchange="changePrice()">
                                     <option value="" data-price="0" selected>--옵션 선택--</option>
                                     <th:block th:each="option:${product.optionProductList}">
-                                        <option th:value="${option.optionCode}"></option>
+                                        <option th:value="${option.optionCode}"
+                                                th:text="${option.opname}+' '+${option.price}+'원 품절'"
+                                                th:data-price="${option.price}"
+                                                th:data-stock="${option.stock}"
+                                                th:if="${option.stock==0}"></option>
+                                        <option th:value="${option.optionCode}"
+                                                th:text="${option.opname}+' '+${option.price}+'원 (제고가 20개 이하입니다.)'"
+                                                th:data-price="${option.price}"
+                                                th:data-stock="${option.stock}"
+                                                th:if="${option.stock<=20}"></option>
                                         <option th:value="${option.optionCode}"
                                                 th:text="${option.opname}+' '+${option.price}+'원'"
                                                 th:data-price="${option.price}"
