@@ -9,7 +9,10 @@
 </head>
 <div layout:fragment="content">
     <h1> 커뮤니티 사진 등록</h1>
-    <form>
+    <form name="communityRegisterForm" method="post" action="/community/user_yes/register.do"  enctype="multipart/form-data">
+        <div class="mb-3">
+            <input type="text" id="userId" name="userId" th:value="${session.loginUser.userId}">
+        </div>
         <div class="mb-3">
             <label for="imgFile">이미지 첨부</label>
             <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
@@ -18,6 +21,26 @@
             <label for="content" class="form-label">내용</label>
             <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
         </div>
+        <div>
+            <button class="btn btn-primary" type="reset" onclick="cancel()">취소</button>
+            <button class="btn" type="submit">등록</button>
+        </div>
     </form>
+    <script th:inline="javascript">
+        //onclick="registerConfirm()
+        // function registerConfirm() {
+        //     let result = confirm("포스트를 등록하시겠습니까 ?");
+        //     // if (result == true) {
+        //     //     location.href = "review/list.do?productCode=" + document.getElementById("productCode").value;
+        //     // }
+        // }
+
+        function cancel() {
+            let result = confirm("포스트를 취소하시겠습니까 ?");
+            // if (result == true) {
+            //     location.href = "/order/user_yes/mypage/" + [[${orderId}]] + "/detail.do";
+            // }
+        }
+    </script>
 </div>
 </html>

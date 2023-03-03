@@ -5,6 +5,7 @@ import com.example.gagooda_project.mapper.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,13 +20,15 @@ public class OrderServiceImp implements OrderService {
     private AddressMapper addressMapper;
     private CommonCodeMapper commonCodeMapper;
     private RefundMapper refundMapper;
+    private OptionProductMapper optionProductMapper;
     public OrderServiceImp(OrderMapper orderMapper,
                            OrderDetailMapper orderDetailMapper,
                            DeliveryMapper deliveryMapper,
                            CartMapper cartMapper,
                            AddressMapper addressMapper,
                            CommonCodeMapper commonCodeMapper,
-                           RefundMapper refundMapper
+                           RefundMapper refundMapper,
+                           OptionProductMapper optionProductMapper
                            ){
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
@@ -34,6 +37,7 @@ public class OrderServiceImp implements OrderService {
         this.addressMapper = addressMapper;
         this.commonCodeMapper = commonCodeMapper;
         this.refundMapper = refundMapper;
+        this.optionProductMapper = optionProductMapper;
     }
     @Override
     public List<OrderDto> orderList(PagingDto paging, int userId,int dates) {
@@ -167,6 +171,23 @@ public class OrderServiceImp implements OrderService {
     public int countRefund(String orderId) {
         return refundMapper.countByOrderId(orderId);
 
+    }
+
+    @Override
+    public OptionProductDto selectOptionProduct(String optionCode) {
+        return optionProductMapper.findById(optionCode);
+
+    }
+
+    @Override
+    public int changeStock(int count,String optionCode,String orderId) {
+        int modify = 0;
+        modify +=  optionProductMapper.updateStock(count,optionCode);
+        String oDet = "o2";
+        if(orderId != null){
+            modify += orderMapper.updateStatus(orderId, oDet);
+        }
+        return modify;
     }
 
 

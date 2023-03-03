@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>커뮤니티 메인</title>
+</head>
+<div layout:fragment="content">
+    <h1>커뮤니티 목록</h1>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary"
+                th:onclick="location.href=[[@{'/community/user_yes/register.do'}]]">등록</button>
+    </div>
+    <div class="col mb-3 card border border-0 position-relative"
+         style="width: 280px; padding: 0;" th:each="community:${communityList}">
+        <div class="position-absolute d-flex justify-content-center align-items-center"
+             style="top:5px; right: 5px;">
+            <a href="">
+                <!--찜자리-->
+            </a>
+        </div>
+        <a th:href="@{'/community/{commId}/detail.do'(commId = ${community.commId})}"
+           style="text-decoration: none; color: black">
+            <img th:src="@{'/img/community/{imgPath}'(imgPath=${community.imgList[0].getImgPath()})}"
+                 class="card-img-top rounded mb-3">
+            <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                    <div class="star-ratings" style="font-size: 24px;">
+                        <div class="nickname">
+                            <span th:text="${community.user.nickname}"></span>
+                        </div>
+                        <div class="view">
+                            <span th:text="${community.views}"></span>
+                        </div>
+                    </div>
+                    <span></span>
+                </div>
+<!--                <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"-->
+<!--                   ></p>-->
+<!--                <p class="card-text mb-2" style="color: #e74444"></p>-->
+            </div>
+        </a>
+    </div>
+    <div>
+        <!--페이지네이션-->
+        <th:block th:include="~{pagination}"></th:block>
+        <!--페이지네이션end-->
+    </div>
+
+</div>
+</html>

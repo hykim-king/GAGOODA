@@ -250,6 +250,20 @@ public class OrderController {
         }
         OrderDto order=orderService.selectOne(orderId);
         List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+        int remainStock = 0;
+        for(OrderDetailDto orderDetail: orderDetailList){
+            OptionProductDto optionProduct = orderService.selectOptionProduct(orderDetail.getOptionCode());
+            if(optionProduct.getStock() >= orderDetail.getCnt()){
+                int count = optionProduct.getStock() - orderDetail.getCnt();
+                int modify = orderService.changeStock(count,orderDetail.getOptionCode(),orderId);
+                if(modify>0){
+                    log.info("updating option product stock and order status completed");
+                }
+            }else{
+                log.error(orderDetail.getOptionCode()+"의 재고가 부족합니다.");
+                break;
+            }
+        }
         int itemCount = orderDetailList.size();
         model.addAttribute("totalPrice",order.getTotalPrice());
         model.addAttribute("orderDetailList",orderDetailList);
@@ -337,15 +351,14 @@ public class OrderController {
             }
             addressList = orderService.userAddressList(loginUser.getUserId());
             log.info("user.addressList: "+addressList);
+            model.addAttribute("addressList", addressList);
         } catch (Exception e) {
             e.printStackTrace();
         }
         UUID orderRandom = UUID.randomUUID();
         String randomString = orderRandom.toString();
         randomString = randomString.replace("-","").substring(0,10);
-        if(addressList != null){
-            model.addAttribute("addressList", addressList);
-        }
+
         if (cartList != null) {
             model.addAttribute("cartList",cartList);
             model.addAttribute("loginUser",loginUser);
@@ -439,20 +452,13 @@ public class OrderController {
         payment.setOrderId(orderId);
         payment.setImpUid(impUid);
         int register = 0;
-        int modify = 0;
         try{
-            register = paymentService.register(payment);
+            String oDet = "o1";
+            register = paymentService.registerOrderPayment(payment,orderId,oDet);
         }catch(Exception e){
             log.error(e.getMessage());
         }
         if(register >0){
-            try{
-                String oDet = "o1";
-                modify = orderService.modifyOne(orderId,oDet);
-                System.out.println("status update: "+ modify);
-            }catch(Exception e){
-                log.error(e.getMessage());
-            }
             session.setAttribute("msg","결제가 성공적으로 이루어졌습니다.");
         }else{
             session.setAttribute("msg","결제에 실패하였습니다.");

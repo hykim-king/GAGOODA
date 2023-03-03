@@ -14,4 +14,5 @@ public interface OptionProductMapper {
     OptionProductDto findById(String id);
     int updateOne(OptionProductDto optionProduct);
     int deleteById(String productCode);
+    int updateStock(int count,String optionCode);
 }

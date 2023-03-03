@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.gagooda_project.mapper.CommunityMapper">
+    <resultMap id="communityMap" type="CommunityDto" autoMapping="true">
+        <id column="comm_id" property="commId"/>
+        <result column="user_id" property="userId"/>
+        <result column="reg_Date" property="regDate"/>
+        <result column="img_code" property="imgCode"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.example.gagooda_project.mapper.UserMapper.findById"
+                     fetchType="lazy"
+                     autoMapping="true"/>
+        <collection property="imgList"
+                    column="img_code"
+                    select="com.example.gagooda_project.mapper.ImageMapper.listByImgCode"
+                    fetchType="lazy"/>
+
+    </resultMap>
+    <insert id="insertOne" parameterType="CommunityDto" useGeneratedKeys="true" keyProperty="commId">
+        INSERT INTO community (user_id,content,img_code)
+        VALUES (#{userId}, #{content},#{imgCode})
+    </insert>
+    <update id="updateOne" parameterType="CommunityDto">
+        UPDATE community
+        SET img_code=#{imgCode}, content = #{content}
+        WHERE comm_id = #{commId}
+    </update>
+    <select id="count" resultType="int" parameterType="PagingDto">
+        SELECT COUNT(*) FROM community
+    </select>
+    <select id="listAll" resultMap="communityMap" parameterType="PagingDto">
+        SELECT * FROM community
+                 ORDER BY ${orderField} ${direct}
+                 LIMIT #{startRow},#{rows}
+    </select>
+    <select id="findById" resultMap="communityMap" parameterType="int">
+        SELECT * FROM community where comm_id=#{commId}
+    </select>
+
+</mapper>

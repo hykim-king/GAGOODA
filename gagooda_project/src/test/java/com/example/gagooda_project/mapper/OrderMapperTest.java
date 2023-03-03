@@ -96,7 +96,7 @@ class OrderMapperTest {
 
     @Test
     void deleteById(){
-        String orderId = "23022340410faf8772e8";
+        String orderId = "23030238164242fc17b0";
         deliveryMapper.deleteOne(orderId);
         orderDetailMapper.deleteByOrderId(orderId);
         orderMapper.deleteById(orderId);

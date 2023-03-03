@@ -12,6 +12,9 @@
             stock = #{stock}
         WHERE option_code=#{optionCode} AND product_code=#{productCode}
     </update>
+    <update id="updateStock">
+        UPDATE option_product SET stock = #{count} WHERE option_code=#{optionCode}
+    </update>
 
     <select id="listByProductCode" resultMap="optionProductMap">
         SELECT * FROM option_product WHERE product_code=#{productCode}
