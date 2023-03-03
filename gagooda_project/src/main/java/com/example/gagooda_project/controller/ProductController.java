@@ -27,6 +27,7 @@ public class ProductController {
     private final OptionProductService optionProductService;
     private final CartService cartService;
     private final ReviewService reviewService;
+    private final ZzimService zzimService;
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductController(ProductService productService,
@@ -36,7 +37,8 @@ public class ProductController {
                              CategoryConnService categoryConnService,
                              OptionProductService optionProductService,
                              CartService cartService,
-                             ReviewService reviewService) {
+                             ReviewService reviewService,
+                             ZzimService zzimService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
@@ -45,6 +47,7 @@ public class ProductController {
         this.optionProductService = optionProductService;
         this.cartService = cartService;
         this.reviewService = reviewService;
+        this.zzimService = zzimService;
     }
 
     @Value("${img.upload.path}")
@@ -81,6 +84,7 @@ public class ProductController {
             Model model,
             HttpSession session,
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             @PathVariable String categoryId,
             PagingDto paging,
             HttpServletRequest req
@@ -99,7 +103,10 @@ public class ProductController {
         map.put("categoryIdList", categoryIdList);
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
-
+            if (loginUser!=null) {
+                Map<String,ZzimDto> zzim = zzimService.zzimCheck(productList,loginUser);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
             model.addAttribute("realCategoryId", categoryId);
