@@ -169,7 +169,7 @@ public class MainController {
             session.removeAttribute("msg");
         }
         try {
-            paging.setRows(20);
+            paging.setRows(16);
             if (paging.getOrderField() == null) paging.setOrderField("mod_date");
             paging.setQueryString(req.getParameterMap());
             Map<String, Object> map = new HashMap<>();

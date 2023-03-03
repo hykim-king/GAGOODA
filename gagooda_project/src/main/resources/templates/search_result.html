@@ -8,41 +8,46 @@
     <title th:text="${searchWord}+' 검색결과'"></title>
 </head>
 <div layout:fragment="content">
-    <h1>
-        '<span th:text="${searchWord}"></span>'에 대한 검색결과 <span th:text="${paging.totalRows}"></span>건
-    </h1>
-    <div class="col mb-3 card border border-0 position-relative"
-         style="width: 280px; padding: 0;" th:each="product:${productList}">
-        <div class="position-absolute d-flex justify-content-center align-items-center"
-             style="top:5px; right: 5px;">
-            <a href="">
-                <!--찜자리-->
-            </a>
-        </div>
-        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
-           style="text-decoration: none; color: black">
-            <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
-                 class="card-img-top rounded mb-3">
-            <div class="card-body p-0">
-                <div class="d-flex align-items-center">
-                    <div class="star-ratings" style="font-size: 24px;">
-                        <div class="fill-ratings"
-                             th:style="'width:'+${product.avgRate/5*100}+'%;'">
-                            <span>★★★★★</span>
-                        </div>
-                        <div class="empty-ratings">
-                            <span>★★★★★</span>
-                        </div>
-                    </div>
-                    <span th:text="'('+${product.reviewCnt}+')'"></span>
+    <div class="container">
+        <h3 class="mt-5">
+            '<span th:text="${searchWord}"></span>'에 대한 검색결과 <span th:text="${paging.totalRows}"></span>건
+        </h3>
+        <hr style="border: 2px solid #737373;">
+        <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5">
+            <div class="col mb-3 card border border-0 position-relative"
+                 style="width: 280px; padding: 0;" th:each="product:${productList}">
+                <div class="position-absolute d-flex justify-content-center align-items-center"
+                     style="top:5px; right: 5px;">
+                    <a href="">
+                        <!--찜자리-->
+                    </a>
                 </div>
-                <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
-                   th:text="${product.pname}"></p>
-                <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+                <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
+                   style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
+                         class="card-img-top rounded mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex align-items-center">
+                            <div class="star-ratings" style="font-size: 24px;">
+                                <div class="fill-ratings"
+                                     th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                                    <span>★★★★★</span>
+                                </div>
+                                <div class="empty-ratings">
+                                    <span>★★★★★</span>
+                                </div>
+                            </div>
+                            <span th:text="'('+${product.reviewCnt}+')'"></span>
+                        </div>
+                        <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
+                           th:text="${product.pname}"></p>
+                        <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+                    </div>
+                </a>
             </div>
-        </a>
-    </div>
+        </div>
 
-    <th:block th:include="~{pagination}"></th:block>
+        <th:block th:include="~{pagination}"></th:block>
+    </div>
 </div>
 </html>
