@@ -9,6 +9,10 @@
 </head>
 <div layout:fragment="content">
     <h1>커뮤니티 목록</h1>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary"
+                th:onclick="location.href=[[@{'/community/user_yes/register.do'}]]">등록</button>
+    </div>
     <div class="col mb-3 card border border-0 position-relative"
          style="width: 280px; padding: 0;" th:each="community:${communityList}">
         <div class="position-absolute d-flex justify-content-center align-items-center"

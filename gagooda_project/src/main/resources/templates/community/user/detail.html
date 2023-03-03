@@ -46,6 +46,10 @@
             <span th:text="${community.views}"></span>
         </div>
     </div>
+    <div>
+        <button class="btn btn-primary"
+                th:onclick="location.href=[[@{'/community/user_yes/{commId}/modify.do'(commId=${community.commId})}]]">수정</button>
+    </div>
 
 </div>
 </html>

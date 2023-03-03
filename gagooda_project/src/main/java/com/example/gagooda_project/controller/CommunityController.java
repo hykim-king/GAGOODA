@@ -66,6 +66,25 @@ public class CommunityController {
         log.info("community register getMapping");
         return "/community/user/register";
     }
+
+    @GetMapping("/user_yes/{commId}/modify.do")
+    public String modify(@SessionAttribute UserDto loginUser,
+                         @PathVariable int commId,
+                         Model model){
+        try{
+            CommunityDto community = communityService.selectOne(commId);
+            model.addAttribute("community",community);
+
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        return "/community/user/modify";
+    }
+    @PostMapping("/user_yes/modify.do")
+    public String modify(@SessionAttribute UserDto loginUser,
+                         CommunityDto community){
+        return null;
+    }
     @PostMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,
                            @RequestParam(name = "imgFile") List<MultipartFile> imgFileList,
