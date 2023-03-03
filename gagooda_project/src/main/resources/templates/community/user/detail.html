@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>포스트 상세</title>
+</head>
+<div layout:fragment="content">
+    <h1 th:text="${community.commId}+'의 포스트 상세 페이지'"></h1>
+    <div class="container">
+        <div id="carouselExampleIndicators" class="carousel slide">
+            <div class="carousel-inner">
+                <th:block th:each="img:${community.imgList}">
+                    <div class="carousel-item active">
+                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100" alt="...">
+                    </div>
+                </th:block>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+    <div>
+        <div>
+            <p>닉네임: </p>
+            <span th:text="${community.user.nickname}"></span>
+        </div>
+        <div>
+            <p>게시일: </p>
+            <span th:text="${#calendars.format(community.regDate,'yyyy년-MM월-dd일')}"></span>
+        </div>
+        <div>
+            <p>내용</p>
+            <p th:text="${community.content}"></p>
+        </div>
+        <div>
+            <p>조회수: </p>
+            <span th:text="${community.views}"></span>
+        </div>
+    </div>
+
+</div>
+</html>
