@@ -26,7 +26,7 @@
         <tr th:each="review:${reviewList}">
             <td th:text="${review.reviewId}"></td>
             <td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
-                th:text="${review.optionProduct.opname}"></td>
+                ><a class="text-decoration-none text-black" th:href="@{'/product/{productCode}/detail.do'(productCode=${review.productCode})}" th:text="${review.optionProduct.opname}"></a></td>
             <td th:text="${review.rate}"></td>
             <td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"
                 th:text="${review.content}"></td>
@@ -35,49 +35,24 @@
                 <button type="submit" th:onclick=|update(${review.reviewId})| class="btn border"
                         style="background-color: #FFFAF5; color: #b68c68">수정
                 </button>
+                <button type="submit" th:onclick=|remove(${review.reviewId})| class="btn border"
+                        style="background-color: #FFFAF5; color: #b68c68">삭제
+                </button>
             </td>
         </tr>
         </tbody>
     </table>
-    <nav aria-label="Page navigation example" class="pt-3">
-        <ul class="pagination d-flex justify-content-center">
-            <li class="page-item" th:classappend="${(!paging.prev)?'disabled text-black-50':''}">
-                <a class="page-link text-black-50" aria-label="Previous"
-                   th:href="@{${paging.queryString}(page=${paging.prevPage})}"><span
-                        aria-hidden="true">&laquo;</span></a>
-            </li>
-            <th:block th:if="${paging.startPage>1}">
-                <li class="page-item">
-                    <a class="page-link" th:href="@{${paging.queryString}(page=1)}">1</a>
-                </li>
-                <li class="page-link"><span>...</span></li>
-            </th:block>
-
-            <li class="page-item" th:each="i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
-                th:classappend="${(i==paging.page)?'disaled':''}">
-                <a class="page-link" style="color: #B68C68" th:classappend="${(i==paging.page)?'fw-bold':''}"
-                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
-            </li>
-            <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li class="page-item"><span>...</span></li>
-                <li>
-                    <a class="page-link" style="color: #B68C68"
-                       th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                       th:text="${paging.totalPages}"></a>
-                </li>
-            </th:block>
-
-            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
-                <a class="page-link text-black-50" th:href="@{${paging.queryString}(page=${paging.nextPage})}"
-                   aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-            </li>
-        </ul>
-    </nav>
     <script th:inline="javascript">
         function update(reviewId) {
             let update = confirm("해당 리뷰를 수정하시겠습니까 ?");
             if (update == true) {
                 location.href = "/review/user_yes/modify.do?reviewId=" + reviewId;
+            }
+        }
+        function remove(reviewId) {
+            let remove = confirm("해당 리뷰를 삭제하시겠습니까 ?");
+            if (remove == true) {
+                location.href = "/review/user_yes/delete.do?reviewId=" + reviewId;
             }
         }
     </script>

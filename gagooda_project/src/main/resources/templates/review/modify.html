@@ -1,25 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        .basic_img {
-            width: 200px;
-            height: 200px;
-        }
-    </style>
-</head>
-<div layout:fragment="content">
-
+      xmlns:th="http://www.thymeleaf.org">
     <form action="/review/user_yes/modify.do" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+        <input type="text" name="reviewId" th:value="${review.reviewId}">
         <h2 class="text-center mb-5">리뷰 수정</h2>
         <div class="mx-auto" style="width: 50%">
-            <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+            <input type="text" name="userId" th:value="${session.loginUser.userId}">
             <div class="mb-3">
                 <label for="productName" class="form-label">상품명</label>
                 <th:block th:each="optionProduct:${optionProductList}">
@@ -59,7 +45,7 @@
             </div>
         </div>
     </form>
-    <script>
+    <script th:inline="javascript">
         function modifyReview() {
             let result = confirm("리뷰를 수정하시겠습니까 ?");
             if (result == true) {
@@ -74,5 +60,4 @@
             }
         }
     </script>
-</div>
 </html>

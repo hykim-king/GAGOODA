@@ -70,7 +70,11 @@ public class ReviewServiceImp implements ReviewService {
                 System.out.println("imgFileList imageFile : " + imgFileList.get(imgFile));
                 if (imgFileList.get(imgFile) != null) {
                     ImageDto image = StaticMethods.parseIntoImage(imgFileList.get(imgFile), review.getImgCode(), imgPath + "/review", imgFile + 1);
-                    if (imageMapper.insertOne(image) <= 0) throw new Error("사진을 올리는데 문제가 있었습니다.");
+                    if (image != null) {
+                        if (imageMapper.insertOne(image) <= 0) throw new Error("사진을 올리는데 문제가 있었습니다.");
+                    } else {
+                        log.info("이미지 파일이 아닙니다!!");
+                    }
                 }
             }
             return 1;
@@ -109,7 +113,11 @@ public class ReviewServiceImp implements ReviewService {
             // 새로운 이미지 추가
             for (int imgFile = 0; imgFile < imgFileList.size(); imgFile++) {
                 ImageDto image = StaticMethods.parseIntoImage(imgFileList.get(imgFile), review.getImgCode(), imgPath + "/review", imgFile + 1);
-                imageList.add(image);
+                if (image != null) {
+                    imageList.add(image);
+                } else {
+                    log.info("이미지 파일이 아닙니다!!");
+                }
             }
             // 새로운 이미지 코드들 seq 재정의
             for (int i = 0; i < imageList.size(); i++) {

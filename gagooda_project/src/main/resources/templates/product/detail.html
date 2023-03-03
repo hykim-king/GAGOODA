@@ -211,7 +211,9 @@
                             <!--리뷰 영역-->
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel"
                                  aria-labelledby="nav-profile-tab" tabindex="0" style="min-height: 100px;">
-                                <p th:if="${true}">해당 상품에는 후기가 없습니다.</p>
+                                <div id="reviewList">
+                                    <th:block th:insert="~{/review/list}"></th:block>
+                                </div>
                             </div>
                             <!--리뷰 영역 end-->
 
@@ -333,6 +335,34 @@
                 alert(`삭제 실패 (${resp.status})`);
             }
         }
+        async function updateReview(reviewId) {
+            let url = "/review/user_yes/modify.do?reviewId="+reviewId;
+            const resp = await fetch(url, {method: "POST"});
+            if (resp.status === 200) {
+                const json = await resp.json();
+                if (json === 1) {
+                    await loadReviewList();
+                } else {
+                    alert("수정할 리뷰가 없습니다.");
+                }
+            } else {
+                alert(`수정 실패 (${resp.status})`);
+            }
+        }
+        async function removeReview(reviewId) {
+            let url = "/review/user_yes/delete.do?reviewId="+reviewId;
+            const resp = await fetch(url, {method: "DELETE"});
+            if (resp.status === 200) {
+                const json = await resp.json();
+                if (json === 1) {
+                    await loadReviewList();
+                } else {
+                    alert("삭제 할 리뷰가 없습니다.");
+                }
+            } else {
+                alert(`삭제 실패 (${resp.status})`);
+            }
+        }
 
         async function registerPInquiry(e, pInquiryForm) {
             e.preventDefault();
@@ -353,6 +383,12 @@
             const html = await resp.text();
             document.getElementById("ajaxContent").innerHTML = html;
             init();
+        }
+        async function loadReviewList() {
+            const reviewList = "/review/"+[[${product.productCode}]]+"/list.do";
+            const resp = await fetch(reviewList);
+            const html = await resp.text();
+            document.getElementById("reviewList").innerHTML = html;
         }
 
         const optionCode = product_choose.optionCode;
