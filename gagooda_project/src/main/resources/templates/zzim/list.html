@@ -93,16 +93,10 @@
           </table>
         </div>
 
-        <div class="d-block">
-          <div class="float-start">
-            <button type="button" class="delOneBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelOne()">선택상품 삭제</button>
-            <button type="button" class="delAllBtn btn btn-light border" style="width: 120px; font-size: small;" onclick="cartDelAll()">전체상품 삭제</button>
-          </div>
-        </div>
         <div class="d-block text-center mb-5">
           <div style="margin-top: 100px">
-            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>
-            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderAll()">전체상품 장바구니로</button>
+            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="cartDelOne()">선택상품 삭제하기</button>
+            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>
           </div>
         </div>
       </th:block>
@@ -148,53 +142,6 @@
             changeEvent();
           })
   )
-
-
-  function cartUpdate() {
-    const query = 'input[name="cntText"]'
-    const selectedElements = document.querySelectorAll(query)
-
-    const selectedElementsCnt = selectedElements.length;
-
-    const arr = new Array(selectedElementsCnt);
-
-    document.querySelectorAll('input[name="cntText"]').forEach(function(v, i) {
-      arr[i] = v.value;
-    });
-
-    const form = document.createElement('form');
-    form.setAttribute('method', 'post');
-    form.setAttribute('action', '/cart/user_yes/mypage/update.do');
-
-    var input1 = document.createElement('input');
-    input1.setAttribute("type", "hidden");
-    input1.setAttribute("name", "cartCnts");
-    input1.setAttribute("value", arr);
-    form.appendChild(input1);
-    document.body.appendChild(form);
-    form.submit();
-  }
-
-  function cartDelAll() {
-    const query = 'input[name="checkList"]'
-    const selectedElements = document.querySelectorAll(query)
-
-    const selectedElementsCnt = selectedElements.length;
-
-    if (selectedElementsCnt == 0) {
-      alert("삭제할 항목이 없습니다.");
-      return false;
-    } else {
-      if (confirm("정말로 전체삭제하시겠습니까?")) {
-        const form = document.createElement('form');
-        form.setAttribute('method', 'post');
-        form.setAttribute('action', '/cart/user_yes/mypage/deleteAll.do');
-        document.body.appendChild(form);
-        form.submit();
-        changeEvent();
-      }
-    }
-  }
 
   function cartDelOne() {
     const query = 'input[name="checkList"]:checked'
