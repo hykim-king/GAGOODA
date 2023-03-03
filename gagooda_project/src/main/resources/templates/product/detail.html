@@ -8,6 +8,7 @@
     <title th:text="${product.pname}+' 상세페이지'"></title>
     <link rel="stylesheet" href="/css/star_rate.css">
     <script src="/js/star_rate.js" defer></script>
+    <script src="https://kit.fontawesome.com/3a45d8e733.js" crossorigin="anonymous"></script>
 </head>
 <style>
     .displayNone {
@@ -66,7 +67,13 @@
                         <div class="card-body">
                             <h6 class="card-subtitle text-muted text-start mt-2 mb-3" th:text="${product.productCode}">
                                 GAGOODA</h6>
-                            <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
+                                <!--                            찜 자리-->
+                                <div id="zzimBox">
+                                    <th:block th:include="~{/zzim/register}"></th:block>
+                                </div>
+                            </div>
                             <div class="d-flex align-items-center">
                                 <div class="star-ratings" style="font-size: 24px;">
                                     <div class="fill-ratings" th:style="'width:'+${product.avgRate/5*100}+'%;'">
@@ -321,6 +328,12 @@
                     registerPInquiry(e, pInquiryForm);
                 };
             }
+            const zzimForm = document.forms["zzimForm"+[[${product.productCode}]]];
+            if(zzimForm != null) {
+                zzimForm.onsubmit = function(e) {
+                    registerZzim(e, zzimForm);
+                };
+            }
         }
 
         init();
@@ -374,6 +387,21 @@
             }
         }
 
+        async  function removeZzim(zzimId,productCode) {
+            let url = "/zzim/user_yes/mypage/delete.do?zzimId="+zzimId;
+            const resp = await fetch(url, {method:"DELETE"});
+            if (resp.status ===200) {
+                const json = await resp.json();
+                if (json === 1) {
+                    await loadZzim();
+                } else {
+                    alert("취소 중 오류가 발생하였습니다.");
+                }
+            } else {
+                alert(`200 아닌 오류 발생 (${resp.status})`) ;
+            }
+        }
+
         async function registerPInquiry(e, pInquiryForm) {
             e.preventDefault();
             let url = "/product_inquiry/user_yes/register.do";
@@ -385,6 +413,26 @@
                 await loadPInquiryList();
                 pInquiryForm.reset();
             }
+        }
+
+        async function registerZzim(e, zzimForm) {
+            e.preventDefault();
+            let url = "/zzim/user_yes/mypage/register.do";
+            const formData = new FormData(zzimForm);
+            const resp = await fetch(url, {method:"POST",body: formData});
+            const json = await resp.json();
+            console.log(json);
+            if (json === 1) {
+                await loadZzim();
+            }
+        }
+
+        async function loadZzim() {
+            const url = "/zzim/user_yes/show.do?productCode=" + [[${product.productCode}]];
+            const resp = await fetch(url);
+            const html = await resp.text();
+            document.getElementById("zzimBox").innerHTML = html;
+            init();
         }
 
         async function loadPInquiryList() {

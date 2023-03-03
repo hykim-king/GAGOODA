@@ -154,6 +154,13 @@ public class ProductController {
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
             int count = reviewService.countByProductCode(productCode);
             log.info("paging for Product Inquiry: "+paging);
+            if(loginUser!=null) {
+                ZzimDto zzimDto = zzimService.selectOne(productCode, loginUser);
+                System.out.println(zzimDto);
+                Map<String, ZzimDto> zzim = new HashMap<String, ZzimDto>();
+                zzim.put(productCode, zzimDto);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("count",count);
             model.addAttribute("reviewList",reviewList);
             model.addAttribute("paging", paging);

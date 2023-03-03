@@ -25,6 +25,10 @@ public class ZzimServiceImp implements ZzimService{
     }
     @Override
     public int insert(ZzimDto zzim) {
+        ZzimDto zzimDto = zzimMapper.findByProductCodeAndUserId(zzim.getProductCode(),zzim.getUserId());
+        if(zzimDto!=null) {
+            return 0;
+        }
         return zzimMapper.insertOne(zzim);
     }
 
@@ -33,9 +37,11 @@ public class ZzimServiceImp implements ZzimService{
         return zzimMapper.deleteOne(zzimId);
     }
 
+
+
     @Override
-    public ZzimDto selectOne(int userId, String productCode) {
-        return zzimMapper.findByProductCodeAndUserId(productCode,userId);
+    public ZzimDto selectOne(String productCode, UserDto loginUser) {
+        return zzimMapper.findByProductCodeAndUserId(productCode, loginUser.getUserId());
     }
 
     @Override

@@ -1,22 +1,29 @@
 package com.example.gagooda_project.controller;
 
+import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.dto.ZzimDto;
 import com.example.gagooda_project.service.ProductService;
 import com.example.gagooda_project.service.ZzimService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/zzim/")
 public class ZzimController {
     private ZzimService zzimService;
-    public ZzimController(ZzimService zzimService) {
+    private ProductService productService;
+    public ZzimController(ZzimService zzimService,
+                          ProductService productService) {
         this.zzimService = zzimService;
+        this.productService = productService;
     }
 
     @GetMapping("/user_yes/mypage/list.do")
@@ -39,6 +46,24 @@ public class ZzimController {
         }
     }
 
+    @GetMapping("/user_yes/show.do")
+    public String show (@SessionAttribute UserDto loginUser,
+                        @RequestParam String productCode,
+                        Model model) {
+        try {
+            ProductDto product = productService.selectOne(productCode);
+            ZzimDto zzimDto = zzimService.selectOne(productCode,loginUser);
+            Map<String, ZzimDto> zzim = new HashMap<>();
+            zzim.put(productCode,zzimDto);
+            model.addAttribute("product",product);
+            model.addAttribute("zzim",zzim);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("msg","찜 안보임");
+        }
+        return "/zzim/register";
+    }
+
     @PostMapping("/user_yes/mypage/register.do")
     public @ResponseBody int register(@SessionAttribute UserDto loginUser,
                                   @SessionAttribute(required = false) String msg,
@@ -59,16 +84,16 @@ public class ZzimController {
         }
     }
 
-    @GetMapping("/user_yes/mypage/delete.do")
-    public String delete(@SessionAttribute UserDto loginUser,
+    @DeleteMapping("/user_yes/mypage/delete.do")
+    public @ResponseBody int delete(@SessionAttribute UserDto loginUser,
                                     @RequestParam(name = "zzimId") int zzimId,
                                     HttpSession session) {
         try {
             int delete = zzimService.remove(zzimId);
-            return "redirect:/";
+            return delete;
         } catch (Exception e) {
             session.setAttribute("msg","찜 삭제 실패");
-            return "redirect:/";
+            return 0;
         }
     }
 }

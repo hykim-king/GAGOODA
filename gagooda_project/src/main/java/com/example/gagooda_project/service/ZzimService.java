@@ -10,7 +10,7 @@ import java.util.Map;
 public interface ZzimService {
     int insert(ZzimDto zzim);
     int remove(int zzimId);
-    ZzimDto selectOne(int userId,String productCode);
+    ZzimDto selectOne(String productCode, UserDto loginUser);
     List<ZzimDto> listByUserId(int userId);
     Map<String, ZzimDto> zzimCheck(List<ProductDto> productList, UserDto loginUser);
 
