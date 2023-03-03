@@ -4,8 +4,8 @@
 <div>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
-    <div>
-        <h4>총 리뷰 : <span th:text="${count}"></span>건</h4>
+    <h4 class="text-start">총 리뷰 : <span th:text="${count}"></span>건</h4>
+    <div class="text-start">
         <select class="form-select-sm" name="" id="">
             <option value="" selected disabled>정렬</option>
             <option value="">최신순</option>
@@ -14,34 +14,88 @@
         </select>
     </div>
     <th:block th:if="${reviewList == null or reviewList.isEmpty()}">
-        <hr>
         <p th:text="'등록된 리뷰가 없습니다.'"></p>
     </th:block>
+    <hr style="color: #ddd">
     <th:block th:each="review:${reviewList}">
-        <div class="d-flex position-relative border mb-3" style="width: 600px;">
-            <th:bolck th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">
-                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 100px; height: 100px;">
-            </th:bolck>
-            <div class="container-sm">
-                <h5 class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 30px"></h5>
-                <p th:text="${review.content}"></p>
-                <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
-            </div>
-            <div class="d-flex container-sm" style="height: 100%;">
-                <div class="vr"></div>
-                <div>
-                    <p th:text="${review.user.nickname} + '님의 리뷰입니다.'"></p>
-                    <p th:text="'상품명 : '+${review.optionCode}"></p>
-                    <button class="btn" style="background-color: #FFFAF5; color: #b68c68"; type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
-                            th:onclick=|modifyReview(${review.reviewId})| th:text="수정"></button>
-                    <button class="btn" style="background-color: #FFFAF5; color: #b68c68"; type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
-                            th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
+        <div style="display: flex; flex-direction: column; margin-bottom: 15px">
+            <div style="width: 100%; height: 30px;"></div>
+            <div style="width: 100%; display: flex;">
+                <div style="width: 680px; border-right: 1px solid #ddd;">
+                    <div style="display: flex; justify-content: space-between; padding-right: 20px; align-items: center;">
+                        <p class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 24px"></p>
+                        <p style="color: #5c636a; font-size: 14px;" th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
+                    </div>
+                    <div class="box" style="padding-right: 20px;">
+                        <p style="line-height: 2em; margin-bottom: 0; color: #5c636a;" class="content" th:text="${review.content}"></p>
+                    </div>
+                    <div style="display: flex; width: 680px; justify-content: start;">
+                        <th:bolck th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">
+                            <button style="padding: 0 !important;" type="button" class="btn btn-link" data-bs-toggle="modal" th:data-bs-target="'#staticBackdrop'+${img.imgCode}+${img.seq}">
+                                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 150px; height: 150px; border-radius: 5px;">
+                            </button>
+                            <div class="modal fade" th:id="'staticBackdrop'+${img.imgCode}+${img.seq}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                 th:aria-labelledby="'staticBackdropLabel'+${img.imgCode}+${img.seq}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" th:id="'staticBackdropLabel'+${img.imgCode}+${img.seq}">Modal title</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div th:id="'carouselExampleControls'+${img.imgCode}+${img.seq}" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    <th:block th:each="innerImg:${review.imgList}">
+                                                        <div class="carousel-item active" th:if="${innerImg.imgPath.equals(img.imgPath)}">
+                                                            <img th:src="@{'/img/review/{file}'(file=${innerImg.imgPath})}" class="d-block w-100" alt="...">
+                                                        </div>
+                                                        <div class="carousel-item" th:unless="${innerImg.imgPath.equals(img.imgPath)}">
+                                                            <img th:src="@{'/img/review/{file}'(file=${innerImg.imgPath})}" class="d-block w-100" alt="...">
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" th:data-bs-target="'#carouselExampleControls'+${img.imgCode}+${img.seq}" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" th:data-bs-target="'#carouselExampleControls'+${img.imgCode}+${img.seq}" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Understood</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:bolck>
+                    </div>
+                </div>
+                <div style="display: flex; flex-direction: column; padding: 0 20px; justify-content: start;">
+                    <div style="display: flex">
+                        <p style="color: #5c636a; font-size: 14px; font-weight: bold" th:text="${review.user.nickname}"></p>
+                        <p style="color: #5c636a; font-size: 14px;">님의 리뷰입니다.</p>
+                    </div>
+                    <div style="display: flex">
+                        <p style="color: #5c636a; font-size: 14px; font-weight: bold">상품명 </p>
+                        <p style="color: #5c636a; font-size: 14px;" th:text="${review.optionCode}"></p>
+                    </div>
+                    <div>
+                        <button type="button" class="btn" data-bs-toggle="modal" style="background-color: #FFFAF5; color: #b68c68;"
+                                th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
+                                th:data-bs-target="'#exampleModal'+${review.reviewId}" th:text="수정">
+                        </button>
+                        <button class="btn" style="background-color: #FFFAF5; color: #b68c68"; type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
+                                th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
+                        <th:block th:include="~{/review/modify}"></th:block>
+                    </div>
                 </div>
             </div>
+            <div style="width: 100%; height: 30px; border-bottom: 1px solid #ddd;"></div>
         </div>
-<!--        <div id="reviewModifyForm">-->
-<!--            <th:block th:include="~{/review/modify}"></th:block>-->
-<!--        </div>-->
     </th:block>
     <script th:inline="javascript">
         function deleteReview(reviewId) {
@@ -50,18 +104,48 @@
                 removeReview(reviewId);
             }
         }
-        function modifyReview(reviewId) {
-            let result = confirm("해당 리뷰를 수정하시겠습니까 ?");
-            if (result == true) {
-                updateReview(reviewId);
-            }
-        }
         $(function(){
             $(".rate").score({
                 starColor:"#b68c68",
                 backgroundColor:"white",
             });
         });
+    </script>
+    <script text="javascript/text">
+        $(document).ready(function () {
+            $('.box').each(function () {
+                let content = $(this).children('.content');
+                let content_txt = content.text();
+                let content_txt_short = content_txt.substring(0,100);
+                let btn_more = $('<div style="padding: 10px 0; display: flex; justify-content: end; margin-bottom: 10px;"><a style="text-decoration: none; color: #afafaf; font-size: 12px;" href="javascript:void(0)" class="more">더보기 ∇</a></div>');
+
+                $(this).append(btn_more);
+
+                if(content_txt.length >= 100){
+                    content.html(content_txt_short)
+                }else{
+                    btn_more.hide()
+                }
+
+                btn_more.click(toggle_content);
+
+                function toggle_content() {
+                    if ($(this).hasClass('short')) {
+                        // 접기 상태
+                        $(this).html(`<div style="padding: 10px 0; display: flex; justify-content: end; margin-bottom: 10px;"><a
+                            style="text-decoration: none; color: #afafaf; font-size: 12px; cursor: pointer;">더보기 ∇</a></div>`);
+                        content.html(content_txt_short)
+                        $(this).removeClass('short');
+                    } else {
+                        // 더보기 상태
+                        $(this).html(`<div style="padding: 10px 0; display: flex; justify-content: end; margin-bottom: 10px;"><a
+                            style="text-decoration: none; color: #afafaf; font-size: 12px; cursor: pointer;">접기 ∆</a></div>`);
+                        content.html(content_txt);
+                        $(this).addClass('short');
+                    }
+                }
+            })
+        })
     </script>
 </div>
 </html>

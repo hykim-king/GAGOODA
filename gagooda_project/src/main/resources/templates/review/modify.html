@@ -1,50 +1,64 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <form action="/review/user_yes/modify.do" method="post" enctype="multipart/form-data">
-        <input type="text" name="reviewId" th:value="${review.reviewId}">
-        <h2 class="text-center mb-5">리뷰 수정</h2>
-        <div class="mx-auto" style="width: 50%">
-            <input type="text" name="userId" th:value="${session.loginUser.userId}">
-            <div class="mb-3">
-                <label for="productName" class="form-label">상품명</label>
-                <th:block th:each="optionProduct:${optionProductList}">
-                    <input type="text" class="form-control" id="productName" th:value="${optionProduct.getOpname()}"
-                           readonly>
-                </th:block>
+<div class="modal fade" th:id="'exampleModal'+${review.reviewId}" tabindex="-1"
+     th:aria-labelledby="'exampleModalLabel'+${review.reviewId}" aria-hidden="true"
+     th:if="${session.loginUser != null}">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" th:id="'exampleModalLabel'+${review.reviewId}">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-3">
-                <label for="rate" class="form-label">평점</label>
-                <input type="number" min="1" max="5" step="1" maxlength="1" class="form-control" name="rate"
-                       th:value="${review.rate}" id="rate" required placeholder="1~5점을 주세요 !">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">내용</label>
-                <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}"
-                          id="content" cols="30" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
-                <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
-                <div>
-                    <th:block th:each="img:${review.imgList}">
-                        <label>
-                            <input type="checkbox" name="imgToDelete" th:value="${img.imgCode}+'/'+${img.seq}">
-                            <img class="basic_img" th:src="@{'/img/review/{file}'(file=${img.imgPath})}" alt="">
-                        </label>
-                    </th:block>
-                </div>
-            </div>
-            <div class="d-grid d-flex gap-2 float-end">
-                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset"
-                        onclick="cancel()">취소
-                </button>
-                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit"
-                        onclick="modifyReview()">수정
-                </button>
+            <div class="modal-body">
+                <form action="/review/user_yes/modify.do" method="post" enctype="multipart/form-data"
+                      th:name="'reviewModifyForm'+${review.reviewId}" class="modifyForm">
+                    <input type="text" name="reviewId" th:value="${review.reviewId}">
+                    <h2 class="text-center mb-5">리뷰 수정</h2>
+                    <div class="mx-auto" style="width: 50%">
+                        <input type="text" name="userId" th:value="${session.loginUser.userId}">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">상품명</label>
+                            <th:block th:each="optionProduct:${optionProductList}">
+                                <input type="text" class="form-control" id="productName" th:value="${optionProduct.getOpname()}"
+                                       readonly>
+                            </th:block>
+                        </div>
+                        <div class="mb-3">
+                            <label for="rate" class="form-label">평점</label>
+                            <input type="number" min="1" max="5" step="1" maxlength="1" class="form-control" name="rate"
+                                   th:value="${review.rate}" id="rate" required placeholder="1~5점을 주세요 !">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">내용</label>
+                            <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}"
+                                      id="content" cols="30" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
+                            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
+                            <div>
+                                <th:block th:each="img:${review.imgList}">
+                                    <label>
+                                        <input type="checkbox" name="imgToDelete" th:value="${img.imgCode}+'/'+${img.seq}">
+                                        <img class="basic_img" th:src="@{'/img/review/{file}'(file=${img.imgPath})}" alt="">
+                                    </label>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div class="d-grid d-flex gap-2 float-end">
+                            <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset" data-bs-dismiss="modal">취소
+                            </button>
+                            <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit" data-bs-dismiss="modal">수정
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
+</div>
+
     <script th:inline="javascript">
         function modifyReview() {
             let result = confirm("리뷰를 수정하시겠습니까 ?");
