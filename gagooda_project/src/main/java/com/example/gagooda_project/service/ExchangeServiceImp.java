@@ -17,15 +17,18 @@ public class ExchangeServiceImp implements ExchangeService {
     private AddressMapper addressMapper;
     private CommonCodeMapper commonCodeMapper;
     private OrderMapper orderMapper;
+    private OrderDetailMapper orderDetailMapper;
 
     public ExchangeServiceImp(ExchangeMapper exchangeMapper,
                               AddressMapper addressMapper,
                               CommonCodeMapper commonCodeMapper,
-                              OrderMapper orderMapper) {
+                              OrderMapper orderMapper,
+                              OrderDetailMapper orderDetailMapper) {
         this.exchangeMapper = exchangeMapper;
         this.addressMapper = addressMapper;
         this.commonCodeMapper = commonCodeMapper;
         this.orderMapper = orderMapper;
+        this.orderDetailMapper = orderDetailMapper;
     }
     @Override
     @Transactional
@@ -126,53 +129,8 @@ public class ExchangeServiceImp implements ExchangeService {
     @Override
     public int registerAddress(AddressDto address){return addressMapper.insertOne(address);}
 
-//    @Override
-//    public List<ExchangeDto> list(List<String> exDetList) {
-//        return exchangeMapper.pageAll(exDetList);
-//    }
-//
-//    @Override
-//    public List<ExchangeDto> orderInDate(int id, int period) {
-//        return exchangeMapper.pageByUserAndDate(id, period);
-//    }
-//
-//    @Override
-//    public int register(ExchangeDto exchange) {
-//        return exchangeMapper.insertOne(exchange);
-//    }
-//
-//    @Override
-//    public int modify(ExchangeDto exchange) {
-//        return exchangeMapper.updateOne(exchange);
-//    }
-//
-//    @Override
-//    public int countByUserIdAndOrderDetailId(int userId, int orderDetailId) {
-//        return exchangeMapper.countByUserIdAndOrderDetailId(userId, orderDetailId);
-//    }
-//
-//    @Override
-//    public ExchangeDto findById(int id) {
-//        return exchangeMapper.findById(id);
-//    }
-//
-//    @Override
-//    public AddressDto selectAddress(int addressId) {
-//        return addressMapper.findById(addressId);
-//    }
-//
-//    @Override
-//    public List<AddressDto> showAddressListByUserId(int userId) {
-//        return addressMapper.listByUserId(userId);
-//    }
-//
-//    @Override
-//    public List<CommonCodeDto> detCodeList(String  mstCode) {
-//        return commonCodeMapper.listByMstCode(mstCode);
-//    }
-//
-//    @Override
-//    public ExchangeDto selectOne(int id) {
-//        return exchangeMapper.findById(id);
-//    }
+    @Override
+    public OrderDetailDto selectOrderDetailById(int orderDetailId) {
+        return orderDetailMapper.findById(orderDetailId);
+    }
 }

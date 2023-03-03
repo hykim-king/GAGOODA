@@ -138,16 +138,20 @@
                 </td>
             </tr>
             <tr>
-                <th class="col-2">첨부 이미지</th>
-                <td class="col-4">
-                    <th:block th:if="${!refund.imageList.isEmpty() && refund.imageList != null}" th:each="img:${refund.imageList}">
-                        <img th:src="@{'/img/refund/{imgPath}'(imgPath = ${img.imgPath})}" alt="" style="width: 400px; height: 400px; object-fit: cover;">
-                    </th:block>
-                </td>
+                <th class="col-2">환불 요청 사유</th>
+                <td class="col-4" th:text="${refund.reason}"></td>
                 <th class="col-2">엘리베이터 유무</th>
                 <td class="col-4">
                     <div th:if="${refund.elevator == 1}">O</div>
                     <div th:unless="${refund.elevator == 1}">X</div>
+                </td>
+            </tr>
+            <tr>
+                <th class="col-2">첨부 이미지</th>
+                <td class="col-4">
+                    <th:block th:if="${!refund.imageList.isEmpty() && refund.imageList != null}" th:each="img:${refund.imageList}">
+                        <img th:src="@{'/img/refund/{imgPath}'(imgPath = ${img.imgPath})}" alt="" style="width: 200px; height: 200px; object-fit: cover;">
+                    </th:block>
                 </td>
             </tr>
         </tbody>

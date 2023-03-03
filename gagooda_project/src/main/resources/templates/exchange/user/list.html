@@ -67,7 +67,7 @@
             <td class="text-center" style="vertical-align: middle;" th:text="${exchange.orderId}"></td>
             <td>
                 <th:block th:if="${!exchange.orderDetailDto.imageList.isEmpty() && exchange.orderDetailDto.imageList != null}">
-                    <img th:src="@{'/img/product/{file}' (file=${exchange.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
+                    <img th:src="@{'/img/product/{file}' (file=${exchange.orderDetailDto.imageList[0].imgPath})}" style="width: 50px; height:50px; object-fit: cover; vertical-align: middle;">
                 </th:block>
                 <span style="vertical-align: middle;" th:text="${#strings.abbreviate(exchange.orderDetailDto.optionName, 15) }"></span>
             </td>

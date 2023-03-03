@@ -164,10 +164,12 @@ public class ExchangeController {
         try{
             if(loginUser.getGDet().equals("g1")){
                 ExchangeDto exchange = exchangeService.selectOne(exchangeId);
+                OrderDetailDto orderDetail = exchangeService.selectOrderDetailById(exchange.getOrderDetailId());
                 OrderDto order = orderService.selectOne(exchange.getOrderId());
                 session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allExList = exchangeService.showDetCodeList("ex");
                 model.addAttribute("exchange", exchange);
+                model.addAttribute("orderDetail", orderDetail);
                 model.addAttribute("order",order);
                 model.addAttribute("exCodeList", allExList);
                 return "exchange/admin/detail";
@@ -177,5 +179,25 @@ public class ExchangeController {
         }
 //        return "redirect:/refund/admin/list.do";
         return "exchange/admin/detail";
+    }
+
+    @PostMapping("admin/{exchangeId}/modify.do")
+    public String adminModify(@PathVariable int exchangeId,
+                              ExchangeDto exchange,
+                              HttpServletRequest req,
+                              @SessionAttribute UserDto loginUser){
+        int modify = 0;
+        if(loginUser.getGDet().equals("g1") && exchangeId == exchange.getExchangeId()){
+            try{
+                modify += exchangeService.modifyOne(exchange, "admin");
+                if(modify > 0){
+                    return "redirect:/exchange/admin/"+exchangeId+"/detail.do";
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                return "redirect:"+req.getRequestURI();
+            }
+        }
+        return "redirect:"+req.getRequestURI();
     }
 }

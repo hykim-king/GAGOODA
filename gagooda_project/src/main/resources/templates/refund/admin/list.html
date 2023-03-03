@@ -69,7 +69,7 @@
                 <td th:text="${refund.orderDetailDto.optionCode}"></td>
                 <td th:text="${refund.orderDetailDto.price}"></td>
                 <td th:text="${refund.cancelAmount}"></td>
-                <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
+                <td th:text="${refund.rfDetDto.detName}"></td>
                 <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
                 <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
             </tr>
@@ -96,9 +96,11 @@
                 let isOk = confirm("진행 상태가 '환불 요청 확인' 상태로 바뀝니다. 확인하시겠습니까?");
                 if(isOk){
                     modifyRf(refundId);
+                    setTimeout(()=>{document.location.href =  targetHref}, 200);
                 }
+            }else{
+                document.location.href =  targetHref;
             }
-            document.location.href =  targetHref;
         })
     })
     /* 비동기 rf 상태 수정 */
