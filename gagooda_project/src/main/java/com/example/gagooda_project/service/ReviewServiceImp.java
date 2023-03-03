@@ -168,6 +168,11 @@ public class ReviewServiceImp implements ReviewService {
     }
 
     @Override
+    public int countByProductCode(String productCode) {
+        return reviewMapper.countByProductCode(productCode);
+    }
+
+    @Override
     @Transactional
     public int delete(ReviewDto review, int reviewId) {
         List<ImageDto> deleteImageList = imageMapper.listByImgCode(review.getImgCode());

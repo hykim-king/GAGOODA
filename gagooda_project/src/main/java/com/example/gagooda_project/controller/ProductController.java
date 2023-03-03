@@ -145,7 +145,9 @@ public class ProductController {
             List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
             List<ReviewDto> reviewList = reviewService.reviewList(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            int count = reviewService.countByProductCode(productCode);
             log.info("paging for Product Inquiry: "+paging);
+            model.addAttribute("count",count);
             model.addAttribute("reviewList",reviewList);
             model.addAttribute("paging", paging);
             model.addAttribute("product", product);
