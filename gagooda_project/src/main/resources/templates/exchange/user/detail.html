@@ -28,7 +28,7 @@
         </tr>
         <tr>
             <th>주문 상품</th>
-            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>
+            <td th:text="${order.orderDetailList[0].optionName + ' 등 ' + order.orderDetailList.size() + ' 건'}"></td>
         </tr>
         <tr>
             <th>총 주문 금액</th>
@@ -36,7 +36,7 @@
         </tr>
     </table>
 
-    <h3 class="mt-5">환불 요청 정보</h3>
+    <h3 class="mt-5">교환 요청 정보</h3>
     <hr style="margin-top: 0; background : #b68c68; height: 5px">
     <table class="table">
         <tr>
@@ -50,7 +50,7 @@
         <tr>
             <th class="align-middle">교환 대상 상품</th>
             <td>
-                <th:block th:if="${exchange.orderDetailDto.imageList != null}">
+                <th:block th:if="${!exchange.orderDetailDto.imageList.isEmpty() && exchange.orderDetailDto.imageList != null}">
                     <img th:src="@{'/img/product/{file}' (file=${exchange.orderDetailDto.imageList[0].imgPath})}" style="width: 100px; height: 100px; object-fit: cover; vertical-align: middle;">
                 </th:block>
                 <span th:text="${exchange.orderDetailDto.optionName}"></span>
@@ -82,7 +82,7 @@
     <hr style="margin-top: 0; background : #b68c68; height: 5px">
     <table class="table">
         <tr>
-            <th class="col-2">환불 처리 현황</th>
+            <th class="col-2">교환 처리 현황</th>
             <td class="10" th:text="${exchange.exDetDto.detName}"></td>
         </tr>
         <tr>

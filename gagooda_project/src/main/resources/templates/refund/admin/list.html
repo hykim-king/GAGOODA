@@ -69,7 +69,7 @@
                 <td th:text="${refund.orderDetailDto.optionCode}"></td>
                 <td th:text="${refund.orderDetailDto.price}"></td>
                 <td th:text="${refund.cancelAmount}"></td>
-                <td th:text="${rfCodeList[refund.rfDet.substring(2)].detName}"></td>
+                <td th:text="${refund.rfDetDto.detName}"></td>
                 <td th:text="${#calendars.format(refund.regDate, 'yyyy-MM-dd')}"></td>
                 <td th:text="${#calendars.format(refund.modDate, 'yyyy-MM-dd')}"></td>
             </tr>
@@ -79,33 +79,7 @@
     <th:block th:unless="${refundCount >= 0}"><div>해당 환불 내역이 존재하지 않습니다.</div></th:block>
 
     <!--pagination-->
-    <nav class="m-1 d-flex justify-content-center">
-        <ul class="pagination">
-            <li class="page-item" th:classappend="${(!paging.prev)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}">Prev</a></li>
-            <th:block th:if="${paging.startPage>1}">
-                <li>
-                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
-                </li>
-                <li class="disabled"><span>…</span></li>
-            </th:block>
-
-            <li class="page-item" th:each=" i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
-                th:classappend="${(i==paging.page)?'disabled':''}">
-                <a class="page-link" th:classappend="${(i==paging.page)?'text-primary fw-bold':''}"
-                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
-            </li>
-            <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li class="disabled"><span>…</span></li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                       th:text="${paging.totalPages}"></a>
-                </li>
-            </th:block>
-            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}">Next</a></li>
-        </ul>
-    </nav>
+    <div th:include="/pagination.html"></div>
     <!--pagination end--------------->
 
 <script th:inline="javascript">
@@ -118,16 +92,25 @@
             let refundId = row.dataset.refund;
             let rfDet = row.dataset.rfdet;
             console.log("refundData:", rfDet);
-            // document.location.href =  targetHref;
+            if(rfDet === "rf0" ){
+                let isOk = confirm("진행 상태가 '환불 요청 확인' 상태로 바뀝니다. 확인하시겠습니까?");
+                if(isOk){
+                    modifyRf(refundId);
+                    setTimeout(()=>{document.location.href =  targetHref}, 200);
+                }
+            }else{
+                document.location.href =  targetHref;
+            }
         })
     })
     /* 비동기 rf 상태 수정 */
-    async function modifyRf(refundId, rfDet){
-        let url = "http://"+document.location.host+"refund/admin/"+refundId+"/modify.do"
+    async function modifyRf(refundId){
+        let url = "http://"+document.location.host+"/refund/admin/"+refundId+"/modify.do"
         let modifyForm = new FormData();
         modifyForm.set("refundId", refundId);
-        modifyForm.set("rfDet", rfDet);
-        const resp = await fetch(url)
+        modifyForm.set("rfDet", "rf2");
+        const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
+        console.log(resp)
     }
 
 

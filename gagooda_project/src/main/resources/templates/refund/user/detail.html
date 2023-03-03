@@ -35,7 +35,7 @@
         </tr>
         <tr>
             <th>주문 상품</th>
-            <td th:text="${order.orderDetailList[0].optionName + ' 외 ' + (order.orderDetailList.size()-1) + ' 건'}"></td>
+            <td th:text="${order.orderDetailList[0].optionName + ' 등 ' + order.orderDetailList.size() + ' 건'}"></td>
         </tr>
         <tr>
             <th>총 주문 금액</th>

@@ -22,4 +22,5 @@ public interface ExchangeService {
     public int countAll();
     public int countByUser(int userId);
     public int registerAddress(AddressDto address);
+    public OrderDetailDto selectOrderDetailById(int orderDetailId);
 }

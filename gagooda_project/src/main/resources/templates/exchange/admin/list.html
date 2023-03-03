@@ -14,7 +14,6 @@
             <label class="d-block">검색 키워드 :
                 <select name="searchDiv" id="searchDiv">
                     <option value="" selected disabled>검색 분류 선택</option>
-                    <option value="all">전체</option>
                     <option value="order_id">주문번호</option>
                     <option value="uname">신청자명</option>
                     <option value="phone">신청자 전화번호</option>
@@ -44,10 +43,10 @@
             </div>
         </div>
         <button type="submit" class="btn btn-outline-secondary">검색</button>
-        <button name="reset" type="reset">초기화</button>
+        <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
     </form>
     <h3>교환 신청 <span th:if="${exchangeList != null && !exchangeList.isEmpty() }" th:text="${exchangeList.size()}"></span></h3>
-    <table>
+    <table class="table table-striped">
         <thead>
         <tr>
             <th>작성자</th>
@@ -63,7 +62,7 @@
         </thead>
         <tbody>
         <th:block th:if="${exchangeCount >= 0}" th:each="exchange : ${exchangeList}">
-            <tr class="hrefRow" th:data-exchange="${exchange.exchangeId}">
+            <tr class="hrefRow" th:data-exchange="${exchange.exchangeId}" th:data-exDet="${exchange.exDet}">
                 <td th:text="${exchange.uname}"></td>
                 <td th:text="${exchange.orderId}"></td>
                 <td th:text="${exchange.orderDetailId}"></td>
@@ -80,33 +79,7 @@
     <th:block th:unless="${exchangeCount >= 0}"><div>해당 교환 내역이 존재하지 않습니다.</div></th:block>
 
     <!--pagination-->
-    <nav class="m-1 d-flex justify-content-center">
-        <ul class="pagination">
-            <li class="page-item" th:classappend="${(!paging.prev)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.prevPage})}">Prev</a></li>
-            <th:block th:if="${paging.startPage>1}">
-                <li>
-                    <a th:href="@{${paging.queryString}(page=1)}">1</a>
-                </li>
-                <li class="disabled"><span>…</span></li>
-            </th:block>
-
-            <li class="page-item" th:each=" i : ${#numbers.sequence(paging.startPage,paging.endPage)}"
-                th:classappend="${(i==paging.page)?'disabled':''}">
-                <a class="page-link" th:classappend="${(i==paging.page)?'text-primary fw-bold':''}"
-                   th:href="@{${paging.queryString}(page=${i})}" th:text="${i}"></a>
-            </li>
-            <th:block th:if="${paging.endPage<paging.totalPages}">
-                <li class="disabled"><span>…</span></li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{${paging.queryString}(page=${paging.totalPages})}"
-                       th:text="${paging.totalPages}"></a>
-                </li>
-            </th:block>
-            <li class="page-item" th:classappend="${(!paging.next)?'disabled':''}">
-                <a class="page-link" th:href="@{${paging.queryString}(page=${paging.nextPage})}">Next</a></li>
-        </ul>
-    </nav>
+    <div th:include="/pagination.html"></div>
     <!--pagination end--------------->
 
     <script th:inline="javascript">
@@ -116,9 +89,30 @@
                 console.log(row)
                 let targetHref = "http://"+ document.location.host + "/exchange/admin/" + row.dataset.exchange +"/detail.do";
                 console.log(targetHref)
-                document.location.href =  targetHref;
+                let exchangeId = row.dataset.exchange;
+                let exDet = row.dataset.exdet;
+                if(exDet === "ex0" ){
+                    let isOk = confirm("진행 상태가 '교환 요청 확인' 상태로 바뀝니다. 확인하시겠습니까?");
+                    if(isOk){
+                        modifyRf(exchangeId);
+                        setTimeout(()=>{document.location.href = targetHref}, 200);
+                    }
+                }else{
+                    document.location.href = targetHref;
+                }
             })
         })
+
+        /* 비동기 rf 상태 수정 */
+        async function modifyRf(exchangeId){
+            let url = "http://"+document.location.host+"/exchange/admin/"+exchangeId+"/modify.do"
+            let modifyForm = new FormData();
+            modifyForm.set("exchangeId", exchangeId);
+            modifyForm.set("exDet", "ex2");
+            const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
+            console.log(resp)
+        }
+
         const forms = document.forms.searchForm;
         console.log(forms);
         forms.searchDiv.onchange = (qualifiedName, value)=>{
