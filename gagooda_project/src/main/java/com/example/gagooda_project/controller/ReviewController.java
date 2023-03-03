@@ -39,7 +39,9 @@ public class ReviewController {
         }
         try {
             List<ReviewDto> reviewList = reviewService.reviewList(productCode);
+            int count = reviewService.countByProductCode(productCode);
             model.addAttribute("reviewList", reviewList);
+            model.addAttribute("count",count);
             return "/review/list";
         } catch (Exception e) {
             e.printStackTrace();

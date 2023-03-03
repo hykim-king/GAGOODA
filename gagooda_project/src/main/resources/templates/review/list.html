@@ -5,6 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
     <div>
+        <h4>총 리뷰 : <span th:text="${count}"></span>건</h4>
         <select class="form-select-sm" name="" id="">
             <option value="" selected disabled>정렬</option>
             <option value="">최신순</option>
@@ -13,6 +14,7 @@
         </select>
     </div>
     <th:block th:if="${reviewList == null or reviewList.isEmpty()}">
+        <hr>
         <p th:text="'등록된 리뷰가 없습니다.'"></p>
     </th:block>
     <th:block th:each="review:${reviewList}">
@@ -24,26 +26,34 @@
                 <h5 class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 30px"></h5>
                 <p th:text="${review.content}"></p>
                 <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
-                <button type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
-                        th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
             </div>
             <div class="d-flex container-sm" style="height: 100%;">
                 <div class="vr"></div>
                 <div>
                     <p th:text="${review.user.nickname} + '님의 리뷰입니다.'"></p>
                     <p th:text="'상품명 : '+${review.optionCode}"></p>
+                    <button class="btn" style="background-color: #FFFAF5; color: #b68c68"; type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
+                            th:onclick=|modifyReview(${review.reviewId})| th:text="수정"></button>
+                    <button class="btn" style="background-color: #FFFAF5; color: #b68c68"; type="button" th:if="${session.loginUser != null and review.userId == session.loginUser.userId}"
+                            th:onclick=|deleteReview(${review.reviewId})| th:text="삭제"></button>
                 </div>
             </div>
         </div>
-        <div id="reviewModifyForm">
-            <th:block th:include="~{/review/modify}"></th:block>
-        </div>
+<!--        <div id="reviewModifyForm">-->
+<!--            <th:block th:include="~{/review/modify}"></th:block>-->
+<!--        </div>-->
     </th:block>
     <script th:inline="javascript">
         function deleteReview(reviewId) {
             let result = confirm("해당 리뷰를 삭제하시겠습니까 ?");
             if (result == true) {
                 removeReview(reviewId);
+            }
+        }
+        function modifyReview(reviewId) {
+            let result = confirm("해당 리뷰를 수정하시겠습니까 ?");
+            if (result == true) {
+                updateReview(reviewId);
             }
         }
         $(function(){
