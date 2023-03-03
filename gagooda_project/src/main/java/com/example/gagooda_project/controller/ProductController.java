@@ -26,6 +26,7 @@ public class ProductController {
     private final CategoryConnService categoryConnService;
     private final OptionProductService optionProductService;
     private final CartService cartService;
+    private final ReviewService reviewService;
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductController(ProductService productService,
@@ -34,7 +35,8 @@ public class ProductController {
                              ProductInquiryService productInquiryService,
                              CategoryConnService categoryConnService,
                              OptionProductService optionProductService,
-                             CartService cartService) {
+                             CartService cartService,
+                             ReviewService reviewService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
@@ -42,6 +44,7 @@ public class ProductController {
         this.categoryConnService = categoryConnService;
         this.optionProductService = optionProductService;
         this.cartService = cartService;
+        this.reviewService = reviewService;
     }
 
     @Value("${img.upload.path}")
@@ -140,8 +143,10 @@ public class ProductController {
         try {
             ProductDto product = productService.selectOne(productCode);
             List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
+            List<ReviewDto> reviewList = reviewService.reviewList(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
             log.info("paging for Product Inquiry: "+paging);
+            model.addAttribute("reviewList",reviewList);
             model.addAttribute("paging", paging);
             model.addAttribute("product", product);
             model.addAttribute("plist", plist);

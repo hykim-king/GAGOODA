@@ -28,9 +28,9 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/list.do") // 상품디테일에 달려 있는 리뷰 리스트
+    @GetMapping("/{productCode}/list.do") // 상품디테일에 달려 있는 리뷰 리스트
     public String list(Model model,
-                       @RequestParam(name = "productCode", required = false) String productCode,
+                       @PathVariable String productCode,
                        HttpSession session,
                        @SessionAttribute(required = false) String msg) {
         if (msg != null) {
@@ -120,7 +120,7 @@ public class ReviewController {
         }
         if (register > 0) {
             session.setAttribute("msg", "리뷰 등록에 성공하였습니다.");
-            return "redirect:/review/list.do?productCode=" + review.getProductCode();
+            return "redirect:/product/"+review.getProductCode()+"/detail.do";
         } else {
             session.setAttribute("msg", "리뷰 등록에 실패하였습니다.");
             return "redirect:/review/user_yes/" + review.getProductCode() + "/register.do";
@@ -151,24 +151,56 @@ public class ReviewController {
     }
 
     @PostMapping("/user_yes/modify.do") // 리뷰아이디에 따른 리뷰 수정
-    public String modify(ReviewDto review,
+    public int modify(ReviewDto review,
                          @RequestParam(name = "imgFile", required = false) List<MultipartFile> imageList,
                          @RequestParam(name = "imgToDelete", required = false) List<String> imgToDeleteList,
                          HttpSession session,
                          @SessionAttribute UserDto loginUser) {
         log.info("imgToDeleteList: " + imgToDeleteList);
+        int modify = 0;
         try {
-            reviewService.update(imageList, review, imgPath, imgToDeleteList);
-            return "redirect:/review/user_yes/mypage/mypageList.do";
+            modify = reviewService.update(imageList, review, imgPath, imgToDeleteList);
+            return modify;
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/review/user_yes/modify.do?reviewId=" + review.getReviewId();
+            return 0;
         }
 
     }
-
     @GetMapping("/user_yes/delete.do") // 리뷰아이디에 따른 리뷰 삭제
-    public String remove(@RequestParam(name = "reviewId") int reviewId,
+    public String delete(@RequestParam(name = "reviewId") int reviewId,
+                                    @SessionAttribute UserDto loginUser,
+                                    @SessionAttribute(required = false) String msg,
+                                    HttpSession session,
+                                    Model model
+    ) {
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+            System.out.println(msg);
+        }
+        ReviewDto review = reviewService.selectOne(reviewId);
+        try {
+            if (loginUser.getUserId() == review.getUserId()) {
+                int delete = reviewService.delete(review, reviewId);
+                if (delete > 0) {
+                    session.setAttribute("msg", "성공적으로 삭제하였습니다.");
+                } else {
+                    session.setAttribute("msg", "삭제를 실패하였습니다.");
+                }
+                return "redirect:/review/user_yes/mypage/mypageList.do";
+            } else {
+                session.setAttribute("msg", "삭제할 권한이 없습니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            session.setAttribute("msg", "삭제하는 중 오류가 있었습니다.");
+        }
+        return "redirect:/review/user_yes/mypage/mypageList.do";
+    }
+
+    @DeleteMapping("/user_yes/delete.do") // 리뷰아이디에 따른 리뷰 삭제
+    public @ResponseBody int remove(@RequestParam(name = "reviewId") int reviewId,
                          @SessionAttribute UserDto loginUser,
                          @SessionAttribute(required = false) String msg,
                          HttpSession session,
@@ -185,11 +217,10 @@ public class ReviewController {
                 int delete = reviewService.delete(review, reviewId);
                 if (delete > 0) {
                     session.setAttribute("msg", "성공적으로 삭제하였습니다.");
-                    return "redirect:/review/list.do?productCode=" + review.getProductCode();
                 } else {
                     session.setAttribute("msg", "삭제를 실패하였습니다.");
-                    return "redirect:/review/list";
                 }
+                return delete;
             } else {
                 session.setAttribute("msg", "삭제할 권한이 없습니다.");
             }
@@ -197,7 +228,7 @@ public class ReviewController {
             e.printStackTrace();
             session.setAttribute("msg", "삭제하는 중 오류가 있었습니다.");
         }
-        return "redirect:/review/list.do?productCode=" + review.getProductCode();
+        return 0;
     }
 
     // admin
@@ -245,7 +276,7 @@ public class ReviewController {
         return "/review/admin/list";
     }
 
-    @GetMapping("/admin/{reviewId}/detail.do") // 관리자페이지 리뷰 상세
+    @GetMapping("/admin/{reviewId}/detail.do") // 관리자페이지 리뷰 상세지
     public String adminDetail(@SessionAttribute UserDto loginUser,
                               @PathVariable int reviewId,
                               Model model

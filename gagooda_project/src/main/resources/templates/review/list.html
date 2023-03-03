@@ -1,18 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+      xmlns:th="http://www.thymeleaf.org">
+<div>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
-    <style>
-
-    </style>
-</head>
-<div layout:fragment="content">
     <div>
         <select class="form-select-sm" name="" id="">
             <option value="" selected disabled>정렬</option>
@@ -44,12 +35,15 @@
                 </div>
             </div>
         </div>
+        <div id="reviewModifyForm">
+            <th:block th:include="~{/review/modify}"></th:block>
+        </div>
     </th:block>
     <script th:inline="javascript">
         function deleteReview(reviewId) {
             let result = confirm("해당 리뷰를 삭제하시겠습니까 ?");
             if (result == true) {
-                location.href = "user_yes/delete.do?reviewId="+reviewId;
+                removeReview(reviewId);
             }
         }
         $(function(){
