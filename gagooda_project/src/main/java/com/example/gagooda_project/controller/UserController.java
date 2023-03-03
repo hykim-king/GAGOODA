@@ -107,7 +107,11 @@ public class UserController {
             } else {
                 session.setAttribute("msg", "다시 한번 더 입력해 주세요");
             }
-            if (previousUrl != null) return "redirect:"+previousUrl;
+            if (previousUrl != null
+                    && !previousUrl.contains("login.do")
+                    && !previousUrl.contains("signup.do")) {
+                return "redirect:"+previousUrl;
+            }
             if (user == null) {
                 session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
                 return "redirect:/user/login.do";

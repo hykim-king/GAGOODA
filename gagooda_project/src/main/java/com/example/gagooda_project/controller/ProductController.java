@@ -96,24 +96,11 @@ public class ProductController {
         map.put("categoryIdList", categoryIdList);
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+
             model.addAttribute("paging", paging);
-
-            List<List<ProductDto>> productListList = new ArrayList<>();
-            int len = (productList.size()/4 > 0)? productList.size()/4 : 1;
-            for (int i=0; i<len; i++) {
-                List<ProductDto> tempList = new ArrayList<>();
-                for (int j=i*4; j<i*4+4; j++) {
-                    if (j < productList.size()) {
-                        tempList.add(productList.get(j));
-                    } else {
-                        break;
-                    }
-                }
-                productListList.add(tempList);
-            }
-            model.addAttribute("productListList", productListList);
-
+            model.addAttribute("productList", productList);
             model.addAttribute("realCategoryId", categoryId);
+
             if (categoryId.length() == 3) {
                 CategoryDto category = categoryService.selectOne(categoryId);
                 categoryId = category.getParentId();

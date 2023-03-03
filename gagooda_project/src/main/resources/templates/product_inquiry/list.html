@@ -1,26 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<h4>문의수: <span th:text="${plist.size()}"></span></h4>
+<div class="d-flex justify-content-between px-1">
+    <h4 class="text-start">문의수: <span th:text="${plist.size()}"></span></h4>
+    <button th:if="${session.loginUser != null}" type="button" class="btn btn-sm btn-outline-*"
+            style="color: #B68C68; border-color: #B68C68; padding: 10px"
+            data-bs-toggle="modal" data-bs-target="#pInquiryModal">
+        문의 작성하기
+    </button>
+</div>
+<hr>
 <div>
     <span th:if="${plist.isEmpty()}">해당 상품에는 문의가 없습니다.</span>
-    <ul th:unless="${plist.isEmpty()}">
-        <li th:each="p:${plist}">
-            <p th:text="${p.getCommonCodeDto().getDetName()}">문의유형</p>
-            <p th:text="${p.getPInquiryId()}">문의ID</p>
-            <p th:text="${p.getUser().getUname()}">사용자이름</p>
-            <p th:text="${p.getOptionProductDto().getOpname()}">옵션</p>
-            <p th:text="${p.getRegDate()}">문의작성일</p>
-            <p th:text="${p.getTitle()}">문의제목</p>
-            <p th:text="${p.getContent()}">문의내용</p>
-            <th:block th:if="${p.getReply() != null}">
-                <p th:text="${p.getReply()}">답글</p>
-                <p th:text="${p.getReplyDate()}">답글작성일</p>
-            </th:block>
-            <button type="button"
-                    th:onclick=|removePInquiryWindow(${p.PInquiryId})|
-                    th:if="${session.loginUser != null and session.loginUser.userId == p.userId}">삭제</button>
-        </li>
-    </ul>
+    <th:block th:unless="${plist.isEmpty()}">
+        <div th:each="p:${plist}">
+            <div class="card text-start my-4">
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title" th:text="${p.title}"></h5>
+                        <h6 class="card-text mb-2 text-muted" th:text="${p.user.nickname}+'님'"></h6>
+                    </div>
+                    <div class="align-items-center">
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                th:onclick=|removePInquiryWindow(${p.PInquiryId})|
+                                th:if="${session.loginUser != null and session.loginUser.userId == p.userId}">삭제
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="card-text" th:text="${p.optionProductDto.opname}" style="font-size: 12px;"></p>
+                    <p class="card-text" th:text="${p.content}"></p>
+                </div>
+                <div class="card-body p-2" th:if="${p.reply != null}">
+                    <div class="p-2" style="border: 1px solid #838383; border-radius: 10px">
+                        <div class="d-flex justify-content-between">
+                            <p><strong>답변</strong></p>
+                            <p class="card-text text-end"
+                               th:text="${#dates.format(p.replyDate, 'yyyy년 MM월 dd일')}"></p>
+                        </div>
+                        <p class="card-text" th:text="${p.reply}"></p>
+                    </div>
+                </div>
+                <div class="card-footer text-muted text-end"
+                     th:text="${#dates.format(p.regDate, 'yyyy년 MM월 dd일')}"></div>
+            </div>
+        </div>
+    </th:block>
     <!--페이지네이션-->
     <th:block th:include="~{pagination}"></th:block>
     <!--페이지네이션end-->

@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-    <form action="/product_inquiry/user_yes/register.do" method="post" name="pInquiryForm" class="displayNone">
-        <h2 class="text-center mb-5">상품 문의하기</h2>
-        <div class="mx-auto" style="width: 50%">
-            <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
-            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
-            <div class="mb-3">
-                <select name="piDet" id="piDet" class="form-select" required aria-label="select example">
-                    <option value="">문의 유형</option>
-                        <th:block th:each="commonCode:${commonCodeList}">
-                            <option th:value="${commonCode.getDetCode()}" th:text="${commonCode.getDetName()}"></option>
-                        </th:block>
-                </select>
-                <div class="invalid-feedback">Example invalid select feedback</div>
+<!-- Modal -->
+<div class="modal fade" id="pInquiryModal" tabindex="-1" aria-labelledby="pInquiryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5" id="pInquiryModalLabel">상품 문의하기</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-3">
-                <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
-                    <option value="">상품 옵션</option>
-                        <th:block th:each="optionProduct:${product.optionProductList}">
-                            <option th:value="${optionProduct.getOptionCode()}" th:text="${optionProduct.getOpname()}"></option>
-                        </th:block>
-                </select>
-                <div class="invalid-feedback">Example invalid select feedback</div>
-            </div>
-            <div class="mb-3">
-                <label for="title" class="form-label">제목</label>
-                <input type="text" class="form-control" name="title" id="title" required>
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">내용</label>
-                <textarea class="form-control" name="content" id="content" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <input class="form-check-input secret" type="checkbox" name="secret" id="secret">
-                <label class="form-check-label" for="secret">비밀글</label>
-            </div>
-            <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="submit">등록</button>
+            <div class="modal-body p-3">
+                <form action="/product_inquiry/user_yes/register.do" method="post" name="pInquiryForm">
+                    <input type="hidden" name="userId" id="userId" th:value="${session.loginUser.userId}">
+                    <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
+                    <div class="mb-3">
+                        <select name="piDet" id="piDet" class="form-select" required aria-label="select example">
+                            <option value="">문의 유형</option>
+                            <th:block th:each="commonCode:${commonCodeList}">
+                                <option th:value="${commonCode.getDetCode()}"
+                                        th:text="${commonCode.getDetName()}"></option>
+                            </th:block>
+                        </select>
+                        <div class="invalid-feedback">Example invalid select feedback</div>
+                    </div>
+                    <div class="mb-3">
+                        <select name="optionCode" id="optionCode" class="form-select" required
+                                aria-label="select example">
+                            <option value="">상품 옵션</option>
+                            <th:block th:each="optionProduct:${product.optionProductList}">
+                                <option th:value="${optionProduct.getOptionCode()}"
+                                        th:text="${optionProduct.getOpname()}"></option>
+                            </th:block>
+                        </select>
+                        <div class="invalid-feedback">Example invalid select feedback</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" class="form-control" name="title" id="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">내용</label>
+                        <textarea class="form-control" name="content" id="content" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-check-input secret" type="checkbox" name="secret" id="secret">
+                        <label class="form-check-label" for="secret">비밀글</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn  text-center "
+                                style="background-color: #B68C68; color: white; padding: 10px" type="submit"
+                                data-bs-dismiss="modal">
+                            등록
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
+</div>
 </div>
 </html>

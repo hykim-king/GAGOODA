@@ -108,6 +108,7 @@
                                         id="optionCode" required onchange="changePrice()">
                                     <option value="" data-price="0" selected>--옵션 선택--</option>
                                     <th:block th:each="option:${product.optionProductList}">
+                                        <option th:value="${option.optionCode}"></option>
                                         <option th:value="${option.optionCode}"
                                                 th:text="${option.opname}+' '+${option.price}+'원'"
                                                 th:data-price="${option.price}"
@@ -196,10 +197,10 @@
                                 </button>
                             </div>
                         </nav>
-                        <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-content mt-3 p-2" id="nav-tabContent">
                             <!--상품 상세정보 영역-->
                             <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                 aria-labelledby="nav-home-tab" tabindex="0" style="min-height: 100px;">
+                                 aria-labelledby="nav-home-tab" tabindex="0" style="min-height: 300px;">
                                 <p th:if="${product.infoImageList.isEmpty()}">해당 상품에는 설명이미지가 없습니다.</p>
                                 <img class="img-fluid" th:if="${product.infoImageList != null}"
                                      th:each="infImg:${product.infoImageList}"
@@ -210,7 +211,7 @@
 
                             <!--리뷰 영역-->
                             <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                 aria-labelledby="nav-profile-tab" tabindex="0" style="min-height: 100px;">
+                                 aria-labelledby="nav-profile-tab" tabindex="0" style="min-height: 300px;">
                                 <p th:if="${true}">해당 상품에는 후기가 없습니다.</p>
                             </div>
                             <!--리뷰 영역 end-->
@@ -232,7 +233,7 @@
 
                             <!--배송역역 영역-->
                             <div class="tab-pane fade" id="nav-disabled" role="tabpanel"
-                                 aria-labelledby="nav-disabled-tab" tabindex="0" style="min-height: 100px">
+                                 aria-labelledby="nav-disabled-tab" tabindex="0" style="min-height: 300px">
                                 .6..
                             </div>
                             <!--배송역역 영역 end-->

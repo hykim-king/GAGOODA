@@ -4,145 +4,183 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/layout.html}">
 <head>
-  <meta charset="UTF-8">
-  <title>GAGOODA_MAIN</title>
+    <meta charset="UTF-8">
+    <title>GAGOODA</title>
 </head>
 <div layout:fragment="content">
-  <!--광고영역-->
-  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
-    <div class="carousel-inner" style="width:100%;">
-      <div class="carousel-item active">
-        <img th:src="@{'/img/main/002.png'}" class="-block w-100" alt="..." style="width: 100vw; object-fit: cover;">
-      </div>
-      <div class="carousel-item">
-        <img th:src="@{'/img/main/003.png'}" class="d-block w-100" alt="..." style="width: 100vw; object-fit: cover;">
-      </div>
-      <div class="carousel-item">
-        <img th:src="@{'/img/main/004.png'}" class="d-block w-100" alt="..." style="width: 100vw; object-fit: cover;">
-      </div>
+    <!--광고영역-->
+    <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <div class="carousel-inner" style="width:100%;">
+            <div class="carousel-item active">
+                <img th:src="@{'/img/main/002.png'}" class="-block w-100" alt="..."
+                     style="width: 100vw; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img th:src="@{'/img/main/003.png'}" class="d-block w-100" alt="..."
+                     style="width: 100vw; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img th:src="@{'/img/main/004.png'}" class="d-block w-100" alt="..."
+                     style="width: 100vw; object-fit: cover;">
+            </div>
+        </div>
     </div>
-  </div>
-<!--  <img th:src="@{'/img/main/furniture_ad.jpg'}" class="img-fluid" style="width:100vw; height: 50vh;">-->
-  <!--광고영역 end--------------------------->
-  <!--공지사항 영역-->
-  <div id="carouselExampleSlidesOnly" class="carousel slide " data-bs-ride="carousel" style="background-color: #E5DBD2;">
-    <div class="carousel-inner" style="width:100%;">
-      <div class="carousel-item active">
-        <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">GAGOODA 공식몰 웹 프로젝트</div>
-      </div>
-      <div class="carousel-item">
-        <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">가구다 공식몰 시스템 점검 일정 안내 (2월 20일 00시~9시 30분)</div>
-      </div>
-    </div>
-  </div>
-
-  <!--공지사항 영역 end------------------------>
-  <!--추천 상품 리스트-->
-  <div class="container pb-5">
-    <div class="text-center my-5 pt-3 fs-3"><strong>추천 리스트</strong></div>
-    <!--상품 카드 틀, 반복문 돌리세요-->
-    <div class="row row-cols-1 row-cols-md-2 gap-5 d-flex justify-content-center mb-5" >
-      <div class="col mb-3" style="width: 285px;height: 340px;" th:each="product:${orderedProductList}">
-        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
-               class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2" th:text="${product.avgRate}"></p>
-            <p class="mb-2" th:text="${product.pname}"></p>
-            <p class="card-text mt-1" th:text="${product.salesPc}+'원'"></p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <!--추천 상품 리스트 end------------------------>
-    <!--event-->
-    <div class="d-flex mt-4 py-4">
-      <img th:src="@{'/img/main/event1.png'}" style="width:50%;">
-      <img th:src="@{'/img/main/event2.png'}" style="width:50%;">
-    </div>
-    <!--event end------------------------------------>
-
-    <!--신상품 -->
-    <div class="text-center my-5 fs-3"><strong>신상품</strong></div>
-    <!--상품 카드 틀, 반복문 돌리세요-->
-
-    <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5" >
-      <th:block th:each="product:${recentProduct}">
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.getProductCode()})}" style="text-decoration: none; color: black">
-          <th:block th:if="${product.imageList != null}">
-            <th:block th:each="img:${product.imageList.get(0)}">
-              <img th:src="@{'/img/product/{file}'(file=${img.imgPath})}" class="card-img-top rounded mb-3">
-            </th:block>
-          </th:block>
-<!--          <img th:src="@{'/img/product/{file}'(file=${product.getImgCode()+'_0.png'})}" class="card-img-top rounded mb-3">-->
-          <div>
-            <p class="mb-2" th:text="${product.getPname()}">상품</p>
-            <p class="card-text mt-1" th:text="${product.getSalesPc()}">가격</p>
-          </div>
-        </a>
-      </div>
-      </th:block>
+    <!--  <img th:src="@{'/img/main/furniture_ad.jpg'}" class="img-fluid" style="width:100vw; height: 50vh;">-->
+    <!--광고영역 end--------------------------->
+    <!--공지사항 영역-->
+    <div id="carouselExampleSlidesOnly" class="carousel slide " data-bs-ride="carousel"
+         style="background-color: #E5DBD2;">
+        <div class="carousel-inner" style="width:100%;">
+            <div class="carousel-item active">
+                <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">GAGOODA 공식몰 웹
+                    프로젝트
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="d-flex justify-content-center align-items-center" style="height: 60px; ">가구다 공식몰 시스템 점검 일정
+                    안내 (2월 20일 00시~9시 30분)
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!--신상품 end--------------------------------->
-    <img th:src="@{'/img/main/event_dummy.jpg'}" class="my-5 py-5" style="width:100%; height: 40vh;">
-    <!--세일-->
-    <div class="text-center my-5 fs-3"><strong>세일 상품</strong></div>
-    <!--상품 카드 틀, 반복문 돌리세요-->
-    <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5" >
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a href="/static" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a href="/static" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a href="/static" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a href="/static" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
-      <div class="col mb-3" style="width: 240px;height: 300px;">
-        <a href="/static" style="text-decoration: none; color: black">
-          <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
-          <div>
-            <p class="mb-2">상품</p>
-            <p class="card-text mt-1">가격</p>
-          </div>
-        </a>
-      </div>
+    <!--공지사항 영역 end------------------------>
+    <!--추천 상품 리스트-->
+    <div class="container pb-5">
+        <div class="text-center my-5 pt-3 fs-3"><strong>추천 리스트</strong></div>
+        <!--상품 카드 틀, 반복문 돌리세요-->
+        <div class="row row-cols-1 row-cols-md-2 gap-5 d-flex justify-content-center mb-5">
+            <div class="col mb-3 card border border-0 position-relative"
+                 style="width: 280px; padding: 0;" th:each="product:${orderedProductList}">
+                <div class="position-absolute d-flex justify-content-center align-items-center"
+                     style="top:5px; right: 5px;">
+                    <a href="">
+                        <!--찜자리-->
+                    </a>
+                </div>
+                <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
+                   style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
+                         class="card-img-top rounded mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex align-items-center">
+                            <div class="star-ratings" style="font-size: 24px;">
+                                <div class="fill-ratings"
+                                     th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                                    <span>★★★★★</span>
+                                </div>
+                                <div class="empty-ratings">
+                                    <span>★★★★★</span>
+                                </div>
+                            </div>
+                            <span th:text="'('+${product.reviewCnt}+')'"></span>
+                        </div>
+                        <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
+                           th:text="${product.pname}"></p>
+                        <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!--추천 상품 리스트 end------------------------>
+        <!--event-->
+        <div class="d-flex mt-4 py-4">
+            <img th:src="@{'/img/main/event1.png'}" style="width:50%;">
+            <img th:src="@{'/img/main/event2.png'}" style="width:50%;">
+        </div>
+        <!--event end------------------------------------>
+
+        <!--신상품 -->
+        <div class="text-center my-5 fs-3"><strong>신상품</strong></div>
+        <!--상품 카드 틀, 반복문 돌리세요-->
+
+        <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5">
+            <div class="col mb-3 card border border-0 position-relative"
+                 style="width: 280px; padding: 0;" th:each="product:${recentProduct}">
+                <div class="position-absolute d-flex justify-content-center align-items-center"
+                     style="top:5px; right: 5px;">
+                    <a href="">
+                        <!--찜자리-->
+                    </a>
+                </div>
+                <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
+                   style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/{imgPath}'(imgPath=${product.imageList[0].getImgPath()})}"
+                         class="card-img-top rounded mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex align-items-center">
+                            <div class="star-ratings" style="font-size: 24px;">
+                                <div class="fill-ratings"
+                                     th:style="'width:'+${product.avgRate/5*100}+'%;'">
+                                    <span>★★★★★</span>
+                                </div>
+                                <div class="empty-ratings">
+                                    <span>★★★★★</span>
+                                </div>
+                            </div>
+                            <span th:text="'('+${product.reviewCnt}+')'"></span>
+                        </div>
+                        <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"
+                           th:text="${product.pname}"></p>
+                        <p class="card-text mb-2" th:text="${product.salesPc}+'원'" style="color: #e74444"></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!--신상품 end--------------------------------->
+        <img th:src="@{'/img/main/event_dummy.jpg'}" class="my-5 py-5" style="width:100%; height: 40vh;">
+        <!--세일-->
+        <div class="text-center my-5 fs-3"><strong>세일 상품</strong></div>
+        <!--상품 카드 틀, 반복문 돌리세요-->
+        <div class="row row-cols-1 row-cols-md-2 g-4 d-flex justify-content-between mb-5">
+            <div class="col mb-3" style="width: 240px;height: 300px;">
+                <a href="/static" style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+                    <div>
+                        <p class="mb-2">상품</p>
+                        <p class="card-text mt-1">가격</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-3" style="width: 240px;height: 300px;">
+                <a href="/static" style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+                    <div>
+                        <p class="mb-2">상품</p>
+                        <p class="card-text mt-1">가격</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-3" style="width: 240px;height: 300px;">
+                <a href="/static" style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+                    <div>
+                        <p class="mb-2">상품</p>
+                        <p class="card-text mt-1">가격</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-3" style="width: 240px;height: 300px;">
+                <a href="/static" style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+                    <div>
+                        <p class="mb-2">상품</p>
+                        <p class="card-text mt-1">가격</p>
+                    </div>
+                </a>
+            </div>
+            <div class="col mb-3" style="width: 240px;height: 300px;">
+                <a href="/static" style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/product/HA310611_0.png'}" class="card-img-top rounded mb-3">
+                    <div>
+                        <p class="mb-2">상품</p>
+                        <p class="card-text mt-1">가격</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <!--세일 end------------------------------------->
     </div>
-    <!--세일 end------------------------------------->
-  </div>
-  <!--푸터-->
-  <div class="d-flex text-white justify-content-center align-items-center mt-5" style="height: 40vh; background-color: #FFFAF5;">
-    푸터
-  </div>
-  <!--푸터 end-------------------------------------->
 </div>
 </html>

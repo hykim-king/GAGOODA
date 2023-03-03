@@ -110,7 +110,7 @@
         GROUP BY final.product_code) as db
     </select>
     <select id="pageForPaging" resultMap="productMap">
-        SELECT final.*, COUNT(od.product_code) order_cnt
+        SELECT ROW_NUMBER() OVER() AS num_row, final.*, COUNT(od.product_code) order_cnt
         FROM (SELECT pc.*, COUNT(r.product_code) review_cnt, AVG(r.rate) avg_rate FROM
         (SELECT product.*
         FROM product

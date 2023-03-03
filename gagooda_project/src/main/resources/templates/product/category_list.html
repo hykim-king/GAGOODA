@@ -5,7 +5,7 @@
       layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'GAGOODA '+${category.cname}"></title>
     <link rel="stylesheet" href="/css/star_rate.css">
     <script src="/js/star_rate.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -30,8 +30,7 @@
             </li>
             <li th:each="child:${childList}" class="nav-item">
                 <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
-                   th:text="${child.cname}"
-                   th:if="${realCategoryId.equals(child.categoryId)}"
+                   th:text="${child.cname}" th:if="${realCategoryId.equals(child.categoryId)}"
                    class="nav-link active" aria-current="page"></a>
                 <a th:href="@{'/product/{categoryId}/list.do'(categoryId=${child.categoryId})}"
                    th:text="${child.cname}" th:unless="${realCategoryId.equals(child.categoryId)}"
@@ -39,8 +38,9 @@
             </li>
         </ul>
         <div class="container mt-4">
-            <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5"
-                 th:each="productList:${productListList}">
+            <!--            <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5"-->
+            <!--                 th:each="productList:${productListList}">-->
+            <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5">
                 <div class="col mb-3 card border border-0 position-relative"
                      style="width: 280px; padding: 0;" th:each="product:${productList}">
                     <div class="position-absolute d-flex justify-content-center align-items-center"
