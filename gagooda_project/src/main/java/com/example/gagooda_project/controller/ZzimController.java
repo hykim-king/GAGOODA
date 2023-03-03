@@ -59,16 +59,16 @@ public class ZzimController {
         }
     }
 
-    @DeleteMapping("/user_yes/mypage/delete.do")
-    public @ResponseBody int delete(@SessionAttribute UserDto loginUser,
+    @GetMapping("/user_yes/mypage/delete.do")
+    public String delete(@SessionAttribute UserDto loginUser,
                                     @RequestParam(name = "zzimId") int zzimId,
                                     HttpSession session) {
         try {
             int delete = zzimService.remove(zzimId);
-            return delete;
+            return "redirect:/";
         } catch (Exception e) {
             session.setAttribute("msg","찜 삭제 실패");
-            return 0;
+            return "redirect:/";
         }
     }
 }

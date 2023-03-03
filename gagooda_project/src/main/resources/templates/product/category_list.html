@@ -44,10 +44,17 @@
                 <div class="col mb-3 card border border-0 position-relative"
                      style="width: 280px; padding: 0;" th:each="product:${productList}">
                     <div class="position-absolute d-flex justify-content-center align-items-center"
-                         style="top:5px; right: 5px;">
-                        <a href="">
-                            <!--찜자리-->
+                         style="top:5px; right: 5px;" th:if="${zzim!=null && session.loginUser!=null}">
+                        <a th:href="@{'/zzim/user_yes/mypage/delete.do'(zzimId=${zzim.get(product.productCode).zzimId})}" th:if="${zzim.get(product.productCode)!=null}">
+                            <!--찜자리-->yes
                         </a>
+                        <form action="/zzim/user_yes/mypage/register.do" th:unless="${zzim.get(product.productCode)!=null}" method="post">
+                            <input type="hidden" th:value="${session.loginUser.userId}" name="userId">
+                            <input type="hidden" th:value="${product.productCode}" name="productCode">
+                            <button type="submit">no</button>
+                        </form>
+
+
                     </div>
                     <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
                        style="text-decoration: none; color: black">
