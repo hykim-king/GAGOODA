@@ -17,10 +17,8 @@
             <div class="col mb-3 card border border-0 position-relative"
                  style="width: 280px; padding: 0;" th:each="product:${productList}">
                 <div class="position-absolute d-flex justify-content-center align-items-center"
-                     style="top:5px; right: 5px;">
-                    <a href="">
-                        <!--찜자리-->
-                    </a>
+                     style="top:5px; right: 5px;" th:classappend="'zzimBox'+${product.productCode}">
+                    <th:block th:include="~{/zzim/register}"></th:block>
                 </div>
                 <a th:href="@{'/product/{productCode}/detail.do'(productCode=${product.productCode})}"
                    style="text-decoration: none; color: black">
@@ -49,5 +47,53 @@
 
         <th:block th:include="~{pagination}"></th:block>
     </div>
+    <script th:inline="javascript">
+        function init() {
+            const zzimForms = document.querySelectorAll(".zzimForm");
+            zzimForms.forEach(zzimForm=> {
+                zzimForm.onsubmit = function(e) {
+                    registerZzim(e, zzimForm);
+                };
+            })
+        }
+        init();
+
+        async  function removeZzim(zzimId, productCode) {
+            let url = "/zzim/user_yes/mypage/delete.do?zzimId="+zzimId;
+            const resp = await fetch(url, {method:"DELETE"});
+            if (resp.status ===200) {
+                const json = await resp.json();
+                if (json === 1) {
+                    await loadZzim(productCode);
+                } else {
+                    alert("취소 중 오류가 발생하였습니다.");
+                }
+            } else {
+                alert(`200 아닌 오류 발생 (${resp.status})`) ;
+            }
+        }
+        async function registerZzim(e, zzimForm) {
+            e.preventDefault();
+            let url = "/zzim/user_yes/mypage/register.do";
+            const formData = new FormData(zzimForm);
+            const resp = await fetch(url, {method:"POST",body: formData});
+            const json = await resp.json();
+            console.log(json);
+            if (json === 1) {
+                await loadZzim(zzimForm["productCode"].value);
+            }
+        }
+
+        async function loadZzim(productCode) {
+            const url = "/zzim/user_yes/show.do?productCode=" + productCode;
+            const resp = await fetch(url);
+            const html = await resp.text();
+            document.querySelectorAll(".zzimBox"+productCode).forEach(zzimBox=>{
+                zzimBox.innerHTML = html;
+            });
+            init();
+        }
+
+    </script>
 </div>
 </html>

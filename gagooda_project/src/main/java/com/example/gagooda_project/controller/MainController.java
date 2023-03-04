@@ -1,10 +1,9 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.CategoryDto;
-import com.example.gagooda_project.dto.PagingDto;
-import com.example.gagooda_project.dto.ProductDto;
+import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.CategoryService;
 import com.example.gagooda_project.service.ProductService;
+import com.example.gagooda_project.service.ZzimService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -24,39 +23,12 @@ import java.util.Map;
 public class MainController {
     private CategoryService categoryService;
     private ProductService productService;
+    private ZzimService zzimService;
 
-    public MainController(CategoryService categoryService, ProductService productService) {
+    public MainController(CategoryService categoryService, ProductService productService, ZzimService zzimService) {
         this.categoryService = categoryService;
         this.productService = productService;
-    }
-
-    @GetMapping("/mainpage.do")
-    public String main(HttpServletRequest req,
-                       Model model,
-                       @SessionAttribute(required = false) String msg,
-                       HttpSession session){
-        if (msg != null) {
-            session.removeAttribute("msg");
-            model.addAttribute("msg", msg);
-        }
-        try{
-            PagingDto paging = new PagingDto();
-            // 보여줄 상품의 개수
-            paging.setRows(10);
-            // 정렬 기준
-            paging.setOrderField("mod_date");
-            // 정렬 방향
-            paging.setDirect("DESC");
-            List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("recentProduct",recentProduct);
-
-            paging.setOrderField("order_cnt");
-            List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("orderedProductList", orderedProductList);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "mainpage";
+        this.zzimService = zzimService;
     }
 
     @GetMapping("/error.do")
@@ -101,6 +73,7 @@ public class MainController {
     @GetMapping("/")
     public String main(
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session,
             Model model
     ) {
@@ -119,10 +92,16 @@ public class MainController {
             // 정렬 방향
             paging.setDirect("DESC");
             List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
+
             model.addAttribute("recentProduct",recentProduct);
 
             paging.setOrderField("order_cnt");
             List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(recentProduct,loginUser);
+                zzim.putAll(zzimService.zzimCheck(orderedProductList,loginUser));
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("orderedProductList", orderedProductList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,6 +141,7 @@ public class MainController {
             PagingDto paging,
             HttpServletRequest req,
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session
     ) {
         if (msg != null) {
@@ -175,6 +155,10 @@ public class MainController {
             Map<String, Object> map = new HashMap<>();
             map.put("searchWord", "'%"+searchWord+"%'");
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(productList,loginUser);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
             model.addAttribute("searchWord", searchWord);
