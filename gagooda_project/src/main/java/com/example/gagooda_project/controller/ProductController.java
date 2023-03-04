@@ -79,6 +79,16 @@ public class ProductController {
         }
     }
 
+    @PostMapping("/{categoryId}/list.do")
+    public String orderList(
+            HttpServletRequest req,
+            @PathVariable String categoryId,
+            PagingDto paging
+    ){
+        paging.setQueryString(req.getParameterMap());
+        return "redirect:/product/"+categoryId+"/list.do"+paging.getQueryString();
+    }
+
     @GetMapping("/{categoryId}/list.do")
     public String list(
             Model model,

@@ -116,19 +116,13 @@
                                     <option value="" data-price="0" selected>--옵션 선택--</option>
                                     <th:block th:each="option:${product.optionProductList}">
                                         <option th:value="${option.optionCode}"
-                                                th:text="${option.opname}+' '+${option.price}+'원 품절'"
+                                                th:text="${option.opname}+' '+${option.price}+'원'
+                                                +${(option.stock==0)?'(품절)':''}"
                                                 th:data-price="${option.price}"
                                                 th:data-stock="${option.stock}"
-                                                th:if="${option.stock==0}"></option>
-                                        <option th:value="${option.optionCode}"
-                                                th:text="${option.opname}+' '+${option.price}+'원 (제고가 20개 이하입니다.)'"
-                                                th:data-price="${option.price}"
-                                                th:data-stock="${option.stock}"
-                                                th:if="${option.stock<=20}"></option>
-                                        <option th:value="${option.optionCode}"
-                                                th:text="${option.opname}+' '+${option.price}+'원'"
-                                                th:data-price="${option.price}"
-                                                th:data-stock="${option.stock}"></option>
+                                                th:disabled="${(option.stock == 0)?'true':'false'}"
+                                                th:styleappend="${(option.stock == 0)?
+                                                'color:#7a7a7a; text-decoration-line: line-through;':''}"></option>
                                     </th:block>
                                 </select>
                             </div>

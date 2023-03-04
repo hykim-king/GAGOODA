@@ -13,6 +13,19 @@
             '<span th:text="${searchWord}"></span>'에 대한 검색결과 <span th:text="${paging.totalRows}"></span>건
         </h3>
         <hr style="border: 2px solid #737373;">
+        <p class="mt-5 text-center" th:if="${productList.isEmpty()}">해당 검색어의 검색결과가 없습니다.</p>
+        <form th:action="@{'/search_results.do'(searchWord=${searchWord})}"
+              method="post" onchange="document.getElementById('ordering').submit()" id="ordering">
+            <select name="orderField">
+                <option value="sales_pc" th:selected="(${paging.orderField.equals('sales_pc')?true:false})">가격 순</option>
+                <option value="mod_date" th:selected="(${paging.orderField.equals('mod_date')?true:false})">수정일 순</option>
+                <option value="pname" th:selected="(${paging.orderField.equals('pname')?true:false})">이름 순</option>
+            </select>
+            <select name="direct">
+                <option value="DESC" th:selected="(${paging.direct.equals('DESC')?true:false})">내림차순</option>
+                <option value="ASC" th:selected="(${paging.direct.equals('ASC')?true:false})">오름차순</option>
+            </select>
+        </form>
         <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5">
             <div class="col mb-3 card border border-0 position-relative"
                  style="width: 280px; padding: 0;" th:each="product:${productList}">

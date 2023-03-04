@@ -38,6 +38,18 @@
                    class="nav-link" style="color: #B68C68;"></a>
             </li>
         </ul>
+        <form th:action="@{'/product/{categoryId}/list.do'(categoryId=${category.categoryId})}"
+              method="post" onchange="document.getElementById('ordering').submit()" id="ordering">
+            <select name="orderField">
+                <option value="sales_pc" th:selected="(${paging.orderField.equals('sales_pc')?true:false})">가격 순</option>
+                <option value="mod_date" th:selected="(${paging.orderField.equals('mod_date')?true:false})">수정일 순</option>
+                <option value="pname" th:selected="(${paging.orderField.equals('pname')?true:false})">이름 순</option>
+            </select>
+            <select name="direct">
+                <option value="DESC" th:selected="(${paging.direct.equals('DESC')?true:false})">내림차순</option>
+                <option value="ASC" th:selected="(${paging.direct.equals('ASC')?true:false})">오름차순</option>
+            </select>
+        </form>
         <div class="container mt-4">
             <!--            <div class="row row-cols-1 row-cols-md-2 gap-5 g-4 d-flex justify-content-center mb-5"-->
             <!--                 th:each="productList:${productListList}">-->

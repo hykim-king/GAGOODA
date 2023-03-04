@@ -3,6 +3,7 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.CategoryDto;
 import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductDto;
+import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.CategoryService;
 import com.example.gagooda_project.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,35 +29,6 @@ public class MainController {
     public MainController(CategoryService categoryService, ProductService productService) {
         this.categoryService = categoryService;
         this.productService = productService;
-    }
-
-    @GetMapping("/mainpage.do")
-    public String main(HttpServletRequest req,
-                       Model model,
-                       @SessionAttribute(required = false) String msg,
-                       HttpSession session){
-        if (msg != null) {
-            session.removeAttribute("msg");
-            model.addAttribute("msg", msg);
-        }
-        try{
-            PagingDto paging = new PagingDto();
-            // 보여줄 상품의 개수
-            paging.setRows(10);
-            // 정렬 기준
-            paging.setOrderField("mod_date");
-            // 정렬 방향
-            paging.setDirect("DESC");
-            List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("recentProduct",recentProduct);
-
-            paging.setOrderField("order_cnt");
-            List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("orderedProductList", orderedProductList);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "mainpage";
     }
 
     @GetMapping("/error.do")
@@ -119,7 +91,7 @@ public class MainController {
             // 정렬 방향
             paging.setDirect("DESC");
             List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("recentProduct",recentProduct);
+            model.addAttribute("recentProduct", recentProduct);
 
             paging.setOrderField("order_cnt");
             List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
@@ -137,16 +109,29 @@ public class MainController {
     @PostMapping("/search_results.do")
     public String searchResults(
             @RequestParam String searchWord,
-            HttpSession session
+            PagingDto paging,
+            HttpSession session,
+            HttpServletRequest req
     ) {
+        if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         String encodedParam = null;
         try {
             encodedParam = URLEncoder.encode(searchWord, "UTF-8");
+            Map<String, String[]> paramMap = new HashMap<>(req.getParameterMap());
+            if (paramMap.get("searchWord") != null) {
+                String encodedWord = URLEncoder.encode(paramMap.get("searchWord")[0], "UTF-8");
+                paramMap.put("searchWord", new String[]{encodedWord});
+            }
+            paging.setQueryString(req.getParameterMap());
             System.out.println(searchWord);
-            if(searchWord.isBlank()) {
+            if (searchWord.isBlank()) {
                 return "redirect:/";
             } else {
-                return "redirect:/search_results.do?searchWord="+encodedParam;
+                if (paging.getQueryString() != null) {
+                    return "redirect:/search_results.do" + paging.getQueryString();
+                } else {
+                    return "redirect:/search_results.do?searchWord=" + encodedParam;
+                }
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -173,7 +158,7 @@ public class MainController {
             if (paging.getOrderField() == null) paging.setOrderField("mod_date");
             paging.setQueryString(req.getParameterMap());
             Map<String, Object> map = new HashMap<>();
-            map.put("searchWord", "'%"+searchWord+"%'");
+            map.put("searchWord", "'%" + searchWord + "%'");
             List<ProductDto> productList = productService.pagingProduct(paging, map);
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
@@ -183,5 +168,12 @@ public class MainController {
             e.printStackTrace();
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/user_yes/quick_menu.do")
+    public String quickMenu(
+            @SessionAttribute UserDto loginUser
+    ){
+        return null;
     }
 }
