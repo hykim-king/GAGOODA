@@ -50,7 +50,7 @@
             <a class="btn btn-outline-danger cancelAllBtn" onclick="cancelAll()" href="javascript:void(0)">직접 환불</a>
         </div>
     </form>
-    <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
+    <h3>환불 신청 <span th:text="${refundCount}"></span></h3>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -116,9 +116,6 @@
         modifyForm.set("rfDet", "rf2");
         const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
         console.log(resp)
-        if(resp.status!==200){
-            alert(`rf 상태 변경 중 오류 발생(${resp.status})`)
-        }
     }
 
 
@@ -127,15 +124,50 @@
     forms.searchDiv.onchange = (qualifiedName, value)=>{
         console.log(forms.searchDiv.value);
         forms.searchWord.setAttribute("required", value);
+        if(!forms.searchDiv.value){
+            forms.searchWord.removeAttribute("required");
+        }
+    }
+    forms.searchWord.onchange = (qualifiedName, value)=>{
+        forms.searchDiv.setAttribute("required", value);
+        if (!forms.searchWord.value){
+            forms.searchDiv.removeAttribute("required");
+        }
     }
     forms.dateType.onchange = (qualifiedName, value)=>{
         forms.startDate.setAttribute("required", value);
         forms.endDate.setAttribute("required", value);
+        if(!forms.dateType.value && !forms.startDate.value && !forms.endDate.value){
+            forms.startDate.removeAttribute("required");
+            forms.endDate.removeAttribute("required");
+        }
     }
+    forms.startDate.onchange = (qualifiedName, value)=>{
+        forms.dateType.setAttribute("required", value);
+        forms.endDate.setAttribute("required", value);
+        if(!forms.startDate.value && !forms.startDate.value && !forms.endDate.value){
+            forms.dateType.removeAttribute("required");
+            forms.endDate.removeAttribute("required");
+        }
+    }
+    forms.endDate.onchange = (qualifiedName, value)=>{
+        forms.dateType.setAttribute("required", value);
+        forms.startDate.setAttribute("required", value);
+        if(!forms.endDate.value && !forms.startDate.value && !forms.endDate.value){
+            forms.dateType.removeAttribute("required");
+            forms.startDate.removeAttribute("required");
+        }
+    }
+
     forms.reset.onclick=()=>{
-        forms.searchWord.removeAttribute("required");
-        forms.startDate.removeAttribute("required");
-        forms.endDate.removeAttribute("required");
+        // forms.searchWord.removeAttribute("required");
+        // forms.startDate.removeAttribute("required");
+        // forms.endDate.removeAttribute("required");
+        console.log(forms[0])
+        console.log(forms.length)
+        for (let i = 0; i < 5;i++){
+            forms[i].removeAttribute("required")
+        }
     }
 
     /* 전체 주문 환불 팝업 버튼 */

@@ -178,7 +178,8 @@
         </div>
         <div>
             <label class="form-label d-block" for="reply">환불 요청 답변</label>
-            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none" th:text="${refund.reply}"></textarea>
+            <div th:text="'이전 답변: '+${refund.reply}"></div>
+            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none"></textarea>
         </div>
         <button class="btn btn-outline-primary refundSubmit" type="submit" >등록</button>
     </form>
@@ -282,9 +283,10 @@
         let modifyForm = new FormData();
         modifyForm.set("refundId", refundId);
         modifyForm.set("rfDet", rfDet);
+        modifyForm.set("reply", `${new Intl.DateTimeFormat('kr').format(new Date())} 환불이 완료되었습니다. 계좌 확인 후 3일 내에 결제 취소가 확인되지 않는다면 고객센터로 문의 주시기 바랍니다. 감사합니다.`)
         const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
         console.log(resp)
-        if (resp.status !== 200){
+        if (resp.status !== 0){
             alert(`상태 수정 중 오류 발생 (${resp.status})`)
         }
     }

@@ -81,7 +81,7 @@
     <select id="pageByUserIdAndDate" resultMap="exchangeMap">
         SELECT * FROM exchange WHERE user_id = #{userId}
         <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
-            AND reg_date BETWEEN #{startDate} AND #{endDate}
+            AND DATE(reg_date) BETWEEN #{startDate} AND #{endDate}
         </if>
         <if test="startDate != null and endDate != null and startDate.equals(endDate)">
             AND reg_date LIKE #{startDate}
@@ -101,7 +101,7 @@
     <select id="countByUserIdAndDate" resultType="int">
         SELECT COUNT(*) FROM exchange WHERE user_id = #{userId}
         <if test="startDate != null and endDate != null and !startDate.equals(endDate)">
-            AND reg_date BETWEEN #{startDate} AND #{endDate}
+            AND DATE(reg_date) BETWEEN #{startDate} AND #{endDate}
         </if>
         <if test="startDate != null and endDate != null and startDate.equals(endDate)">
             AND reg_date LIKE #{startDate}
@@ -127,7 +127,7 @@
                 AND ${searchDiv} LIKE #{searchWord}
             </if>
             <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
-                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+                AND DATE(${dateType}) BETWEEN #{startDate} AND #{endDate}
             </if>
             <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
@@ -154,7 +154,7 @@
                 AND ${searchDiv} LIKE #{searchWord}
             </if>
             <if test="dateType != '' and starDate != '' and endDate != '' and !startDate.equals(endDate)">
-                AND ${dateType} BETWEEN #{startDate} AND #{endDate}
+                AND DATE(${dateType}) BETWEEN #{startDate} AND #{endDate}
             </if>
             <if test="dateType != '' and starDate != '' and endDate != '' and startDate.equals(endDate)">
                 AND ${dateType} LIKE #{startDate}
