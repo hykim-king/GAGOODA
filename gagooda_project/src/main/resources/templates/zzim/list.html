@@ -98,7 +98,7 @@
         <div class="d-block text-center mb-5">
           <div style="margin-top: 100px">
             <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="zzimDelOne()">선택상품 삭제하기</button>
-            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>
+<!--            <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>-->
           </div>
         </div>
       </th:block>
@@ -180,69 +180,69 @@
     }
   }
 
-  function orderOne() {
-    const query = 'input[name="checkList"]:checked';
-    const selectedElements = document.querySelectorAll(query);
-    const selectedElementsCnt = selectedElements.length;
-
-    if (selectedElementsCnt == 0) {
-      alert("주문할 상품이 없습니다.");
-      return false;
-    } else {
-      const arr = new Array(selectedElementsCnt);
-
-      document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
-        arr[i] = v.value;
-      });
-
-      const form = document.createElement('form');
-      form.setAttribute('method', 'get');        //Post 메소드 적용
-      form.setAttribute('action', '/order/user_yes/register.do');
-
-      var input1 = document.createElement('input');
-      input1.setAttribute("type", "hidden");
-      input1.setAttribute("name", "orderCartIds");
-      input1.setAttribute("value", arr);
-      form.appendChild(input1);
-      console.log(form);
-      document.body.appendChild(form);
-      form.submit();
-    }
-  }
-
-  function orderAll() {
-    const query = 'input[name="checkList"]'
-    const selectedElements = document.querySelectorAll(query)
-    const selectedElementsCnt = selectedElements.length;
-
-    if (selectedElementsCnt == 0) {
-      alert("주문할 상품이 없습니다.");
-      return false;
-    } else {
-      allCheck.checked = true;
-
-      for (let i=0; i<list.length; i++) {
-        list[i].checked = true;
-      }
-
-      const arr = new Array(selectedElementsCnt);
-
-      document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
-        arr[i] = v.value;
-      });
-
-      const form = document.createElement('form');
-      form.setAttribute('method', 'get');        //Post 메소드 적용
-      form.setAttribute('action', '/order/user_yes/register.do');
-
-      var input1 = document.createElement('input');
-      input1.setAttribute("type", "hidden");
-      input1.setAttribute("name", "orderCartIds");
-      input1.setAttribute("value", arr);
-      form.appendChild(input1);
-      console.log(form);
-      document.body.appendChild(form);
-      form.submit();
-    }
-  }
+  // function orderOne() {
+  //   const query = 'input[name="checkList"]:checked';
+  //   const selectedElements = document.querySelectorAll(query);
+  //   const selectedElementsCnt = selectedElements.length;
+  //
+  //   if (selectedElementsCnt == 0) {
+  //     alert("주문할 상품이 없습니다.");
+  //     return false;
+  //   } else {
+  //     const arr = new Array(selectedElementsCnt);
+  //
+  //     document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+  //       arr[i] = v.value;
+  //     });
+  //
+  //     const form = document.createElement('form');
+  //     form.setAttribute('method', 'get');        //Post 메소드 적용
+  //     form.setAttribute('action', '/order/user_yes/register.do');
+  //
+  //     var input1 = document.createElement('input');
+  //     input1.setAttribute("type", "hidden");
+  //     input1.setAttribute("name", "orderCartIds");
+  //     input1.setAttribute("value", arr);
+  //     form.appendChild(input1);
+  //     console.log(form);
+  //     document.body.appendChild(form);
+  //     form.submit();
+  //   }
+  // }
+  //
+  // function orderAll() {
+  //   const query = 'input[name="checkList"]'
+  //   const selectedElements = document.querySelectorAll(query)
+  //   const selectedElementsCnt = selectedElements.length;
+  //
+  //   if (selectedElementsCnt == 0) {
+  //     alert("주문할 상품이 없습니다.");
+  //     return false;
+  //   } else {
+  //     allCheck.checked = true;
+  //
+  //     for (let i=0; i<list.length; i++) {
+  //       list[i].checked = true;
+  //     }
+  //
+  //     const arr = new Array(selectedElementsCnt);
+  //
+  //     document.querySelectorAll('input[name="checkList"]:checked').forEach(function(v, i) {
+  //       arr[i] = v.value;
+  //     });
+  //
+  //     const form = document.createElement('form');
+  //     form.setAttribute('method', 'get');        //Post 메소드 적용
+  //     form.setAttribute('action', '/order/user_yes/register.do');
+  //
+  //     var input1 = document.createElement('input');
+  //     input1.setAttribute("type", "hidden");
+  //     input1.setAttribute("name", "orderCartIds");
+  //     input1.setAttribute("value", arr);
+  //     form.appendChild(input1);
+  //     console.log(form);
+  //     document.body.appendChild(form);
+  //     form.submit();
+  //   }
+  // }
 </script>

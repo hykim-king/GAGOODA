@@ -5,7 +5,8 @@
     <div class="d-flex justify-content-end align-items-center"
          style="top:5px; right: 5px;" th:if="${session.loginUser!=null}">
 
-        <button th:onclick="removeZzim([[${zzim.get(product.productCode).zzimId}]], [[${product.productCode}]])" th:if="${zzim.get(product.productCode)!=null}" style="background:none; padding: 0; border:none; font-size:1.5em">
+        <button th:onclick="removeZzim([[${zzim.get(product.productCode).zzimId}]], [[${product.productCode}]])"
+                th:if="${zzim.get(product.productCode)!=null}" style="background:none; padding: 0; border:none; font-size:1.5em">
             <!--찜자리--> <i class="fa-solid fa-heart"></i>
         </button>
 

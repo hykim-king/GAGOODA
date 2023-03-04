@@ -79,6 +79,7 @@ public class MainController {
     @GetMapping("/")
     public String main(
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session,
             Model model
     ) {
@@ -101,6 +102,11 @@ public class MainController {
 
             paging.setOrderField("order_cnt");
             List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(recentProduct,loginUser);
+                zzim.putAll(zzimService.zzimCheck(orderedProductList,loginUser));
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("orderedProductList", orderedProductList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,6 +159,7 @@ public class MainController {
             PagingDto paging,
             HttpServletRequest req,
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session
     ) {
         if (msg != null) {
@@ -166,6 +173,10 @@ public class MainController {
             Map<String, Object> map = new HashMap<>();
             map.put("searchWord", "'%" + searchWord + "%'");
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(productList,loginUser);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
             model.addAttribute("searchWord", searchWord);
