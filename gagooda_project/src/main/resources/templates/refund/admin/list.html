@@ -42,8 +42,13 @@
                 <label><input type="checkbox" name="rfDet" id="rf8" value="rf8" > 환불 불가 </label>
             </div>
         </div>
-        <button type="submit" class="btn btn-outline-secondary">검색</button>
-        <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
+        <div class="d-flex justify-content-between">
+            <div>
+                <button type="submit" class="btn btn-outline-secondary">검색</button>
+                <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
+            </div>
+            <a class="btn btn-outline-danger cancelAllBtn" onclick="cancelAll()" href="javascript:void(0)">직접 환불</a>
+        </div>
     </form>
     <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
     <table class="table table-striped">
@@ -111,6 +116,9 @@
         modifyForm.set("rfDet", "rf2");
         const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
         console.log(resp)
+        if(resp.status!==200){
+            alert(`rf 상태 변경 중 오류 발생(${resp.status})`)
+        }
     }
 
 
@@ -128,6 +136,12 @@
         forms.searchWord.removeAttribute("required");
         forms.startDate.removeAttribute("required");
         forms.endDate.removeAttribute("required");
+    }
+
+    /* 전체 주문 환불 팝업 버튼 */
+    function cancelAll(){
+        let url = "http://"+window.location.host+"/refund/admin/payments/cancel.do"
+        window.open(url, "cancelAll", "width=450, height=600, resizable=no")
     }
 
 </script>

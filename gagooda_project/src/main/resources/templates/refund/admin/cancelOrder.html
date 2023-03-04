@@ -10,15 +10,15 @@
     <form name="cancel" action="javascript:void(0)" method="POST">
         <div>
             <label for="orderId">주문번호</label>
-            <input type="text" name="orderId" id="orderId" readonly>  <!--환불 진행할 상품의 해당 주문번호-->
+            <input type="text" name="orderId" id="orderId" required>  <!--환불 진행할 상품의 해당 주문번호-->
         </div>
         <div>
             <label for="cancelAmount">환불 금액</label>
-            <input type="number" name="cancelAmount" id="cancelAmount" readonly>  <!--환불 금액-->
+            <input type="number" name="cancelAmount" id="cancelAmount" required>  <!--환불 금액-->
         </div>
         <div>
             <label for="reason">환불 사유</label>
-            <input type="text" name="reason" id="reason" readonly>  <!--환불 사유-->
+            <input type="text" name="reason" id="reason" required>  <!--환불 사유-->
         </div>
         <button name="submitBtn" type="submit" onclick="cancelPayments()">환불하기</button>
     </form>
@@ -35,13 +35,13 @@
         const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값(해당 URL에는 0(성공) 혹은 1(실패)가 반환됨(이외의 값이 존재할 수 있음.)
         console.log("respJson: "+respJson)
         console.log(respJson.message);
-        // window.close();
-        // if(respJson > 0){
-        //     alert("결제 취소 실패")
-        // }else{
-        //     alert("결제 취소 성공")
-        // }
-        // window.close();
+
+        if (respJson.code > 0 || respJson.code < 0){
+            alert (respJson.message);
+        }else if(respJson.code === 0){
+            alert(totalPrice +" 중 "+ cancelAmount +"원을 결제 취소하였습니다.");
+
+        }
     }
 
     let closeBtn = document.querySelector("#closeBtn");

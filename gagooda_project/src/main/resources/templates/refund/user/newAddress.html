@@ -72,11 +72,11 @@
         <div>
             <span>엘리베이터 유무</span>
             <th:block th:if="${order.isElevator()}">
-                <input type="checkbox" checked disabled aria-disabled="true">
+                <span>O</span>
                 <div class="add d-none" th:text="${order.elevator}"></div>
             </th:block>
             <th:block th:unless="${order.isElevator()}">
-                <input type="checkbox" disabled aria-disabled="true">
+                <span>X</span>
                 <div class="add d-none" th:text="${order.elevator}"></div>
             </th:block>
         </div>

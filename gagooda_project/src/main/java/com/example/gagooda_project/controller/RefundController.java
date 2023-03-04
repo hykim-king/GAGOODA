@@ -57,6 +57,7 @@ public class RefundController {
 
     @GetMapping("user_yes/mypage/list.do")
     public String list(@SessionAttribute UserDto loginUser,
+                       @SessionAttribute(required = false) String msg,
                        @RequestParam(name = "period", defaultValue = "7", required = false) int period,
                        @RequestParam(name = "startDate", required = false) String startDate,
                        @RequestParam(name = "endDate", required = false) String endDate,
@@ -66,10 +67,9 @@ public class RefundController {
                        HttpSession session,
                        Model model) {
         log.info("req.getParameterMap:"+req.getParameterMap());
-        String refundMsg = null;
-        if (session.getAttribute("refundMsg") != null) {
-            refundMsg = session.getAttribute("refundMsg").toString();
-            session.removeAttribute("refundMsg");
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
         }
         try {
             paging.setQueryString(req.getParameterMap());
@@ -78,44 +78,69 @@ public class RefundController {
             model.addAttribute("refundList", refundList);
             model.addAttribute("userRefundCount", userRefundCount);
             model.addAttribute("paging", paging);
+            return "refund/user/list";
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-        model.addAttribute("refundMsg", refundMsg);
-        return "refund/user/list";
     }
 
     @GetMapping("user_yes/mypage/{orderDetailId}/register.do")
     public String register(@SessionAttribute UserDto loginUser,
+                           @SessionAttribute(required = false) String msg,
                            @PathVariable int orderDetailId,
                            HttpSession session,
                            Model model) {
-        String refundMsg = null;
-        if (session.getAttribute("refundMsg") != null) {
-            log.info("$$$$$$$$$$$$$$$$MSGMSGMSG$$$$$$$$$$$$$$$");
-            refundMsg = session.getAttribute("refundMsg").toString();
-            session.removeAttribute("refundMsg");
-            model.addAttribute("refundMsg", refundMsg);
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
         }
         try{
             OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
             OrderDto order = orderServiceImp.selectOne(orderDetail.getOrderId());
-            int refundCount = refundServiceImp.countByOrderId(order.getOrderId());
-            List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
-            AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
+            if(loginUser.getUserId() == order.getUserId()){
+                List<RefundDto> checkRefundList = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId());
+                List<ExchangeDto> checkExchangeList = exchangeService.selectOrderDetail(orderDetail.getOrderDetailId());
+                boolean isOk = true;
+                if(checkRefundList != null){
+                    for(RefundDto checkRefund : checkRefundList){
+                        if(!checkRefund.getRfDet().equals("rf1")){
+                            isOk = false;
+                            break;
+                        }
+                    }
+                }
+                if(checkExchangeList != null){
+                    for(ExchangeDto checkExchange : checkExchangeList){
+                        if(!checkExchange.getExDet().equals("ex1")){
+                            isOk = false;
+                            break;
+                        }
+                    }
+                }
+                if(isOk){
+                    int refundCount = refundServiceImp.countByOrderId(order.getOrderId());
+                    List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+                    AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
 
-            model.addAttribute("orderDetail", orderDetail);
-            model.addAttribute("order", order);
-            model.addAttribute("refundCount", refundCount);
-            model.addAttribute("orderAddress", orderAddress);
-            model.addAttribute("addressList", addressList);
-
+                    model.addAttribute("orderDetail", orderDetail);
+                    model.addAttribute("order", order);
+                    model.addAttribute("refundCount", refundCount);
+                    model.addAttribute("orderAddress", orderAddress);
+                    model.addAttribute("addressList", addressList);
+                    return "refund/user/register";
+                }else{
+                    session.setAttribute("msg", "이미 교환/환불을 진행 중인 상품입니다.");
+                    return "redirect:/order/user_yes/mypage/"+order.getOrderId()+"/detail.do";
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
             return "redirect:/";
         }
-        return "refund/user/register";
-
+        return "redirect:/";
     }
 
     @PostMapping("user_yes/mypage/{orderDetailId}/register.do")
@@ -132,6 +157,9 @@ public class RefundController {
         int seq = 1;
             try {
                 OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
+                List<RefundDto> checkRefund = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId());
+                List<ExchangeDto> checkExchange = exchangeService.selectOrderDetail(orderDetail.getOrderDetailId());
+
                 if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderDetail.getOrderId())) {
                     /* 환불, 교환 체크하여 이름 지정 */
                     if (refund.isReType()) {
@@ -156,10 +184,10 @@ public class RefundController {
                                 }
                             }
                             seq = 0;
-                            session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                            session.setAttribute("msg", reType + " 요청에 성공했습니다.");
                             return "redirect:/refund/user_yes/mypage/" + refund.getRefundId() + "/detail.do";
                         } else { // 실패했을 시
-                            session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
+                            session.setAttribute("msg", reType + " 요청에 실패했습니다.");
                             return "redirect:/refund/user_yes/mypage/" + orderDetailId + "/register.do";
                         }
                     } else {
@@ -201,29 +229,32 @@ public class RefundController {
                                 }
                             }
                             seq = 0;
-                            session.setAttribute("refundMsg", reType + " 요청에 성공했습니다.");
+                            session.setAttribute("msg", reType + " 요청에 성공했습니다.");
                             return "redirect:/exchange/user_yes/mypage/" + exchange.getExchangeId() + "/detail.do";
                         } else { // 실패했을 시
-                            session.setAttribute("refundMsg", reType + " 요청에 실패했습니다.");
+                            session.setAttribute("msg", reType + " 요청에 실패했습니다.");
                             return "redirect:/exchange/user_yes/mypage/" + orderDetailId + "/register.do";
                         }
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+                return "redirect:/";
             }
-        return "redirect:/refund/user_yes/mypage/"+orderDetailId+"/register.do";
+        session.setAttribute("msg", "잘못된 접근입니다.");
+        return "redirect:/";
     }
 
     @GetMapping("user_yes/mypage/{refundId}/detail.do")
     public String detail(@SessionAttribute UserDto loginUser,
+                         @SessionAttribute(required = false) String msg,
                          @PathVariable int refundId,
                          HttpSession session,
                          Model model) {
-        String refundMsg = null;
-        if (session.getAttribute("refundMsg") != null) {
-            refundMsg = session.getAttribute("refundMsg").toString();
-            session.removeAttribute("refundMsg");
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
         }
         RefundDto refund = null;
         try {
@@ -232,19 +263,27 @@ public class RefundController {
                 List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
                 List<CommonCodeDto> rfrDetList = refundServiceImp.showDetCodeList("rfr");
                 OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
+                if(refund.getRfDet().equals("rf7")){
+                    PaymentDto paymentDto = paymentServiceImp.selectOne(refund.getOrderId());
+                    IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(paymentDto.getImpUid());
+                    if(paymentResp != null){
+                        model.addAttribute("payment", paymentResp.getResponse());
+                    }
+                }
                 model.addAttribute("refund", refund);
                 model.addAttribute("rfDetList", rfDetList);
                 model.addAttribute("rfrDetList", rfrDetList);
                 model.addAttribute("order", order);
-                model.addAttribute("refundMsg", refundMsg);
                 return "refund/user/detail";
             }else{
-                return "index";
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-        return "refund/user/list";
     }
 
     @PostMapping("user_yes/mypage/{refundId}/modify.do")
@@ -258,29 +297,30 @@ public class RefundController {
                 modify += refundServiceImp.modifyOne(upRefund, "user");
             } catch (Exception e) {
                 e.printStackTrace();
+                session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+                return "redirect:/";
             }
         }
         if (modify > 0) {
-            session.setAttribute("refundMsg", "환불 요청이 성공적으로 취소되었습니다.");
+            session.setAttribute("msg", "환불 요청이 성공적으로 취소되었습니다.");
             return "redirect:/refund/user_yes/mypage/list.do";
         } else {
-            session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
-            return "redirect:/refund/user_yes/mypage/detail.do/"+refundId;
+            session.setAttribute("msg", "정보가 일치하지 않습니다.");
+            return "redirect:/refund/user_yes/mypage/"+refundId+"/detail.do";
         }
     }
     @GetMapping("user_yes/mypage/{orderDetailId}/addressList.do")
     public String addressList(Model model,
                               HttpSession session,
                               @PathVariable int orderDetailId,
+                              @SessionAttribute(required = false) String msg,
                               @SessionAttribute UserDto loginUser){
-        String refundMsg = "";
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         int addressId = 0;
         try{
-            if (session.getAttribute("refundMsg") != null ){
-                refundMsg = session.getAttribute("refundMsg").toString();
-                session.removeAttribute("refundMsg");
-                model.addAttribute("refundMsg",refundMsg);
-            }
             if (session.getAttribute("addressId") != null ){
                 addressId = (int) session.getAttribute("addressId");
                 session.removeAttribute("addressId");
@@ -297,6 +337,8 @@ public class RefundController {
             }
         }catch (Exception e){
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
         return "refund/user/newAddress";
     }
@@ -322,6 +364,8 @@ public class RefundController {
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
+                            @SessionAttribute(required = false) String msg,
+                            HttpSession session,
                             PagingDto paging,
                             HttpServletRequest req,
                             @RequestParam(name = "rfDet", required = false, defaultValue = "") String rfDet,
@@ -333,6 +377,10 @@ public class RefundController {
                             Model model){
         log.info("req.getParameterMap:"+req.getParameterMap());
         log.info("requestUri:" +req.getRequestURI());
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -352,20 +400,27 @@ public class RefundController {
                 return "refund/admin/list";
             }
             else{
-                return "/index";
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         }catch (Exception e){
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-        return "refund/admin/list";
     }
 
     @GetMapping("admin/{refundId}/detail.do")
     public String adminDetail(@PathVariable int refundId,
+                              @SessionAttribute(required = false) String msg,
                               HttpSession session,
                               HttpServletRequest req,
                               @SessionAttribute UserDto loginUser,
                               Model model){
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         PaymentDto payment = null;
         IamportResponse<Payment> paymentResp = null;
         try{
@@ -388,16 +443,20 @@ public class RefundController {
                 model.addAttribute("rfCodeList", allRfList);
 
                 return "refund/admin/detail";
+            }else{
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         }catch (Exception e){
             log.info(e.getMessage());
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-//        return "redirect:/refund/admin/list.do";
-        return "refund/admin/detail";
     }
 
     @PostMapping("admin/{refundId}/modify.do")
     public String adminModify(@PathVariable int refundId,
+                              HttpSession session,
                               RefundDto refund,
                               HttpServletRequest req,
                               @SessionAttribute UserDto loginUser){
@@ -410,7 +469,6 @@ public class RefundController {
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                return "redirect:"+req.getRequestURI();
             }
         }
         return "redirect:"+req.getRequestURI();
@@ -434,11 +492,13 @@ public class RefundController {
     }
     //결제 취소 GET
     @GetMapping("admin/payments/cancel.do")
-    public String cancelPaymentByIamUid(@SessionAttribute UserDto loginUser){
+    public String cancelPaymentByIamUid(@SessionAttribute UserDto loginUser,
+                                        HttpSession session){
         if(loginUser.getGDet().equals("g1")){
             return "refund/admin/cancelOrder";
         }else{
-            return "mainpage";
+            session.setAttribute("msg", "잘못된 접근입니다.");
+            return "redirect:/";
         }
     }
     //결제 취소 POST
