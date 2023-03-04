@@ -786,14 +786,57 @@
             </nav>
         </div>
     </div>
+
+    <div class="position-fixed" style="bottom: 10px; right: 10px;" th:if="${session.loginUser != null}">
+        <div class="dropup-center dropup">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Centered dropup
+            </button>
+            <ul class="dropdown">
+                <li>
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseZzim" aria-expanded="true"
+                                        aria-controls="collapseZzim">
+                                    찜 목록
+                                </button>
+                            </h2>
+                            <div id="collapseZzim" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                                 data-bs-parent="#accordionExample">
+                                <div class="accordion-body overflow-auto" id="zzimListBox">
+                                    <th:block th:include="~{/layout/quickZzimList}"></th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Action two</a></li>
+                <li><a class="dropdown-item" href="#">Action three</a></li>
+            </ul>
+        </div>
+    </div>
     <!--하위 네브 메뉴 end-->
-    <script>
+    <script th:inline="javascript">
         const searchBox = document.forms["searchBox"];
         searchBox.onsubmit = (e) => {
             const searchInput = document.getElementById("searchInput");
             if (searchInput.value.trim() === "") {
                 e.preventDefault();
             }
+        }
+
+        async function loadZzimList() {
+            const url = "/user_yes/quick_menu.do";
+            const resp = await fetch(url);
+            const html = await resp.text();
+            document.getElementById("zzimListBox").innerHTML = html;
+        }
+
+        if ([[${session.loginUser}]]!=null) {
+            loadZzimList();
         }
     </script>
 </div>

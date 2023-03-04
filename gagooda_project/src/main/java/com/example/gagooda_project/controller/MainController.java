@@ -1,11 +1,10 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.CategoryDto;
-import com.example.gagooda_project.dto.PagingDto;
-import com.example.gagooda_project.dto.ProductDto;
-import com.example.gagooda_project.dto.UserDto;
+import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.CartService;
 import com.example.gagooda_project.service.CategoryService;
 import com.example.gagooda_project.service.ProductService;
+import com.example.gagooda_project.service.ZzimService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -23,12 +22,19 @@ import java.util.Map;
 
 @Controller
 public class MainController {
-    private CategoryService categoryService;
-    private ProductService productService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
+    private final ZzimService zzimService;
+    private final CartService cartService;
 
-    public MainController(CategoryService categoryService, ProductService productService) {
+    public MainController(CategoryService categoryService,
+                          ProductService productService,
+                          ZzimService zzimService,
+                          CartService cartService) {
         this.categoryService = categoryService;
         this.productService = productService;
+        this.zzimService = zzimService;
+        this.cartService = cartService;
     }
 
     @GetMapping("/error.do")
@@ -172,8 +178,17 @@ public class MainController {
 
     @GetMapping("/user_yes/quick_menu.do")
     public String quickMenu(
-            @SessionAttribute UserDto loginUser
+            @SessionAttribute UserDto loginUser,
+            Model model
     ){
-        return null;
+        try{
+            List<ZzimDto> zzimList = zzimService.listByUserId(loginUser.getUserId());
+            List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
+            model.addAttribute("zzimList", zzimList);
+            model.addAttribute("cartList", cartList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "layout/quickZzimList";
     }
 }
