@@ -68,9 +68,11 @@
             <tbody>
             <th:block th:each="i : ${#numbers.sequence(0, zzimList.size()-1)}">
               <tr th:data="${zzimList[i].zzimId}">
-                <td th:text="${i+1}"></td>
+                <td>
+                  <div th:text="${i+1}" style="margin-top: 45px;"></div>
+                </td>
                 <td class="checkBox">
-                  <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${zzimList[i].zzimId}" style="cursor: pointer;">
+                  <input type="checkbox" name="checkList" class="checkList" id="checkList" checked th:value="${zzimList[i].zzimId}" style="cursor: pointer; margin-top:45px">
                   <label for="checkList"></label>
                 </td>
                 <td style="width: 10%">
@@ -79,8 +81,8 @@
                   </a>
                 </td>
                 <td>
-                  <div style="margin-top: 20px;">
-                    <a class="text-decoration-none" style="color: #000000;" th:href="@{'/product/{productCode}/detail.do'(productCode=${zzimList[i].getProductCode()})}" th:text="${zzimList[i].getProduct().getPname()}"></a>
+                  <div style="margin-top: 45px">
+                  <a class="text-decoration-none" style="color: #000000;" th:href="@{'/product/{productCode}/detail.do'(productCode=${zzimList[i].getProductCode()})}" th:text="${zzimList[i].getProduct().getPname()}"></a>
                   </div>
                 </td>
                 <td>
@@ -95,7 +97,7 @@
 
         <div class="d-block text-center mb-5">
           <div style="margin-top: 100px">
-            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="cartDelOne()">선택상품 삭제하기</button>
+            <button type="button" class="orderOneBtn btn btn-secondary" style="width: 180px; font-size: small;" onclick="zzimDelOne()">선택상품 삭제하기</button>
             <button type="button" class="orderAllBtn btn btn-danger" style="width: 180px; font-size: small;" onclick="orderOne()">선택상품 장바구니로</button>
           </div>
         </div>
@@ -143,7 +145,7 @@
           })
   )
 
-  function cartDelOne() {
+  function zzimDelOne() {
     const query = 'input[name="checkList"]:checked'
     const selectedElements = document.querySelectorAll(query)
 
@@ -163,11 +165,11 @@
 
         const form = document.createElement('form');
         form.setAttribute('method', 'post');        //Post 메소드 적용
-        form.setAttribute('action', '/cart/user_yes/mypage/deleteOne.do');
+        form.setAttribute('action', '/zzim/user_yes/mypage/deleteOne.do');
 
         var input1 = document.createElement('input');
         input1.setAttribute("type", "hidden");
-        input1.setAttribute("name", "cartIds");
+        input1.setAttribute("name", "zzimIds");
         input1.setAttribute("value", arr);
         form.appendChild(input1);
         console.log(form);

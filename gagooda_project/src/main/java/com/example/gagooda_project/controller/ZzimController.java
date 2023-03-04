@@ -1,5 +1,6 @@
 package com.example.gagooda_project.controller;
 
+import com.example.gagooda_project.dto.CartDto;
 import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.dto.ZzimDto;
@@ -94,6 +95,26 @@ public class ZzimController {
         } catch (Exception e) {
             session.setAttribute("msg","찜 삭제 실패");
             return 0;
+        }
+    }
+    @PostMapping("/user_yes/mypage/deleteOne.do")
+    public String deleteOne(@SessionAttribute UserDto loginUser,
+                            @RequestParam List<Integer> zzimIds,
+                            HttpSession session) {
+        int delete =0;
+        try {
+            for (int i=0; i<zzimIds.size();i++) {
+                int id = Integer.parseInt(String.valueOf(zzimIds.get(i)));
+                delete = zzimService.remove(id);
+            }
+        }catch( Exception e){
+            session.setAttribute("msg","삭제에 실패하였습니다.");
+        }
+        if (delete>0) {
+            return "redirect:/zzim/user_yes/mypage/list.do";
+        } else {
+            session.setAttribute("msg","삭제 실패");
+            return "redirect:/zzim/user_yes/mypage/list.do";
         }
     }
 }
