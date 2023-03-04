@@ -1,55 +1,96 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            justify-content: space-around;
+            padding: 0 0.2em;
+            text-align: center;
+            width: 5em;
+        }
+        .star-rating>input {
+            display: none;
+        }
+        .star-rating label {
+            -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+            -webkit-text-stroke-width: 2.3px;
+            -webkit-text-stroke-color: #2b2a29;
+            cursor: pointer;
+        }
+        .star-rating :checked ~ label {
+            -webkit-text-fill-color: #b68c68;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            -webkit-text-fill-color: #c19e80;
+        }
+    </style>
+</head>
 <div class="modal fade" th:id="'exampleModal'+${review.reviewId}" tabindex="-1"
      th:aria-labelledby="'exampleModalLabel'+${review.reviewId}" aria-hidden="true"
      th:if="${session.loginUser != null}">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" th:id="'exampleModalLabel'+${review.reviewId}">Modal title</h1>
+                <h1 class="modal-title fs-5" th:id="'exampleModalLabel'+${review.reviewId}">리뷰 수정</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-lg">
                 <form action="/review/user_yes/modify.do" method="post" enctype="multipart/form-data"
                       th:name="'reviewModifyForm'+${review.reviewId}" class="modifyForm">
-                    <input type="text" name="reviewId" th:value="${review.reviewId}">
-                    <h2 class="text-center mb-5">리뷰 수정</h2>
-                    <div class="mx-auto" style="width: 50%">
-                        <input type="text" name="userId" th:value="${session.loginUser.userId}">
+                    <input type="hidden" name="reviewId" th:value="${review.reviewId}">
+                    <div class="mx-auto" style="width: 80%;">
+                        <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
                         <div class="mb-3">
-                            <label for="productName" class="form-label">상품명</label>
-                            <th:block th:each="optionProduct:${optionProductList}">
-                                <input type="text" class="form-control" id="productName" th:value="${optionProduct.getOpname()}"
-                                       readonly>
-                            </th:block>
+                            <label for="productName" class="form-label float-start">상품명</label>
+                                <input type="text" class="form-control" id="productName" th:value="${review.optionProduct.opname}" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="rate" class="form-label">평점</label>
-                            <input type="number" min="1" max="5" step="1" maxlength="1" class="form-control" name="rate"
-                                   th:value="${review.rate}" id="rate" required placeholder="1~5점을 주세요 !">
+                            <div class="star-rating mx-auto">
+                                <th:block>
+
+                                </th:block>
+                                <input type="radio" id="5-stars" name="rate" th:value="${review.rate}"/>
+                                <label for="5-stars" class="star pr-4">★</label>
+                                <input type="radio" id="4-stars" name="rate" th:value="${review.rate}"/>
+                                <label for="4-stars" class="star">★</label>
+                                <input type="radio" id="3-stars" name="rate" th:value="${review.rate}"/>
+                                <label for="3-stars" class="star">★</label>
+                                <input type="radio" id="2-stars" name="rate" th:value="${review.rate}"/>
+                                <label for="2-stars" class="star">★</label>
+                                <input type="radio" id="1-star" name="rate" th:value="${review.rate}"/>
+                                <label for="1-star" class="star">★</label>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="content" class="form-label">내용</label>
+                            <label for="content" class="form-label float-start">내용</label>
                             <textarea class="form-control" name="content" th:value="${review.content}" th:text="${review.content}"
-                                      id="content" cols="30" rows="3" required></textarea>
+                                      id="content" cols="80" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
-                            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
-                            <div>
+                            <label class="form-label float-start" for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">* 체크시 삭제</span>
+                            <input multiple="multiple" max="4" onchange="selectImage(this)" type="file" class="form-control" name="imgFile" id="imgFile">
+                            <div style="display: flex; width: 100%; justify-content: space-around;">
                                 <th:block th:each="img:${review.imgList}">
                                     <label>
-                                        <input type="checkbox" name="imgToDelete" th:value="${img.imgCode}+'/'+${img.seq}">
-                                        <img class="basic_img" th:src="@{'/img/review/{file}'(file=${img.imgPath})}" alt="">
+                                        <input style="margin-top: 10px;" type="checkbox" name="imgToDelete" th:value="${img.imgCode}+'/'+${img.seq}">
+                                        <img style="width: 150px; height: 150px; margin: 10px 10px 0 10px;" class="basic_img" th:src="@{'/img/review/{file}'(file=${img.imgPath})}">
                                     </label>
                                 </th:block>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
                         <div class="d-grid d-flex gap-2 float-end">
-                            <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset" data-bs-dismiss="modal">취소
+                            <button class="btn" style="background-color: #FFFAF5; color: #b68c68" type="reset" data-bs-dismiss="modal">취소
                             </button>
-                            <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit" data-bs-dismiss="modal">수정
+                            <button class="btn" style="background-color: #b68c68; color: #FFFAF5 " type="submit" data-bs-dismiss="modal">수정
                             </button>
                         </div>
                     </div>
@@ -71,6 +112,14 @@
             let result = confirm("리뷰 수정을 취소하시겠습니까 ?");
             if (result == true) {
                 location.href = "/review/user_yes/mypage/mypageList.do"
+            }
+        }
+        function selectImage(file) {
+            let maxFile = 5;
+            let selectFile = file.files.length
+            if (maxFile <= selectFile) {
+                alert("이미지는 최대 4개까지 선택가능합니다.")
+                close();
             }
         }
     </script>
