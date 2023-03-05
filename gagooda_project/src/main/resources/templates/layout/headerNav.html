@@ -25,17 +25,8 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                         <th:block th:if="${session.loginUser == null}">
                             <ul class="navbar-nav ">
-                                <li class="nav-item">
-                                    <a class="nav-link text-white active" aria-current="page" href="/user/g0/signup.do">회원가입</a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link text-white" href="/user/g1/signup.do">관리자 회원가입</a>
-                                </li>
                                 <li class="nav-item ">
                                     <a class="nav-link text-white" href="/user/login.do">로그인</a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link text-white" href="/user/findpw.do">비밀번호 찾기</a>
                                 </li>
                             </ul>
                         </th:block>
@@ -795,36 +786,9 @@
         </div>
     </div>
 
-    <div class="position-fixed" style="bottom: 10px; right: 10px;" th:if="${session.loginUser != null}">
-        <div class="dropup-center dropup">
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Centered dropup
-            </button>
-            <ul class="dropdown">
-                <li>
-                    <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="headingOne">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseZzim" aria-expanded="true"
-                                        aria-controls="collapseZzim">
-                                    찜 목록
-                                </button>
-                            </h2>
-                            <div id="collapseZzim" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                                 data-bs-parent="#accordionExample">
-                                <div class="accordion-body overflow-auto" id="zzimListBox">
-                                    <th:block th:include="~{/layout/quickZzimList}"></th:block>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Action two</a></li>
-                <li><a class="dropdown-item" href="#">Action three</a></li>
-            </ul>
-        </div>
+    <div class="position-fixed" style="bottom: 10px; right: 10px;" id="quickListBox"
+         th:if="${session.loginUser != null}">
+        <th:block th:include="~{/layout/quickZzimList}"></th:block>
     </div>
     <!--하위 네브 메뉴 end-->
     <script th:inline="javascript">
@@ -836,15 +800,18 @@
             }
         }
 
-        async function loadZzimList() {
+        async function loadQuickList() {
             const url = "/user_yes/quick_menu.do";
             const resp = await fetch(url);
-            const html = await resp.text();
-            document.getElementById("zzimListBox").innerHTML = html;
+            if (resp.status === 200) {
+                document.getElementById("quickListBox").innerHTML = await resp.text();;
+            } else {
+                alert("요청 오류"+resp.status);
+            }
         }
 
         if ([[${session.loginUser}]]!=null) {
-            loadZzimList();
+            loadQuickList();
         }
     </script>
 </div>

@@ -304,11 +304,11 @@ public class UserController {
             session.removeAttribute("loginUser");
             UserDto user = userService.selectOne(loginUser.getUserId());
             session.setAttribute("loginUser", user);
-            return "redirect:/user/user_yes/temp.do";
+            session.setAttribute("msg", "사용자 정보가 성공적으로 수정되었습니다.");
         } else {
             session.setAttribute("msg", "사용자 정보 수정 중 오류 뜸");
-            return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
         }
+        return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
     }
 
     @GetMapping("/admin/list.do")

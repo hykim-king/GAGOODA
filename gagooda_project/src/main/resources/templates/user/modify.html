@@ -2,52 +2,102 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
 </head>
-<div layout:fragment="content">
-    <form action="/user/user_yes/modify.do" method="post">
+<div layout:fragment="myPageContent">
+    <form action="/user/user_yes/modify.do" method="post" class="container mt-5" style="width: 60%; margin-bottom: 200px">
         <input type="hidden" name="userId" th:value="${userId}">
-        <div>
-            <label for="email">이메일</label>
-            <input type="email" name="email" id="email" th:value="${session.loginUser.email}" required>
+        <h3 class="text-center">회원 정보 수정</h3>
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control form-control-lg" name="email" id="email" th:value="${session.loginUser.email}" required>
         </div>
-        <div>
-            <label for="uname">이름</label>
-            <input type="text" name="uname" id="uname"
-                   th:value="${session.loginUser.uname}" required>
+        <div class="mb-3">
+            <label for="uname" class="form-label">이름</label>
+            <input type="text" class="form-control form-control-lg" id="uname" name="uname"
+                   required readonly th:value="${session.loginUser.uname}">
         </div>
-        <div>
-            <label for="nickname">닉네임</label>
+        <div class="mb-3">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" class="form-control form-control-lg"
+                   id="phone" name="phone" required readonly th:value="${session.loginUser.phone}">
+        </div>
+        <button type="button" class="form-control form-control-lg mb-4" onclick="onClickCertification()"
+                style="background-color: #FFFAF5; color: #B68C68" id="basic-addon2"> 본인인증
+        </button>
+        <div class="mb-3">
+            <label for="nickname" class="form-label">닉네임</label>
             <input type="text" name="nickname" id="nickname"
-                   th:value="${session.loginUser.nickname}" required>
+                   th:value="${session.loginUser.nickname}" required
+                   class="form-control form-control-lg">
         </div>
-        <fieldset>
-            <label for="phone">전화번호</label>
-            <input type="text" id="phone" name="phone"
-                   th:value="${session.loginUser.phone}" required>
-            <button type="button">인증번호 받기</button>
-        </fieldset>
-
         <div>
-            <label for="varify">인증번호 입력</label>
-            <input type="text" id="varify" required>
+            <input type="checkbox" name="emailcheck" id="emailcheck" class="form-check-input"
+                   th:checked="(${session.loginUser.emailCheck})?'true':'false'">
+            <label for="emailcheck" class="form-check-label">광고 및 업데이트 관련 이메일 수신 동의</label>
         </div>
 
-        <div>
-            <label for="emailcheck">광고 및 업데이트 관련 이메일 수신 동의</label>
-            <th:block th:if="${session.loginUser.emailCheck}">
-                <input type="checkbox" name="emailcheck" id="emailcheckChecked" checked>
-            </th:block>
-            <th:block th:if="${!session.loginUser.emailCheck}">
-                <input type="checkbox" name="emailcheck" id="emailcheck">
-            </th:block>
-        </div>
-
-        <button type="submit">수정하기</button>
-        <a href="/">취소하기</a>
+        <button type="submit" class="form-control form-control-lg text-white my-5" style="background-color: #B68C68;">수정하기</button>
     </form>
+    <script th:inline="javascript">
+        const phone = signupForm["phone"];
+        const uname = signupForm["uname"];
+
+        const IMP = window.IMP;
+        IMP.init("imp61025700");
+
+        function onClickCertification() {
+            console.log("click");
+            /* 2. 본인인증 데이터 정의하기 */
+            const data = {
+                merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
+                company: '아임포트', // 회사명 또는 URL
+                // carrier: 'KT', // 통신사
+                // name: '양한나', // 이름
+                // phone: '01043302309', // 전화번호
+                popup: false
+            };
+
+            /* 4. 본인인증 창 호출하기 */
+            IMP.certification(data, callback);
+        };
+        /* 3. 콜백 함수 정의하기 */
+        async function callback(response) {
+            const {
+                success,
+                merchant_uid,
+                error_msg
+            } = response;
+
+            if (success) {
+                console.log('본인인증 성공')
+                console.log(response.imp_uid);
+                jQuery.ajax({
+                    url: "/user/certifications.do",
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    data: JSON.stringify({imp_uid: response.imp_uid}),
+                    success: function (data) {
+                        if (data != null) {
+                            console.log(data);
+                            const object = JSON.parse(data);
+                            uname.value = object.response.name;
+                            phone.value = object.response.phone;
+                        } else {
+                            alert("통신 중 오류가 있었습니다.");
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e)
+                    }
+                });
+            } else {
+                console.log(`본인인증 실패: ${error_msg}`);
+            }
+        }
+    </script>
 </div>
 </html>

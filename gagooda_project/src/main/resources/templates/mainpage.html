@@ -197,6 +197,7 @@
                 const json = await resp.json();
                 if (json === 1) {
                     await loadZzim(productCode);
+                    await loadQuickList();
                 } else {
                     alert("취소 중 오류가 발생하였습니다.");
                 }
@@ -209,10 +210,17 @@
             let url = "/zzim/user_yes/mypage/register.do";
             const formData = new FormData(zzimForm);
             const resp = await fetch(url, {method:"POST",body: formData});
-            const json = await resp.json();
-            console.log(json);
-            if (json === 1) {
-                await loadZzim(zzimForm["productCode"].value);
+            if (resp.status == 200) {
+                const json = await resp.json();
+                console.log(json);
+                if (json === 1) {
+                    await loadZzim(zzimForm["productCode"].value);
+                    await loadQuickList();
+                } else {
+                    alert("찜 등록 중 오류 발생")
+                }
+            } else {
+                alert("오류 발생"+resp.status);
             }
         }
 
