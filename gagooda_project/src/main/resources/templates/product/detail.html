@@ -330,6 +330,8 @@
                 };
             }
 
+            moreReview();
+
             const reviewModifyForms = document.querySelectorAll(".modifyForm");
             reviewModifyForms.forEach(modifyForm => {
                 modifyForm.onsubmit = function (e) {
@@ -452,6 +454,7 @@
             const resp = await fetch(reviewList);
             const html = await resp.text();
             document.getElementById("reviewList").innerHTML = html;
+            init();
         }
 
         const optionCode = product_choose.optionCode;
