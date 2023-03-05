@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form th:onsubmit="event.preventDefault(); modifyReply(this);"
+      name="replyModifyForm" enctype="multipart/form-data" action="/reply/modify.do" method="post">
+  <input type="hidden" name="commId" th:value="${reply.commId}">
+  <input type="hidden" name="fkReplyId" th:value="${reply.fkReplyId}">
+  <input type="hidden" name="replyId" th:value="${reply.replyId}">
+  <div>
+    <div >
+      <div >
+        <h3 >
+          <span th:text="${reply.replyId}"></span>.
+          댓글 수정 폼
+          <small class="uk-text-meta" th:text="${#calendars.format(reply.regDate)}"></small>
+        </h3>
+        <p class="">
+          <input class="form-control" name="userId" readonly th:value="${reply.userId}">
+        </p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <p class="uk-width-expand">
+            <textarea th:text="${reply.content}"
+                      name="content" class="uk-textarea uk-width-1-1" rows="2" placeholder="내용"></textarea>
+
+    </p>
+  </div>
+  <div class="uk-card-footer">
+    <ul class="uk-breadcrumb">
+      <li>
+        <button type="reset" class="btn-warning">초기화</button>
+      </li>
+      <li>
+        <button type="submit" class="btn-primary">수정</button>
+      </li>
+    </ul>
+  </div>
+</form>
+</html>

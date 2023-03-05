@@ -121,4 +121,10 @@ public class CommunityServiceImp implements CommunityService{
             throw new Error("커뮤니티 저장하다가 생긴 오류");
         }
     }
+
+    @Override
+    public CommunityDto detail(int commId) {
+        communityMapper.updateViews(commId);
+        return communityMapper.findById(commId);
+    }
 }

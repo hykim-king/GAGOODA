@@ -49,14 +49,14 @@
         function modifyCommunity(commId) {
             let result = confirm("포스트를 수정하시겠습니까 ?");
             if (result == true) {
-                location.href = '/community/user_yes/'+commId+'/list.do';
+                location.href = '/community/'+commId+'/detail.do';
             }
         }
 
         function cancel(commId) {
             let result = confirm("포스트 수정을 취소하시겠습니까 ?");
             if (result == true) {
-                location.href = '/community/user_yes/'+commId+'/list.do';
+                location.href = '/community/'+commId+'/detail.do';
             }
         }
     </script>

@@ -3,6 +3,8 @@ package com.example.gagooda_project.service;
 import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ReplyDto;
 import com.example.gagooda_project.mapper.ReplyMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +12,19 @@ import java.util.List;
 @Service
 public class ReplyServiceImp implements ReplyService{
     private ReplyMapper replyMapper;
+    private Logger log= LoggerFactory.getLogger(this.getClass());
+
+    public ReplyServiceImp(ReplyMapper replyMapper) {
+        this.replyMapper = replyMapper;
+    }
 
     @Override
     public List<ReplyDto> commDetailList(int commId, PagingDto paging) {
-        return null;
+        log.info("service에 진입했습니다.");
+        int totalRows =replyMapper.countByCommId(commId,paging) ;
+        log.info("totalRows: "+totalRows);
+        paging.setTotalRows(totalRows);
+        return replyMapper.findByCommIdPaging(commId, paging);
     }
 
     @Override
@@ -23,12 +34,12 @@ public class ReplyServiceImp implements ReplyService{
 
     @Override
     public int removeOne(int replyId) {
-        return 0;
+        return replyMapper.deleteById(replyId);
     }
 
     @Override
     public int modifyOne(ReplyDto reply) {
-        return 0;
+        return replyMapper.updateById(reply);
     }
 
     @Override
@@ -38,6 +49,7 @@ public class ReplyServiceImp implements ReplyService{
 
     @Override
     public ReplyDto detail(int replyId) {
-        return null;
+
+        return replyMapper.findById(replyId);
     }
 }
