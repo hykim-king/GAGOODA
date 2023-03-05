@@ -44,6 +44,7 @@ public class ExchangeController {
 
     @GetMapping("user_yes/mypage/list.do")
     public String list(@SessionAttribute UserDto loginUser,
+                       @SessionAttribute(required = false) String msg,
                        @RequestParam(name = "period", defaultValue = "7", required = false) int period,
                        @RequestParam(name = "startDate", required = false) String startDate,
                        @RequestParam(name = "endDate", required = false) String endDate,
@@ -53,6 +54,10 @@ public class ExchangeController {
                        HttpSession session,
                        Model model) {
         log.info("req.getParameterMap:"+req.getParameterMap());
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         try {
             paging.setQueryString(req.getParameterMap());
             List<ExchangeDto> exchangeList = exchangeService.showUserExchangeList(loginUser.getUserId(), period, startDate, endDate, detCode, paging);
@@ -60,18 +65,24 @@ public class ExchangeController {
             model.addAttribute("exchangeList", exchangeList);
             model.addAttribute("userExchangeCount", userExchangeCount);
             model.addAttribute("paging", paging);
+            return "exchange/user/list";
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-//        model.addAttribute("refundMsg", refundMsg);
-        return "exchange/user/list";
     }
 
     @GetMapping("user_yes/mypage/{exchangeId}/detail.do")
     public String detail(@SessionAttribute UserDto loginUser,
+                         @SessionAttribute(required = false) String msg,
                          @PathVariable int exchangeId,
                          HttpSession session,
                          Model model) {
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         ExchangeDto exchange = null;
         try {
             exchange = exchangeService.selectOne(exchangeId);
@@ -85,12 +96,14 @@ public class ExchangeController {
                 model.addAttribute("order", order);
                 return "exchange/user/detail";
             }else{
-                return "index";
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-        return "refund/user/list";
     }
 
     @PostMapping("user_yes/mypage/{exchangeId}/modify.do")
@@ -107,16 +120,18 @@ public class ExchangeController {
             }
         }
         if (modify > 0) {
-//            session.setAttribute("exchangeMsg", "교환 요청이 성공적으로 취소되었습니다.");
+            session.setAttribute("msg", "교환 요청이 성공적으로 취소되었습니다.");
             return "redirect:/exchange/user_yes/mypage/list.do";
         } else {
-//            session.setAttribute("refundMsg", "정보가 일치하지 않습니다.");
-            return "redirect:/exchange/user_yes/mypage/detail.do/"+exchangeId;
+            session.setAttribute("msg", "정보가 일치하지 않습니다.");
+            return "redirect:/exchange/user_yes/mypage/"+exchangeId+"/detail.do";
         }
     }
 
     @GetMapping("admin/list.do")
     public String adminList(@SessionAttribute UserDto loginUser,
+                            @SessionAttribute(required = false) String msg,
+                            HttpSession session,
                             PagingDto paging,
                             HttpServletRequest req,
                             @RequestParam(name = "exDet", required = false, defaultValue = "") String exDet,
@@ -128,6 +143,10 @@ public class ExchangeController {
                             Model model){
         log.info("req.getParameterMap:"+req.getParameterMap());
         log.info("requestUri:" +req.getRequestURI());
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         try{
             if (loginUser.getGDet().equals("g1")){
                 Map<String, Object> searchFilter = new HashMap<>();
@@ -147,12 +166,14 @@ public class ExchangeController {
                 return "exchange/admin/list";
             }
             else{
-                return "/index";
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         }catch (Exception e){
             e.printStackTrace();
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-        return "exchange/admin/list";
     }
 
     @GetMapping("admin/{exchangeId}/detail.do")
@@ -160,25 +181,35 @@ public class ExchangeController {
                               HttpSession session,
                               HttpServletRequest req,
                               @SessionAttribute UserDto loginUser,
+                              @SessionAttribute(required = false) String msg,
                               Model model){
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         try{
             if(loginUser.getGDet().equals("g1")){
                 ExchangeDto exchange = exchangeService.selectOne(exchangeId);
                 OrderDetailDto orderDetail = exchangeService.selectOrderDetailById(exchange.getOrderDetailId());
+                OptionProductDto optionProduct = exchangeService.selectOptionProductByOptionCode(orderDetail.getOptionCode());
                 OrderDto order = orderService.selectOne(exchange.getOrderId());
                 session.setAttribute("prevUri",req.getRequestURI());
                 List<CommonCodeDto> allExList = exchangeService.showDetCodeList("ex");
                 model.addAttribute("exchange", exchange);
                 model.addAttribute("orderDetail", orderDetail);
+                model.addAttribute("optionProduct", optionProduct);
                 model.addAttribute("order",order);
                 model.addAttribute("exCodeList", allExList);
                 return "exchange/admin/detail";
+            }else{
+                session.setAttribute("msg", "잘못된 접근입니다.");
+                return "redirect:/";
             }
         }catch (Exception e){
             log.info(e.getMessage());
+            session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+            return "redirect:/";
         }
-//        return "redirect:/refund/admin/list.do";
-        return "exchange/admin/detail";
     }
 
     @PostMapping("admin/{exchangeId}/modify.do")
@@ -199,5 +230,38 @@ public class ExchangeController {
             }
         }
         return "redirect:"+req.getRequestURI();
+    }
+
+    @PostMapping("admin/{exchangeId}/stockModify.do")
+    @ResponseBody
+    public int stockModify(@PathVariable int exchangeId,
+                                         OptionProductDto optionProduct,
+                                         @SessionAttribute UserDto loginUser){
+        int modify = 0;
+        ExchangeDto exchange = null;
+        OrderDetailDto orderDetail = null;
+        OptionProductDto checkOptPro = null;
+        if(loginUser.getGDet().equals("g1")){
+            try{
+                exchange = exchangeService.selectOne(exchangeId);
+                orderDetail = exchangeService.selectOrderDetailById(exchange.getOrderDetailId());
+                checkOptPro = exchangeService.selectOptionProductByOptionCode(orderDetail.getOptionCode());
+                if(checkOptPro.getOptionCode().equals(optionProduct.getOptionCode())){
+                    int stock = checkOptPro.getStock();
+                    int subCount = exchange.getCnt();
+                    int modifiedStock = stock - subCount;
+                    if (modifiedStock > 0){
+                        modify = exchangeService.modifyOptionProductStock(modifiedStock, orderDetail.getOptionCode());
+                        return modify;
+                    }else if(modifiedStock < 0){
+                        modify = -1;
+                        return modify;
+                    }
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return modify;
     }
 }

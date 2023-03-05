@@ -42,10 +42,15 @@
                 <label><input type="checkbox" name="rfDet" id="rf8" value="rf8" > 환불 불가 </label>
             </div>
         </div>
-        <button type="submit" class="btn btn-outline-secondary">검색</button>
-        <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
+        <div class="d-flex justify-content-between">
+            <div>
+                <button type="submit" class="btn btn-outline-secondary">검색</button>
+                <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
+            </div>
+            <a class="btn btn-outline-danger cancelAllBtn" onclick="cancelAll()" href="javascript:void(0)">직접 환불</a>
+        </div>
     </form>
-    <h3>환불 신청 <span th:if="${refundList != null && !refundList.isEmpty() }" th:text="${refundList.size()}"></span></h3>
+    <h3>환불 신청 <span th:text="${refundCount}"></span></h3>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -119,15 +124,56 @@
     forms.searchDiv.onchange = (qualifiedName, value)=>{
         console.log(forms.searchDiv.value);
         forms.searchWord.setAttribute("required", value);
+        if(!forms.searchDiv.value){
+            forms.searchWord.removeAttribute("required");
+        }
+    }
+    forms.searchWord.onchange = (qualifiedName, value)=>{
+        forms.searchDiv.setAttribute("required", value);
+        if (!forms.searchWord.value){
+            forms.searchDiv.removeAttribute("required");
+        }
     }
     forms.dateType.onchange = (qualifiedName, value)=>{
         forms.startDate.setAttribute("required", value);
         forms.endDate.setAttribute("required", value);
+        if(!forms.dateType.value && !forms.startDate.value && !forms.endDate.value){
+            forms.startDate.removeAttribute("required");
+            forms.endDate.removeAttribute("required");
+        }
     }
+    forms.startDate.onchange = (qualifiedName, value)=>{
+        forms.dateType.setAttribute("required", value);
+        forms.endDate.setAttribute("required", value);
+        if(!forms.startDate.value && !forms.startDate.value && !forms.endDate.value){
+            forms.dateType.removeAttribute("required");
+            forms.endDate.removeAttribute("required");
+        }
+    }
+    forms.endDate.onchange = (qualifiedName, value)=>{
+        forms.dateType.setAttribute("required", value);
+        forms.startDate.setAttribute("required", value);
+        if(!forms.endDate.value && !forms.startDate.value && !forms.endDate.value){
+            forms.dateType.removeAttribute("required");
+            forms.startDate.removeAttribute("required");
+        }
+    }
+
     forms.reset.onclick=()=>{
-        forms.searchWord.removeAttribute("required");
-        forms.startDate.removeAttribute("required");
-        forms.endDate.removeAttribute("required");
+        // forms.searchWord.removeAttribute("required");
+        // forms.startDate.removeAttribute("required");
+        // forms.endDate.removeAttribute("required");
+        console.log(forms[0])
+        console.log(forms.length)
+        for (let i = 0; i < 5;i++){
+            forms[i].removeAttribute("required")
+        }
+    }
+
+    /* 전체 주문 환불 팝업 버튼 */
+    function cancelAll(){
+        let url = "http://"+window.location.host+"/refund/admin/payments/cancel.do"
+        window.open(url, "cancelAll", "width=450, height=600, resizable=no")
     }
 
 </script>

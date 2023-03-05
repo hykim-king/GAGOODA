@@ -23,4 +23,6 @@ public interface ExchangeService {
     public int countByUser(int userId);
     public int registerAddress(AddressDto address);
     public OrderDetailDto selectOrderDetailById(int orderDetailId);
+    public OptionProductDto selectOptionProductByOptionCode(String optionCode);
+    public int modifyOptionProductStock(int count, String optionCode);
 }

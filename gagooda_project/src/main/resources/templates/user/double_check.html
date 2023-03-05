@@ -2,19 +2,24 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout.html}">
+      layout:decorate="~{/layout/mypageLayout}">
 <head>
     <meta charset="UTF-8">
     <title>두번 확인</title>
 </head>
-<div layout:fragment="content">
-    <form action="/user/user_yes/double_check.do" method="post">
-        <div>
-            <label for="pw">비밀번호</label>
-            <input type="password" name="pw" id="pw">
+<div layout:fragment="myPageContent">
+    <h3 class="text-center">본인 확인</h3>
+    <form action="/user/user_yes/double_check.do" method="post"
+          class="container mt-5" style="width: 60%; margin-bottom: 200px">
+        <div class="mb-3">
+            <label for="pw" class="form-label">비밀번호</label>
+            <input type="password" name="pw" id="pw"
+                   class="form-control form-control-lg">
         </div>
-        <button type="submit">확인</button>
-        <a href="/">취소</a>
+        <div class="mb-3">
+            <button type="submit" class="form-control form-control-lg text-white my-5"
+                    style="background-color: #B68C68;">확인</button>
+        </div>
     </form>
 </div>
 </html>
