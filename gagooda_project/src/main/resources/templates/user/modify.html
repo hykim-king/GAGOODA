@@ -48,6 +48,8 @@
 
         <button type="submit">수정하기</button>
         <a href="/">취소하기</a>
+        <a th:href="@{'/user/user_yes/{userId}/remove.do' (userId=${userId})}">삭제하기</a>
+        <a th:href="@{'/user/{userId}/password_reset.do' (userId = ${userId})} ">비밀번호 변경</a>
     </form>
 </div>
 </html>

@@ -3,12 +3,10 @@ package com.example.gagooda_project.controller;
 import com.example.gagooda_project.dto.*;
 import com.example.gagooda_project.service.*;
 import com.siot.IamportRestClient.IamportClient;
-import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.PagedDataList;
 import com.siot.IamportRestClient.response.Payment;
-import jakarta.mail.Session;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
@@ -19,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -27,11 +24,11 @@ import java.util.*;
 @RequestMapping("/refund")
 public class RefundController {
 
-    RefundServiceImp refundServiceImp;
-    OrderServiceImp orderServiceImp;
-    ImageServiceImp imageServiceImp;
-    AddressServiceImp addressServiceImp;
-    PaymentServiceImp paymentServiceImp;
+    RefundService refundService;
+    OrderService orderService;
+    ImageService imageService;
+    AddressService addressService;
+    PaymentService paymentService;
     ExchangeService exchangeService;
     Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
     @Value("${img.upload.path}")
@@ -40,17 +37,17 @@ public class RefundController {
     private final IamportClient iamportClient;
     private static int imageCount = 1000;
 
-    public RefundController(RefundServiceImp refundServiceImp,
-                            OrderServiceImp orderServiceImp,
-                            ImageServiceImp imageServiceImp,
-                            AddressServiceImp addressServiceImp,
-                            PaymentServiceImp paymentServiceImp,
+    public RefundController(RefundService refundService,
+                            OrderService orderService,
+                            ImageService imageService,
+                            AddressService addressService,
+                            PaymentService paymentService,
                             ExchangeService exchangeService) {
-        this.refundServiceImp = refundServiceImp;
-        this.orderServiceImp = orderServiceImp;
-        this.imageServiceImp = imageServiceImp;
-        this.addressServiceImp = addressServiceImp;
-        this.paymentServiceImp = paymentServiceImp;
+        this.refundService = refundService;
+        this.orderService = orderService;
+        this.imageService = imageService;
+        this.addressService = addressService;
+        this.paymentService = paymentService;
         this.exchangeService = exchangeService;
         this.iamportClient = new IamportClient("5625884002542635", "V1vlsxRPO59Ty3xDEKlhf2W7gkv2dMU4Hld8EFXYvuDedHnF3kRWvX1gqt9DNsg6GQSmoz2D76iogdnU");
     }
@@ -73,8 +70,8 @@ public class RefundController {
         }
         try {
             paging.setQueryString(req.getParameterMap());
-            List<RefundDto> refundList = refundServiceImp.showUserRefundList(loginUser.getUserId(), period, startDate, endDate, detCode, paging);
-            int userRefundCount = refundServiceImp.showCountByUser(loginUser.getUserId(), period, startDate, endDate, detCode);
+            List<RefundDto> refundList = refundService.showUserRefundList(loginUser.getUserId(), period, startDate, endDate, detCode, paging);
+            int userRefundCount = refundService.showCountByUser(loginUser.getUserId(), period, startDate, endDate, detCode);
             model.addAttribute("refundList", refundList);
             model.addAttribute("userRefundCount", userRefundCount);
             model.addAttribute("paging", paging);
@@ -97,10 +94,10 @@ public class RefundController {
             session.removeAttribute("msg");
         }
         try{
-            OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
-            OrderDto order = orderServiceImp.selectOne(orderDetail.getOrderId());
+            OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
+            OrderDto order = orderService.selectOne(orderDetail.getOrderId());
             if(loginUser.getUserId() == order.getUserId()){
-                List<RefundDto> checkRefundList = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId());
+                List<RefundDto> checkRefundList = refundService.selectOrderDetail(orderDetail.getOrderDetailId());
                 List<ExchangeDto> checkExchangeList = exchangeService.selectOrderDetail(orderDetail.getOrderDetailId());
                 boolean isOk = true;
                 if(checkRefundList != null){
@@ -120,9 +117,9 @@ public class RefundController {
                     }
                 }
                 if(isOk){
-                    int refundCount = refundServiceImp.countByOrderId(order.getOrderId());
-                    List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
-                    AddressDto orderAddress = refundServiceImp.selectAddress(order.getAddressId());
+                    int refundCount = refundService.countByOrderId(order.getOrderId());
+                    List<AddressDto> addressList = refundService.showAddressListByUserId(loginUser.getUserId());
+                    AddressDto orderAddress = refundService.selectAddress(order.getAddressId());
 
                     model.addAttribute("orderDetail", orderDetail);
                     model.addAttribute("order", order);
@@ -156,8 +153,8 @@ public class RefundController {
         String code;
         int seq = 1;
             try {
-                OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
-                List<RefundDto> checkRefund = refundServiceImp.selectOrderDetail(orderDetail.getOrderDetailId());
+                OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
+                List<RefundDto> checkRefund = refundService.selectOrderDetail(orderDetail.getOrderDetailId());
                 List<ExchangeDto> checkExchange = exchangeService.selectOrderDetail(orderDetail.getOrderDetailId());
 
                 if (loginUser.getUserId() == refund.getUserId() && refund.getOrderId().equals(orderDetail.getOrderId())) {
@@ -166,19 +163,19 @@ public class RefundController {
                         reType = "refund";
                         detailimgPath = imgPath + "/refund";
                         code = reType + refund.getOrderId() + refund.getOrderDetailId();
-                        List<ImageDto> imgList = imageServiceImp.showImagesWithCode(code);
+                        List<ImageDto> imgList = imageService.showImagesWithCode(code);
                         if(imgList != null){
                             code = code  + imageCount;
                             imageCount++;
                         }
                         refund.setImgCode(code);
-                        register += refundServiceImp.registerOne(refund);
+                        register += refundService.registerOne(refund);
                         /* 등록 */
                         if (register > 0) { // 성공했을 시
                             if (imgFileList.size() > 0){
                                 for (MultipartFile imgFile : imgFileList) {
                                     if (!imgFile.isEmpty()){
-                                        register += imageServiceImp.registerMultipartImage(imgFile, detailimgPath, code, seq);
+                                        register += imageService.registerMultipartImage(imgFile, detailimgPath, code, seq);
                                         seq++;
                                     }
                                 }
@@ -212,7 +209,7 @@ public class RefundController {
                         exchange.setRfrDet(refund.getRfrDet());
                         /* 등록 */
                         code = reType + exchange.getOrderId() + exchange.getOrderDetailId();
-                        List<ImageDto> imgList = imageServiceImp.showImagesWithCode(code);
+                        List<ImageDto> imgList = imageService.showImagesWithCode(code);
                         if(imgList != null){
                             code = code  + imageCount;
                             imageCount++;
@@ -223,7 +220,7 @@ public class RefundController {
                             if (imgFileList.size() > 0) {
                                 for (MultipartFile imgFile : imgFileList) {
                                     if (!imgFile.isEmpty()){
-                                        imageServiceImp.registerMultipartImage(imgFile, detailimgPath, code, seq);
+                                        imageService.registerMultipartImage(imgFile, detailimgPath, code, seq);
                                         seq++;
                                     }
                                 }
@@ -258,13 +255,13 @@ public class RefundController {
         }
         RefundDto refund = null;
         try {
-            refund = refundServiceImp.selectOne(refundId);
+            refund = refundService.selectOne(refundId);
             if (loginUser.getUserId() == refund.getUserId()) {
-                List<CommonCodeDto> rfDetList = refundServiceImp.showDetCodeList("rf");
-                List<CommonCodeDto> rfrDetList = refundServiceImp.showDetCodeList("rfr");
-                OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
+                List<CommonCodeDto> rfDetList = refundService.showDetCodeList("rf");
+                List<CommonCodeDto> rfrDetList = refundService.showDetCodeList("rfr");
+                OrderDto order = orderService.selectOne(refund.getOrderId());
                 if(refund.getRfDet().equals("rf7")){
-                    PaymentDto paymentDto = paymentServiceImp.selectOne(refund.getOrderId());
+                    PaymentDto paymentDto = paymentService.selectOne(refund.getOrderId());
                     IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(paymentDto.getImpUid());
                     if(paymentResp != null){
                         model.addAttribute("payment", paymentResp.getResponse());
@@ -291,10 +288,10 @@ public class RefundController {
                          @SessionAttribute UserDto loginUser,
                          HttpSession session) {
         int modify = 0;
-        RefundDto upRefund = refundServiceImp.selectOne(refundId);
+        RefundDto upRefund = refundService.selectOne(refundId);
         if (loginUser.getUserId() == upRefund.getUserId()) {
             try {
-                modify += refundServiceImp.modifyOne(upRefund, "user");
+                modify += refundService.modifyOne(upRefund, "user");
             } catch (Exception e) {
                 e.printStackTrace();
                 session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
@@ -320,14 +317,14 @@ public class RefundController {
             if (session.getAttribute("addressId") != null ){
                 addressId = (int) session.getAttribute("addressId");
                 session.removeAttribute("addressId");
-                AddressDto address = addressServiceImp.selectOne(addressId);
+                AddressDto address = addressService.selectOne(addressId);
                 model.addAttribute("addressId", addressId);
                 model.addAttribute("address",address);
             }
-            OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
-            OrderDto order = orderServiceImp.selectOne(orderDetail.getOrderId());
+            OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
+            OrderDto order = orderService.selectOne(orderDetail.getOrderId());
             if(loginUser.getUserId() == order.getUserId()){
-                List<AddressDto> addressList = refundServiceImp.showAddressListByUserId(loginUser.getUserId());
+                List<AddressDto> addressList = refundService.showAddressListByUserId(loginUser.getUserId());
                 model.addAttribute("addressList",addressList);
                 model.addAttribute("order",order);
             }
@@ -350,12 +347,12 @@ public class RefundController {
         log.info("$$$$$$$$$$$$$$$"+address.getPostCode());
         log.info("$$$$$$$$$$$$$$$"+address.getUserId());
         try{
-            OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(orderDetailId);
-            OrderDto order = orderServiceImp.selectOne(orderDetail.getOrderId());
+            OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
+            OrderDto order = orderService.selectOne(orderDetail.getOrderId());
             if (loginUser.getUserId() == order.getUserId()){
-                register = addressServiceImp.register(address);
+                register = addressService.register(address);
                 if (register > 0){
-                    return refundServiceImp.selectAddress(address.getAddressId());
+                    return refundService.selectAddress(address.getAddressId());
                 }
             }
         }catch (Exception e){
@@ -390,10 +387,10 @@ public class RefundController {
                 searchFilter.put("rfDet",rfDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord", searchWord);
                 searchFilter.put("dateType", dateType); searchFilter.put("startDate", startDate); searchFilter.put("endDate", endDate);
                 searchFilter.put("paging", paging);
-                List<CommonCodeDto> rfCodeList = refundServiceImp.showDetCodeList("rf");
-                List<RefundDto> refundList = refundServiceImp.showRefundList(searchFilter);
-                int refundCount = refundServiceImp.countPageAll(searchFilter);
-                int allRfCnt = refundServiceImp.countAll();
+                List<CommonCodeDto> rfCodeList = refundService.showDetCodeList("rf");
+                List<RefundDto> refundList = refundService.showRefundList(searchFilter);
+                int refundCount = refundService.countPageAll(searchFilter);
+                int allRfCnt = refundService.countAll();
                 model.addAttribute("refundList", refundList);
                 model.addAttribute("rfCodeList", rfCodeList);
                 model.addAttribute("paging",paging);
@@ -427,12 +424,12 @@ public class RefundController {
         IamportResponse<Payment> paymentResp = null;
         try{
             if(loginUser.getGDet().equals("g1")){
-                RefundDto refund = refundServiceImp.selectOne(refundId);
-                OrderDto order = orderServiceImp.selectOne(refund.getOrderId());
-                OrderDetailDto orderDetail = refundServiceImp.selectOrderDetailByid(refund.getOrderDetailId());
-                List<CommonCodeDto> allRfList = refundServiceImp.showDetCodeList("rf");
+                RefundDto refund = refundService.selectOne(refundId);
+                OrderDto order = orderService.selectOne(refund.getOrderId());
+                OrderDetailDto orderDetail = refundService.selectOrderDetailByid(refund.getOrderDetailId());
+                List<CommonCodeDto> allRfList = refundService.showDetCodeList("rf");
 
-                payment = paymentServiceImp.selectOne(refund.getOrderId());
+                payment = paymentService.selectOne(refund.getOrderId());
                 if (payment != null){
                     paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
                     if (paymentResp != null){
@@ -465,7 +462,7 @@ public class RefundController {
         int modify = 0;
         if(loginUser.getGDet().equals("g1") && refundId == refund.getRefundId()){
             try{
-                modify += refundServiceImp.modifyOne(refund, "admin");
+                modify += refundService.modifyOne(refund, "admin");
                 if(modify > 0){
                     return "redirect:/refund/admin/"+refundId+"/detail.do";
                 }
@@ -481,7 +478,7 @@ public class RefundController {
     public String paymentsTemp(@PathVariable String orderId,
                                Model model){
         try{
-            OrderDto order = orderServiceImp.selectOne(orderId);
+            OrderDto order = orderService.selectOne(orderId);
             IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid("imp_969193682313");
             IamportResponse<PagedDataList<Payment>> allPaymentsResp = iamportClient.paymentsByStatus("all");
             model.addAttribute("order", order);

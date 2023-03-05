@@ -100,7 +100,7 @@
                         <div class="col-5">
                             <div>
                                 <label for="reason">상세 환불 사유</label>
-                                <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+                                <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요." required></textarea>
                             </div>
                         </div>
 
@@ -158,9 +158,6 @@
                     </div>
                 </div>
 
-
-
-
             </fieldset>
             <div class="d-flex justify-content-end">
                 <button name="refundSubmit" id="refundSubmit" form="refundRegister" type="submit" class="btn text-white me-2" style="background-color: #B68C68;">신청하기</button>
@@ -189,11 +186,11 @@
                             </div>
                             <div>
                                 <label for="newPostCode">우편번호</label>
-                                <input class="form-control" type="number" name="postCode" id="newPostCode" required>
+                                <input class="form-control" type="number" name="postCode" id="newPostCode" readonly required>
                             </div>
                             <div>
                                 <label for="newAddress">주소</label>
-                                <input class="form-control" type="text" name="address" id="newAddress" required>
+                                <input class="form-control" type="text" name="address" id="newAddress" readonly required>
                             </div>
                             <div>
                                 <label for="newAddressDetail">상세주소</label>
@@ -205,7 +202,7 @@
                             </div>
                             <fieldset>
                                 <label for="newReceiverPhone">수령인 전화번호</label>
-                                <input class="form-control" type="number" id="newReceiverPhone" name="receiverPhone" maxlength="11" required>
+                                <input class="form-control" type="number" id="newReceiverPhone" name="receiverPhone" oninput="maxLengthCheck('newReceiverPhone',11)" required>
                             </fieldset>
 
                             <div class="form-check">
@@ -214,7 +211,7 @@
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label" for="newElevator">엘레베이터 유무 여부</label>
-                                <input class="form-check-input" type="checkbox" name="elevator" id="newElevator" value="1">
+                                <input class="form-check-input" type="checkbox" name="elevator" id="newElevator" value="1" >
                             </div>
                         </form>
                     </div>
@@ -228,6 +225,14 @@
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
+            /* input validation */
+            function maxLengthCheck(id, length){
+                let e = document.getElementById(id)
+                if(e.value.length > length){
+                    e.value = e.value.slice(0,length);
+                }
+            }
+
             let newAddressRegister = document.forms.addressRegister;
             let refundRegister = document.forms.refundRegister;
             refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;

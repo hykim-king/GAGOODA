@@ -298,7 +298,9 @@
         if (rfDet.toString() !== "rf7"){ // 환불 완료 상태가 아닐 시
             let rfDetOpt = document.querySelectorAll(".rfDet");
             rfDetOpt.forEach(element=>{
-                if (rfDetOpt.value !== "rf0" || rfDetOpt.value !== "rf1"){ // 환불 요청과 환불 요청 취소가 아닌 상태는
+                if (element.value === "rf0" || element.value === "rf1"){
+                    console.log("rfDet: "+element.value)
+                }else{ // 환불 요청과 환불 요청 취소가 아닌 상태는
                     element.disabled = false  // 이용할 수 있다.
                 }
             })

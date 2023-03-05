@@ -226,7 +226,7 @@ public class UserController {
             e.printStackTrace();
         }
         if (user != null) {
-            return "redirect:/user/user_yes/temp.do";
+            return "redirect:/user/user_yes/"+user.getUserId()+"/modify.do";
         } else {
             return "redirect:/user/user_yes/double_check.do";
         }
