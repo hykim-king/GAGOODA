@@ -75,6 +75,7 @@ public class DeliveryController {
             if(loginUser.getGDet().equals("g1")) {
                 Map<String, Object> searchFilter = new HashMap<>();
                 paging.setQueryString(req.getParameterMap());
+                System.out.println("@@@@@@@@@@@@@@@"+paging);
                 searchFilter.put("dDet",dDet); searchFilter.put("searchDiv",searchDiv); searchFilter.put("searchWord",searchWord);
                 searchFilter.put("dateType",dateType); searchFilter.put("startDate",startDate); searchFilter.put("endDate",endDate);
                 searchFilter.put("paging", paging);

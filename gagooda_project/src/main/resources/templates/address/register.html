@@ -11,7 +11,7 @@
 <h2 class="text-center my-4">사용자 배송지 입력</h2>
   <hr style="margin-bottom:0px; background : #b68c68; height: 5px">
 
-  <form action="/address/user_yes/mypage/register.do" class="container mt-5" style="width: 40%; margin-bottom: 200px" method="post"  enctype="multipart/form-data">
+  <form action="/address/user_yes/mypage/register.do" class="container mt-5" style="width: 40%; margin-bottom: 200px" method="post"  enctype="multipart/form-data" name="addressRegisterForm">
 
 
   <div class="my-3">
@@ -21,7 +21,7 @@
     <label for="postCode"  class="form-label">우편번호</label>
     <div class="input-group my-1">
       <input type="button" style="background-color: #FFFAF5; color: #B68C68" onclick="DaumPostcode()" value="우편번호 찾기" class="d_btn input-group-text">
-      <input type="text" name="postCode" class="form-control form-control-lg" id="postCode" required>
+      <input type="text" name="postCode" class="form-control form-control-lg" id="postCode" readonly required>
   </div>
   <div class="my-3">
     <label for="address"  class="form-label">주소</label>
@@ -39,6 +39,7 @@
     <label for="receiverPhone"  class="form-label">수령인 전화번호</label>
     <input type="text" id="receiverPhone" class="form-control form-control-lg" name="receiverPhone" required>
   </fieldset>
+    <span id="phoneCheckMsg"></span>
 
   <div class="my-3">
     <label for="home"  class="form-label">기본배송지 설정 여부</label>
@@ -57,6 +58,7 @@
 
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script>
+    const addressRegisterForm = document.forms["addressRegisterForm"];
     function DaumPostcode() {
       new daum.Postcode({
         oncomplete: function(data) {
@@ -103,6 +105,37 @@
           document.getElementById("addressDetail").focus();
         }
       }).open();
+    }
+    const phoneInput = addressRegisterForm["receiverPhone"];
+    phoneInput.addEventListener("change",(e)=>{
+      phoneCheck()
+    });
+
+    function phoneCheck() {
+      const phoneCheckMsg = document.getElementById("phoneCheckMsg");
+      const phone = addressRegisterForm["receiverPhone"];
+      if (phone.value === "") {
+        phoneCheckMsg.innerText = "";
+      } else if (isNaN(phone.value)) {
+        phoneCheckMsg.innerText = "전화번호를 정확히 입력해주세요.";
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      } else if (phone.value.length !== 11) {
+        phoneCheckMsg.innerText = "전화번호 11자리를 정확히 입력해 주세요.";
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      } else if (phone.value.slice(0,3) !== '010') {
+        phoneCheckMsg.innerText = "전화번호 앞 3자리는 010 이어야 합니다.";
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      } else {
+        phoneCheckMsg.innerText = "올바른 전화번호 입니다.";
+        phoneCheckMsg.setAttribute("style","color: #0f9105;")
+        return true;
+      }
+      return false;
+    }
+    addressRegisterForm.onsubmit=(e)=>{
+      if (!phoneCheck(e)) {
+        e.preventDefault();
+      }
     }
   </script>
 </div>

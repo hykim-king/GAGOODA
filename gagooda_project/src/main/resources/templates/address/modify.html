@@ -11,7 +11,7 @@
 <h2 class="text-center my-4">사용자 배송지 수정</h2>
   <hr style="margin-bottom: 1; background : #b68c68; height: 5px">
 
-  <form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px">
+  <form action="/address/user_yes/mypage/modify.do" method="post"  enctype="multipart/form-data" class="container mt-5" style="width: 40%; margin-bottom: 200px" name="addressModifyForm">
   <div class="my-3">
     <label for="aname" class="form-label">주소지 이름</label>
     <input type="text" name="aname" class="form-control form-control-lg" id="aname" th:value="${address.getAname}" required>
@@ -37,6 +37,7 @@
     <label for="receiverPhone" class="form-label">수령인 전화번호</label>
     <input type="text" id="receiverPhone" class="form-control form-control-lg" name="receiverPhone" th:value="${address.getReceiverPhone}" required>
   </div>
+    <span id="phoneCheckMsg"></span>
 
   <fieldset class="my-3">
     <legend>기본 배송지 설정 여부</legend>
@@ -71,7 +72,9 @@
 </form>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script>
+    const addressModifyForm = document.forms["addressModifyForm"];
     function DaumPostcode() {
+
       new daum.Postcode({
         oncomplete: function(data) {
           // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -118,15 +121,47 @@
         }
       }).open();
     }
-
     function deleteCheck() {
+
       let result = confirm("정말로 삭제하시겠습니까?");
       if (result==true) {
         location.href = "delete.do?address_id="+document.getElementById("addressId").value;
       } else {
+      }
 
+    }
+    const phoneInput = addressModifyForm["receiverPhone"];
+    phoneInput.addEventListener("change",(e)=> {
+      phoneCheck()
+    });
+
+    function phoneCheck() {
+      const phoneCheckMsg = document.getElementById("phoneCheckMsg");
+      const phone = addressModifyForm["receiverPhone"];
+      if (phone.value === "") {
+        phoneCheckMsg.innerText = "";
+      } else if (isNaN(phone.value)) {
+        phoneCheckMsg.innerText = "전화번호를 정확히 입력해주세요.";
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      }else if (phone.value.length !== 11) {
+        phoneCheckMsg.innerText = "전화번호 11자리를 정확히 입력해 주세요.";
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      } else if (phone.value.slice(0,3) !== '010' ) {
+        phoneCheckMsg.innerText = "전화번호 앞 3자리는 010 이어야 합니다."
+        phoneCheckMsg.setAttribute("style","color: #e53b3b;");
+      } else {
+        phoneCheckMsg.innerText = "올바른 전화번호 입니다.";
+        phoneCheckMsg.setAttribute("style","color: #0f9105;");
+        return true;
+      }
+      return false;
+    }
+    addressModifyForm.onsubmit=(e)=>{
+      if (!phoneCheck(e)) {
+        e.preventDefault();
       }
     }
+
   </script>
 </div>
 </html>
