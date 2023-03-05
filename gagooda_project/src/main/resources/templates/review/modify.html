@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title></title>
-    <style>
-        .star-rating {
-            display: flex;
-            flex-direction: row-reverse;
-            font-size: 2.25rem;
-            line-height: 2.5rem;
-            justify-content: space-around;
-            padding: 0 0.2em;
-            text-align: center;
-            width: 5em;
-        }
-        .star-rating>input {
-            display: none;
-        }
-        .star-rating label {
-            -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
-            -webkit-text-stroke-width: 2.3px;
-            -webkit-text-stroke-color: #2b2a29;
-            cursor: pointer;
-        }
-        .star-rating :checked ~ label {
-            -webkit-text-fill-color: #b68c68;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            -webkit-text-fill-color: #c19e80;
-        }
-    </style>
-</head>
+<style>
+    .rating {
+        display: inline-block;
+        position: relative;
+        height: 50px;
+        line-height: 50px;
+        font-size: 50px;
+    }
+    .rating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        cursor: pointer;
+    }
+    .rating label:last-child {
+        position: static;
+    }
+    .rating label:nth-child(1) {
+        z-index: 5;
+    }
+    .rating label:nth-child(2) {
+        z-index: 4;
+    }
+    .rating label:nth-child(3) {
+        z-index: 3;
+    }
+    .rating label:nth-child(4) {
+        z-index: 2;
+    }
+    .rating label:nth-child(5) {
+        z-index: 1;
+    }
+    .rating label input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+    .rating label .icon {
+        float: left;
+        color: transparent;
+    }
+    .rating label:last-child .icon {
+        color: #ddd;
+    }
+    .rating:not(:hover) label input:checked ~ .icon,
+    .rating:hover label:hover input ~ .icon {
+        color: #B68C68;
+    }
+    .rating label input:focus:not(:checked) ~ .icon:last-child {
+        color: #000;
+        text-shadow: 0 0 5px #09f;
+    }
+</style>
 <div class="modal fade" th:id="'exampleModal'+${review.reviewId}" tabindex="-1"
      th:aria-labelledby="'exampleModalLabel'+${review.reviewId}" aria-hidden="true"
      th:if="${session.loginUser != null}">
@@ -53,19 +77,38 @@
                         </div>
                         <div class="mb-3">
                             <div class="star-rating mx-auto">
-                                <th:block>
-
-                                </th:block>
-                                <input type="radio" id="5-stars" name="rate" th:value="${review.rate}"/>
-                                <label for="5-stars" class="star pr-4">★</label>
-                                <input type="radio" id="4-stars" name="rate" th:value="${review.rate}"/>
-                                <label for="4-stars" class="star">★</label>
-                                <input type="radio" id="3-stars" name="rate" th:value="${review.rate}"/>
-                                <label for="3-stars" class="star">★</label>
-                                <input type="radio" id="2-stars" name="rate" th:value="${review.rate}"/>
-                                <label for="2-stars" class="star">★</label>
-                                <input type="radio" id="1-star" name="rate" th:value="${review.rate}"/>
-                                <label for="1-star" class="star">★</label>
+                                <div class="rating">
+                                    <label>
+                                        <input type="radio" name="rate" value="1" th:checked="(${review.rate==1})?'true':'false'" />
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="rate" value="2" th:checked="(${review.rate==2})?'true':'false'" />
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="rate" value="3" th:checked="(${review.rate==3})?'true':'false'"/>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="rate" value="4" th:checked="(${review.rate==4})?'true':'false'"/>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="rate" value="5" th:checked="(${review.rate==5})?'true':'false'"/>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                        <span class="icon">★</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="mb-3">
