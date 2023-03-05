@@ -13,5 +13,7 @@ public interface CommunityService {
 
     List<CommunityDto> communityList(PagingDto paging);
     CommunityDto selectOne(int commId);
+    int update(List<MultipartFile> imgFileList, CommunityDto community, String imgPath, List<String> imgToDeleteList);
     int register(List<MultipartFile> imgFileList, CommunityDto community, String imgPath);
+    CommunityDto detail(int commId);
 }
