@@ -3,6 +3,7 @@ package com.example.gagooda_project.dto;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ReplyDto {
@@ -11,5 +12,6 @@ public class ReplyDto {
     private Date regDate; //DEFAULT CURRENT_TIMESTAMP
     private int commId; //FK NN
     private int userId; //FK NN
-    private int fk_reply_id; //self-join
+    private Integer fkReplyId; //self-join
+    private List<ReplyDto> replyList; // reply(replyNo) : reReply(fk_reply_id) = 1:N
 }

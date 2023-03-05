@@ -18,7 +18,8 @@
         </div>
        <div>
            <label for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">체크박스 클릭 후 제출시 체크된 기존사진은 삭제됩니다</span>
-           <input multiple="multiple" type="file" id="imgFile" class="form-control">
+           <input multiple="multiple" type="file" id="imgFile" name="imgFile" class="form-control">
+           <input type="hidden" name="imgCode" id="imgCode" th:value="${community.imgCode}">
            <div>
                <th:block th:each="image:${community.imgList}">
                    <label>

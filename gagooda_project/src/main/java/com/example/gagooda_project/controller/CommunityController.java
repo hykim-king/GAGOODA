@@ -82,8 +82,26 @@ public class CommunityController {
     }
     @PostMapping("/user_yes/modify.do")
     public String modify(@SessionAttribute UserDto loginUser,
-                         CommunityDto community){
-        return null;
+                         CommunityDto community,
+                         @RequestParam(name="imgFile", required = false) List<MultipartFile> imgFileList,
+                         @RequestParam(name="imgToDelete", required=false) List<String> imgToDeleteList,
+                         HttpSession session){
+        int modify = 0;
+        log.info("imgToDeleteList: "+ imgToDeleteList);
+        log.info("imgFileList Controller: "+imgFileList);
+        if (loginUser.getUserId() == community.getUserId()){
+            try{
+                modify = communityService.update(imgFileList, community, imgPath, imgToDeleteList);
+
+            }catch(Exception e){
+                log.error(e.getMessage());
+            }
+        }
+        if (modify >0 ){
+            return "redirect:/community/"+community.getCommId()+"/detail.do";
+        }else{
+            return "redirect:/community/"+community.getCommId()+"/modify.do";
+        }
     }
     @PostMapping("/user_yes/register.do")
     public String register(@SessionAttribute UserDto loginUser,

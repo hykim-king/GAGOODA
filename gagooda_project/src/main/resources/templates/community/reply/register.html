@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<form name="replyRegisterForm" action="/reply/register.do" method="post">
+  <input type="hidden" name="commId" th:value="${commId}">
+  <input type="hidden" name="fkReplyId">
+  <div >
+    <div>
+      <h3>댓글 등록 폼</h3>
+      <p class="">
+        <input class="form-control" name="userId" readonly th:value="${session.loginUser.user_id}">
+      </p>
+    </div>
+  </div>
+    <div>
+      <p>
+        <textarea name="contents"  rows="2" placeholder="내용"></textarea>
+      </p>
+    </div>
+    <div>
+      <ul>
+        <li>
+          <button type="reset" class="btn btn-primary">초기화</button>
+        </li>
+        <li>
+          <button type="submit" class="btn btn-primary">등록</button>
+        </li>
+      </ul>
+    </div>
+</form>
+</html>
