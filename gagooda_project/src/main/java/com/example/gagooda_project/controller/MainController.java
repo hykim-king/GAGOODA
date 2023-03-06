@@ -92,7 +92,7 @@ public class MainController {
         try {
             PagingDto paging = new PagingDto();
             // 보여줄 상품의 개수
-            paging.setRows(10);
+            paging.setRows(8);
             // 정렬 기준
             paging.setOrderField("mod_date");
             // 정렬 방향
@@ -134,8 +134,9 @@ public class MainController {
                 String encodedWord = URLEncoder.encode(paramMap.get("searchWord")[0], "UTF-8");
                 paramMap.put("searchWord", new String[]{encodedWord});
             }
-            paging.setQueryString(req.getParameterMap());
+            paging.setQueryString(paramMap);
             System.out.println(searchWord);
+            System.out.println(encodedParam);
             if (searchWord.isBlank()) {
                 return "redirect:/";
             } else {

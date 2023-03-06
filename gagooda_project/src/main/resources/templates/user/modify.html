@@ -8,7 +8,8 @@
     <title>회원 정보 수정</title>
 </head>
 <div layout:fragment="myPageContent">
-    <form action="/user/user_yes/modify.do" method="post" class="container mt-5" style="width: 60%; margin-bottom: 200px">
+    <form action="/user/user_yes/modify.do" method="post" class="container mt-5"
+          style="width: 60%; margin-bottom: 200px" name="userModifyForm">
         <input type="hidden" name="userId" th:value="${userId}">
         <h3 class="text-center">회원 정보 수정</h3>
         <div class="mb-3">
@@ -42,13 +43,22 @@
 
         <button type="submit" class="form-control form-control-lg text-white my-5" style="background-color: #B68C68;">수정하기</button>
         <div class="d-flex justify-content-between">
-            <a th:href="@{'/user/user_yes/{userId}/remove.do' (userId=${userId})}">삭제하기</a>
-            <a th:href="@{'/user/{userId}/password_reset.do' (userId = ${userId})} ">비밀번호 변경</a>
+            <button type="button" style="color: #B68C68; border: none; padding: 0;" id="deleteUser">삭제하기</button>
+            <a style="color: #B68C68;" th:href="@{'/user/{userId}/password_reset.do' (userId = ${userId})} ">비밀번호 변경</a>
         </div>
     </form>
     <script th:inline="javascript">
-        const phone = signupForm["phone"];
-        const uname = signupForm["uname"];
+        console.log(document.getElementById("deleteUser"));
+        document.getElementById("deleteUser").onclick=(e)=>{
+            e.preventDefault();
+            if (confirm("정말로 삭제 하시겠습니까?")) {
+                location.href = "/user/user_yes/[[${userId}]]/remove.do";
+            }
+        }
+
+        const userModifyForm = document.forms["userModifyForm"];
+        const phone = userModifyForm["phone"];
+        const uname = userModifyForm["uname"];
 
         const IMP = window.IMP;
         IMP.init("imp61025700");

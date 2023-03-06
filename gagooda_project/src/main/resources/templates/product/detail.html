@@ -463,7 +463,7 @@
             if ((product_choose.cnt.value != null && product_choose.cnt.value !== "")
                 && (optionCode.value != null && optionCode.value !== "")) {
                 const selectedOption = product_choose.querySelector("option:checked");
-                totalPrice.innerText = product_choose.cnt.value * selectedOption.dataset.price + "원";
+                totalPrice.innerText = (product_choose.cnt.value * selectedOption.dataset.price).toLocaleString() + "원";
             } else {
                 totalPrice.innerText = "0원";
             }
@@ -479,7 +479,7 @@
                 if (value > max) {
                     product_choose.cnt.value = product_choose.cnt.max;
                     document.getElementById("optionMsg").innerText =
-                        "해당 상품의 최대 주문 수량은 "+product_choose.cnt.max+"개 입니다.";
+                        "해당 상품의 최대 주문 수량은 "+Number(product_choose.cnt.max).toLocaleString()+"개 입니다.";
                 } else {
                     document.getElementById("optionMsg").innerText = "";
                 }

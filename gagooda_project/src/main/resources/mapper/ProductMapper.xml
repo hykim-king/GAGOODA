@@ -55,9 +55,10 @@
         WHERE product_code = #{productCode}
     </delete>
     <select id="findById" resultMap="productMap">
-        SELECT *
-        FROM product
-        WHERE product_code = #{productCode}
+        SELECT product.*, COUNT(r.review_id) review_cnt, AVG(r.rate) avg_rate
+        FROM product LEFT JOIN review r on product.product_code = r.product_code
+        WHERE product.product_code = #{productCode}
+        GROUP BY product.product_code
     </select>
     <select id="listAll" resultMap="productMap">
         SELECT *

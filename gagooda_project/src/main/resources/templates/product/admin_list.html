@@ -81,6 +81,8 @@
                 <th>판매가</th>
                 <th>상태</th>
                 <th>수정일</th>
+                <th>평점</th>
+                <th>주문수</th>
             </tr>
             </thead>
             <tbody>
@@ -105,6 +107,8 @@
                     <td th:text="${product.salesPc}"></td>
                     <td th:text="${detDict[product.PDet]}"></td>
                     <td th:text="${#dates.format(product.modDate, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${product.avgRate}"></td>
+                    <td th:text="${product.orderCnt}"></td>
                 </tr>
             </th:block>
             </tbody>

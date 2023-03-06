@@ -47,18 +47,14 @@ public class UserController {
             UserDto user,
             HttpSession session
     ) {
-        int signup = 0;
         try {
-            signup = userService.register(user);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (signup > 0) {
+            userService.register(user);
             session.setAttribute("msg", "회원가입을 성공적으로 마쳤습니다.");
             return "redirect:/user/login.do";
-        } else {
+        } catch (Exception e) {
+            e.printStackTrace();
             session.setAttribute("msg", "회원가입 중 오류가 있었습니다.");
-            return "redirect:/user/signup.do";
+            return "redirect:/user/"+user.getGDet()+"/signup.do";
         }
     }
 
@@ -261,10 +257,11 @@ public class UserController {
         }
         if (delete > 0) {
             session.removeAttribute("loginUser");
+            session.setAttribute("msg", "사용자 "+loginUser.getUname()+"님의 계정이 성공적으로 삭제됐습니다.");
             return "redirect:/";
         } else {
             session.setAttribute("msg", "삭제 중 오류가 생겼습니다. 다시 시도해 주세요.");
-            return "redirect:/user/user_yes/temp.do";
+            return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
         }
     }
 
@@ -284,6 +281,17 @@ public class UserController {
         model.addAttribute("user", loginUser);
         model.addAttribute("userId", userId);
         return "/user/modify";
+    }
+
+    @PostMapping("/check.do")
+    public @ResponseBody Map<String, Boolean> check(
+            @RequestParam UserDto userData
+    ) {
+        try {
+            return userService.checkIfExists(userData);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @PostMapping("/user_yes/modify.do")
