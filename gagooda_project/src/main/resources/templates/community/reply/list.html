@@ -12,16 +12,6 @@
                     <p th:text="${reply.content}"></p>
                 </div>
                 <div class="d-flex">
-                    <div>
-                        <div class="mt-1">
-                            <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
-                        </div>
-                        <div class="ms-2">
-                            <a href="javascript:void(0)"
-                               th:onclick="loadRegisterForm( [[${reply.replyId}]])"
-                               class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
-                        </div>
-                    </div>
                     <div class="mt-1">
                         <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
                     </div>
@@ -30,7 +20,14 @@
                            th:onclick="loadRegisterForm( [[${reply.replyId}]])"
                            class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
                     </div>
-
+                </div>
+                <div class="d-flex justify-content-end" th:if="${ session.loginUser != null && session.loginUser.userId==reply.userId}">
+                    <a href="javascript:void(0)"
+                       th:onclick="loadReplyModifyForm([[${reply.replyId}]])"
+                       class="btn border" style="background-color: #FFFAF5; color: #B68C68;">수정</a>
+                    <a href="javascript:void(0)"
+                       th:onclick="removeReply([[${reply.replyId}]])"
+                       class="btn border" style="background-color: #FFFAF5; color: #B68C68;">삭제</a>
                 </div>
             </div>
         </div>
