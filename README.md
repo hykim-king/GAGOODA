@@ -1,4 +1,4 @@
-<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="300"/>
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
 ># 목차
 
