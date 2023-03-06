@@ -1,5 +1,3 @@
-# 🪑 SPRINGBOOT SHOPPING-MALL PROJECT 
-
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
 # 목차
@@ -10,7 +8,7 @@
 >[프로젝트 설계](#3-프로젝트-설계)\
 >[기능 시연](#4-기능-시연)
 
-# 1. 프로젝트 개요
+# 1. 프로젝트 개요 📌
 
 
 |팀/프로젝트 명|GAGOODA|  
@@ -23,10 +21,10 @@
 
 # 2. 프로젝트 기획
 
-### 2.1 개발 환경
+### 2.1 개발 환경 ⚙️
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="500"/>
 
-### 2.2 WBS
+### 2.2 WBS 🗒️
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
 
 # 3. 프로젝트 설계
