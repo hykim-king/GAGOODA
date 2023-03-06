@@ -1,10 +1,7 @@
 package com.example.gagooda_project.controller;
 
 import com.example.gagooda_project.dto.*;
-import com.example.gagooda_project.service.CartService;
-import com.example.gagooda_project.service.CategoryService;
-import com.example.gagooda_project.service.ProductService;
-import com.example.gagooda_project.service.ZzimService;
+import com.example.gagooda_project.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -26,15 +23,18 @@ public class MainController {
     private final ProductService productService;
     private final ZzimService zzimService;
     private final CartService cartService;
+    private final MyPageService myPageService;
 
     public MainController(CategoryService categoryService,
                           ProductService productService,
                           ZzimService zzimService,
-                          CartService cartService) {
+                          CartService cartService,
+                          MyPageService myPageService) {
         this.categoryService = categoryService;
         this.productService = productService;
         this.zzimService = zzimService;
         this.cartService = cartService;
+        this.myPageService = myPageService;
     }
 
     @GetMapping("/error.do")
@@ -193,8 +193,10 @@ public class MainController {
             Model model
     ){
         try{
-            List<ZzimDto> zzimList = zzimService.listByUserId(loginUser.getUserId());
-            List<CartDto> cartList = cartService.cartList(loginUser.getUserId());
+            PagingDto paging = new PagingDto();
+            PagingDto paging2 = new PagingDto();
+            List<ZzimDto> zzimList = zzimService.zzimList(paging, loginUser.getUserId());
+            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId());
             model.addAttribute("zzimList", zzimList);
             model.addAttribute("cartList", cartList);
         } catch (Exception e) {

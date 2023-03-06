@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.dto.ZzimDto;
@@ -12,6 +13,7 @@ public interface ZzimService {
     int remove(int zzimId);
     ZzimDto selectOne(String productCode, UserDto loginUser);
     List<ZzimDto> listByUserId(int userId);
+    List<ZzimDto> zzimList(PagingDto paging, int userId);
     Map<String, ZzimDto> zzimCheck(List<ProductDto> productList, UserDto loginUser);
 
 

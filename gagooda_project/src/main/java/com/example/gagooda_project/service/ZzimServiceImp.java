@@ -1,5 +1,6 @@
 package com.example.gagooda_project.service;
 
+import com.example.gagooda_project.dto.PagingDto;
 import com.example.gagooda_project.dto.ProductDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.dto.ZzimDto;
@@ -47,6 +48,16 @@ public class ZzimServiceImp implements ZzimService{
     @Override
     public List<ZzimDto> listByUserId(int userId) {
         return zzimMapper.findByUserId(userId);
+    }
+
+    @Override
+    public List<ZzimDto> zzimList(PagingDto paging, int userId) {
+        int totalRows = zzimMapper.count(paging, userId);
+        paging.setDirect("DESC");
+        paging.setRows(4);
+        paging.setOrderField("zzim_id");
+        paging.setTotalRows(totalRows);
+        return zzimMapper.pageAll(paging, userId);
     }
 
     @Override
