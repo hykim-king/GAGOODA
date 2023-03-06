@@ -132,7 +132,7 @@
     <form name="modify" th:action="@{'/exchange/admin/{exchangeId}/modify.do' (exchangeId=${exchange.exchangeId})}" method="POST" onsubmit="return exchangeSubmitFilter()">
         <div>
             <label class="form-label" for="exDet">상태 변경</label>
-            <select class="form-select-sm" name="exDet" id="exDet" required th:disabled="${exchange.exDet.equals('ex7') || exchange.exDet.equals('ex1')}">
+            <select class="form-select-sm" name="exDet" id="exDet" required th:disabled="${exchange.exDet.equals('ex1')}">
                 <option value="" selected disabled>변경할 상태를 선택하세요.</option>
                 <th:block th:each="exCode:${exCodeList}">
                     <option class="exDet" th:value="${exCode.detCode}" th:text="${exCode.detName}" th:data-exNum="${exCode.detCode.substring(2)}"></option>
@@ -140,14 +140,16 @@
             </select>
             <div>
                 <button class="btn btn-outline-secondary resetExDet" type="button" onclick="resetExDet()">이전 상태 사용</button>
+                <button class="btn btn-outline-danger reStartExDet d-none" id="reStartExDet" type="button" >재교환 진행하기</button>
                 <button id="stockSubBtn" class="btn btn-outline-primary d-none" type="button" onclick="modifyStock()">재고 변경 진행</button>
             </div>
         </div>
         <div>
             <label class="form-label d-block" for="reply">교환 요청 답변</label>
-            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none" th:text="${exchange.reply}"></textarea>
+            <div th:text="'이전 답변: '+${exchange.reply}"></div>
+            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none"></textarea>
         </div>
-        <button class="btn btn-outline-primary exchangeSubmit" type="submit">등록</button>
+        <button class="btn btn-outline-primary exchangeSubmit" type="submit" th:disabled="${exchange.exDet.equals('ex1') }">등록</button>
     </form>
     <script th:inline="javascript">
         /* exDet 지난 상태 막기 */
@@ -163,6 +165,7 @@
             }
 
         })
+
         /* ex4 일 때, 페이지 들어오면 버튼 등장 */
         if (currentExDet.toString() === "ex4"){
             let stockSubBtn = document.getElementById("stockSubBtn");
@@ -174,38 +177,73 @@
             let exDet = [[${exchange.exDet}]];
             console.log("exDet: ", exDet)
             let exDetOpt = document.querySelectorAll(".exDet");
-            if (exDet.toString() === "ex3" || exDet.toString() === "ex4"){ // 교환 배송 중 상태일 시
+            if (exDet.toString() === "ex3" || exDet.toString() === "ex4"){ // 교환 수거 중 상태일 시
                 exDetOpt.forEach(element=>{
-                    if (exDetOpt.value === "ex0" || exDetOpt.value === "ex1"){ // 교환 요청과 교환 요청 취소가 아닌 상태는
+                    if (element.value === "ex0" || element.value === "ex1"){ // 교환 요청과 교환 요청 취소가 아닌 상태는
                     }else{
                         element.disabled = false  // 이용할 수 있다.
                     }
                 })
                 alert("이제 상태를 이전 단계로 되돌릴 수 있습니다.")
-            }/*else if(exDet.toString() === "ex5" || exDet.toString() === "ex6"){
+            }else if(exDet.toString() === "ex5" || exDet.toString() === "ex6"){
                 exDetOpt.forEach(element=>{
-                    if (exDetOpt.value === "ex5" || exDetOpt.value === "ex6" || exDetOpt.value === "ex8"){ // 교환 배송 중/배송 완료/거절 상태는
+                    if (element.value === "ex5" || element.value === "ex6" || element.value === "ex8"){ // 교환 배송 중/배송 완료/거절 상태는
                         element.disabled = false  // 이용할 수 있다.
+                    }else{
                     }
                 })
                 alert("교환을 위한 재고가 출고되었으므로, 수거 완료 이후에 해당하는 단계로만 되돌릴 수 있습니다.")
             }else{
-                alert("이미 교환 완료된 상태는 변경할 수 없습니다.")
-            }*/
+                alert("교환 완료 혹은 거절된 상태는 재교환 진행 버튼을 통해 교환 수거부터 다시 진행하시기 바랍니다.")
+            }
+        }
+
+        /* ex2 교환 요청 확인 상태부터 다시 시작하기 */
+        let reStartExDet = document.getElementById("reStartExDet");
+        if(currentExDet.toString() === "ex6" || currentExDet.toString() === "ex7" || currentExDet.toString() === "ex8"){
+            reStartExDet.classList.remove("d-none");
+        }
+        reStartExDet.onclick=async ()=>{
+            let isBack = confirm("재교환을 진행하시겠습니까? \n재교환 진행 시 교환 진행 상태가 교환 요청 확인 상태로 변경됩니다.");
+            if (isBack){
+                let msg = prompt("재교환 진행을 위한 답글을 작성해주십시오.\n(미작성 시 미리 입력된 값이 넘어갑니다.",
+                    "고객님, 죄송합니다. 교환된 상품에도 하자가 발견되었다는 문의 확인했습니다. 수거를 위한 배송 기사님을 빠른 시일 내에 배정하여 " +
+                    "상품 수거 후 판별하여 새로운 상품을 보내드리도록 하겠습니다. 감사합니다.")
+                if (msg != null){
+                    let url = "/exchange/admin/"+[[${exchange.exchangeId}]]+"/modify.do";
+                    let exchangeForm = new FormData();
+                    exchangeForm.set("exDet", "ex3");
+                    exchangeForm.set("reply", msg)
+                    const resp = await fetch(url, {method: "POST", body: exchangeForm})
+                    if(resp.status === 200){
+                        window.location.reload();
+
+                        alert("재교환을 위해 상태를 변경했습니다.")
+                    }else{
+                        alert("상태 되돌리기에 실패하였습니다.")
+                    }
+                }
+            }
 
         }
 
-        /* exDet ex4 교환 수거 완료 일 때만 결제 취소 버튼이 등장 */
-        exDet.addEventListener("change",()=>{
-            let display = document.getElementById("stockSubBtn");
-            if(exDet.value.includes("4")){
-                console.log("remove")
-                display.classList.remove("d-none");
-            }else{
-                console.log("add")
-                display.classList.add("d-none");
-            }
-        })
+        /* exDet ex4 교환 수거 완료 일 때만 재고 수정 버튼이 등장 */
+        // exDet.addEventListener("change",()=>{
+        //     let display = document.getElementById("stockSubBtn");
+        //     if(exDet.value.includes("4")){
+        //         console.log("remove")
+        //         display.classList.remove("d-none");
+        //     }else{
+        //         console.log("add")
+        //         display.classList.add("d-none");
+        //     }
+        // })
+
+        /* 현재 상태가 ex4 일 때만 재고 수정 버튼이 등장 */
+        if (currentExDet.toString() === "ex4"){
+            let stockSubBtn = document.getElementById("stockSubBtn");
+            stockSubBtn.classList.remove("d-none");
+        }
 
         /* 재고 변경 AJAX */
         async function modifyStock(){
@@ -234,6 +272,7 @@
                         let modifyForm = new FormData();
                         modifyForm.set("exchangeId", exchangeId.toString());
                         modifyForm.set("exDet", "ex5");
+                        modifyForm.set("reply", "교환을 위한 상품이 배송을 시작하였습니다.");
                         const modResp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
                         console.log(modResp)
                         window.location.reload();
@@ -261,6 +300,9 @@
                 return false;
             }else if(exDetNum < 5 && (exDet.value === "ex5" || exDet.value === "ex6")){
                 alert("교환 상품이 출고, 배송 되지 않아 교환 상태를 배송 상태로 변경할 수 없습니다.")
+                return false;
+            }else if(exDetNum === 7 && exDet.value === "ex8"){
+                alert("완료된 교환을 거절할 수는 없습니다.")
                 return false;
             }
         }

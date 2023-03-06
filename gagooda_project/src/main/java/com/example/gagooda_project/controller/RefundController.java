@@ -96,35 +96,63 @@ public class RefundController {
         try{
             OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
             OrderDto order = orderService.selectOne(orderDetail.getOrderId());
+            int orderDetailTotalPrice = orderDetail.getTotalPrice();
+            int refundCancelAmount = 0;
+            int orderDetailCnt = orderDetail.getCnt();
+            int exchangedCnt = 0;
+            int refundCnt = 0;
             if(loginUser.getUserId() == order.getUserId()){
                 List<RefundDto> checkRefundList = refundService.selectOrderDetail(orderDetail.getOrderDetailId());
                 List<ExchangeDto> checkExchangeList = exchangeService.selectOrderDetail(orderDetail.getOrderDetailId());
                 boolean isOk = true;
                 if(checkRefundList != null){
-                    for(RefundDto checkRefund : checkRefundList){
-                        if(!checkRefund.getRfDet().equals("rf1")){
-                            isOk = false;
-                            break;
+
+                    for(RefundDto checkRefund : checkRefundList){ // 환불 가능 여부 체크
+                        if(!checkRefund.getRfDet().equals("rf1") && checkRefund.getCancelAmount() == orderDetail.getTotalPrice()){ // 만약 환불 취소 상태가 아니고, 환불 요청 금액과 상세 주문의 총 가격이 같다면
+                            isOk = false; // 교환/환불 불가
+                        }else if(!checkRefund.getRfDet().equals("rf1")){ // 환불 요청 취소 상태가 아니고, 요청 금액과 상세 주문 가격이 다르다면
+                            refundCancelAmount += checkRefund.getCancelAmount(); // 환불 요청 금액을 저장하고,
+                            if(checkExchangeList != null){ // 교환이 등록되어 있다면
+                                for(ExchangeDto checkExchange : checkExchangeList){ // 교환 리스트 전체를 조회해서
+                                    if(!checkExchange.getExDet().equals("ex1") && orderDetail.getTotalPrice() == (checkExchange.getCnt()*orderDetail.getPrice()) + refundCancelAmount){ // 교환이 취소 상태가 아니고, 주문 상세 총 가격과 교환 물품 가격+환불 가격이 같다면
+                                        isOk = false; // 교환/환불 불가
+                                        break;
+                                    }
+                                }
+                            }
                         }
+                    }
+                    if(orderDetailTotalPrice <  refundCancelAmount || orderDetailTotalPrice == refundCancelAmount){ // 주문 총 가격이 환불 요청 금액보다 작거나, 같다면
+                        isOk = false; // 교환/환불 불가
+                    }else{
+                        model.addAttribute("refundAmount", refundCancelAmount);
                     }
                 }
+
                 if(checkExchangeList != null){
-                    int orderDetailCnt = orderDetail.getCnt();
-                    int exchangedCnt = 0;
-                    for(ExchangeDto checkExchange : checkExchangeList){
-                        if(!(checkExchange.getExDet().equals("ex1") || checkExchange.getExDet().equals("ex7"))){
-                            isOk = false;
-                        }
-                        if(checkExchange.getExDet().equals("ex7")){
-                            exchangedCnt += checkExchange.getCnt();
+                    for(ExchangeDto checkExchange : checkExchangeList){ // 교환 가능 여부 체크
+                        if(!checkExchange.getExDet().equals("ex1") && checkExchange.getCnt() == orderDetail.getCnt()){ // 교환 요청 취소가 아니고, 교환 수량과 주문 상세 수량이 같을 때
+                            isOk = false; // 이미 교환이 완전 등록되어 있는 상태(따로 교환/환불 신청 못 하는 상태)
+                        }else if(!checkExchange.getExDet().equals("ex1")){ // 교환 요청 취소가 아니고, 주문 수량과 교환 수량이 다를 때
+                            exchangedCnt += checkExchange.getCnt(); // 교환 요청 수량을 추가하고,
+                            if(checkRefundList != null){ // 환불이 등록되어 있다면
+                                for(RefundDto checkRefund : checkRefundList){ // 환불 리스트 전체를 조회한다.
+                                    refundCnt += (checkRefund.getCancelAmount() / orderDetail.getPrice());
+                                    if(!checkRefund.getRfDet().equals("rf1") && orderDetailCnt == exchangedCnt+(checkRefund.getCancelAmount() / orderDetail.getPrice())){ // 만약 환불이 취소 상태가 아니고, 교환, 환뷸 수량이 주문 개수와 같을 때
+                                        isOk = false; // 교환/환불 불가
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
-                    if(orderDetailCnt < exchangedCnt || orderDetailCnt == exchangedCnt){
+                    if(orderDetailCnt < exchangedCnt + refundCnt || orderDetailCnt == exchangedCnt + refundCnt){
                         isOk = false;
                     }else{
                         model.addAttribute("exchangedCnt", exchangedCnt);
                     }
                 }
+
                 if(isOk){
                     int refundCount = refundService.countByOrderId(order.getOrderId());
                     List<AddressDto> addressList = refundService.showAddressListByUserId(loginUser.getUserId());
@@ -473,9 +501,12 @@ public class RefundController {
                 }
             }catch (Exception e){
                 e.printStackTrace();
+                session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
+                return "redirect:/";
             }
         }
-        return "redirect:"+req.getRequestURI();
+        session.setAttribute("msg", "잘못된 접근입니다.");
+        return "redirect:/";
     }
 
     //임시 결제 페이지
