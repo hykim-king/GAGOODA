@@ -1,4 +1,3 @@
-![header](https://capsule-render.vercel.app/api?type=wave&color=gradient&height=300&section=header&text=Hi there 👋&fontSize=90)
 ![header](https://capsule-render.vercel.app/api?type=waving&color=b68c68&width=500%&height=300&section=header&text=GAGOODA%20PROJECT&fontSize=50)
 ![](https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png)
 # 0. 목차
