@@ -1,5 +1,5 @@
 ![header](https://capsule-render.vercel.app/api?type=wave&color=gradient&height=300&section=header&text=Hi there 👋&fontSize=90)
-![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=300&section=header&text=capsule%20render&fontSize=90)
+![header](https://capsule-render.vercel.app/api?type=waving&color=b68c68&height=300&section=header&text=capsule%20render&fontSize=90)
 ![](https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png)
 # 0. 목차
 # 💋 1. GAGOODA 프로젝트 개요
