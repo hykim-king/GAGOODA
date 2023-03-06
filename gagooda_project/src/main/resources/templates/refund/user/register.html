@@ -202,7 +202,8 @@
                             </div>
                             <fieldset>
                                 <label for="newReceiverPhone">수령인 전화번호</label>
-                                <input class="form-control" type="number" id="newReceiverPhone" name="receiverPhone" oninput="maxLengthCheck('newReceiverPhone',11)" required>
+                                <input class="form-control" type="text" id="newReceiverPhone" name="receiverPhone" maxlength="11" required
+                                       pattern="^(010)[0-9]{8}" oninput="this.value=this.value.replace(/[^0-9,]/g,'');" title="'010XXXXXXXX'으로 작성해 주세요." >
                             </fieldset>
 
                             <div class="form-check">
