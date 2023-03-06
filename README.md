@@ -1,4 +1,4 @@
-# 🪑 GAGOODA
+# 🪑 SPRINGBOOT SHOPPING-MALL PROJECT 
 
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
