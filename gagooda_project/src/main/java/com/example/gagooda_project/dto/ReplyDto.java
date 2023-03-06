@@ -13,5 +13,6 @@ public class ReplyDto {
     private int commId; //FK NN
     private int userId; //FK NN
     private Integer fkReplyId; //self-join
+    private UserDto user;
     private List<ReplyDto> replyList; // reply(replyNo) : reReply(fk_reply_id) = 1:N
 }

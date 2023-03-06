@@ -6,6 +6,11 @@
         <result column="reg_date" property="regDate"/>
         <result column="user_id" property="userId"/>
         <result column="fk_reply_id" property="fkReplyId"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.example.gagooda_project.mapper.UserMapper.findById"
+                     fetchType="lazy"
+                     autoMapping="true"/>
         <collection property="replyList"
                     autoMapping="true"
                     javaType="java.util.ArrayList"

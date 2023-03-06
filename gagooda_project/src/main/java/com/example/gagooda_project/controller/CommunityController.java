@@ -60,6 +60,30 @@ public class CommunityController {
 
     }
 
+    @GetMapping("/{commId}/delete.do")
+    public String delete(@PathVariable int commId,
+                         HttpSession session,
+                         Model model,
+                         @SessionAttribute(required = false) String msg){
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
+        int delete = 0;
+        try{
+            delete = communityService.deleteOne(commId);
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+        if(delete>0){
+            session.setAttribute("msg","포스트 삭제에 성공하였습니다.");
+
+        }else{
+            session.setAttribute("msg","포스트 삭제에 실패하였습니다. 다시 시도해 주세요.");
+        }
+        return "redirect:/community/"+commId+"/detail.do";
+    }
+
     @GetMapping("/{commId}/detail.do")
     public String detail(@PathVariable int commId,
                          Model model,
@@ -75,9 +99,11 @@ public class CommunityController {
             paging.setQueryString(req.getParameterMap());
             CommunityDto community = communityService.detail(commId);
             List<ReplyDto> replyList = replyService.commDetailList(commId, paging);
+            int repCount = replyService.countReply(commId);
             model.addAttribute("community",community);
             model.addAttribute("replyList",replyList);
             model.addAttribute("paging",paging);
+            model.addAttribute("repCount",repCount);
 
         }catch (Exception e){
             log.error(e.getMessage());

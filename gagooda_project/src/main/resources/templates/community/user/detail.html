@@ -8,54 +8,65 @@
     <title>포스트 상세</title>
 </head>
 <div layout:fragment="content">
-    <h1 th:text="${community.commId}+'의 포스트 상세 페이지'"></h1>
     <div class="container">
-        <div id="carouselExampleIndicators" class="carousel slide">
-            <div class="carousel-inner" >
-                <div class="carousel-item" th:classappend="${num.count}==1?'active':''"
-                     th:each="img,num:${community.imgList}">
-                    <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100" alt="...">
+        <div class="mt-4">
+            <h3 class="fw-bold d-inline" th:text="${community.user.nickname}" style="color: #B68C68"></h3><span class="ms-1" style="font-size:20px;">님의 포스트</span>
+        </div>
+        <hr style="margin-top: 0; background : #b68c68; height: 5px">
+        <div class="d-flex flex-column align-items-center">
+            <div id="carouselExampleIndicators" class="carousel slide" style="width: 700px">
+                <div class="carousel-inner" >
+                    <div class="carousel-item" th:classappend="${num.count}==1?'active':''"
+                         th:each="img,num:${community.imgList}">
+                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100 rounded">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <div class="mt-3 fw-bold">
+                    <p th:text="${community.content}"></p>
+                </div>
+                <div class="d-flex justify-content-end mt-2" style="font-size: 14px;">
+                    <div>
+                        <span th:text="${#calendars.format(community.regDate,'yyyy년 MM월 dd일')}"></span>
+                    </div>
+                    <div class="ms-4">
+                        <span>조회수: </span><span th:text="${community.views}"></span>
+                    </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
         </div>
-    </div>
-    <div>
-        <div>
-            <p>닉네임: </p>
-            <span th:text="${community.user.nickname}"></span>
+
+
+        <th:block th:if="${ session.loginUser != null && session.loginUser.userId==community.userId}">
+            <div>
+                <button class="btn btn-primary"
+                        th:onclick="location.href=[[@{'/community/user_yes/{commId}/modify.do'(commId=${community.commId})}]]">수정</button>
+                <button class="btn btn-danger" th:onclick="location.href=[[@{'/community/user_yes/{commId}/delete.do'(commId=${community.commId})}]]">삭제</button>
+            </div>
+        </th:block>
+
+        <h5 class="fw-bold mt-5" th:text="'댓글 '+${repCount}" style="color: #B68C68"></h5>
+        <hr style="margin-top:0px; background : #b68c68; height: 5px">
+        <div th:if="${session.loginUser!=null}" id="replyRegisterContainer">
+            <th:block th:include="/community/reply/register"></th:block>
         </div>
-        <div>
-            <p>게시일: </p>
-            <span th:text="${#calendars.format(community.regDate,'yyyy년-MM월-dd일')}"></span>
+        <div id="replyListContainer">
+            <th:block th:include="/community/reply/list"></th:block>
         </div>
-        <div>
-            <p>내용</p>
-            <p th:text="${community.content}"></p>
-        </div>
-        <div>
-            <p>조회수: </p>
-            <span th:text="${community.views}"></span>
-        </div>
+
     </div>
-    <div>
-        <button class="btn btn-primary"
-                th:onclick="location.href=[[@{'/community/user_yes/{commId}/modify.do'(commId=${community.commId})}]]">수정</button>
-    </div>
-    <h3>댓글 리스트</h3>
-    <div th:if="${session.loginUser!=null}" id="replyRegisterContainer">
-        <th:block th:include="/community/reply/register"></th:block>
-    </div>
-    <div id="replyListContainer">
-        <th:block th:include="/community/reply/list"></th:block>
-    </div>
+
+
+
+
+
 
     <script th:inline="javascript">
         const replyListContainer = document.getElementById("replyListContainer");

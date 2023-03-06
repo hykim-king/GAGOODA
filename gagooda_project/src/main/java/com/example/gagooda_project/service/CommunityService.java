@@ -16,4 +16,5 @@ public interface CommunityService {
     int update(List<MultipartFile> imgFileList, CommunityDto community, String imgPath, List<String> imgToDeleteList);
     int register(List<MultipartFile> imgFileList, CommunityDto community, String imgPath);
     CommunityDto detail(int commId);
+    int deleteOne(int commId);
 }

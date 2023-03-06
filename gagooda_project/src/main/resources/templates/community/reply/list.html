@@ -1,51 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:each="reply:${replyList}">
-    <div class>
-        <div th:id="'replyContainer'+${reply.replyId}">
-           <span th:text="${reply.replyId}"></span>
-        </div>
-        <div>
-            <p th:text="${#calendars.format(reply.regDate)}"></p>
-        </div>
-        <div>
-            <span th:text="${reply.userId}"></span>
-            참조하는 부모의 pk: <span th:text="${reply.fkReplyId}"></span>
-        </div>
-        <div>
-            <p th:text="${reply.content}"></p>
-        </div>
-
-        <div>
-            <th:block th:if="${session.loginUser!=null}">
-                <ul>
-                    <th:block th:if="${ #strings.equals(session.loginUser.userId,reply.userId)}">
-                        <li>
+    <div>
+        <div class="d-flex" style="width:700px;">
+            <div class="profile_icon">
+                <i class="bi bi-emoji-smile-fill" style="font-size: 24px; color: #B68C68;"></i>
+            </div>
+            <div class="ms-2">
+                <div>
+                    <p class="fw-bold" th:text="${reply.user.nickname}" style="font-size: 20px;"></p>
+                    <p th:text="${reply.content}"></p>
+                </div>
+                <div class="d-flex">
+                    <div>
+                        <div class="mt-1">
+                            <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
+                        </div>
+                        <div class="ms-2">
                             <a href="javascript:void(0)"
-                               th:onclick="loadReplyModifyForm([[${reply.replyId}]])"
-                               class="btn btn-warning">수정</a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)"
-                               th:onclick="removeReply([[${reply.replyId}]])"
-                               class="btn btn-danger">삭제</a>
-                        </li>
-                    </th:block>
-                    <li>
+                               th:onclick="loadRegisterForm( [[${reply.replyId}]])"
+                               class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
+                    </div>
+                    <div class="ms-2">
                         <a href="javascript:void(0)"
                            th:onclick="loadRegisterForm( [[${reply.replyId}]])"
-                           class="btn btn-primary">등록폼</a>
-                    </li>
+                           class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
+                    </div>
 
-                </ul>
-            </th:block>
+                </div>
+            </div>
+        </div>
+
+        <div>
             <div th:id="${'reReplyRegisterContainer'+reply.replyId}"></div>
             <!-- collection Fetch select 를 하면 레코드가 없어도 무조건 List 객체 생성 -->
             <div th:if="${reply.replyList!=null && reply.replyList.size()>0}"
                  th:with="replyList=${reply.replyList},paging=null"
                  >
                 <span style="transform: rotate(-180deg)"></span>
-                <div th:include="/reply/list"></div>
+                <div th:include="/community/reply/list"></div>
             </div>
         </div>
 
