@@ -18,17 +18,20 @@ public class ExchangeServiceImp implements ExchangeService {
     private CommonCodeMapper commonCodeMapper;
     private OrderMapper orderMapper;
     private OrderDetailMapper orderDetailMapper;
+    private OptionProductMapper optionProductMapper;
 
     public ExchangeServiceImp(ExchangeMapper exchangeMapper,
                               AddressMapper addressMapper,
                               CommonCodeMapper commonCodeMapper,
                               OrderMapper orderMapper,
-                              OrderDetailMapper orderDetailMapper) {
+                              OrderDetailMapper orderDetailMapper,
+                              OptionProductMapper optionProductMapper) {
         this.exchangeMapper = exchangeMapper;
         this.addressMapper = addressMapper;
         this.commonCodeMapper = commonCodeMapper;
         this.orderMapper = orderMapper;
         this.orderDetailMapper = orderDetailMapper;
+        this.optionProductMapper = optionProductMapper;
     }
     @Override
     @Transactional
@@ -133,4 +136,11 @@ public class ExchangeServiceImp implements ExchangeService {
     public OrderDetailDto selectOrderDetailById(int orderDetailId) {
         return orderDetailMapper.findById(orderDetailId);
     }
+    @Override
+    public OptionProductDto selectOptionProductByOptionCode(String optionCode){ return optionProductMapper.findById(optionCode); }
+    @Override
+    public int modifyOptionProductStock(int count, String optionCode){
+        return optionProductMapper.updateStock(count,optionCode);
+    }
+
 }

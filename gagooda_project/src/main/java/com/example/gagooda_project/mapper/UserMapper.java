@@ -21,5 +21,9 @@ public interface UserMapper {
 
     List<UserDto> listAll();
 
+    List<UserDto> findByEmail(String email);
+    List<UserDto> findByPhone(String phone);
+    List<UserDto> findByNick(String nickname);
+
 //    List<UserDto> pageAll();  // PagingDto paging 필요
 }

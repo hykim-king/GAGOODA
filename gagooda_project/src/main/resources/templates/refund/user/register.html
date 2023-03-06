@@ -19,16 +19,6 @@
                 }
             </script>
         </div>
-            <th:block th:if="${refundMsg !=null}">
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong th:text="${session.loginUser.uname} + 님."></strong>
-                    <p th:text="${refundMsg}"></p>
-                    <p><span th:text="${order.orderId}"></span> 번 주문에 대한 요청이 <strong th:text="${refundCount}"></strong> 건 검색됩니다. </p>
-                    <p>해당 주문은 이미 진행 중인 상품입니다. </p>
-                    <p>교환/환불 요청이 없음에도 등록이 진행되지 않는다면 고객센터에 문의해주십시오.</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </th:block>
 
     <div class="container mb-5" >
         <h4 class="mt-5 mb-3">주문 정보</h4>
@@ -85,12 +75,18 @@
                                 <span class="form-control" th:text="${orderDetail.optionName}"></span>
                             </div>
                             <div class="d-none refundInput mt-1">
-                                <label for="cancelAmount">환불 금액</label>
-                                <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
+                                <label class="d-block">환불 금액
+                                    <input th:if="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice}" name="cancelAmount" readonly>
+                                    <input th:unless="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.price * exchangedCnt}" name="cancelAmount" readonly>
+                                </label>
                             </div>
                             <div class="d-none exchangeInput mt-1">
-                                <label for="cnt">교환 수량</label>
-                                <input class="form-control" type="number" id="cnt" name="cnt" th:max="${orderDetail.cnt}" min="1">
+                                <label class="d-block">교환 수량
+                                    <input th:if="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt}">
+                                    <input th:unless="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - exchangedCnt}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt - exchangedCnt}">
+                                </label>
                             </div>
                             <div class="mt-1">
                                 <label for="imgFileList" class="form-label">첨부 이미지</label>
@@ -110,7 +106,7 @@
                         <div class="col-5">
                             <div>
                                 <label for="reason">상세 환불 사유</label>
-                                <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요."></textarea>
+                                <textarea class="form-control" style="resize: none;" rows="10" id="reason" name="reason" placeholder="환불 사유를 작성해주세요." required></textarea>
                             </div>
                         </div>
 
@@ -119,21 +115,54 @@
             </fieldset>
 
             <fieldset class="mt-5">
-                <legend>환불 물품 수거지 주소</legend>
+                <legend>물품 수거지 주소</legend>
                 <hr style="margin-top: 0; background : #b68c68; height: 5px">
+                <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
+                <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
                 <div>
-                    <div id="loadAddressList" class="col-10 m-auto">
-                        <th:block th:include="refund/user/newAddress"></th:block>
+                    <div  class="d-flex justify-content-around">
+                        <div class="col-5">
+                            <div id="loadAddressList">
+                                <th:block th:include="refund/user/newAddress.html"></th:block>
+                            </div>
+                            <div class="mt-1">
+                                <label for="postCode">우편번호</label>
+                                <input type="text" readonly id="postCode" name="postCode" class="realValue form-control" th:value="${order.postCode}">
+                            </div>
+                            <div class="mt-1">
+                                <label for="address">주소</label>
+                                <input type="text" readonly id="address" name="address" class="realValue form-control" th:value="${order.address}">
+                            </div>
+                            <div class="mt-1">
+                                <label for="addressDetail">상세 주소</label>
+                                <input type="text" readonly id="addressDetail" name="addressDetail" class="realValue form-control" th:value="${order.addressDetail}">
+                            </div>
+                            <div class="mt-1">
+                                <label for="receiverName">수령인 이름</label>
+                                <input type="text" readonly id="receiverName" name="receiverName" class="realValue form-control" th:value="${order.receiverName}">
+                            </div>
+                            <div class="mt-1">
+                                <label for="receiverPhone">수령인 전화번호</label>
+                                <input type="text" readonly id="receiverPhone" name="receiverPhone" class="realValue form-control" th:value="${order.receiverPhone}">
+                            </div>
+                            <div class="mt-1">
+                                <div>엘리베이터 유무</div>
+                                <div class="realValue form-control" th:text="${order.isElevator()}? 'O' : 'X'"></div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="form-control mt-5">
+                                <h5 class="ms-2 mt-2">수거지 주소 유의사항</h5>
+                                <ul class="form-text">
+                                    <li>교환/환불 시 고객님이 수령하신 물품을 수거하러 갈 주소를 입력하는 곳입니다.</li>
+                                    <li class="mt-1">따로 선택하지 않을 시 주문하실 때 선택한 배송지가 기본적으로 선택됩니다.</li>
+                                    <li class="mt-1">주문 배송지 외의 주소에서 물품 수거를 희망하는 고객님은 본인의 배송지 목록 혹은 새 주소 입력을 통해 주소를 새로 설정해주시기 바랍니다.</li>
+                                    <li class="mt-1">제주 외 도서ㆍ산간 지역은 배송료가 생길 수 있습니다.</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <input type="hidden" id="addressId" name="addressId" class="realValue" th:value="${order.addressId}">
-                <input type="hidden" id="postCode" name="postCode" class="realValue" th:value="${order.postCode}">
-                <input type="hidden" id="address" name="address" class="realValue" th:value="${order.address}">
-                <input type="hidden" id="addressDetail" name="addressDetail" class="realValue" th:value="${order.addressDetail}">
-                <input type="hidden" id="receiverName" name="receiverName" class="realValue" th:value="${order.receiverName}">
-                <input type="hidden" id="receiverPhone" name="receiverPhone" class="realValue" th:value="${order.receiverPhone}">
-                <input type="hidden" id="elevator" name="elevator" class="realValue" th:value="${order.elevator}">
 
             </fieldset>
             <div class="d-flex justify-content-end">
@@ -151,7 +180,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="javascript:void(0)" id="addressRegister" method="POST" name="addressRegister">
+                        <form action="javascript:void(0)" id="addressRegister" method="POST" name="addressRegister" onsubmit="newAddressSubmit()">
                             <input type="hidden" name="newCheck" value="new">
                             <input type="hidden" name="userId" id="newUserId" th:value="${session.loginUser.userId}" readonly>
                             <div>
@@ -163,11 +192,11 @@
                             </div>
                             <div>
                                 <label for="newPostCode">우편번호</label>
-                                <input class="form-control" type="number" name="postCode" id="newPostCode" required>
+                                <input class="form-control" type="number" name="postCode" id="newPostCode" readonly required>
                             </div>
                             <div>
                                 <label for="newAddress">주소</label>
-                                <input class="form-control" type="text" name="address" id="newAddress" required>
+                                <input class="form-control" type="text" name="address" id="newAddress" readonly required>
                             </div>
                             <div>
                                 <label for="newAddressDetail">상세주소</label>
@@ -179,7 +208,8 @@
                             </div>
                             <fieldset>
                                 <label for="newReceiverPhone">수령인 전화번호</label>
-                                <input class="form-control" type="number" id="newReceiverPhone" name="receiverPhone" maxlength="11" required>
+                                <input class="form-control" type="text" id="newReceiverPhone" name="receiverPhone" maxlength="11" required
+                                       pattern="^(010)[0-9]{8}" oninput="this.value=this.value.replace(/[^0-9,]/g,'');" title="'010XXXXXXXX'으로 작성해 주세요." >
                             </fieldset>
 
                             <div class="form-check">
@@ -188,13 +218,13 @@
                             </div>
                             <div class="form-check">
                                 <label class="form-check-label" for="newElevator">엘레베이터 유무 여부</label>
-                                <input class="form-check-input" type="checkbox" name="elevator" id="newElevator" value="1">
+                                <input class="form-check-input" type="checkbox" name="elevator" id="newElevator" value="1" >
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">닫기</button>
-                        <button type="button" form="addressRegister" name="addressSubmit" class="btn text-white" style="background-color: #B68C68;" onclick="newAddressSubmit()">등록하기</button>
+                        <button type="button" id="closeBtn" class="btn" data-bs-dismiss="modal" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;">닫기</button>
+                        <button type="submit" form="addressRegister" name="addressSubmit" class="btn text-white" style="background-color: #B68C68;" >등록하기</button>
                     </div>
                 </div>
             </div>
@@ -202,22 +232,11 @@
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
+
             let newAddressRegister = document.forms.addressRegister;
             let refundRegister = document.forms.refundRegister;
-            refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;
-            refundRegister.cnt.value = refundRegister.orderDetailId.dataset.cnt;
-
-            function changeOpt(){
-                let cancelAmount = document.querySelector("#cancelAmount");
-                console.log(document.getElementById("orderDetailId"));
-                let changeSelect = document.getElementById("orderDetailId");
-                cancelAmount.value = changeSelect.options[changeSelect.selectedIndex].dataset.amount;
-                // let optVal = changeSelect.options[changeSelect.selectedIndex].value;
-                // console.log("opt:"+optVal);
-                // let optTxt = changeSelect.options[changeSelect.selectedIndex].text;
-                // console.log("option:"+optTxt);
-                // cancelAmount.value = optTxt.split(":")[1].split(")")[0];
-            }
+            // refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;
+            // refundRegister.cnt.value = refundRegister.orderDetailId.dataset.cnt;
 
             /* 교환/환불 radio 클릭에 따라 해당 input 보여주기 */
             let reType = refundRegister.reType;
@@ -243,94 +262,73 @@
             })
 
             /* 새 주소 등록 후 등록 주소 input 창에 넣기 */
-            const currentAddressList = document.querySelectorAll(".add");
             const realAddressList = document.querySelectorAll(".realValue");
             function changeAdd(){
                 let addressSlt = document.getElementById("myAddressList");
                 document.getElementById("addressId").value = addressSlt.options[addressSlt.selectedIndex].value;
                 console.log(addressSlt.options[addressSlt.selectedIndex].dataset.address, typeof(addressSlt.options[addressSlt.selectedIndex].dataset.address) );
-                let address = addressSlt.options[addressSlt.selectedIndex].dataset.address.split("(")[1].split(")")[0].split(",");
-                let addressMap = new Map();
-                for (let add of address){
-                    let splitAdd = add.split("=");
-                    console.log(splitAdd);
-                    addressMap.set(splitAdd[0].trim(),splitAdd[1]);
-                }
-                console.log(addressMap);
-                console.log(addressMap.get("addressId"));
-                currentAddressList[0].innerText = addressMap.get("addressId");
-                realAddressList[0].value = addressMap.get("addressId");
-                currentAddressList[1].innerText = addressMap.get("postCode");
-                realAddressList[1].value = addressMap.get("postCode");
-                currentAddressList[2].innerText = addressMap.get("address");
-                realAddressList[2].value = addressMap.get("address");
-                currentAddressList[3].innerText = addressMap.get("addressDetail");
-                realAddressList[3].value = addressMap.get("addressDetail");
-                currentAddressList[4].innerText = addressMap.get("receiverName");
-                realAddressList[4].value = addressMap.get("receiverName");
-                currentAddressList[5].innerText = addressMap.get("receiverPhone");
-                realAddressList[5].value = addressMap.get("receiverPhone");
-                currentAddressList[6].innerText = addressMap.get("elevator");
-                realAddressList[6].value = addressMap.get("elevator");
+
+                let addressId = addressSlt.options[addressSlt.selectedIndex].dataset['addressid'];
+                let postCode = addressSlt.options[addressSlt.selectedIndex].dataset['postcode'];
+                let address = addressSlt.options[addressSlt.selectedIndex].dataset['address'];
+                let addressDetail = addressSlt.options[addressSlt.selectedIndex].dataset['addressdetail'];
+                let receiverName = addressSlt.options[addressSlt.selectedIndex].dataset['receivername'];
+                let receiverPhone = addressSlt.options[addressSlt.selectedIndex].dataset['receiverphone'];
+                let elevator = addressSlt.options[addressSlt.selectedIndex].dataset['elevator'];
+
+                realAddressList[0].value = addressId;
+                realAddressList[1].value = elevator;
+                realAddressList[2].value = postCode;
+                realAddressList[3].value = address;
+                realAddressList[4].value = addressDetail;
+                realAddressList[5].value = receiverName;
+                realAddressList[6].value = receiverPhone;
+                realAddressList[7].innerText = (elevator==="true")?"O":"X";
             }
 
-
-
-            /* 모달창 새 주소 등록폼 제출 */
+            /* new 모달창 새 주소 등록 */
             async function newAddressSubmit(){
-                newAddressRegister.addressSubmit.onsubmit=(e)=>{e.preventDefault()};
+                let orderDetailId = [[${orderDetail.orderDetailId}]]
+                console.log(orderDetailId)
+                if(orderDetailId){
+                    let url = "/refund/user_yes/mypage/"+orderDetailId+"/addressRegister.do";
+                    let addressForm = document.forms.addressRegister;
+                    let formData = new FormData(addressForm);
+                    console.log(formData);
+                    const resp = await fetch(url, {method: "POST", body: formData})
+                    console.log("resp: "+ resp);
+                    if(resp.status === 200){
+                        const json = await resp.json()
+                        let addressUrl = "/refund/user_yes/mypage/"+orderDetailId+"/addressList.do"
+                        const addressListResp = await fetch(addressUrl);
+                        console.log()
+                        if(addressListResp.status === 200){
+                            const addressListText = await addressListResp.text();
+                            console.log("text: "+addressListText);
+                            let loadAddressList = document.getElementById("loadAddressList");
+                            loadAddressList.innerHTML = addressListText;
+                            addressForm.reset();
+                            let closeBtn = document.getElementById("closeBtn")
+                            closeBtn.click();
+                            console.log(json.address)
+                            console.log(json.addressDetail)
+                            realAddressList[0].value = json.addressId;
+                            realAddressList[1].value = json.elevator;
+                            realAddressList[2].value = json.postCode;
+                            realAddressList[3].value = json.address;
+                            realAddressList[4].value = json.addressDetail;
+                            realAddressList[5].value = json.receiverName;
+                            realAddressList[6].value = json.receiverPhone;
+                            realAddressList[7].innerText = (json.elevator==="true")?"O":"X";
 
-                let isOk = true;
-                if (!newAddressRegister.aname.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
-                }else if (!newAddressRegister.postCode.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
-                }else if (!newAddressRegister.address.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
-                }else if (!newAddressRegister.addressDetail.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
-                }else if (!newAddressRegister.receiverName.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
-                }else if (!newAddressRegister.receiverPhone.value){
-                    alert("요소를 모두 입력해주세요.");
-                    return false;
+                        }else{
+                            alert(`주소 목록 요청 실패: ${addressListResp.status}`)
+                        }
+                        console.log("json: "+json)
+                    }else{
+                        alert(`새 주소 등록 요청 실패: ${resp.status}`)
+                    }
                 }
-                newAddressRegister.newCheck.value = "isNew";
-                console.log("newAddress submit click!!");
-
-                let url="/refund/user_yes/mypage/"+[[${orderDetail.orderId}]]+"/addressRegister.do";
-                const form = new FormData(newAddressRegister);
-                const resp = await fetch(url,{
-                    method: 'POST',
-                    body: form,
-                    redirect: "manual"
-                })
-                console.log("resp.url:"+resp.url);
-                const respJson = await resp.json();
-                console.log("response.json:"+respJson);
-                if (respJson > 0){
-                    let loadAddressList = document.forms.loadAddressList;
-                    await loadNewAddress();
-                    let closeBtn = document.querySelector(".closeBtn");
-                    closeBtn.click();
-                }else{
-                    alert("등록에 실패하였습니다. 잘못된 값이 없는지 확인해주세요.")
-                }
-            }
-
-            async function loadNewAddress(){
-                let loadForm = document.querySelector("#loadAddressList")
-                let loadUrl = "/refund/user_yes/mypage/"+[[${orderDetail.orderId}]]+"/addressList.do";
-                const response = await fetch(loadUrl);
-                const addressHtml = await response.text();
-                console.log("load$$$$");
-                console.log("addressHtml"+addressHtml);
-                loadForm.innerHTML = addressHtml;
             }
 
             /* 우편번호 API */
@@ -382,21 +380,6 @@
                 }).open();
             }
 
-            async function registerAddress(){
-                let url="/address/user_yes/mypage/register.do";
-                const form = new FormData(newAddressRegister);
-                const response = await fetch(url,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    redirect: 'follow',
-                    body: form,
-                })
-
-                let commits = await response.json(); // 응답 본문 읽어 JSON 형태로 파싱
-                console.log(commits)
-            }
         </script>
 </div>
 </html>

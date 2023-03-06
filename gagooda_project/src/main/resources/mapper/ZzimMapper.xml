@@ -21,6 +21,13 @@
     <select id="findByUserId" resultMap="zzimMap" >
         SELECT * FROM zzim WHERE user_id = #{userId}
     </select>
+    <select id="count" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM zzim WHERE user_id=#{userId}
+    </select>
+    <select id="pageAll" resultMap="zzimMap">
+        SELECT * FROM zzim WHERE user_id=#{userId} ORDER BY ${paging.orderField} ${paging.direct}
+        LIMIT #{paging.startRow},#{paging.rows}
+    </select>
 
     <delete id="deleteOne" parameterType="int">
         DELETE FROM zzim WHERE zzim_id = #{zzimId}

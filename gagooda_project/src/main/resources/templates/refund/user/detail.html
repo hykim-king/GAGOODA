@@ -83,6 +83,14 @@
                 </th:block>
             </td>
         </tr>
+        <tr th:if="${payment != null}">
+            <th>취소 영수증</th>
+            <th:block th:if="${payment.cancelHistory != null}">
+                <td th:each="cancelHis : ${payment.cancelHistory}">
+                    <a class="btn cancelReceipt" style="background-color: #FFFAF5; color: #B68C68; border-color:#eeeeee;" th:data-receiptUrl="${cancelHis.receiptUrl}">취소 영수증</a>
+                </td>
+            </th:block>
+        </tr>
     </table>
 
 <h3 class="mt-5">환불 처리 정보</h3>
@@ -90,7 +98,12 @@
     <table class="table">
         <tr>
             <th class="col-2">환불 처리 현황</th>
-            <td class="10" th:text="${refund.rfDetDto.detName}"></td>
+            <td class="10" >
+                <div class="d-flex">
+                    <span th:text="${refund.rfDetDto.detName}"></span>
+
+                </div>
+            </td>
         </tr>
         <tr>
             <th>답변</th>
@@ -114,9 +127,20 @@
         <a class="btn text-white ms-3 backBtn" href="javascript:void(0)" onclick="goBack()" style="background-color: #B68C68;">목록으로</a>
     </div>
     <script th:inline="javascript">
-            function goBack(){
-                window.history.back();
-            }
+        /* 뒤로 가기 */
+        function goBack(){
+            window.history.back();
+        }
+
+        /* 취소 영수증 */
+        let cancelUrls = document.querySelectorAll(".cancelReceipt");
+        cancelUrls.forEach(url=>{
+            url.addEventListener("click",()=>{
+                window.open(url.dataset.receipturl, "cancelReceipt", "width=450, height=600, resizable=no")
+            })
+        })
+
+
     </script>
 </div>
 </html>

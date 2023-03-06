@@ -39,7 +39,9 @@ public class ReviewController {
         }
         try {
             List<ReviewDto> reviewList = reviewService.reviewList(productCode);
+            int count = reviewService.countByProductCode(productCode);
             model.addAttribute("reviewList", reviewList);
+            model.addAttribute("count",count);
             return "/review/list";
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,7 +153,7 @@ public class ReviewController {
     }
 
     @PostMapping("/user_yes/modify.do") // 리뷰아이디에 따른 리뷰 수정
-    public int modify(ReviewDto review,
+    public @ResponseBody int modify(ReviewDto review,
                          @RequestParam(name = "imgFile", required = false) List<MultipartFile> imageList,
                          @RequestParam(name = "imgToDelete", required = false) List<String> imgToDeleteList,
                          HttpSession session,

@@ -32,12 +32,13 @@
                 th:text="${review.content}"></td>
             <td th:text="${#dates.format(review.regDate,'yyyy-MM-dd HH:mm')}"></td>
             <td class="my-5">
-                <button type="submit" th:onclick=|update(${review.reviewId})| class="btn border"
-                        style="background-color: #FFFAF5; color: #b68c68">수정
-                </button>
-                <button type="submit" th:onclick=|remove(${review.reviewId})| class="btn border"
-                        style="background-color: #FFFAF5; color: #b68c68">삭제
-                </button>
+                <a class="btn border text-decoration-none" style="background-color: #FFFAF5; color: #b68c68;" th:href="@{'/product/{productCode}/detail.do'(productCode=${review.productCode})}">이동</a>
+<!--                <button type="submit" th:onclick=|update(${review.reviewId})| class="btn border"-->
+<!--                        style="background-color: #FFFAF5; color: #b68c68">수정-->
+<!--                </button>-->
+<!--                <button type="submit" th:onclick=|remove(${review.reviewId})| class="btn border"-->
+<!--                        style="background-color: #FFFAF5; color: #b68c68">삭제-->
+<!--                </button>-->
             </td>
         </tr>
         </tbody>

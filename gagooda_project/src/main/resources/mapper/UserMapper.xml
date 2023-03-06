@@ -51,6 +51,15 @@
     <select id="findById" resultMap="userMap">
         SELECT * FROM user WHERE user_id=#{id}
     </select>
+    <select id="findByEmail" resultMap="userMap">
+        SELECT * FROM user WHERE email=#{email}
+    </select>
+    <select id="findByPhone" resultMap="userMap">
+        SELECT * FROM user WHERE email=#{phone}
+    </select>
+    <select id="findByNick" resultMap="userMap">
+        SELECT * FROM user WHERE email=#{nickname}
+    </select>
 </mapper>
 <!--
 
