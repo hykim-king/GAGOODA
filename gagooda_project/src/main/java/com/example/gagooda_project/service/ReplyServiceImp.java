@@ -21,8 +21,9 @@ public class ReplyServiceImp implements ReplyService{
     @Override
     public List<ReplyDto> commDetailList(int commId, PagingDto paging) {
         log.info("service에 진입했습니다.");
-        int totalRows =replyMapper.countByCommId(commId,paging) ;
+        int totalRows =replyMapper.countByCommId(commId) ;
         log.info("totalRows: "+totalRows);
+        paging.setOrderField("reg_date");
         paging.setTotalRows(totalRows);
         return replyMapper.findByCommIdPaging(commId, paging);
     }
@@ -51,5 +52,10 @@ public class ReplyServiceImp implements ReplyService{
     public ReplyDto detail(int replyId) {
 
         return replyMapper.findById(replyId);
+    }
+
+    @Override
+    public int countReply(int commId) {
+        return replyMapper.countByCommId(commId);
     }
 }

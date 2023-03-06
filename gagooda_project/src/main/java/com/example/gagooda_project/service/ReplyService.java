@@ -14,4 +14,6 @@ public interface ReplyService {
     int modifyOne(ReplyDto reply);
     int registerOne(ReplyDto reply);
     ReplyDto detail(int replyId);
+    int countReply(int commId);
+
 }

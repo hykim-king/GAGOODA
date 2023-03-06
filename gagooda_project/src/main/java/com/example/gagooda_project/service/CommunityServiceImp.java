@@ -4,7 +4,6 @@ import com.example.gagooda_project.StaticMethods;
 import com.example.gagooda_project.dto.CommunityDto;
 import com.example.gagooda_project.dto.ImageDto;
 import com.example.gagooda_project.dto.PagingDto;
-import com.example.gagooda_project.dto.ReviewDto;
 import com.example.gagooda_project.mapper.CommunityMapper;
 import com.example.gagooda_project.mapper.ImageMapper;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,4 +125,10 @@ public class CommunityServiceImp implements CommunityService{
         communityMapper.updateViews(commId);
         return communityMapper.findById(commId);
     }
+
+    @Override
+    public int deleteOne(int commId) {
+        return communityMapper.deleteById(commId);
+    }
+
 }

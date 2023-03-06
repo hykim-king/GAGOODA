@@ -11,7 +11,7 @@ public interface ReplyMapper {
     List<ReplyDto> findAll();
     List<ReplyDto> findByCommId(int commId);
     List<ReplyDto> findByCommIdPaging(int commId, PagingDto paging);
-    int countByCommId(int commId, PagingDto paging);
+    int countByCommId(int commId);
     List<ReplyDto> findByUserIdPaging(int userId, PagingDto paging);
     int countByUserId(int userId, PagingDto paging);
     ReplyDto findById(int replyId);
