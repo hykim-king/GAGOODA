@@ -36,6 +36,7 @@
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="500"/>
 
 <br>
+
 ### 2.2 WBS
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
 
