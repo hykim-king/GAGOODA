@@ -1,6 +1,5 @@
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
-
 # 목차
 
 
@@ -23,7 +22,7 @@
 # 2. 프로젝트 기획
 
 ### 2.1 개발 환경
-![개발환경](https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png)
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="400"/>
 ### 2.2 WBS
 ![WBS 사진](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png "WBS 사진")
 
