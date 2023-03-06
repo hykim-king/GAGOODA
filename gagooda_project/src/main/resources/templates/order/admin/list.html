@@ -70,14 +70,14 @@
         <td th:text="${order.userName}"></td>
         <td>
           <a th:href="@{'/order/admin/{orderId}/detail.do'(orderId=${order.orderId})}"><span th:text="${order.orderId}"></span></a>
-          <input type="hidden" name="orderIdHidden" th:value="${order.orderId}">
+          <input type="hidden" name="orderIdHidden" id="orderIdHidden" th:value="${order.orderId}">
         </td>
         <td th:text="${order.totalPrice}"></td>
         <td th:text="${#calendars.format(order.regDate, 'yyyy-MM-dd')}"></td>
         <td th:text="${oCodeList[order.ODet.substring(1)].detName}"></td>
         <td>
           <input type="hidden" name="oDetHidden" th:value="${order.ODet}" th:id="'hidden'+${order.orderId}">
-          <span th:class="oDetName" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
+          <span th:class="oDetName" id="oDetName" th:text="${oCodeList[order.ODet.substring(1)].detName}"></span>
         </td>
       </tr>
     </th:block>
@@ -85,7 +85,7 @@
     </table>
   <th:block th:unless="${oCount >= 0}"><div>해당 주문 내역이 존재하지 않습니다.</div></th:block>
    <div class="d-flex justify-content-end">
-       <button type="submit" class="btn btn-outline-primary mx-3">상태변경</button>
+       <button type="submit" id="submitBtn" class="btn btn-outline-primary mx-3 ">상태변경</button>
    </div>
  </form>
   <!--pagination-->
@@ -148,7 +148,6 @@
         // orderIdHidden.setAttribute("value",checkedBox.value);
       })
     }
-
 
 
   </script>

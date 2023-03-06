@@ -26,6 +26,12 @@
         SET img_code=#{imgCode}, content = #{content}
         WHERE comm_id = #{commId}
     </update>
+    <update id="updateViews">
+        UPDATE community SET views=views+1 WHERE comm_id=#{commId}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM community WHERE comm_id = #{id}
+    </delete>
     <select id="count" resultType="int" parameterType="PagingDto">
         SELECT COUNT(*) FROM community
     </select>

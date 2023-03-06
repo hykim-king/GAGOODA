@@ -30,6 +30,8 @@ public interface ReviewService {
 
     int countByReviews(Map<String, Object> searchFilter);
 
+    int countByProductCode(String productCode);
+
     @Transactional
-    int delete(ReviewDto review, int reviewId);
+    int delete(ReviewDto review, int userId);
 }

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<h4>찜</h4>
+<div th:each="zzim:${zzimList}" th:if="${zzimList != null}">
+    <img th:src="@{'/img/product/{imgPath}'(imgPath=${zzim.product.imageList[0].imgPath})}"
+         th:alt="${zzim.product.pname}" style="width: 100px; height: 100px; object-fit: cover;">
+</div>
+<h4>장바구니</h4>
+<div th:each="cart:${cartList}" th:if="${cartList != null}">
+    <img th:src="@{'/img/product/{imgPath}'(imgPath=${cart.product.imageList[0].imgPath})}"
+         th:alt="${cart.product.pname}" style="width: 100px; height: 100px; object-fit: cover;">
+</div>
+</html>

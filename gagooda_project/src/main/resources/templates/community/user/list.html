@@ -8,46 +8,44 @@
     <title>커뮤니티 메인</title>
 </head>
 <div layout:fragment="content">
-    <h1>커뮤니티 목록</h1>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary"
-                th:onclick="location.href=[[@{'/community/user_yes/register.do'}]]">등록</button>
-    </div>
-    <div class="col mb-3 card border border-0 position-relative"
-         style="width: 280px; padding: 0;" th:each="community:${communityList}">
-        <div class="position-absolute d-flex justify-content-center align-items-center"
-             style="top:5px; right: 5px;">
-            <a href="">
-                <!--찜자리-->
-            </a>
+    <div class="container">
+        <h1 class="mt-4">커뮤니티 목록</h1>
+        <hr style="margin-top: 0; background : #b68c68; height: 5px">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary"
+                    th:onclick="location.href=[[@{'/community/user_yes/register.do'}]]">포스트 등록</button>
         </div>
-        <a th:href="@{'/community/{commId}/detail.do'(commId = ${community.commId})}"
-           style="text-decoration: none; color: black">
-            <img th:src="@{'/img/community/{imgPath}'(imgPath=${community.imgList[0].getImgPath()})}"
-                 class="card-img-top rounded mb-3">
-            <div class="card-body p-0">
-                <div class="d-flex align-items-center">
-                    <div class="star-ratings" style="font-size: 24px;">
-                        <div class="nickname">
-                            <span th:text="${community.user.nickname}"></span>
-                        </div>
-                        <div class="view">
-                            <span th:text="${community.views}"></span>
+        <div class="d-flex justify-content-between">
+            <div class="mx-2 my-3 card border border-0 position-relative"
+                 style="width: 280px;" th:each="community:${communityList}">
+                <a th:href="@{'/community/{commId}/detail.do'(commId = ${community.commId})}"
+                   style="text-decoration: none; color: black">
+                    <img th:src="@{'/img/community/{imgPath}'(imgPath=${community.imgList[0].getImgPath()})}"
+                         class="card-img-top rounded mb-3">
+                    <div class="card-body p-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="userNickname">
+                                <i class="bi bi-person-circle"></i>
+                                <span class="ms-1" th:text="${community.user.nickname}"></span>
+                            </div>
+                            <div class="view">
+                                <i class="bi bi-eye"></i>
+                                <span class="ms-1" th:text="${community.views}"></span>
+                            </div>
                         </div>
                     </div>
-                    <span></span>
-                </div>
-<!--                <p class="mt-0 card-title text-nowrap overflow-hidden fw-bold"-->
-<!--                   ></p>-->
-<!--                <p class="card-text mb-2" style="color: #e74444"></p>-->
+                </a>
+
             </div>
-        </a>
+        </div>
+
+        <div>
+            <!--페이지네이션-->
+            <th:block th:if="${paging!=null}" th:insert="~{pagination}"></th:block>
+            <!--페이지네이션end-->
+        </div>
     </div>
-    <div>
-        <!--페이지네이션-->
-        <th:block th:include="~{pagination}"></th:block>
-        <!--페이지네이션end-->
-    </div>
+
 
 </div>
 </html>

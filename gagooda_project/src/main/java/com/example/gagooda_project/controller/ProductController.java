@@ -27,6 +27,7 @@ public class ProductController {
     private final OptionProductService optionProductService;
     private final CartService cartService;
     private final ReviewService reviewService;
+    private final ZzimService zzimService;
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     public ProductController(ProductService productService,
@@ -36,7 +37,8 @@ public class ProductController {
                              CategoryConnService categoryConnService,
                              OptionProductService optionProductService,
                              CartService cartService,
-                             ReviewService reviewService) {
+                             ReviewService reviewService,
+                             ZzimService zzimService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.commonCodeService = commonCodeService;
@@ -45,6 +47,7 @@ public class ProductController {
         this.optionProductService = optionProductService;
         this.cartService = cartService;
         this.reviewService = reviewService;
+        this.zzimService = zzimService;
     }
 
     @Value("${img.upload.path}")
@@ -76,11 +79,22 @@ public class ProductController {
         }
     }
 
+    @PostMapping("/{categoryId}/list.do")
+    public String orderList(
+            HttpServletRequest req,
+            @PathVariable String categoryId,
+            PagingDto paging
+    ){
+        paging.setQueryString(req.getParameterMap());
+        return "redirect:/product/"+categoryId+"/list.do"+paging.getQueryString();
+    }
+
     @GetMapping("/{categoryId}/list.do")
     public String list(
             Model model,
             HttpSession session,
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             @PathVariable String categoryId,
             PagingDto paging,
             HttpServletRequest req
@@ -99,7 +113,10 @@ public class ProductController {
         map.put("categoryIdList", categoryIdList);
         try {
             List<ProductDto> productList = productService.pagingProduct(paging, map);
-
+            if (loginUser!=null) {
+                Map<String,ZzimDto> zzim = zzimService.zzimCheck(productList,loginUser);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
             model.addAttribute("realCategoryId", categoryId);
@@ -145,7 +162,16 @@ public class ProductController {
             List<ProductInquiryDto> plist = productInquiryService.showInquiries(productCode, paging);
             List<ReviewDto> reviewList = reviewService.reviewList(productCode);
             List<CommonCodeDto> commonCodeList = commonCodeService.showDets("pi");
+            int count = reviewService.countByProductCode(productCode);
             log.info("paging for Product Inquiry: "+paging);
+            if(loginUser!=null) {
+                ZzimDto zzimDto = zzimService.selectOne(productCode, loginUser);
+                System.out.println(zzimDto);
+                Map<String, ZzimDto> zzim = new HashMap<String, ZzimDto>();
+                zzim.put(productCode, zzimDto);
+                model.addAttribute("zzim",zzim);
+            }
+            model.addAttribute("count",count);
             model.addAttribute("reviewList",reviewList);
             model.addAttribute("paging", paging);
             model.addAttribute("product", product);

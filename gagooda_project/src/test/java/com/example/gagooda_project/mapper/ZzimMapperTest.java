@@ -17,7 +17,7 @@ class ZzimMapperTest {
     void insertOne() {
         ZzimDto zzim = new ZzimDto();
         zzim.setUserId(1);
-        zzim.setProductCode("HA00G01EEU");
+        zzim.setProductCode("HLC0E04EU");
         zzimMapper.insertOne(zzim);
     }
 
