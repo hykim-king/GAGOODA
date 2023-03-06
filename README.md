@@ -1,9 +1,9 @@
 ![](https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png)
 ># 목차
-[프로젝트 개요](#-1.-GAGOODA-프로젝트-개요)\
-프로젝트 기획\
-프로젝트 설계\
-기능 시연
+[프로젝트 개요](#1.-GAGOODA-프로젝트-개요)\
+[프로젝트 기획](#2.-프로젝트-기획)\
+[프로젝트 설계](#3.-프로젝트-설계)\
+[기능 시연](#4.-기능-시연)
 
 ># 1. GAGOODA 프로젝트 개요
 
