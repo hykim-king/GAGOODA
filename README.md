@@ -14,7 +14,7 @@
 |프로젝트 목표|1. 유저층이 이용하기 쉽도록 심플하면서도 세련된 UI 와 디자인 제공.<br>2. 효율성, 편의성, 접근성을 극대화 할 수 있도록 한다.|
 |타겟층|폭 넓은 디자인과 1인 가구 혹은 소규모 가족의 라이프스타일에 맞는 가구를 찾고있는 사용자 층.|
 
-![header](https://capsule-render.vercel.app/api?type=rect&color=gradient&text=%20프로젝트%20&height=300&fontSize=100&textBg=true)
+![header](https://capsule-render.vercel.app/api?type=rect&color=gradient&text=%20프로젝트기획%20&height=300&fontSize=100&textBg=true)
 ![header](https://capsule-render.vercel.app/api?type=rect&color=f0f8ff&height=170&section=header&text=프로젝트%20기획&fontSize=35&textBg=true)
 # 2. 프로젝트 기획
 ### 2.1 개발 환경
