@@ -1,7 +1,8 @@
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
-# 목차
+<br>
 
+# 목차
 
 >[프로젝트 개요](#1-프로젝트-개요)\
 ><br>
