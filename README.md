@@ -34,7 +34,7 @@
 ### 2.1 개발 환경
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="500"/>
 
-
+<br>
 ### 2.2 WBS
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
 
@@ -53,4 +53,5 @@
 
 <br>
 <br>
+
 # 4. 기능 시연
