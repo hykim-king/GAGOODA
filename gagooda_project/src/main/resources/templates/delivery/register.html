@@ -2,12 +2,12 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/mypageLayout}">
+      layout:decorate="~{/layout/adminLayout.html}">
 <head>
   <meta charset="UTF-8">
   <title>관리자 배송 정보 입력</title>
 </head>
-<div layout:fragment="myPageContent">
+<div layout:fragment="content">
 <h2>관리자 배송 정보 입력</h2>
 <form action="/delivery/admin/register.do" method="post"  enctype="multipart/form-data">
   <div>
