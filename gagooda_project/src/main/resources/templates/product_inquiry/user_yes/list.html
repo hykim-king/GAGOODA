@@ -78,5 +78,36 @@
     <th:block th:include="~{pagination}"></th:block>
     <!--페이지네이션end-->
 </div>
+    <script th:inline="javascript">
+
+
+        function removePInquiryWindow(pInquiryId) {
+            if (window.confirm("정말 삭제 하시겠습니가?")) {
+                removePInquiry(pInquiryId);
+            }
+        }
+
+        async function removePInquiry(pInquiryId) {
+            let url = "/product_inquiry/user_yes/delete.do?pInquiryId=" + pInquiryId;
+            const resp = await fetch(url, {method: "DELETE"});
+            if (resp.status === 200) {
+                const json = await resp.json();
+                if (json.state === 1) {
+                    await loadPInquiryList();
+                } else {
+                    alert("삭제 할 문의가 없습니다.")
+                }
+            } else {
+                alert(`삭제 실패 (${resp.status})`);
+            }
+        }
+        async function loadPInquiryList() {
+            const listUrl = "/product_inquiry/user_yes/list.do";
+            const resp = await fetch(listUrl);
+            const html = await resp.text();
+            document.innerHTML = html;
+            // init();
+        }
+    </script>
 </div>
 </html>
