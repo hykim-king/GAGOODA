@@ -90,7 +90,7 @@ public class RefundServiceImp implements RefundService{
         }
         PagingDto pagingDto = (PagingDto) searchFilter.get("paging");
         int totalRows = refundMapper.countPageAll(searchFilter);
-        pagingDto.setRows(5);
+        pagingDto.setRows(10);
         pagingDto.setTotalRows(totalRows);
         if (pagingDto.getOrderField() == null){
             pagingDto.setOrderField("reg_date");

@@ -75,12 +75,18 @@
                                 <span class="form-control" th:text="${orderDetail.optionName}"></span>
                             </div>
                             <div class="d-none refundInput mt-1">
-                                <label for="cancelAmount">환불 금액</label>
-                                <input class="form-control" type="text" id="cancelAmount" name="cancelAmount" readonly>
+                                <label class="d-block">환불 금액
+                                    <input th:if="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice}" name="cancelAmount" readonly>
+                                    <input th:unless="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.price * exchangedCnt}" name="cancelAmount" readonly>
+                                </label>
                             </div>
                             <div class="d-none exchangeInput mt-1">
-                                <label for="cnt">교환 수량</label>
-                                <input class="form-control" type="number" id="cnt" name="cnt" th:max="${orderDetail.cnt}" min="1">
+                                <label class="d-block">교환 수량
+                                    <input th:if="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt}">
+                                    <input th:unless="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - exchangedCnt}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt - exchangedCnt}">
+                                </label>
                             </div>
                             <div class="mt-1">
                                 <label for="imgFileList" class="form-label">첨부 이미지</label>
@@ -226,18 +232,11 @@
 
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
         <script th:inline="javascript">
-            /* input validation */
-            function maxLengthCheck(id, length){
-                let e = document.getElementById(id)
-                if(e.value.length > length){
-                    e.value = e.value.slice(0,length);
-                }
-            }
 
             let newAddressRegister = document.forms.addressRegister;
             let refundRegister = document.forms.refundRegister;
-            refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;
-            refundRegister.cnt.value = refundRegister.orderDetailId.dataset.cnt;
+            // refundRegister.cancelAmount.value = refundRegister.orderDetailId.dataset.amount;
+            // refundRegister.cnt.value = refundRegister.orderDetailId.dataset.cnt;
 
             /* 교환/환불 radio 클릭에 따라 해당 input 보여주기 */
             let reType = refundRegister.reType;

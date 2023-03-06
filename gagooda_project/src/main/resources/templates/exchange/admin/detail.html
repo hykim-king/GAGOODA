@@ -176,12 +176,13 @@
             let exDetOpt = document.querySelectorAll(".exDet");
             if (exDet.toString() === "ex3" || exDet.toString() === "ex4"){ // 교환 배송 중 상태일 시
                 exDetOpt.forEach(element=>{
-                    if (exDetOpt.value !== "ex0" || exDetOpt.value !== "ex1"){ // 교환 요청과 교환 요청 취소가 아닌 상태는
+                    if (exDetOpt.value === "ex0" || exDetOpt.value === "ex1"){ // 교환 요청과 교환 요청 취소가 아닌 상태는
+                    }else{
                         element.disabled = false  // 이용할 수 있다.
                     }
                 })
                 alert("이제 상태를 이전 단계로 되돌릴 수 있습니다.")
-            }else if(exDet.toString() === "ex5" || exDet.toString() === "ex6"){
+            }/*else if(exDet.toString() === "ex5" || exDet.toString() === "ex6"){
                 exDetOpt.forEach(element=>{
                     if (exDetOpt.value === "ex5" || exDetOpt.value === "ex6" || exDetOpt.value === "ex8"){ // 교환 배송 중/배송 완료/거절 상태는
                         element.disabled = false  // 이용할 수 있다.
@@ -190,7 +191,7 @@
                 alert("교환을 위한 재고가 출고되었으므로, 수거 완료 이후에 해당하는 단계로만 되돌릴 수 있습니다.")
             }else{
                 alert("이미 교환 완료된 상태는 변경할 수 없습니다.")
-            }
+            }*/
 
         }
 

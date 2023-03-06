@@ -109,11 +109,20 @@ public class RefundController {
                     }
                 }
                 if(checkExchangeList != null){
+                    int orderDetailCnt = orderDetail.getCnt();
+                    int exchangedCnt = 0;
                     for(ExchangeDto checkExchange : checkExchangeList){
-                        if(!checkExchange.getExDet().equals("ex1")){
+                        if(!(checkExchange.getExDet().equals("ex1") || checkExchange.getExDet().equals("ex7"))){
                             isOk = false;
-                            break;
                         }
+                        if(checkExchange.getExDet().equals("ex7")){
+                            exchangedCnt += checkExchange.getCnt();
+                        }
+                    }
+                    if(orderDetailCnt < exchangedCnt || orderDetailCnt == exchangedCnt){
+                        isOk = false;
+                    }else{
+                        model.addAttribute("exchangedCnt", exchangedCnt);
                     }
                 }
                 if(isOk){
@@ -342,10 +351,6 @@ public class RefundController {
                                AddressDto address,
                                HttpSession session ){
         int register = 0;
-        log.info("$$$$$$$$$$$$$$$"+address.getAddress());
-        log.info("$$$$$$$$$$$$$$$"+address.getAddressDetail());
-        log.info("$$$$$$$$$$$$$$$"+address.getPostCode());
-        log.info("$$$$$$$$$$$$$$$"+address.getUserId());
         try{
             OrderDetailDto orderDetail = refundService.selectOrderDetailByid(orderDetailId);
             OrderDto order = orderService.selectOne(orderDetail.getOrderId());
