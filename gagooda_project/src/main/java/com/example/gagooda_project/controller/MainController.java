@@ -1,10 +1,7 @@
 package com.example.gagooda_project.controller;
 
-import com.example.gagooda_project.dto.CategoryDto;
-import com.example.gagooda_project.dto.PagingDto;
-import com.example.gagooda_project.dto.ProductDto;
-import com.example.gagooda_project.service.CategoryService;
-import com.example.gagooda_project.service.ProductService;
+import com.example.gagooda_project.dto.*;
+import com.example.gagooda_project.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -22,41 +19,22 @@ import java.util.Map;
 
 @Controller
 public class MainController {
-    private CategoryService categoryService;
-    private ProductService productService;
+    private final CategoryService categoryService;
+    private final ProductService productService;
+    private final ZzimService zzimService;
+    private final CartService cartService;
+    private final MyPageService myPageService;
 
-    public MainController(CategoryService categoryService, ProductService productService) {
+    public MainController(CategoryService categoryService,
+                          ProductService productService,
+                          ZzimService zzimService,
+                          CartService cartService,
+                          MyPageService myPageService) {
         this.categoryService = categoryService;
         this.productService = productService;
-    }
-
-    @GetMapping("/mainpage.do")
-    public String main(HttpServletRequest req,
-                       Model model,
-                       @SessionAttribute(required = false) String msg,
-                       HttpSession session){
-        if (msg != null) {
-            session.removeAttribute("msg");
-            model.addAttribute("msg", msg);
-        }
-        try{
-            PagingDto paging = new PagingDto();
-            // 보여줄 상품의 개수
-            paging.setRows(10);
-            // 정렬 기준
-            paging.setOrderField("mod_date");
-            // 정렬 방향
-            paging.setDirect("DESC");
-            List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("recentProduct",recentProduct);
-
-            paging.setOrderField("order_cnt");
-            List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("orderedProductList", orderedProductList);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "mainpage";
+        this.zzimService = zzimService;
+        this.cartService = cartService;
+        this.myPageService = myPageService;
     }
 
     @GetMapping("/error.do")
@@ -101,6 +79,7 @@ public class MainController {
     @GetMapping("/")
     public String main(
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session,
             Model model
     ) {
@@ -113,16 +92,21 @@ public class MainController {
         try {
             PagingDto paging = new PagingDto();
             // 보여줄 상품의 개수
-            paging.setRows(10);
+            paging.setRows(8);
             // 정렬 기준
             paging.setOrderField("mod_date");
             // 정렬 방향
             paging.setDirect("DESC");
             List<ProductDto> recentProduct = productService.pagingProduct(paging, new HashMap<>());
-            model.addAttribute("recentProduct",recentProduct);
+            model.addAttribute("recentProduct", recentProduct);
 
             paging.setOrderField("order_cnt");
             List<ProductDto> orderedProductList = productService.pagingProduct(paging, new HashMap<>());
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(recentProduct,loginUser);
+                zzim.putAll(zzimService.zzimCheck(orderedProductList,loginUser));
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("orderedProductList", orderedProductList);
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,16 +121,30 @@ public class MainController {
     @PostMapping("/search_results.do")
     public String searchResults(
             @RequestParam String searchWord,
-            HttpSession session
+            PagingDto paging,
+            HttpSession session,
+            HttpServletRequest req
     ) {
+        if (paging.getOrderField() == null) paging.setOrderField("mod_date");
         String encodedParam = null;
         try {
             encodedParam = URLEncoder.encode(searchWord, "UTF-8");
+            Map<String, String[]> paramMap = new HashMap<>(req.getParameterMap());
+            if (paramMap.get("searchWord") != null) {
+                String encodedWord = URLEncoder.encode(paramMap.get("searchWord")[0], "UTF-8");
+                paramMap.put("searchWord", new String[]{encodedWord});
+            }
+            paging.setQueryString(paramMap);
             System.out.println(searchWord);
-            if(searchWord.isBlank()) {
+            System.out.println(encodedParam);
+            if (searchWord.isBlank()) {
                 return "redirect:/";
             } else {
-                return "redirect:/search_results.do?searchWord="+encodedParam;
+                if (paging.getQueryString() != null) {
+                    return "redirect:/search_results.do" + paging.getQueryString();
+                } else {
+                    return "redirect:/search_results.do?searchWord=" + encodedParam;
+                }
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -162,6 +160,7 @@ public class MainController {
             PagingDto paging,
             HttpServletRequest req,
             @SessionAttribute(required = false) String msg,
+            @SessionAttribute(required = false) UserDto loginUser,
             HttpSession session
     ) {
         if (msg != null) {
@@ -173,8 +172,12 @@ public class MainController {
             if (paging.getOrderField() == null) paging.setOrderField("mod_date");
             paging.setQueryString(req.getParameterMap());
             Map<String, Object> map = new HashMap<>();
-            map.put("searchWord", "'%"+searchWord+"%'");
+            map.put("searchWord", "'%" + searchWord + "%'");
             List<ProductDto> productList = productService.pagingProduct(paging, map);
+            if (loginUser!=null) {
+                Map<String, ZzimDto> zzim = zzimService.zzimCheck(productList,loginUser);
+                model.addAttribute("zzim",zzim);
+            }
             model.addAttribute("paging", paging);
             model.addAttribute("productList", productList);
             model.addAttribute("searchWord", searchWord);
@@ -183,5 +186,23 @@ public class MainController {
             e.printStackTrace();
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/user_yes/quick_menu.do")
+    public String quickMenu(
+            @SessionAttribute UserDto loginUser,
+            Model model
+    ){
+        try{
+            PagingDto paging = new PagingDto();
+            PagingDto paging2 = new PagingDto();
+            List<ZzimDto> zzimList = zzimService.zzimList(paging, loginUser.getUserId());
+            List<CartDto> cartList = myPageService.cartList(paging2, loginUser.getUserId());
+            model.addAttribute("zzimList", zzimList);
+            model.addAttribute("cartList", cartList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "layout/quickZzimList";
     }
 }

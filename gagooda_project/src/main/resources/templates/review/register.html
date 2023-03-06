@@ -1,53 +1,141 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/layout}">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<div layout:fragment="content">
-    <form class="container-sm" action="/review/user_yes/register.do" method="post" name="reviewForm"
-          enctype="multipart/form-data">
-        <h2 class="text-center mb-5">리뷰 등록</h2>
-        <div class="mx-auto" style="width: 50%">
-            <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
-            <input type="hidden" name="productCode" id="productCode" th:value="${productCode}">
-            <div class="mb-3">
-                <label for="optionCode" class="form-label">상품명</label>
-                <select name="optionCode" id="optionCode" class="form-select" required aria-label="select example">
-                    <option value="" disabled>상품 옵션</option>
-                    <th:block th:each="optionProduct:${optionProductList}">
-                        <option th:value="${optionProduct.getOptionCode()}"
-                                th:text="${optionProduct.getOpname()}"></option>
-                    </th:block>
-                </select>
-                <div class="invalid-feedback">Example invalid select feedback</div>
+      xmlns:th="http://www.thymeleaf.org">
+<style>
+    .rating {
+        display: inline-block;
+        position: relative;
+        height: 50px;
+        line-height: 50px;
+        font-size: 50px;
+    }
+    .rating label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        cursor: pointer;
+    }
+    .rating label:last-child {
+        position: static;
+    }
+    .rating label:nth-child(1) {
+        z-index: 5;
+    }
+    .rating label:nth-child(2) {
+        z-index: 4;
+    }
+    .rating label:nth-child(3) {
+        z-index: 3;
+    }
+    .rating label:nth-child(4) {
+        z-index: 2;
+    }
+    .rating label:nth-child(5) {
+        z-index: 1;
+    }
+    .rating label input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+    .rating label .icon {
+        float: left;
+        color: transparent;
+    }
+    .rating label:last-child .icon {
+        color: #ddd;
+    }
+    .rating:not(:hover) label input:checked ~ .icon,
+    .rating:hover label:hover input ~ .icon {
+        color: #B68C68;
+    }
+    .rating label input:focus:not(:checked) ~ .icon:last-child {
+        color: #000;
+        text-shadow: 0 0 5px #09f;
+    }
+</style>
+<div class="modal fade" th:id="'reviewRegisterModal'+${orderDetail.orderDetailId}" tabindex="-1"
+     th:aria-labelledby="'reviewRegisterModalLabel'+${orderDetail.orderDetailId}" aria-hidden="true"
+     th:if="${session.loginUser != null}">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" th:id="'reviewRegisterModalLabel'+${orderDetail.orderDetailId}">리뷰 등록</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="mb-3">
-                <label for="rate" class="form-label">평점</label>
-                <input type="range" min="1" max="5" class="form-control" name="rate" id="rate" required
-                       placeholder="1~5점을 주세요 !">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">내용</label>
-                <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="imgFile">이미지 첨부</label>
-                <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
-            </div>
-            <div class="d-grid d-flex gap-2 float-end">
-                <button class="btn btn-sm" style="background-color: #FFFAF5; color: #b68c68" type="reset"
-                        onclick="cancel()">취소
-                </button>
-                <button class="btn btn-sm" style="background-color: #b68c68; color: #FFFAF5 " type="submit"
-                        onclick="registerReview()">등록
-                </button>
+            <div class="modal-body modal-lg">
+                <form action="/review/user_yes/register.do" method="post" name="reviewForm"
+                      enctype="multipart/form-data">
+                    <div class="mx-auto" style="width: 80%">
+                        <input type="hidden" name="userId" th:value="${session.loginUser.userId}">
+                        <input type="hidden" name="productCode" id="productCode" th:value="${orderDetail.productCode}">
+                        <div class="mb-3">
+                            <label th:for="optionCode+${orderDetail.optionCode}" class="form-label"></label>
+                            <input type="hidden" th:value="${orderDetail.optionCode}" th:id="optionCode+${orderDetail.optionCode}" name="optionCode">
+                            <label class="form-label" th:for="optionCode+${orderDetail.optionName}">상품명</label>
+                            <input class="form-control" type="text" th:value="${orderDetail.optionName}" th:id="optionCode+${orderDetail.optionName}" readonly>
+                            <div class="invalid-feedback">Example invalid select feedback</div>
+                        </div>
+                        <div class="mb-3 mx-auto">
+                            <div class="rating">
+                                <label>
+                                    <input type="radio" name="rate" value="1"/>
+                                    <span class="icon">★</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="rate" value="2"/>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="rate" value="3"/>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="rate" value="4"/>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="rate" value="5"/>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                    <span class="icon">★</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">내용</label>
+                            <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imgFile">이미지 첨부</label>
+                            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
+                        </div>
+                        <div class="modal-footer">
+                            <div class="d-grid d-flex gap-2 float-end">
+                                <button class="btn" style="background-color: #FFFAF5; color: #b68c68" type="reset"
+                                        onclick="cancel()">취소
+                                </button>
+                                <button class="btn" style="background-color: #b68c68; color: #FFFAF5 " type="submit"
+                                        onclick="registerReview()">등록
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
+</div>
     <script th:inline="javascript">
         function registerReview() {
             let result = confirm("리뷰를 등록하시겠습니까 ?");

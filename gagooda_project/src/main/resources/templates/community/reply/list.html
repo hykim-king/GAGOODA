@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:each="reply:${replyList}">
+    <div>
+        <div class="d-flex" style="width:700px;">
+            <div class="profile_icon">
+                <i class="bi bi-emoji-smile-fill" style="font-size: 24px; color: #B68C68;"></i>
+            </div>
+            <div class="ms-2">
+                <div>
+                    <p class="fw-bold" th:text="${reply.user.nickname}" style="font-size: 20px;"></p>
+                    <p th:text="${reply.content}"></p>
+                </div>
+                <div class="d-flex">
+                    <div>
+                        <div class="mt-1">
+                            <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
+                        </div>
+                        <div class="ms-2">
+                            <a href="javascript:void(0)"
+                               th:onclick="loadRegisterForm( [[${reply.replyId}]])"
+                               class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
+                        </div>
+                    </div>
+                    <div class="mt-1">
+                        <p class="fw-bold" th:text="${#calendars.format(reply.regDate,'yyyy년 MM월 dd일')}" style="color: #5c636a; font-size: 12px;"></p>
+                    </div>
+                    <div class="ms-2">
+                        <a href="javascript:void(0)"
+                           th:onclick="loadRegisterForm( [[${reply.replyId}]])"
+                           class="text-decoration-none fw-bold" style="cursor:pointer; color: #5c636a; font-size: 12px">답글달기</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div th:id="${'reReplyRegisterContainer'+reply.replyId}"></div>
+            <!-- collection Fetch select 를 하면 레코드가 없어도 무조건 List 객체 생성 -->
+            <div th:if="${reply.replyList!=null && reply.replyList.size()>0}"
+                 th:with="replyList=${reply.replyList},paging=null"
+                 >
+                <span style="transform: rotate(-180deg)"></span>
+                <div th:include="/community/reply/list"></div>
+            </div>
+        </div>
+
+    </div>
+</th:block>
+<!--페이지네이션-->
+<th:block th:if="${paging != null}" th:insert="/pagination"></th:block>
+<!--페이지네이션end-->
+</html>

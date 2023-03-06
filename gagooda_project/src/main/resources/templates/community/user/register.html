@@ -23,23 +23,23 @@
         </div>
         <div>
             <button class="btn btn-primary" type="reset" onclick="cancel()">취소</button>
-            <button class="btn" type="submit">등록</button>
+            <button class="btn" type="submit" onclick="registerConfirm()">등록</button>
         </div>
     </form>
     <script th:inline="javascript">
-        //onclick="registerConfirm()
-        // function registerConfirm() {
-        //     let result = confirm("포스트를 등록하시겠습니까 ?");
-        //     // if (result == true) {
-        //     //     location.href = "review/list.do?productCode=" + document.getElementById("productCode").value;
-        //     // }
-        // }
+
+        function registerConfirm() {
+            let result = confirm("포스트를 등록하시겠습니까 ?");
+             if (result == true) {
+            location.href = "/community/list.do";
+             }
+        }
 
         function cancel() {
             let result = confirm("포스트를 취소하시겠습니까 ?");
-            // if (result == true) {
-            //     location.href = "/order/user_yes/mypage/" + [[${orderId}]] + "/detail.do";
-            // }
+            if (result == true) {
+                location.href = "/community/list.do";
+            }
         }
     </script>
 </div>

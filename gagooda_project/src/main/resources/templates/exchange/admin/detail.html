@@ -66,7 +66,7 @@
         <tr>
             <th class="col-2">교환 요청 수량</th>
             <td class="col-4" >
-                <span th:text="${exchange.cnt}"></span>( <span th:text="${'주문 수량: '+ orderDetail.cnt}"></span> )
+                <span th:text="${exchange.cnt}"></span>
             </td>
             <th class="col-2">수령인 연락처</th>
             <td class="col-4" th:text="${exchange.receiverPhone}"></td>
@@ -101,34 +101,53 @@
     </table>
 
 
-
-
     <h3>교환 상태 변경</h3>
-    <div class="col-5">
-        <div>현재 교환 진행 상태</div>
-        <div id="detName" class="form-control" th:text="${exchange.exDetDto.detName}"></div>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th class="col-1">옵션 상품 코드</th>
+                <td class="col-11" th:text="${orderDetail.optionCode}"></td>
+            </tr>
+            <tr>
+                <th class="col-1">상세 주문 수량</th>
+                <td class="col-11" th:text="${orderDetail.cnt}"></td>
+            </tr>
+            <tr>
+                <th class="col-1">교환 요청 수량</th>
+                <td class="col-11" th:text="${exchange.cnt}"></td>
+            </tr>
+            <tr>
+                <th class="col-1">상품 재고 수량</th>
+                <td class="col-11" >
+                    <span th:text="${optionProduct.stock}"></span>
+                    <span th:if="${!exchange.exDet.equals('ex7')}" th:text="${'(교환 시 재고량: ' + (optionProduct.stock - exchange.cnt)} + ')'"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex">
+        <div>현재 교환 진행 상태: </div>
+        <div id="detName" th:text="${exchange.exDetDto.detName}"></div>
     </div>
-    <div class="col-5">
-        <div>교환 답변</div>
-        <div class="form-control" th:text="${exchange.reply}"></div>
-    </div>
-    <form name="modify" th:action="@{'/exchange/admin/{exchangeId}/modify.do' (exchangeId=${exchange.exchangeId})}" method="POST">
+    <form name="modify" th:action="@{'/exchange/admin/{exchangeId}/modify.do' (exchangeId=${exchange.exchangeId})}" method="POST" onsubmit="return exchangeSubmitFilter()">
         <div>
             <label class="form-label" for="exDet">상태 변경</label>
-            <select class="form-select-sm" name="exDet" id="exDet" required>
+            <select class="form-select-sm" name="exDet" id="exDet" required th:disabled="${exchange.exDet.equals('ex7') || exchange.exDet.equals('ex1')}">
                 <option value="" selected disabled>변경할 상태를 선택하세요.</option>
                 <th:block th:each="exCode:${exCodeList}">
                     <option class="exDet" th:value="${exCode.detCode}" th:text="${exCode.detName}" th:data-exNum="${exCode.detCode.substring(2)}"></option>
                 </th:block>
             </select>
-            <button id="cancelBtn" class="btn btn-outline-primary" type="button">재고 변경 진행</button>
+            <div>
+                <button class="btn btn-outline-secondary resetExDet" type="button" onclick="resetExDet()">이전 상태 사용</button>
+                <button id="stockSubBtn" class="btn btn-outline-primary d-none" type="button" onclick="modifyStock()">재고 변경 진행</button>
+            </div>
         </div>
         <div>
             <label class="form-label d-block" for="reply">교환 요청 답변</label>
-            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none"></textarea>
+            <textarea class="form-text form-control-sm" required name="reply" id="reply" cols="70" rows="10" style="resize: none" th:text="${exchange.reply}"></textarea>
         </div>
-        <button class="btn btn-outline-primary" type="submit">등록</button>
-        <button class="btn btn-outline-secondary" type="reset">초기화</button>
+        <button class="btn btn-outline-primary exchangeSubmit" type="submit">등록</button>
     </form>
     <script th:inline="javascript">
         /* exDet 지난 상태 막기 */
@@ -144,6 +163,109 @@
             }
 
         })
+        /* ex4 일 때, 페이지 들어오면 버튼 등장 */
+        if (currentExDet.toString() === "ex4"){
+            let stockSubBtn = document.getElementById("stockSubBtn");
+            stockSubBtn.classList.remove("d-none");
+        }
+
+        /* exDet disabled 풀기 */
+        function resetExDet(){
+            let exDet = [[${exchange.exDet}]];
+            console.log("exDet: ", exDet)
+            let exDetOpt = document.querySelectorAll(".exDet");
+            if (exDet.toString() === "ex3" || exDet.toString() === "ex4"){ // 교환 배송 중 상태일 시
+                exDetOpt.forEach(element=>{
+                    if (exDetOpt.value === "ex0" || exDetOpt.value === "ex1"){ // 교환 요청과 교환 요청 취소가 아닌 상태는
+                    }else{
+                        element.disabled = false  // 이용할 수 있다.
+                    }
+                })
+                alert("이제 상태를 이전 단계로 되돌릴 수 있습니다.")
+            }/*else if(exDet.toString() === "ex5" || exDet.toString() === "ex6"){
+                exDetOpt.forEach(element=>{
+                    if (exDetOpt.value === "ex5" || exDetOpt.value === "ex6" || exDetOpt.value === "ex8"){ // 교환 배송 중/배송 완료/거절 상태는
+                        element.disabled = false  // 이용할 수 있다.
+                    }
+                })
+                alert("교환을 위한 재고가 출고되었으므로, 수거 완료 이후에 해당하는 단계로만 되돌릴 수 있습니다.")
+            }else{
+                alert("이미 교환 완료된 상태는 변경할 수 없습니다.")
+            }*/
+
+        }
+
+        /* exDet ex4 교환 수거 완료 일 때만 결제 취소 버튼이 등장 */
+        exDet.addEventListener("change",()=>{
+            let display = document.getElementById("stockSubBtn");
+            if(exDet.value.includes("4")){
+                console.log("remove")
+                display.classList.remove("d-none");
+            }else{
+                console.log("add")
+                display.classList.add("d-none");
+            }
+        })
+
+        /* 재고 변경 AJAX */
+        async function modifyStock(){
+            let exchangeId = [[${exchange.exchangeId}]]
+            console.log("exchangeId: ", exchangeId)
+            let optionCode = [[${orderDetail.optionCode}]]
+            let url = "/exchange/admin/"+exchangeId+"/stockModify.do"
+            let currentStock = [[${optionProduct.stock}]]
+            let modifiedStock = [[${optionProduct.stock - exchange.cnt}]]
+            console.log("currentStock:"+currentStock)
+            console.log("modifiedStock: ", modifiedStock)
+            let stockFormData = new FormData();
+            stockFormData.set("optionCode", optionCode.toString())
+            let isOk = confirm("해당 옵션 상품의 재고를 수정하시겠습니까? " +
+                "\n재고 변경 시 자동으로 상태가 '교환 배송 중(다음 단계)'으로 변경됩니다." +
+                "\n현재 재고량: "+currentStock+", 수정 시 재고량: "+modifiedStock)
+            if(isOk){
+                const resp = await fetch(url, {method: "post", body: stockFormData})
+                console.log("resp: ", resp)
+                if(resp.status === 200){
+                    const json = await resp.json();
+                    console.log("json: ", json)
+                    if(json > 0){
+                        alert("성공적으로 재고가 변경되었습니다.")
+                        let url = "/exchange/admin/"+exchangeId+"/modify.do"
+                        let modifyForm = new FormData();
+                        modifyForm.set("exchangeId", exchangeId.toString());
+                        modifyForm.set("exDet", "ex5");
+                        const modResp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
+                        console.log(modResp)
+                        window.location.reload();
+                    }else if(json < 0){
+                        alert("현재 재고가 교환 수량보다 적어 재고 수정에 실패했습니다.")
+                    }else{
+                        alert("데이터를 불러오지 못했습니다.")
+                    }
+                }else{
+                    alert(`서버 에러 ${resp.status}`)
+                }
+            }
+        }
+
+        /* 상태 변화 제출 시 필터링 */
+        function exchangeSubmitFilter(){
+            console.log(exDet.value)
+            let exDetNum = Number(currentExDet.slice(2));
+            console.log(exDetNum)
+            if (exDetNum < 5 && exDet.value === "ex7"){
+                alert("아직 교환 상품이 출고, 배송되지 않아 교환 완료 상태로 변경할 수 없습니다.")
+                return false;
+            }else if((exDetNum >= 5 && exDetNum < 7) && exDet.value === "ex8"){
+                alert("교환 상품이 출고, 배송 중이기 때문에 교환 거절로 변경할 수 없습니다.")
+                return false;
+            }else if(exDetNum < 5 && (exDet.value === "ex5" || exDet.value === "ex6")){
+                alert("교환 상품이 출고, 배송 되지 않아 교환 상태를 배송 상태로 변경할 수 없습니다.")
+                return false;
+            }
+        }
+
+
     </script>
 
 </div>

@@ -45,7 +45,7 @@
         <button type="submit" class="btn btn-outline-secondary">검색</button>
         <button name="reset" type="reset" class="btn btn-outline-primary">초기화</button>
     </form>
-    <h3>교환 신청 <span th:if="${exchangeList != null && !exchangeList.isEmpty() }" th:text="${exchangeList.size()}"></span></h3>
+    <h3>교환 신청 <span th:text="${allCount}"></span></h3>
     <table class="table table-striped">
         <thead>
         <tr>

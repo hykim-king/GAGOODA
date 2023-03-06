@@ -9,162 +9,232 @@
 </head>
 <div layout:fragment="content">
 
-<form action="/user/signup.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px" name="signupForm">
-    <input type="hidden" th:value="${gDet}" name="gDet">
+    <form action="/user/signup.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px"
+          name="signupForm">
+        <input type="hidden" th:value="${gDet}" name="gDet">
 
-    <div class="mx-auto" >
-        <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
-    </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">이메일</label>
-        <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="name@example.com" required>
-    </div>
-    <div class="mb-3">
-        <label for="uname" class="form-label">이름</label>
-        <input type="text" class="form-control form-control-lg" id="uname" name="uname" required readonly>
-    </div>
-    <div class="mb-3">
-        <label for="phone" class="form-label">전화번호</label>
-        <input type="text" class="form-control form-control-lg"
-               id="phone" name="phone" required readonly>
-    </div>
-    <button type="button" class="form-control form-control-lg mb-4" onclick="onClickCertification()"
-            style="background-color: #FFFAF5; color: #B68C68" id="basic-addon2"> 본인인증
-    </button>
-    <div class="mb-3">
-        <label for="nickname" class="form-label">닉네임</label>
-        <input type="text" class="form-control form-control-lg" id="nickname" name="nickname" required>
-    </div>
-    <div class="mb-3">
-        <label for="pw" class="form-label">비밀번호</label>
-        <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
-    </div>
-    <div class="mt-0 mb-2">
-        <ul>
-            <li style="font-size: 12px; color: #3b3b3b;">비밀번호 길이는 최소 8자 이상이어야 합니다.</li>
-        </ul>
-    </div>
-    <div class="mb-3">
-        <label for="check" class="form-label">비밀번호 확인</label>
-        <input type="password" class="form-control form-control-lg" id="check" name="check" required>
-    </div>
-    <div class="mt-0 mb-2">
-        <span id="pwCheckMsg"></span>
-    </div>
-    <div class="form-check form-check-reverse">
-        <input class="form-check-input" type="checkbox" name="" id="private-data" required>
-        <label class="form-check-label" for="private-data">
-            개인정보 수집 및 이용 동의
-        </label>
-    </div>
-    <div class="form-check form-check-reverse">
-        <input class="form-check-input" type="checkbox" name="emailCheck" id="emailCheck" checked>
-        <label class="form-check-label" for="emailCheck">
-            광고 및 업데이트 관련 이메일 수신 동의
-        </label>
-    </div>
-    <div class="mb-3">
-        <input type="submit" class="form-control form-control-lg text-white my-5" value="가입하기" style="background-color: #B68C68;">
-    </div>
-</form>
+        <div class="mx-auto">
+            <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
+        </div>
+        <div class="mb-1">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control form-control-lg" id="email" name="email"
+                   placeholder="name@example.com" required>
+        </div>
+        <div class="mb-3">
+            <span id="emailCheckMsg" data-check="false"></span>
+        </div>
+        <div class="mb-3">
+            <label for="uname" class="form-label">이름</label>
+            <input type="text" class="form-control form-control-lg" id="uname" name="uname" required readonly>
+        </div>
+        <div class="mb-1">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" class="form-control form-control-lg"
+                   id="phone" name="phone" required readonly>
+        </div>
+        <div class="mb-3">
+            <span id="phoneCheckMsg" data-check="false"></span>
+        </div>
+        <button type="button" class="form-control form-control-lg mb-4" onclick="onClickCertification()"
+                style="background-color: #FFFAF5; color: #B68C68" id="basic-addon2"> 본인인증
+        </button>
+        <div class="mb-1">
+            <label for="nickname" class="form-label">닉네임</label>
+            <input type="text" class="form-control form-control-lg" id="nickname" name="nickname" required>
+        </div>
+        <div class="mb-3">
+            <span id="nickCheckMsg" data-check="false"></span>
+        </div>
+        <div class="mb-3">
+            <label for="pw" class="form-label">비밀번호</label>
+            <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
+        </div>
+        <div class="mt-0 mb-2">
+            <ul>
+                <li style="font-size: 12px; color: #3b3b3b;">비밀번호 길이는 최소 8자 이상이어야 합니다.</li>
+            </ul>
+        </div>
+        <div class="mb-3">
+            <label for="check" class="form-label">비밀번호 확인</label>
+            <input type="password" class="form-control form-control-lg" id="check" name="check" required>
+        </div>
+        <div class="mt-0 mb-2">
+            <span id="pwCheckMsg"></span>
+        </div>
+        <div class="form-check form-check-reverse">
+            <input class="form-check-input" type="checkbox" name="" id="private-data" required>
+            <label class="form-check-label" for="private-data">
+                개인정보 수집 및 이용 동의
+            </label>
+        </div>
+        <div class="form-check form-check-reverse">
+            <input class="form-check-input" type="checkbox" name="emailCheck" id="emailCheck" checked>
+            <label class="form-check-label" for="emailCheck">
+                광고 및 업데이트 관련 이메일 수신 동의
+            </label>
+        </div>
+        <div class="mb-3">
+            <input type="submit" class="form-control form-control-lg text-white my-5" value="가입하기"
+                   style="background-color: #B68C68;">
+        </div>
+    </form>
+    <form name="checkExistance" style="display: none;">
+        <input type="hidden" name="email">
+        <input type="hidden" name="nickname">
+        <input type="hidden" name="phone">
+    </form>
 
-<script>
-    const signupForm = document.forms["signupForm"];
-    const pw = signupForm["pw"];
-    const check = signupForm["check"];
-    const phone = signupForm["phone"];
-    const uname = signupForm["uname"];
+    <script>
+        const signupForm = document.forms["signupForm"];
 
-    signupForm.onsubmit=(e)=>{
-        if (!pwcheck()) {
-            e.preventDefault();
-            alert("비밀번호가 올바르지 않습니다.");
+        function fillData(formName, checkName) {
+            const form = document.forms[formName];
+            const emailData = form["email"];
+            const phoneData = form["phone"];
+            const nickData = form["nickname"];
+
+            const checkForm = document.forms[checkName];
+            checkForm["email"].setAttribute("value", emailData.value);
+            checkForm["phone"].setAttribute("value", phoneData.value);
+            checkForm["nickname"].setAttribute("value", nickData.value);
         }
-        if (uname.value === "" || phone.value === "") {
-            e.preventDefault();
-            alert("본인인증을 먼저 진행해 주세요.");
+
+        async function checkUnique(checkForm) {
+            url = "/user/check.do";
+            const formData = new FormData(checkForm);
+            const resp = await fetch(url, {method:"POST",body: formData});
+            if (resp.status === 200) {
+                const json = resp.json();
+                const emailCheckMsg = document.getElementById("emailCheckMsg");
+                if (json.email) {
+                    // 존재하는 이메일
+                    emailCheckMsg.dataset["check"] = 'false';
+                } else {
+                    // 이메일 존재하지 않음
+                    emailCheckMsg.dataset["check"] = 'true';
+                }
+                const phoneCheckMsg = document.getElementById("phoneCheckMsg");
+                if (json.phone) {
+                    // 존재하는 전화번호
+                    phoneCheckMsg.dataset["check"] = 'false';
+                } else {
+                    // 전화번호 존재하지 않음
+                    phoneCheckMsg.dataset["check"] = 'true';
+                }
+                const nickCheckMsg = document.getElementById("nickCheckMsg");
+                if (json.nickname) {
+                    // 존재하는 닉네임
+                    nickCheckMsg.dataset["check"] = 'false';
+                } else {
+                    // 닉네임 존재하지 않음
+                    nickCheckMsg.dataset["check"] = 'true';
+                }
+                if (!json.email && !json.phone && !json.nickname) {
+                    // 이메일 전화번호 닉네임 모두가 존재하지 않는다면
+                }
+            } else {
+                alert("통신 오류!"+resp.status);
+            }
         }
-    }
 
-    pw.addEventListener("change", (e)=>{
-        pwcheck()
-    });
-    check.addEventListener("change", (e)=>{
-        pwcheck()
-    });
 
-    function pwcheck() {
-        const pwCheckMsg = document.getElementById("pwCheckMsg");
-        if (pw.value === "") {
-            pwCheckMsg.innerText = "";
-        } else if (pw.value.length < 8) {
-            pwCheckMsg.innerText = "비밀번호가 너무 짧습니다.";
-            pwCheckMsg.setAttribute("style", "color: #e53b3b;");
-        } else if (pw.value !== check.value) {
-            pwCheckMsg.innerText = "비밀번호가 일치하지 않습니다.";
-            pwCheckMsg.setAttribute("style", "color: #e53b3b;");
-        } else {
-            pwCheckMsg.innerText = "비밀번호가 일치합니다.";
-            pwCheckMsg.setAttribute("style", "color: #0f9105;");
-            return true;
+        const pw = signupForm["pw"];
+        const check = signupForm["check"];
+        const phone = signupForm["phone"];
+        const uname = signupForm["uname"];
+
+        signupForm.onsubmit = (e) => {
+            if (!pwcheck()) {
+                e.preventDefault();
+                alert("비밀번호가 올바르지 않습니다.");
+            }
+            if (uname.value === "" || phone.value === "") {
+                e.preventDefault();
+                alert("본인인증을 먼저 진행해 주세요.");
+            }
         }
-        return false;
-    }
 
-    const IMP = window.IMP;
-    IMP.init("imp61025700");
+        pw.addEventListener("change", (e) => {
+            pwcheck()
+        });
+        check.addEventListener("change", (e) => {
+            pwcheck()
+        });
 
-    function onClickCertification() {
-        console.log("click");
-        /* 2. 본인인증 데이터 정의하기 */
-        const data = {
-            merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
-            company: '아임포트', // 회사명 또는 URL
-            // carrier: 'KT', // 통신사
-            // name: '양한나', // 이름
-            // phone: '01043302309', // 전화번호
-            popup: false
+        function pwcheck() {
+            const pwCheckMsg = document.getElementById("pwCheckMsg");
+            if (pw.value === "") {
+                pwCheckMsg.innerText = "";
+            } else if (pw.value.length < 8) {
+                pwCheckMsg.innerText = "비밀번호가 너무 짧습니다.";
+                pwCheckMsg.setAttribute("style", "color: #e53b3b;");
+            } else if (pw.value !== check.value) {
+                pwCheckMsg.innerText = "비밀번호가 일치하지 않습니다.";
+                pwCheckMsg.setAttribute("style", "color: #e53b3b;");
+            } else {
+                pwCheckMsg.innerText = "비밀번호가 일치합니다.";
+                pwCheckMsg.setAttribute("style", "color: #0f9105;");
+                return true;
+            }
+            return false;
+        }
+
+        const IMP = window.IMP;
+        IMP.init("imp61025700");
+
+        function onClickCertification() {
+            console.log("click");
+            /* 2. 본인인증 데이터 정의하기 */
+            const data = {
+                merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
+                company: '아임포트', // 회사명 또는 URL
+                // carrier: 'KT', // 통신사
+                // name: '양한나', // 이름
+                // phone: '01043302309', // 전화번호
+                popup: false
+            };
+
+            /* 4. 본인인증 창 호출하기 */
+            IMP.certification(data, callback);
         };
 
-        /* 4. 본인인증 창 호출하기 */
-        IMP.certification(data, callback);
-    };
-    /* 3. 콜백 함수 정의하기 */
-    async function callback(response) {
-        const {
-            success,
-            merchant_uid,
-            error_msg
-        } = response;
+        /* 3. 콜백 함수 정의하기 */
+        async function callback(response) {
+            const {
+                success,
+                merchant_uid,
+                error_msg
+            } = response;
 
-        if (success) {
-            console.log('본인인증 성공')
-            console.log(response.imp_uid);
-            jQuery.ajax({
-                url: "/user/certifications.do",
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                data: JSON.stringify({imp_uid: response.imp_uid}),
-                success: function (data) {
-                    if (data != null) {
-                        console.log(data);
-                        const object = JSON.parse(data);
-                        uname.value = object.response.name;
-                        phone.value = object.response.phone;
-                    } else {
-                        alert("통신 중 오류가 있었습니다.");
+            if (success) {
+                console.log('본인인증 성공')
+                console.log(response.imp_uid);
+                jQuery.ajax({
+                    url: "/user/certifications.do",
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    data: JSON.stringify({imp_uid: response.imp_uid}),
+                    success: function (data) {
+                        if (data != null) {
+                            console.log(data);
+                            const object = JSON.parse(data);
+                            uname.value = object.response.name;
+                            phone.value = object.response.phone;
+                        } else {
+                            alert("통신 중 오류가 있었습니다.");
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e)
                     }
-                },
-                error: function (e) {
-                    console.log(e)
-                }
-            });
-        } else {
-            console.log(`본인인증 실패: ${error_msg}`);
+                });
+            } else {
+                console.log(`본인인증 실패: ${error_msg}`);
+            }
         }
-    }
 
-</script>
+    </script>
 </div>
 
 </html>

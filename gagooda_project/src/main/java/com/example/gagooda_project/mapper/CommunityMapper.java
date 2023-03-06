@@ -13,4 +13,6 @@ public interface CommunityMapper {
     int count(PagingDto paging);
     List<CommunityDto> listAll(PagingDto paging);
     CommunityDto findById(int commId);
+    int deleteById(int id);
+    int updateViews(int commId);
 }

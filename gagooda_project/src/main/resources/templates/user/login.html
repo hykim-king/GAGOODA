@@ -8,27 +8,38 @@
     <title>사용자 로그인</title>
 </head>
 <div layout:fragment="content">
-    <body>
-    <form action="/user/login.do" method="post" class="container mt-5" style="width: 40%; margin-bottom: 200px">
-        <div class="mx-auto" >
-            <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
-        </div>
+    <div class="container" style="width: 40%; margin-bottom: 200px">
+        <form action="/user/login.do" method="post" class="mt-5 mb-1">
+            <div class="mx-auto">
+                <img th:src="@{'/html_img/LOGO_BG.png'}" class="d-block mx-auto mb-5" style="width: 240px">
+            </div>
 
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" class="form-control form-control-lg" id="email" name="email" required>
-        </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">이메일</label>
+                <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+            </div>
 
-        <div class="mb-3">
-            <label for="pw" class="form-label">비밀번호</label>
-            <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
-        </div>
+            <div class="mb-3">
+                <label for="pw" class="form-label">비밀번호</label>
+                <input type="password" class="form-control form-control-lg" id="pw" name="pw" required>
+            </div>
 
-        <div class="mb-3">
-            <input type="submit" class="form-control form-control-lg text-white my-5" value="로그인" style="background-color: #B68C68;">
+            <div>
+                <input type="submit" class="form-control form-control-lg text-white" value="로그인"
+                       style="background-color: #B68C68;">
+            </div>
+        </form>
+        <div class="d-flex justify-content-between">
+            <div class="">
+                <a class="text-decoration-none" style="color: #B68C68;" href="/user/findpw.do">비밀번호 찾기</a>
+            </div>
+            <div class="">
+                <a class="text-decoration-none" style="color: #B68C68;" aria-current="page" href="/user/g0/signup.do">회원가입</a>
+            </div>
+            <div class="">
+                <a class="text-decoration-none" style="color: #B68C68;" href="/user/g1/signup.do">관리자 회원가입</a>
+            </div>
         </div>
-
-    </form>
-    </body>
+    </div>
 </div>
 </html>

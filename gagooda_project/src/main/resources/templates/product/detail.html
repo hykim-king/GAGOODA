@@ -8,6 +8,7 @@
     <title th:text="${product.pname}+' 상세페이지'"></title>
     <link rel="stylesheet" href="/css/star_rate.css">
     <script src="/js/star_rate.js" defer></script>
+    <script src="https://kit.fontawesome.com/3a45d8e733.js" crossorigin="anonymous"></script>
 </head>
 <style>
     .displayNone {
@@ -66,7 +67,13 @@
                         <div class="card-body">
                             <h6 class="card-subtitle text-muted text-start mt-2 mb-3" th:text="${product.productCode}">
                                 GAGOODA</h6>
-                            <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title text-start fs-3 fw-semibold" th:text="${product.pname}">상품명</h5>
+                                <!--                            찜 자리-->
+                                <div id="zzimBox">
+                                    <th:block th:include="~{/zzim/register}"></th:block>
+                                </div>
+                            </div>
                             <div class="d-flex align-items-center">
                                 <div class="star-ratings" style="font-size: 24px;">
                                     <div class="fill-ratings" th:style="'width:'+${product.avgRate/5*100}+'%;'">
@@ -108,11 +115,14 @@
                                         id="optionCode" required onchange="changePrice()">
                                     <option value="" data-price="0" selected>--옵션 선택--</option>
                                     <th:block th:each="option:${product.optionProductList}">
-                                        <option th:value="${option.optionCode}"></option>
                                         <option th:value="${option.optionCode}"
-                                                th:text="${option.opname}+' '+${option.price}+'원'"
+                                                th:text="${option.opname}+' '+${option.price}+'원'
+                                                +${(option.stock==0)?'(품절)':''}"
                                                 th:data-price="${option.price}"
-                                                th:data-stock="${option.stock}"></option>
+                                                th:data-stock="${option.stock}"
+                                                th:disabled="${(option.stock == 0)?'true':'false'}"
+                                                th:styleappend="${(option.stock == 0)?
+                                                'color:#7a7a7a; text-decoration-line: line-through;':''}"></option>
                                     </th:block>
                                 </select>
                             </div>
@@ -312,6 +322,22 @@
                     registerPInquiry(e, pInquiryForm);
                 };
             }
+
+            const zzimForm = document.forms["zzimForm"+[[${product.productCode}]]];
+            if(zzimForm != null) {
+                zzimForm.onsubmit = function(e) {
+                    registerZzim(e, zzimForm);
+                };
+            }
+
+            moreReview();
+
+            const reviewModifyForms = document.querySelectorAll(".modifyForm");
+            reviewModifyForms.forEach(modifyForm => {
+                modifyForm.onsubmit = function (e) {
+                    updateReview(e, modifyForm);
+                }
+            })
         }
 
         init();
@@ -336,20 +362,7 @@
                 alert(`삭제 실패 (${resp.status})`);
             }
         }
-        async function updateReview(reviewId) {
-            let url = "/review/user_yes/modify.do?reviewId="+reviewId;
-            const resp = await fetch(url, {method: "POST"});
-            if (resp.status === 200) {
-                const json = await resp.json();
-                if (json === 1) {
-                    await loadReviewList();
-                } else {
-                    alert("수정할 리뷰가 없습니다.");
-                }
-            } else {
-                alert(`수정 실패 (${resp.status})`);
-            }
-        }
+
         async function removeReview(reviewId) {
             let url = "/review/user_yes/delete.do?reviewId="+reviewId;
             const resp = await fetch(url, {method: "DELETE"});
@@ -365,6 +378,35 @@
             }
         }
 
+        async  function removeZzim(zzimId,productCode) {
+            let url = "/zzim/user_yes/mypage/delete.do?zzimId="+zzimId;
+            const resp = await fetch(url, {method:"DELETE"});
+            if (resp.status ===200) {
+                const json = await resp.json();
+                if (json === 1) {
+                    await loadZzim();
+                    await loadQuickList();
+                } else {
+                    alert("취소 중 오류가 발생하였습니다.");
+                }
+            } else {
+                alert(`200 아닌 오류 발생 (${resp.status})`) ;
+            }
+        }
+
+        async function updateReview(e, reviewModifyForm) {
+            e.preventDefault();
+            let url = "/review/user_yes/modify.do"
+            const formData = new FormData(reviewModifyForm);
+            const resp = await fetch(url, {method: "POST", body: formData});
+            const json = await resp.json();
+            console.log(json)
+            if (json === 1) {
+                await loadReviewList();
+                reviewModifyForm.reset();
+            }
+        }
+
         async function registerPInquiry(e, pInquiryForm) {
             e.preventDefault();
             let url = "/product_inquiry/user_yes/register.do";
@@ -374,8 +416,30 @@
             console.log(json);
             if (json.state === 1) {
                 await loadPInquiryList();
+                await loadQuickList();
                 pInquiryForm.reset();
             }
+        }
+
+        async function registerZzim(e, zzimForm) {
+            e.preventDefault();
+            let url = "/zzim/user_yes/mypage/register.do";
+            const formData = new FormData(zzimForm);
+            const resp = await fetch(url, {method:"POST",body: formData});
+            const json = await resp.json();
+            console.log(json);
+            if (json === 1) {
+                await loadZzim();
+                await loadQuickList();
+            }
+        }
+
+        async function loadZzim() {
+            const url = "/zzim/user_yes/show.do?productCode=" + [[${product.productCode}]];
+            const resp = await fetch(url);
+            const html = await resp.text();
+            document.getElementById("zzimBox").innerHTML = html;
+            init();
         }
 
         async function loadPInquiryList() {
@@ -390,6 +454,7 @@
             const resp = await fetch(reviewList);
             const html = await resp.text();
             document.getElementById("reviewList").innerHTML = html;
+            init();
         }
 
         const optionCode = product_choose.optionCode;
@@ -398,7 +463,7 @@
             if ((product_choose.cnt.value != null && product_choose.cnt.value !== "")
                 && (optionCode.value != null && optionCode.value !== "")) {
                 const selectedOption = product_choose.querySelector("option:checked");
-                totalPrice.innerText = product_choose.cnt.value * selectedOption.dataset.price + "원";
+                totalPrice.innerText = (product_choose.cnt.value * selectedOption.dataset.price).toLocaleString() + "원";
             } else {
                 totalPrice.innerText = "0원";
             }
@@ -414,7 +479,7 @@
                 if (value > max) {
                     product_choose.cnt.value = product_choose.cnt.max;
                     document.getElementById("optionMsg").innerText =
-                        "해당 상품의 최대 주문 수량은 "+product_choose.cnt.max+"개 입니다.";
+                        "해당 상품의 최대 주문 수량은 "+Number(product_choose.cnt.max).toLocaleString()+"개 입니다.";
                 } else {
                     document.getElementById("optionMsg").innerText = "";
                 }

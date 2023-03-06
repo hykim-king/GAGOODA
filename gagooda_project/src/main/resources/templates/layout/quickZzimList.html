@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+    #scroll-top{
+        position: fixed;
+        bottom: 2%;
+        right: 2%;
+    }
+    #quick-btn{
+        position: fixed;
+        bottom: 7%;
+        right: 2%;
+
+    }
+</style>
+<script>
+    // Get the button
+    let mybutton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.display = "block";
+        } else {
+            mybutton.style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+</script>
+<div class="dropup-center dropup">
+    <button class="btn btn-sm dropdown-toggle position-fixed" style="background-color: #b68c68 !important; color: #FFFAF5" id="scroll-top" type="button" onclick="topFunction()">top</button>
+    <button class="btn btn-sm dropdown-toggle position-fixed" style="background-color: #b68c68 !important; color: #FFFAF5" id="quick-btn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
+        Quick Menu
+    </button>
+    <ul class="dropdown-menu" style="width:130px">
+        <div class="accordion accordion-flush" id="quickMenuBody" >
+            <!-- 최근 본 상품 -->
+            <div class="accordion-item overflow-scroll">
+                <h2 class="accordion-header" id="q-recentProduct">
+                    <button class="accordion-button collapsed" style="font-size: 12px; font-weight: bold; background-color: #FFFAF5 !important; color: #b68c68 !important;" type="button" data-bs-toggle="collapse" data-bs-target="#quick-recentProduct" aria-expanded="false">
+                        장바구니
+                    </button>
+                </h2>
+                <div id="quick-recentProduct" class="accordion-collapse collapse" >
+                    <div class="accordion-body">상품 이미지</div>
+                    <th:block th:each="cart:${cartList}" th:if="${cartList != null}">
+                        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${cart.productCode})}">
+                            <img th:src="@{'/img/product/{imgPath}'(imgPath=${cart.product.imageList[0].imgPath})}" th:alt="${cart.product.pname}" style="width: 100px; height: 100px; object-fit: cover;">
+                        </a>
+                    </th:block>
+                    <a href="/cart/user_yes/mypage/list.do" class="atag-viewAll nav-link text-center">전체보기</a>
+                </div>
+            </div>
+            <!-- 최근 본 상품 end-------------------------->
+            <!-- 찜한 상품 -->
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="q-zzimProduct">
+                    <button class="accordion-button collapsed" type="button" style="font-size: 12px; font-weight: bold; background-color: #FFFAF5 !important; color: #b68c68 !important;" data-bs-toggle="collapse" data-bs-target="#quick-zzimProduct" aria-expanded="false">
+                        찜한 상품
+                    </button>
+                </h2>
+                <div id="quick-zzimProduct" class="accordion-collapse collapse">
+                    <div class="accordion-body">상품 이미지</div>
+                    <th:block th:each="zzim:${zzimList}" th:if="${zzimList != null}">
+                        <a th:href="@{'/product/{productCode}/detail.do'(productCode=${zzim.productCode})}">
+                            <img style="width: 100px; height: 100px; object-fit: cover;" th:alt="${zzim.product.pname}" th:src="@{'/img/product/{imgPath}'(imgPath=${zzim.product.imageList[0].imgPath})}" alt="">
+                        </a>
+                    </th:block>
+                    <a th:href="@{/zzim/user_yes/mypage/list.do}" class="atag-viewAll nav-link text-center">전체보기</a>
+                </div>
+            </div>
+            <!-- 찜한 상품 end ------------------------------>
+        </div>
+    </ul>
+</div>
+</html>

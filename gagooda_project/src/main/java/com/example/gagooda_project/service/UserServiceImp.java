@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -183,6 +185,27 @@ public class UserServiceImp implements UserService {
         conn.disconnect();
 
         return response;
+    }
+
+    @Override
+    public Map<String, Boolean> checkIfExists(UserDto user) {
+        Map<String, Boolean> checkMap = new HashMap<>();
+        if(userMapper.findByEmail(user.getEmail()) != null) {
+            checkMap.put("email", true);
+        } else {
+            checkMap.put("email", false);
+        }
+        if(userMapper.findByEmail(user.getPhone()) != null) {
+            checkMap.put("phone", true);
+        } else {
+            checkMap.put("phone", false);
+        }
+        if(userMapper.findByEmail(user.getNickname()) != null) {
+            checkMap.put("nickname", true);
+        } else {
+            checkMap.put("nickname", false);
+        }
+        return checkMap;
     }
 
 }

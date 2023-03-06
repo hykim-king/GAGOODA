@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<!--하트 버튼-->
+    <div class="d-flex justify-content-end align-items-center"
+         style="top:5px; right: 5px;" th:if="${session.loginUser!=null}">
+
+        <button th:onclick="removeZzim([[${zzim.get(product.productCode).zzimId}]], [[${product.productCode}]])"
+                th:if="${zzim.get(product.productCode)!=null}" style="background:none; padding: 0; border:none; font-size:1.5em">
+            <!--찜자리--> <i class="fa-solid fa-heart"></i>
+        </button>
+
+        <form action="/zzim/user_yes/mypage/register.do" th:unless="${zzim.get(product.productCode)!=null}" method="post" th:name="'zzimForm'+${product.productCode}" class="zzimForm">
+            <input type="hidden" th:value="${session.loginUser.userId}" name="userId">
+            <input type="hidden" th:value="${product.productCode}" name="productCode">
+            <button type="submit" style="background:none; padding: 0; border:none; font-size:1.5em"><i class="fa-regular fa-heart"></i></button>
+        </form>
+    </div>
+</html>
