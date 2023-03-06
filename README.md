@@ -1,4 +1,5 @@
 ![](https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png)
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png"  width="800" height="400"/>
 ># 목차
 [프로젝트 개요](#1-gagooda-프로젝트-개요)\
 [프로젝트 기획](#2-프로젝트-기획)\
