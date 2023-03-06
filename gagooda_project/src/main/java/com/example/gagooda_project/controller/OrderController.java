@@ -136,14 +136,22 @@ public class OrderController {
             session.removeAttribute("msg");
             model.addAttribute("msg", msg);
         }
-        OrderDto order = orderService.selectOne(orderId);
-        List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
-        DeliveryDto delivery = orderService.selectDelivery(orderId);
-        List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
-        model.addAttribute("order", order);
-        model.addAttribute("orderDetailList", orderDetailList);
-        model.addAttribute("delivery", delivery);
-        model.addAttribute("oCodeList", oCodeList);
+        try{
+            OrderDto order = orderService.selectOne(orderId);
+            List<OrderDetailDto> orderDetailList = orderService.orderDetailList(orderId);
+            DeliveryDto delivery = orderService.selectDelivery(orderId);
+            List<CommonCodeDto> oCodeList = orderService.showDetCodeList("o");
+            PaymentDto payment = paymentService.selectOne(orderId);
+            IamportResponse<Payment> paymentResp = iamportClient.paymentByImpUid(payment.getImpUid());
+            model.addAttribute("order", order);
+            model.addAttribute("orderDetailList", orderDetailList);
+            model.addAttribute("delivery", delivery);
+            model.addAttribute("oCodeList", oCodeList);
+            model.addAttribute("payment", paymentResp.getResponse());
+        }catch(Exception e){
+            log.error(e.getMessage());
+        }
+
         return "/order/admin/detail";
     }
 

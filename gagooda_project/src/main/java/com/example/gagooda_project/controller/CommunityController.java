@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import retrofit2.http.Path;
 
 import java.util.List;
 
@@ -57,10 +58,9 @@ public class CommunityController {
 
         return "/community/user/list";
 
-
     }
 
-    @GetMapping("/{commId}/delete.do")
+    @GetMapping("user_yes/{commId}/delete.do")
     public String delete(@PathVariable int commId,
                          HttpSession session,
                          Model model,
@@ -81,7 +81,7 @@ public class CommunityController {
         }else{
             session.setAttribute("msg","포스트 삭제에 실패하였습니다. 다시 시도해 주세요.");
         }
-        return "redirect:/community/"+commId+"/detail.do";
+        return "redirect:/community/list.do";
     }
 
     @GetMapping("/{commId}/detail.do")
