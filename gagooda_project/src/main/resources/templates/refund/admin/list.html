@@ -114,6 +114,7 @@
         let modifyForm = new FormData();
         modifyForm.set("refundId", refundId);
         modifyForm.set("rfDet", "rf2");
+        modifyForm.set("reply", "사랑합니다, 고객님! 지금 요청을 확인하였습니다. 빠른 시일 내에 처리 진행해드리도록 하겠습니다.")
         const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
         console.log(resp)
     }
