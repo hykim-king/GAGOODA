@@ -1,14 +1,16 @@
+# 🪑 GAGOODA
+
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
 # 목차
 
 
->[프로젝트 개요](#1-gagooda-프로젝트-개요)\
+>[프로젝트 개요](#1-프로젝트-개요)\
 >[프로젝트 기획](#2-프로젝트-기획)\
 >[프로젝트 설계](#3-프로젝트-설계)\
 >[기능 시연](#4-기능-시연)
 
-# 1. GAGOODA 프로젝트 개요
+# 1. 프로젝트 개요
 
 
 |팀/프로젝트 명|GAGOODA|  
