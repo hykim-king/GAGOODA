@@ -113,6 +113,7 @@
             }
         }
         init();
+        const content = document.forms["replyRegisterForm"].content;
         async function registerReply(e, replyRegisterForm){
             e.preventDefault();
             let url = "/reply/register.do";
@@ -123,6 +124,7 @@
                 console.log('json: '+json);
                 console.log('resp: '+resp);
                 if(json === 1){
+                    content.value="";
                     await loadReplyList();
                 } else {
                     alert("등록이 되지 않았습니다.");
