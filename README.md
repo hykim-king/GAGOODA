@@ -60,7 +60,10 @@
 ### 사용자
 * 메인 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
+
 * 로그인
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/login.gif"  width="800" height="400"/>
+
 * 회원가입
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/signup.gif"  width="800" height="400"/>
 
