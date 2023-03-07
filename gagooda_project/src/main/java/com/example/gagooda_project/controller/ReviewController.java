@@ -247,10 +247,9 @@ public class ReviewController {
                             @RequestParam(name = "startDate", required = false, defaultValue = "") String startDate,
                             @RequestParam(name = "endDate", required = false, defaultValue = "") String endDate) {
         log.info("req.getParameterMap:" + req.getParameterMap());
-        String adminMsg = "";
-        if (session.getAttribute(msg) != null) {
-            adminMsg = session.getAttribute(msg).toString();
-            session.removeAttribute(msg);
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
         }
         try {
             if (loginUser.getGDet().equals("g1")) {
@@ -280,11 +279,17 @@ public class ReviewController {
 
     @GetMapping("/admin/{reviewId}/detail.do") // 관리자페이지 리뷰 상세지
     public String adminDetail(@SessionAttribute UserDto loginUser,
+                              @SessionAttribute(required = false) String msg,
+                              HttpSession session,
                               @PathVariable int reviewId,
                               Model model
     ) {
         int detail = 0;
         System.out.println(reviewId);
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         try {
             ReviewDto review = reviewService.selectOne(reviewId);
             model.addAttribute("review", review);

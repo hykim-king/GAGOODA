@@ -67,10 +67,15 @@ public class ProductInquiryController {
     @GetMapping("/user_yes/register.do")
     public String register(
             @SessionAttribute UserDto loginUser,
+            @SessionAttribute(required = false) String msg,
             Model model,
             @PathVariable(required = true, name = "productCode") String productCode,
             HttpSession session
     ) {
+        if (msg != null) {
+            session.removeAttribute("msg");
+            model.addAttribute("msg", msg);
+        }
         int check = 0;
         List<CommonCodeDto> commonCodeList = productInquiryService.showCommonCode("pi");
         List<OptionProductDto> optionProductList = productInquiryService.showOptionProduct(productCode);
@@ -318,8 +323,14 @@ public class ProductInquiryController {
     public String admindelete(
             @SessionAttribute UserDto loginUser,
             @RequestParam(name = "pInquiryId") int pInquiryId,
-            HttpSession session
+            @SessionAttribute(required = false) String msg,
+            HttpSession session,
+            Model model
     ) {
+        if (msg != null) {
+            model.addAttribute("msg", msg);
+            session.removeAttribute("msg");
+        }
         int delete = 0;
         ProductInquiryDto productInquiry = productInquiryService.showDetail(pInquiryId);
         try {
