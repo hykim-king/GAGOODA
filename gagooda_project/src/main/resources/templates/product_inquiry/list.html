@@ -16,7 +16,12 @@
             <div class="card text-start my-4">
                 <div class="card-header d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title" th:text="${p.title}"></h5>
+                        <h5 class="card-title" th:if="${p.secret
+                        && (session.loginUser == null
+                        || session.loginUser.userId != p.userId)}">비밀 글입니다.</h5>
+                        <h5 class="card-title" th:if="${!p.secret
+                        || (session.loginUser != null
+                        && session.loginUser.userId == p.userId)}" th:text="${p.title}"></h5>
                         <h6 class="card-text mb-2 text-muted" th:text="${p.user.nickname}+'님'"></h6>
                     </div>
                     <div class="align-items-center">
@@ -29,7 +34,8 @@
                 </div>
                 <div class="card-body">
                     <p class="card-text" th:text="${p.optionProductDto.opname}" style="font-size: 12px;"></p>
-                    <p class="card-text" th:text="${p.content}"></p>
+                    <p class="card-text" th:if="${!p.secret || (session.loginUser != null
+                        && session.loginUser.userId == p.userId)}" th:text="${p.content}"></p>
                 </div>
                 <div class="card-body p-2" th:if="${p.reply != null}">
                     <div class="p-2" style="border: 1px solid #838383; border-radius: 10px">

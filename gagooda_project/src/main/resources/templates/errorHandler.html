@@ -5,7 +5,7 @@
       layout:decorate="~{/layout/layout.html}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'에러코드 '+${error}"></title>
 </head>
 <div layout:fragment="content">
 <h1 th:text="${error}"></h1>

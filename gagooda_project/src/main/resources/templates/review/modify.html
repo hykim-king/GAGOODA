@@ -118,8 +118,8 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label float-start" for="imgFile">이미지 첨부</label><span style="color: #a4a4a4; margin-left: 30px;">* 체크시 삭제</span>
-                            <input multiple="multiple" max="4" onchange="selectImage(this)" type="file" class="form-control" name="imgFile" id="imgFile">
-                            <div style="display: flex; width: 100%; justify-content: space-around;">
+                            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
+                            <div style="display: flex; width: 100%; justify-content: space-around; flex-wrap: wrap;">
                                 <th:block th:each="img:${review.imgList}">
                                     <label>
                                         <input style="margin-top: 10px;" type="checkbox" name="imgToDelete" th:value="${img.imgCode}+'/'+${img.seq}">
@@ -157,13 +157,13 @@
                 location.href = "/review/user_yes/mypage/mypageList.do"
             }
         }
-        function selectImage(file) {
-            let maxFile = 5;
-            let selectFile = file.files.length
-            if (maxFile <= selectFile) {
-                alert("이미지는 최대 4개까지 선택가능합니다.")
-                close();
-            }
-        }
+        // function selectImage(file) {
+        //     let maxFile = 5;
+        //     let selectFile = file.files.length
+        //     if (maxFile <= selectFile) {
+        //         alert("이미지는 최대 4개까지 선택가능합니다.")
+        //         close();
+        //     }
+        // }
     </script>
 </html>

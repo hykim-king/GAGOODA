@@ -18,7 +18,7 @@
                 <div class="carousel-inner" >
                     <div class="carousel-item" th:classappend="${num.count}==1?'active':''"
                          th:each="img,num:${community.imgList}">
-                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100 rounded">
+                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100 rounded" style="height:700px; object-fit: cover;">
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -39,20 +39,25 @@
                     <div class="ms-4">
                         <span>조회수: </span><span th:text="${community.views}"></span>
                     </div>
+                    <div class="ms-4">
+                        <span>댓글: </span><span th:text="${repCount}"></span>
+                    </div>
                 </div>
             </div>
         </div>
 
 
         <th:block th:if="${ session.loginUser != null && session.loginUser.userId==community.userId}">
-            <div>
-                <button class="btn btn-primary"
+            <div class="d-flex justify-content-end">
+                <button class="btn text-white" style="background-color: #b68c68"
                         th:onclick="location.href=[[@{'/community/user_yes/{commId}/modify.do'(commId=${community.commId})}]]">수정</button>
-                <button class="btn btn-danger" th:onclick="location.href=[[@{'/community/user_yes/{commId}/delete.do'(commId=${community.commId})}]]">삭제</button>
+                <button class="btn border ms-2"  style="background-color: #FFFAF5; color: #B68C68;"
+                        th:onclick="location.href=[[@{'/community/user_yes/{commId}/delete.do'(commId=${community.commId})}]]">삭제</button>
             </div>
         </th:block>
 
-        <h5 class="fw-bold mt-5" th:text="'댓글 '+${repCount}" style="color: #B68C68"></h5>
+
+        <h5 class="fw-bold mt-5" style="color: #B68C68">댓글</h5>
         <hr style="margin-top:0px; background : #b68c68; height: 5px">
         <div th:if="${session.loginUser!=null}" id="replyRegisterContainer">
             <th:block th:include="/community/reply/register"></th:block>
@@ -108,6 +113,7 @@
             }
         }
         init();
+        const content = document.forms["replyRegisterForm"].content;
         async function registerReply(e, replyRegisterForm){
             e.preventDefault();
             let url = "/reply/register.do";
@@ -118,6 +124,7 @@
                 console.log('json: '+json);
                 console.log('resp: '+resp);
                 if(json === 1){
+                    content.value="";
                     await loadReplyList();
                 } else {
                     alert("등록이 되지 않았습니다.");

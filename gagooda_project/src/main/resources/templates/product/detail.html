@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <title th:text="${product.pname}+' 상세페이지'"></title>
     <link rel="stylesheet" href="/css/star_rate.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
     <script src="/js/star_rate.js" defer></script>
     <script src="https://kit.fontawesome.com/3a45d8e733.js" crossorigin="anonymous"></script>
 </head>
@@ -201,10 +203,6 @@
                                         data-bs-target="#inquiryListContainer" type="button" role="tab"
                                         aria-controls="nav-contact" aria-selected="false">문의
                                 </button>
-                                <button class="nav-link text-secondary" id="nav-disabled-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-disabled" type="button" role="tab"
-                                        aria-controls="nav-disabled" aria-selected="false">배송
-                                </button>
                             </div>
                         </nav>
                         <div class="tab-content mt-3 p-2" id="nav-tabContent">
@@ -242,14 +240,6 @@
                                 </div>
                             </div>
                             <!--문의 영역 end-->
-
-                            <!--배송역역 영역-->
-                            <div class="tab-pane fade" id="nav-disabled" role="tabpanel"
-                                 aria-labelledby="nav-disabled-tab" tabindex="0" style="min-height: 300px">
-                                .6..
-                            </div>
-                            <!--배송역역 영역 end-->
-
                         </div>
                         <!--탭 end-->
                     </div>
@@ -492,6 +482,12 @@
             document.getElementById("optionMsg").innerText = "";
             product_choose.cnt.value = "";
             product_choose.cnt.setAttribute("max", availableStock);
+        });
+        $(function(){
+            $(".rate").score({
+                starColor:"#b68c68",
+                backgroundColor:"white",
+            });
         });
     </script>
 </div>

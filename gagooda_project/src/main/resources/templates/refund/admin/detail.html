@@ -162,7 +162,7 @@
         <div>현재 환불 진행 상태: </div>
         <div id="detName" class="ms-2" th:text="${refund.rfDetDto.detName}"></div>
     </div>
-    <form name="modify" th:action="@{'/refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}" method="POST" onsubmit="return submitRefund()">
+    <form name="modify" th:action="@{'/refund/admin/{refundId}/modify.do' (refundId=${refund.refundId})}" method="POST" onsubmit="return (submitRefund())">
         <div>
             <label class="form-label" for="rfDet">상태 변경</label>
             <select class="form-select-sm" name="rfDet" id="rfDet" required th:disabled="${refund.rfDet.equals('rf7') || refund.rfDet.equals('rf1')}">
@@ -197,19 +197,25 @@
         if(element.dataset.rfnum < currentRfDet.slice(2)){
             element.disabled = true;
         }
+    })
+    if(currentRfDet.toString() === "rf7" || currentRfDet.toString() === "rf1"){
+        let submitBtn = document.querySelector(".refundSubmit");
+        submitBtn.disabled = true;
+    }
 
-    })
-    /* rfDet rf4, rf5, rf6 일 때만 결제 취소 버튼이 등장 */
-    rfDet.addEventListener("change",()=>{
-        let display = document.getElementById("cancelBtn");
-        if(rfDet.value.includes("4") || rfDet.value.includes("5") || rfDet.value.includes("6")){
-            console.log("remove")
-            display.classList.remove("d-none");
-        }else{
-            console.log("add")
-            display.classList.add("d-none");
-        }
-    })
+    /* rfDet rf4, rf5, rf6 일 때만 결제 취소 버튼이 등장 --> 아직 submit 되지 않은 상태이기 때문에 여기서 변환해주지는 말자. */
+    // rfDet.addEventListener("change",()=>{
+    //     let display = document.getElementById("cancelBtn");
+    //     if(rfDet.value.includes("4") || rfDet.value.includes("5") || rfDet.value.includes("6")){
+    //         console.log("remove")
+    //         display.classList.remove("d-none");
+    //     }else{
+    //         console.log("add")
+    //         display.classList.add("d-none");
+    //     }
+    // })
+
+    /* 현재 주문 상태가 rf4, rf5, rf6 일 때만 결제 취소 버튼이 등장 */
     if (currentRfDet.toString() === "rf4" || currentRfDet.toString() === "rf5" || currentRfDet.toString() === "rf6"){
         let cancelBtn = document.getElementById("cancelBtn");
         cancelBtn.classList.remove("d-none");
@@ -239,53 +245,65 @@
     let detName = document.getElementById("detName").innerText;
 
     async function cancelPayments(){ // 결제 취소 AJAX
-        const forms = document.forms.cancel; // POST 요청을 보낼 form
-        const formData = new FormData(forms); // fetch body에 담기 위해 new FormData 에 넣어준다.
-        formData.set("orderId", orderId);
-        formData.set("cancelAmount", "50");
-        formData.set("reason", detName);
-        let url = "/refund/admin/payments/cancel.do"; // 취소 요청을 보낼 POST url
-        const resp = await fetch(url,{method: "POST", body: formData}) // AJAX 시도
-        console.log("resp: "+ resp)
-        // console.log(resp.body)
-        // console.log(await resp.json())
-        if(resp.status === 200){
-            const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값, 취소된 객체의 정보를 담고 있음.
-            console.log("respJson: "+respJson)
-            console.log(respJson.message);
-            let payMethod = document.querySelector(".payMethod");
-            if(payMethod.innerText === "point"){ // 결제 수단이 "point"(간편결제:카카오페이,네이버페이 등) 이라면
-                alert("간편 결제의 경우 부분 환불이 불가하여 전체 환불로 진행되어야 합니다. \n " +
-                    "상태를 '환불 불가'로 변경 후 전화 상담을 통해 환불 리스트 페이지의 환불 버튼을 이용하기 바랍니다.")
-            }else{
-                if (respJson.code > 0 || respJson.code < 0){ // 결제 취소에 실패했을 경우
-                    alert (respJson.message);
-                }else if(respJson.code === 0){  // 결제 취소에 성공했을 경우
-                    let totalPrice = [[${refund.orderDto.totalPrice}]]
-                    let cancelAmount = [[${refund.cancelAmount}]]
-                    let refundId = [[${refund.refundId}]]
-                    alert(totalPrice +" 중 "+ cancelAmount +"원을 결제 취소하였습니다.");
-                    await modifyRf(refundId, "rf7")
-                    window.location.reload();
-                    // let rfDet = document.getElementById("rfDet");
-                    // rfDet.value = "rf7";
-                    // rfDet.disabled = true;
-
+        let isOk = confirm(`${[[${refund.cancelAmount}]]}원(50원) 환불(결제 취소)를 진행하시겠습니까?\n한 번 결제 취소를 진행할 시, 요청한 환불 금액이 고객에게 환불되며, '환불 완료' 상태가 되어 이후 상태 변경을 진행할 수 없습니다.`)
+        let reply;
+        if(isOk){
+            reply = prompt("답변을 작성하시겠습니까? 답변을 작성하지 않을 시 기본 저장되어 있는 답글이 보내집니다.",
+                `${new Intl.DateTimeFormat('kr').format(new Date())} 기준 환불이 완료되었습니다. 계좌 확인 후 3일 내에 결제 취소가 확인되지 않는다면 고객센터로 문의 주시기 바랍니다. 감사합니다.`)
+            if(reply != null){
+                const forms = document.forms.cancel; // POST 요청을 보낼 form
+                const formData = new FormData(forms); // fetch body에 담기 위해 new FormData 에 넣어준다.
+                formData.set("orderId", orderId);
+                formData.set("cancelAmount", "50");
+                formData.set("reason", detName);
+                let url = "/refund/admin/payments/cancel.do"; // 취소 요청을 보낼 POST url
+                const resp = await fetch(url,{method: "POST", body: formData}) // AJAX 시도
+                console.log("resp: "+ resp)
+                // console.log(resp.body)
+                // console.log(await resp.json())
+                if(resp.status === 200){
+                    const respJson = await resp.json(); // 비동기 통신으로 반환한 JSON 값, 취소된 객체의 정보를 담고 있음.
+                    console.log("respJson: "+respJson)
+                    console.log(respJson.message);
+                    let payMethod = document.querySelector(".payMethod");
+                    if(payMethod.innerText === "point"){ // 결제 수단이 "point"(간편결제:카카오페이,네이버페이 등) 이라면
+                        alert("간편 결제의 경우 부분 환불이 불가하여 전체 환불로 진행되어야 합니다. \n " +
+                            "상태를 '환불 불가'로 변경 후 전화 상담을 통해 환불 리스트 페이지의 환불 버튼을 이용하기 바랍니다.")
+                    }else{
+                        if (respJson.code > 0 || respJson.code < 0){ // 결제 취소에 실패했을 경우
+                            alert (respJson.message);
+                        }else if(respJson.code === 0){  // 결제 취소에 성공했을 경우
+                            let totalPrice = [[${refund.orderDto.totalPrice}]]
+                            let cancelAmount = [[${refund.cancelAmount}]]
+                            let refundId = [[${refund.refundId}]]
+                            alert(totalPrice +" 중 "+ cancelAmount +"원을 결제 취소하였습니다.");
+                            await modifyRf(refundId, "rf7", reply)
+                            window.location.reload();
+                            // let rfDet = document.getElementById("rfDet");
+                            // rfDet.value = "rf7";
+                            // rfDet.disabled = true;
+                        }
+                    }
+                }else{
+                    alert(`결제 취소 중 오류 발생 (${resp.status})`)
+                    return false;
                 }
-
+            }else{
+                alert("결제 취소 진행을 취소하였습니다.");
+                return false;
             }
         }else{
-            alert(`결제 취소 중 오류 발생 (${resp.status})`)
+            return false;
         }
     }
 
     /* 비동기 rf 상태 수정 */
-    async function modifyRf(refundId, rfDet){
+    async function modifyRf(refundId, rfDet, reply){
         let url = "http://"+document.location.host+"/refund/admin/"+refundId+"/modify.do"
         let modifyForm = new FormData();
         modifyForm.set("refundId", refundId);
         modifyForm.set("rfDet", rfDet);
-        modifyForm.set("reply", `${new Intl.DateTimeFormat('kr').format(new Date())} 환불이 완료되었습니다. 계좌 확인 후 3일 내에 결제 취소가 확인되지 않는다면 고객센터로 문의 주시기 바랍니다. 감사합니다.`)
+        modifyForm.set("reply", reply)
         const resp = await fetch(url, {method: "POST", body: modifyForm, redirect: "manual"})
         console.log(resp)
         if (resp.status !== 0){
@@ -308,7 +326,7 @@
             })
             alert("이제 상태를 이전 단계로 되돌릴 수 있습니다.")
         }else{
-            alert("이미 환불 완료된 상태는 변경할 수 없습니다.")
+            alert("이미 완료된 상태는 변경할 수 없습니다.")
         }
     }
 
@@ -319,7 +337,12 @@
         if( rfDetNum > 3 && rfDet.value === "rf7" ){
             let doCancel = confirm("환불 완료로 상태 제출 시 결제 취소가 자동으로 진행됩니다. 정말 제출하시겠습니까?")
             if(doCancel){
-                cancelPayments();
+                this.event.preventDefault();
+                console.log("prevent?")
+                return cancelPayments();
+
+            }else{
+                return false;
             }
         }else if(rfDetNum < 4 && rfDet.value === "rf7"){
             alert("환불 물품이 수거되지 않아 상태를 환불 완료로 변경할 수 없습니다.")

@@ -37,17 +37,17 @@ public class ExchangeServiceImp implements ExchangeService {
     @Transactional
     public int registerOne(ExchangeDto exchange) throws Exception {
         int register = 0;
-        List<ExchangeDto> checkExchangeList = null;
-        // 주문 상세 단건 등록의 경우
-        checkExchangeList = exchangeMapper.findByOrderDetailId(exchange.getOrderDetailId());
-        OrderDto order = orderMapper.findById(exchange.getOrderId());
-        if (checkExchangeList != null){ // db 조회가 되지만,
-            for (ExchangeDto checkExchange : checkExchangeList){
-                if(!checkExchange.getExDet().equals("ex1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
-                    throw new RuntimeException();
-                }
-            }
-        }
+//        List<ExchangeDto> checkExchangeList = null;
+//        // 주문 상세 단건 등록의 경우
+//        checkExchangeList = exchangeMapper.findByOrderDetailId(exchange.getOrderDetailId());
+//        OrderDto order = orderMapper.findById(exchange.getOrderId());
+//        if (checkExchangeList != null){ // db 조회가 되지만,
+//            for (ExchangeDto checkExchange : checkExchangeList){
+//                if(!checkExchange.getExDet().equals("ex1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
+//                    throw new RuntimeException();
+//                }
+//            }
+//        }
         register += exchangeMapper.insertOne(exchange);
         return register;
     }

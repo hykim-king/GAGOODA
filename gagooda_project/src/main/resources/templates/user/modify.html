@@ -43,7 +43,10 @@
 
         <button type="submit" class="form-control form-control-lg text-white my-5" style="background-color: #B68C68;">수정하기</button>
         <div class="d-flex justify-content-between">
-            <button type="button" style="color: #B68C68; border: none; padding: 0;" id="deleteUser">삭제하기</button>
+            <button type="button" style="color: #B68C68; border: none; padding: 0; background: none;
+            text-decoration-line: underline;" id="deleteUser">
+                삭제하기
+            </button>
             <a style="color: #B68C68;" th:href="@{'/user/{userId}/password_reset.do' (userId = ${userId})} ">비밀번호 변경</a>
         </div>
     </form>
