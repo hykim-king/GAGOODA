@@ -57,3 +57,6 @@
 <br>
 
 # 기능 시연
+* 메인 페이지
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
+
