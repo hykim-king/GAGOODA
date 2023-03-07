@@ -57,11 +57,24 @@
 <br>
 
 # 기능 시연
+### 사용자
 * 메인 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
-
+* 로그인
 * 회원가입
-<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/signup.gif"  width="800" height="400"/>
 
 * 마이 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mypage.gif"  width="800" height="400"/>
+
+* 네브바
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/nav_to_detail.gif"  width="800" height="400"/>
+
+* 주문등록
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_register.gif"  width="800" height="400"/>
+
+* 주문 완료
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_complete.gif"  width="800" height="400"/>
+
+### 관리자
+* 주문 상태 변환 
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_admin.gif"  width="800" height="400"/>
