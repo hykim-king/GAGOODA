@@ -33,13 +33,11 @@
 
 # 프로젝트 기획
 
-|개발 환경|
-|:--:|
-|<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="500"/>|
+* 개발 환경
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/develop-tool.png"  width="800" height="400"/>
 
-|WBS|
-|:--:|
-|<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>|
+* WBS
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
 
 
 <br>
@@ -59,3 +57,8 @@
 <br>
 
 # 기능 시연
+* 메인 페이지
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
+
+* 마이 페이지
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mypage.gif"  width="800" height="400"/>

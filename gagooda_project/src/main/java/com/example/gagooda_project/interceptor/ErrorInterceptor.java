@@ -19,7 +19,6 @@ public class ErrorInterceptor implements HandlerInterceptor {
 //        session.removeAttribute("redirectUri");
         if(response.getStatus() != 200) {
             session.setAttribute("error", response.getStatus());
-//            response.sendError(response.getStatus());
             response.sendRedirect("/error.do");
             return false;
         }
