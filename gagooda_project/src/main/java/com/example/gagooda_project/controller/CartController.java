@@ -5,6 +5,8 @@ import com.example.gagooda_project.dto.OptionProductDto;
 import com.example.gagooda_project.dto.UserDto;
 import com.example.gagooda_project.service.*;
 import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ public class CartController {
     OptionProductService optionProductService;
     ProductService productService;
     ImageService imageService;
+    private Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
 
     public CartController(CartServiceImp cartServiceImp,
                           ProductService productService,
@@ -35,20 +39,32 @@ public class CartController {
 
     @GetMapping("/user_yes/mypage/list.do")
     public String list(@RequestParam(name = "optionCode", required = false) String optionCode,
-                       Model model,
-                       @SessionAttribute UserDto loginUser) {
-        List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
-        CartDto cart = cartServiceImp.selectOne(loginUser.getUserId(), optionCode);
-        int totalCnt = 0;
-        int totalPrice = 0;
-        for (CartDto cartDto : cartList) {
-            totalCnt += cartDto.getCnt();
-            totalPrice += cartDto.getOptionProduct().getPrice()*cartDto.getCnt();
+                       @SessionAttribute UserDto loginUser,
+                       @SessionAttribute(required = false) String msg,
+                       HttpSession session,
+                       Model model) {
+        if (msg!=null) {
+            model.addAttribute("msg",msg);
+            session.removeAttribute("msg");
         }
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("cart", cart);
-        model.addAttribute("totalCnt", totalCnt);
-        model.addAttribute("totalPrice", totalPrice);
+        try{
+            List<CartDto> cartList = cartServiceImp.cartList(loginUser.getUserId());
+            CartDto cart = cartServiceImp.selectOne(loginUser.getUserId(), optionCode);
+            int totalCnt = 0;
+            int totalPrice = 0;
+            for (CartDto cartDto : cartList) {
+                totalCnt += cartDto.getCnt();
+                totalPrice += cartDto.getOptionProduct().getPrice()*cartDto.getCnt();
+            }
+            model.addAttribute("cartList", cartList);
+            model.addAttribute("cart", cart);
+            model.addAttribute("totalCnt", totalCnt);
+            model.addAttribute("totalPrice", totalPrice);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+
         return "/cart/list";
     }
 
@@ -77,7 +93,7 @@ public class CartController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         if (update > 0) {
             return "redirect:/cart/user_yes/mypage/list.do";
@@ -97,7 +113,7 @@ public class CartController {
                 delete = cartServiceImp.removeOne(id);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         if (delete > 0) {
             return "redirect:/cart/user_yes/mypage/list.do";
@@ -112,7 +128,7 @@ public class CartController {
         try {
             delete = cartServiceImp.removeAll(loginUser.getUserId());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         if (delete > 0) {
             return "redirect:/cart/user_yes/mypage/list.do";
@@ -146,7 +162,7 @@ public class CartController {
                     insert = cartServiceImp.registerOne(cart);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
             System.out.println("insert cart: "+insert);
             if (!(insert > 0)) {
