@@ -29,21 +29,21 @@
                     <div class="box" style="padding-right: 20px;">
                         <p style="line-height: 2em; margin-bottom: 0; color: #5c636a;" class="content" th:text="${review.content}"></p>
                     </div>
-                    <div style="display: flex; width: 680px; justify-content: start;">
+                    <div style="display: flex; width: 680px; justify-content: start; flex-wrap: wrap">
                         <th:bolck th:if="${!reviewList.isEmpty()}" th:each="img:${review.imgList}">
                             <button style="padding: 0 !important;" type="button" class="btn btn-link" data-bs-toggle="modal" th:data-bs-target="'#staticBackdrop'+${img.imgCode}+${img.seq}">
-                                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 150px; height: 150px; border-radius: 5px;">
+                                <img th:src="@{'/img/review/{file}'(file=${img.imgPath})}" class="flex-shrink-0 me-3" style="width: 150px; height: 150px; border-radius: 5px; margin-bottom: 16px;">
                             </button>
                             <div class="modal fade" th:id="'staticBackdrop'+${img.imgCode}+${img.seq}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                  th:aria-labelledby="'staticBackdropLabel'+${img.imgCode}+${img.seq}" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-5" th:id="'staticBackdropLabel'+${img.imgCode}+${img.seq}">Modal title</h1>
+                                            <h1 class="modal-title fs-5" th:id="'staticBackdropLabel'+${img.imgCode}+${img.seq}">리뷰 상세</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body d-flex justify-content-around">
-                                            <div th:id="'carouselExampleControls'+${img.imgCode}+${img.seq}" class="carousel slide " style="width: 300px; height: 300px;" data-bs-ride="carousel">
+                                            <div th:id="'carouselExampleControls'+${img.imgCode}+${img.seq}" class="carousel slide " style="width: 400px; height: 400px; margin-right: 15px; border-right: 1px solid #ddd;" data-bs-ride="carousel">
                                                 <div class="carousel-inner">
                                                     <th:block th:each="innerImg:${review.imgList}">
                                                         <div class="carousel-item active" th:if="${innerImg.imgPath.equals(img.imgPath)}">
@@ -63,12 +63,19 @@
                                                     <span class="visually-hidden">Next</span>
                                                 </button>
                                             </div>
-                                            <div style="width: 300px; height: 300px; background-color: #0c4128">
-
+                                            <div style="width: 400px; margin-left: 15px;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <p class="mt-0 rate" th:data-max="${5}" th:data-rate="${review.rate}" style="font-size: 16px"></p>
+                                                    <p th:text="${#dates.format(review.regDate,'yyyy-MM-dd')}"></p>
+                                                </div>
+                                                <div style="border: 1px solid #ddd; border-radius: 10px; padding: 10px; margin-bottom: 10px;">
+                                                    <div class="d-flex"><p style="font-weight: bold; color: #2c3034" th:text="${review.user.nickname}"></p><p>님의 리뷰입니다.</p></div>
+                                                    <div class="d-flex" style="flex-direction: column; text-align: start"><p style="font-weight: bold; color: #2c3034">상품명</p><p style="margin-bottom: 5px;" th:text="${review.optionProduct.opname}"></p></div>
+                                                </div>
+                                                <div>
+                                                    <p th:text="${review.content}"></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                     </div>
                                 </div>
@@ -108,12 +115,12 @@
                 removeReview(reviewId);
             }
         }
-        $(function(){
-            $(".rate").score({
-                starColor:"#b68c68",
-                backgroundColor:"white",
-            });
-        });
+        // $(function(){
+        //     $(".rate").score({
+        //         starColor:"#b68c68",
+        //         backgroundColor:"white",
+        //     });
+        // });
     </script>
     <script text="javascript/text">
         function moreReview () {
