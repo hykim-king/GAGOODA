@@ -33,13 +33,11 @@
 
 # 프로젝트 기획
 
-|개발 환경|
-|:--:|
-|<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/develop-tool.png"  width="800" height="400"/>|
+* 개발 환경
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/develop-tool.png"  width="800" height="400"/>
 
-|WBS|
-|:--:|
-|<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>|
+* WBS
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
 
 
 <br>
