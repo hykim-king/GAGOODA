@@ -7,6 +7,8 @@
     <meta charset="UTF-8">
     <title th:text="${product.pname}+' 상세페이지'"></title>
     <link rel="stylesheet" href="/css/star_rate.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiphop5782/score@0.0.2/score.js"></script>
     <script src="/js/star_rate.js" defer></script>
     <script src="https://kit.fontawesome.com/3a45d8e733.js" crossorigin="anonymous"></script>
 </head>
@@ -480,6 +482,12 @@
             document.getElementById("optionMsg").innerText = "";
             product_choose.cnt.value = "";
             product_choose.cnt.setAttribute("max", availableStock);
+        });
+        $(function(){
+            $(".rate").score({
+                starColor:"#b68c68",
+                backgroundColor:"white",
+            });
         });
     </script>
 </div>

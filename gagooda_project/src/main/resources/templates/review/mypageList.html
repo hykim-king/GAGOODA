@@ -43,6 +43,11 @@
         </tr>
         </tbody>
     </table>
+    <div class="d-flex" style="justify-content: center">
+        <th:block th:if="${reviewList == null or reviewList.isEmpty()}">
+            <p th:text="'등록된 리뷰가 없습니다.'"></p>
+        </th:block>
+    </div>
     <script th:inline="javascript">
         function update(reviewId) {
             let update = confirm("해당 리뷰를 수정하시겠습니까 ?");
