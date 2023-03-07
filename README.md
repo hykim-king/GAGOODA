@@ -60,5 +60,8 @@
 * 메인 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
 
+* 회원가입
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/signup.gif"  width="800" height="400"/>
+
 * 마이 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mypage.gif"  width="800" height="400"/>
