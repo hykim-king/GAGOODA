@@ -8,24 +8,29 @@
     <title>커뮤니티 등록</title>
 </head>
 <div layout:fragment="content">
-    <h1> 커뮤니티 사진 등록</h1>
-    <form name="communityRegisterForm" method="post" action="/community/user_yes/register.do"  enctype="multipart/form-data">
-        <div class="mb-3">
-            <input type="text" id="userId" name="userId" th:value="${session.loginUser.userId}">
-        </div>
-        <div class="mb-3">
-            <label for="imgFile">이미지 첨부</label>
-            <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
-        </div>
-        <div class="mb-3">
-            <label for="content" class="form-label">내용</label>
-            <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
-        </div>
-        <div>
-            <button class="btn btn-primary" type="reset" onclick="cancel()">취소</button>
-            <button class="btn" type="submit" onclick="registerConfirm()">등록</button>
-        </div>
-    </form>
+    <div class="container">
+        <h1 class="mt-4"> 커뮤니티 사진 등록</h1>
+        <hr style="margin-top: 0; background : #b68c68; height: 5px">
+        <form name="communityRegisterForm" method="post" action="/community/user_yes/register.do"  enctype="multipart/form-data">
+            <div class="mb-3">
+                <input type="hidden" id="userId" name="userId" th:value="${session.loginUser.userId}">
+            </div>
+            <div class="mb-3">
+                <label for="imgFile">이미지 첨부</label>
+                <input multiple="multiple" type="file" class="form-control" name="imgFile" id="imgFile">
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">내용</label>
+                <textarea class="form-control" name="content" id="content" cols="30" rows="3" required></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn border" style="background-color: #FFFAF5; color: #B68C68;" type="reset" onclick="cancel()">취소</button>
+                <button class="btn text-white ms-2" style="background-color: #B68C68" type="submit" onclick="registerConfirm()">등록</button>
+            </div>
+        </form>
+    </div>
+
+
     <script th:inline="javascript">
 
         function registerConfirm() {
