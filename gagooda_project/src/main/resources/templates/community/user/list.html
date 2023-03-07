@@ -15,13 +15,13 @@
             <button class="btn text-white" style="background-color: #B68C68;"
                     th:onclick="location.href=[[@{'/community/user_yes/register.do'}]]">포스트 등록</button>
         </div>
-        <div class="d-flex justify-content-between">
+        <div class="row row-cols-1 row-cols-md-2 gap-5 d-flex justify-content-center mb-5">
             <div class="mx-2 my-3 card border border-0 position-relative"
                  style="width: 280px;" th:each="community:${communityList}">
                 <a th:href="@{'/community/{commId}/detail.do'(commId = ${community.commId})}"
                    style="text-decoration: none; color: black">
                     <img th:src="@{'/img/community/{imgPath}'(imgPath=${community.imgList[0].getImgPath()})}"
-                         class="card-img-top rounded mb-3">
+                         class="card-img-top rounded mb-3" style="height:280px; object-fit: cover;">
                     <div class="card-body p-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="userNickname">

@@ -47,6 +47,7 @@ public class CommunityController {
             model.addAttribute("msg", msg);
         }
         if(paging.getOrderField()==null)paging.setOrderField("comm_id");
+        paging.setRows(16);
         paging.setQueryString(req.getParameterMap());
         try{
             List<CommunityDto> communityList = communityService.communityList(paging);

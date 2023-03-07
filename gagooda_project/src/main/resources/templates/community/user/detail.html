@@ -18,7 +18,7 @@
                 <div class="carousel-inner" >
                     <div class="carousel-item" th:classappend="${num.count}==1?'active':''"
                          th:each="img,num:${community.imgList}">
-                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100 rounded">
+                        <img th:src="@{'/img/community/{imgPath}'(imgPath=${img.imgPath})}" class="d-block w-100 rounded" style="height:700px; object-fit: cover;">
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
