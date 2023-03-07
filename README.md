@@ -81,3 +81,6 @@
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_admin.gif"  width="800" height="400"/>
 
 * 교환 환불 처리
+
+# 끝인사
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/thank-you.png"  width="800" height="400"/>
