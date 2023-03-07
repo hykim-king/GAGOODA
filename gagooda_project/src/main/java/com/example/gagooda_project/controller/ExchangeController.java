@@ -102,7 +102,7 @@ public class ExchangeController {
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
-            return "redirect:/";
+            return "redirect:/exchange/user_yes/mypage/"+exchangeId+"/detail.do";
         }
     }
 
@@ -208,7 +208,7 @@ public class ExchangeController {
         }catch (Exception e){
             log.info(e.getMessage());
             session.setAttribute("msg", "데이터를 가져오는 데에 문제가 있었습니다");
-            return "redirect:/";
+            return "redirect:/exchange/admin/list.do";
         }
     }
 
@@ -226,10 +226,10 @@ public class ExchangeController {
                 }
             }catch (Exception e){
                 e.printStackTrace();
-                return "redirect:"+req.getRequestURI();
+                return "redirect:/exchange/admin/list.do";
             }
         }
-        return "redirect:"+req.getRequestURI();
+        return "redirect:/";
     }
 
     @PostMapping("admin/{exchangeId}/stockModify.do")
