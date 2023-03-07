@@ -79,3 +79,5 @@
 ### 관리자
 * 주문 상태 변환 
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_admin.gif"  width="800" height="400"/>
+
+* 교환 환불 처리
