@@ -76,18 +76,36 @@
                             </div>
                             <div class="d-none refundInput mt-1">
                                 <label class="d-block">환불 금액
-                                    <input th:if="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice}" name="cancelAmount" readonly>
-                                    <input th:unless="${exchangedCnt == 0}" class="form-control" type="text" th:value="${orderDetail.price * exchangedCnt}" name="cancelAmount" readonly>
+                                    <!-- 교환, 환불 모두 신청되어 있지 않을 때 -->
+                                    <input th:if="${exchangedCnt == 0 && refundAmount == 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice}" name="cancelAmount" readonly>
+                                    <!-- 교환만 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt != 0 && refundAmount == 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice - (orderDetail.price * exchangedCnt)}" name="cancelAmount" readonly>
+                                    <!-- 환불만 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt == 0 && refundAmount != 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice - refundAmount}" name="cancelAmount" readonly>
+                                    <!-- 교환, 환불 모두 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt != 0 && refundAmount != 0}" class="form-control" type="text" th:value="${orderDetail.totalPrice - (orderDetail.price * exchangedCnt) - refundAmount}" name="cancelAmount" readonly>
                                 </label>
                             </div>
+
                             <div class="d-none exchangeInput mt-1">
                                 <label class="d-block">교환 수량
-                                    <input th:if="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt}" min="1"
+                                    <!-- 교환, 환불 모두 신청되어 있지 않을 때 -->
+                                    <input th:if="${exchangedCnt == 0 && refundAmount == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt}" min="1"
                                            oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt}">
-                                    <input th:unless="${exchangedCnt == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - exchangedCnt}" min="1"
+                                    <!-- 교환만 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt != 0 && refundAmount == 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - exchangedCnt}" min="1"
                                            oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt - exchangedCnt}">
+                                    <!-- 환불만 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt == 0 && refundAmount != 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - (refundAmount / orderDetail.price)}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt - (refundAmount / orderDetail.price)}">
+                                    <!-- 교환, 환불 모두 부분 신청이 되어 있을 때-->
+                                    <input th:if="${exchangedCnt != 0 && refundAmount != 0}" class="form-control cnt" type="number" name="cnt" th:max="${orderDetail.cnt - exchangedCnt - (refundAmount / orderDetail.price)}" min="1"
+                                           oninput="(!this.value)?this.value=1:this.value" th:value="${orderDetail.cnt - exchangedCnt - (refundAmount / orderDetail.price)}">
                                 </label>
                             </div>
+                            <script th:inline="javascript">
+
+                            </script>
                             <div class="mt-1">
                                 <label for="imgFileList" class="form-label">첨부 이미지</label>
                                 <input class="form-control" type="file" name="imgFileList" id="imgFileList">
@@ -260,6 +278,14 @@
                     }
                 })
             })
+
+            /* exchange cnt 값이 max를 넘었을 때, max 값으로 재정의 */
+            let exchangeCnt = document.querySelector(".cnt");
+            exchangeCnt.onchange=()=>{
+                if (exchangeCnt.value > exchangeCnt.max){
+                    exchangeCnt.value = exchangeCnt.max;
+                }
+            }
 
             /* 새 주소 등록 후 등록 주소 input 창에 넣기 */
             const realAddressList = document.querySelectorAll(".realValue");
