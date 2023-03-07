@@ -106,21 +106,7 @@ public class AddressController {
             return "redirect:/";
         }
     }
-
-    @GetMapping("/user_yes/mypage/dismissDefault.do")
-    public String modifyDefault(@SessionAttribute(required = true) UserDto loginUser,
-                                AddressDto address) {
-        int modify=0;
-        if(loginUser.getUserId() == address.getUserId()) {
-            try {
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-
+    
     @PostMapping("/user_yes/mypage/modify.do")
     public String modifyOne(AddressDto address,
                             @SessionAttribute(required = true) UserDto loginUser,

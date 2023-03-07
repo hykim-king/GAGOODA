@@ -67,15 +67,10 @@ public class ZzimController {
 
     @PostMapping("/user_yes/mypage/register.do")
     public @ResponseBody int register(@SessionAttribute UserDto loginUser,
-                                  @SessionAttribute(required = false) String msg,
                                   HttpSession session,
                                   ZzimDto zzim,
                                   Model model) {
         int register = 0;
-        if (msg != null) {
-            session.removeAttribute("msg");
-            model.addAttribute("msg",msg);
-        }
         try {
             register = zzimService.insert(zzim);
             return register;

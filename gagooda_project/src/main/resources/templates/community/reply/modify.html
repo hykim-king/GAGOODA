@@ -5,36 +5,17 @@
   <input type="hidden" name="commId" th:value="${reply.commId}">
   <input type="hidden" name="fkReplyId" th:value="${reply.fkReplyId}">
   <input type="hidden" name="replyId" th:value="${reply.replyId}">
+  <input type="hidden" name="userId" th:value="${reply.userId}">
   <div>
-    <div >
-      <div >
-        <h3 >
-          <span th:text="${reply.replyId}"></span>.
-          댓글 수정 폼
-          <small class="uk-text-meta" th:text="${#calendars.format(reply.regDate)}"></small>
-        </h3>
-        <p class="">
-          <input class="form-control" name="userId" readonly th:value="${reply.userId}">
+        <p class="fw-bold" th:text="${reply.user.nickname}" style="color: #5c636a;">
         </p>
-      </div>
-    </div>
   </div>
-  <div>
-    <p class="uk-width-expand">
-            <textarea th:text="${reply.content}"
-                      name="content" class="uk-textarea uk-width-1-1" rows="2" placeholder="내용"></textarea>
-
-    </p>
+  <div class="col-12">
+    <input type="text" class="form-control" name="content" id="exampleFormControlInput1" th:value="${reply.content}" placeholder="칭찬과 격려는 작성자에게 큰 힘이 됩니다:)">
   </div>
-  <div class="uk-card-footer">
-    <ul class="uk-breadcrumb">
-      <li>
-        <button type="reset" class="btn-warning">초기화</button>
-      </li>
-      <li>
-        <button type="submit" class="btn-primary">수정</button>
-      </li>
-    </ul>
+  <div class="d-flex justify-content-end mt-2">
+    <button type="reset" class="btn border" style="background-color: #FFFAF5; color: #B68C68;">초기화</button>
+    <button type="submit" class="btn border ms-2" style="background-color: #FFFAF5; color: #B68C68;">수정</button>
   </div>
 </form>
 </html>

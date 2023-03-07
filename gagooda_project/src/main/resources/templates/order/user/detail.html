@@ -125,6 +125,24 @@
     </tr>
     </table>
     <!--수령인 정보 end------------------------------------->
+    <!--결제 정보-->
+    <h3 class="mt-4">결제 정보</h3>
+    <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">
+    <table class="table">
+        <tr>
+            <th class="col-2">결제자</th>
+            <td class="col-10" th:text="${payment.buyerName}"></td>
+        </tr>
+        <tr>
+            <th>결제 수단</th>
+            <td th:text="${payment.payMethod}"></td>
+        </tr>
+        <tr>
+            <th>결제 카드사</th>
+            <td th:text="${payment.cardName}"></td>
+        </tr>
+    </table>
+    <!--결제 정보 end--------------------->
     <!--카드 영수증-->
     <h3 class="mt-4">결제영수증 정보</h3>
     <hr class="mb-0" style="margin-top: 0; background : #b68c68; height: 5px">

@@ -37,17 +37,17 @@ public class RefundServiceImp implements RefundService{
     @Override
     public int registerOne(RefundDto refund) throws Exception {
         int register = 0;
-        List<RefundDto> checkRefundList = null;
-        // 주문 상세 단건 등록의 경우
-        checkRefundList = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
-        if (checkRefundList != null){ // db 조회가 되지만,
-            for (RefundDto checkRefund : checkRefundList){
-                if(!checkRefund.getRfDet().equals("rf1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
-                    throw new RuntimeException();
-                }
-                register +=1 ;
-            }
-        }
+//        List<RefundDto> checkRefundList = null;
+//        // 주문 상세 단건 등록의 경우
+//        checkRefundList = refundMapper.findByOrderDetailId(refund.getOrderDetailId());
+//        if (checkRefundList != null){ // db 조회가 되지만,
+//            for (RefundDto checkRefund : checkRefundList){
+//                if(!checkRefund.getRfDet().equals("rf1")){ // 상태가 rf1(요청 취소) 이외의 코드인 경우 실패
+//                    throw new RuntimeException();
+//                }
+//                register +=1 ;
+//            }
+//        }
         register += refundMapper.insertOne(refund);
         return register;
     }

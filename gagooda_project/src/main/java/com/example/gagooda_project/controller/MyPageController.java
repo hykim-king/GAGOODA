@@ -36,7 +36,13 @@ public class MyPageController {
     @GetMapping("/user_yes/main.do") // 관리자 메인페이지
     public String myPageMain(@SessionAttribute UserDto loginUser,
                              Model model,
-                             HttpServletRequest req) {
+                             HttpServletRequest req,
+                             @SessionAttribute(required = false) String msg,
+                             HttpSession session) {
+        if (msg!=null) {
+            model.addAttribute("msg",msg);
+            session.removeAttribute("msg");
+        }
         try {
             List<ODetDto> oDetList = myPageService.countByUserIdAndStatus(loginUser.getUserId());
             List<CommonCodeDto> myPageDetList = myPageService.showDetCodeList("o");
