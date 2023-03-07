@@ -21,6 +21,7 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
+
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/{gDet}/signup.do")
@@ -54,23 +55,25 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             session.setAttribute("msg", "회원가입 중 오류가 있었습니다.");
-            return "redirect:/user/"+user.getGDet()+"/signup.do";
+            return "redirect:/user/" + user.getGDet() + "/signup.do";
         }
     }
 
     @GetMapping("/login.do")
-    public String login(@SessionAttribute(required = false) String msg,
-                        HttpSession session,
-                        Model model,
-                        HttpServletRequest req) {
+    public String login(
+            @SessionAttribute(required = false) String msg,
+            HttpSession session,
+            Model model,
+            HttpServletRequest req
+    ) {
         String previousUrl = req.getHeader("referer");
-        if (    previousUrl != null && (
+        if (previousUrl != null && (
                 previousUrl.contains("signup.do") ||
-                previousUrl.contains("findpw.do") ||
-                previousUrl.contains("password_reset.do") ||
-                previousUrl.contains("logout.do")
-                )
-        ){
+                        previousUrl.contains("findpw.do") ||
+                        previousUrl.contains("password_reset.do") ||
+                        previousUrl.contains("logout.do")
+        )
+        ) {
             previousUrl = null;
         }
 
@@ -92,12 +95,16 @@ public class UserController {
             @SessionAttribute(required = false) boolean postUrl,
             @SessionAttribute(required = false) String previousUrl
     ) {
+        session.removeAttribute("getUri");
+        session.removeAttribute("previousUrl");
+        session.removeAttribute("postUrl");
         try {
             UserDto user = userService.login(email, pw);
+            if (user == null) {
+                session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
+                return "redirect:/user/login.do";
+            }
             session.setAttribute("loginUser", user);
-            session.removeAttribute("getUri");
-            session.removeAttribute("previousUrl");
-            session.removeAttribute("postUrl");
             if (!postUrl) {
                 if (getUrl != null) return "redirect:" + getUrl;
             } else {
@@ -106,11 +113,7 @@ public class UserController {
             if (previousUrl != null
                     && !previousUrl.contains("login.do")
                     && !previousUrl.contains("signup.do")) {
-                return "redirect:"+previousUrl;
-            }
-            if (user == null) {
-                session.setAttribute("msg", "이메일 주소나 비밀번호가 잘못되었습니다.");
-                return "redirect:/user/login.do";
+                return "redirect:" + previousUrl;
             }
             return "redirect:/";
         } catch (Exception e) {
@@ -191,7 +194,7 @@ public class UserController {
             return "redirect:/";
         } else {
             session.setAttribute("msg", "비밀번호 재설정에 실패했습니다.");
-            return "redirect:/user/"+userId+"/password_reset.do";
+            return "redirect:/user/" + userId + "/password_reset.do";
         }
     }
 
@@ -222,7 +225,7 @@ public class UserController {
             e.printStackTrace();
         }
         if (user != null) {
-            return "redirect:/user/user_yes/"+user.getUserId()+"/modify.do";
+            return "redirect:/user/user_yes/" + user.getUserId() + "/modify.do";
         } else {
             return "redirect:/user/user_yes/double_check.do";
         }
@@ -257,11 +260,11 @@ public class UserController {
         }
         if (delete > 0) {
             session.removeAttribute("loginUser");
-            session.setAttribute("msg", "사용자 "+loginUser.getUname()+"님의 계정이 성공적으로 삭제됐습니다.");
+            session.setAttribute("msg", "사용자 " + loginUser.getUname() + "님의 계정이 성공적으로 삭제됐습니다.");
             return "redirect:/";
         } else {
             session.setAttribute("msg", "삭제 중 오류가 생겼습니다. 다시 시도해 주세요.");
-            return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
+            return "redirect:/user/user_yes/" + loginUser.getUserId() + "/modify.do";
         }
     }
 
@@ -300,7 +303,7 @@ public class UserController {
             UserDto modifiedUser,
             HttpSession session
     ) {
-        int modify=0;
+        int modify = 0;
         try {
             modifiedUser.setPw(loginUser.getPw());
             modifiedUser.setMsDet(loginUser.getMsDet());
@@ -308,7 +311,7 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (modify > 0 ) {
+        if (modify > 0) {
             session.removeAttribute("loginUser");
             UserDto user = userService.selectOne(loginUser.getUserId());
             session.setAttribute("loginUser", user);
@@ -316,7 +319,7 @@ public class UserController {
         } else {
             session.setAttribute("msg", "사용자 정보 수정 중 오류 뜸");
         }
-        return "redirect:/user/user_yes/"+loginUser.getUserId()+"/modify.do";
+        return "redirect:/user/user_yes/" + loginUser.getUserId() + "/modify.do";
     }
 
     @GetMapping("/admin/list.do")
@@ -338,14 +341,14 @@ public class UserController {
         String previousUrl = req.getHeader("referer");
         if (
                 previousUrl.contains("signup.do") ||
-                previousUrl.contains("findpw.do") ||
-                previousUrl.contains("password_reset.do") ||
-                previousUrl.contains("user_yes") ||
-                previousUrl.contains("login.do")
-        ){
+                        previousUrl.contains("findpw.do") ||
+                        previousUrl.contains("password_reset.do") ||
+                        previousUrl.contains("user_yes") ||
+                        previousUrl.contains("login.do")
+        ) {
             return "redirect:/";
         } else {
-            return "redirect:"+previousUrl;
+            return "redirect:" + previousUrl;
         }
     }
 
@@ -354,14 +357,14 @@ public class UserController {
     public @ResponseBody String certifications(
             @RequestBody Map<String, Object> param
     ) {
-        try{
+        try {
             System.out.println(param);
             String imp_uid = (String) param.get("imp_uid");
 
             String token = userService.getToken();
 
             return userService.getCertifications(imp_uid, token);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
