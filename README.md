@@ -47,7 +47,7 @@
 
 
 * 요구사항 정의  
-⌞ [요구사항_정의서.xlm](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD%EC%A0%95%EC%9D%98%EC%84%9C.xlsx "요구사항 정의서 파일")
+⌞ [요구사항_정의서.xlm](https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_requirements_doc.xlsx "요구사항 정의서 파일")
 
 
 * 데이터 베이스 설계 (ERD)  
@@ -57,8 +57,35 @@
 <br>
 
 # 기능 시연
+### 사용자
 * 메인 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mainpage.gif"  width="800" height="400"/>
 
+* 로그인
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/login.gif"  width="800" height="400"/>
+
+* 회원가입
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/signup.gif"  width="800" height="400"/>
+
 * 마이 페이지
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/mypage.gif"  width="800" height="400"/>
+
+* 네브바
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/nav_to_detail.gif"  width="800" height="400"/>
+
+* 주문등록
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_register.gif"  width="800" height="400"/>
+
+* 주문 완료
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_complete.gif"  width="800" height="400"/>
+
+### 관리자
+* 주문 상태 변환 
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/order_admin.gif"  width="800" height="400"/>
+
+* 교환 환불 처리
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/admin_exchange_refund.gif"  width="800" height="400"/>
+
+
+# 끝인사
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/thank-you.png"  width="800" height="400"/>
