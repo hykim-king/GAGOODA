@@ -1,4 +1,4 @@
-<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/github_gagooda_logo.png"  width="800" height="400"/>
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/main.png"  width="800" height="400"/>
 
 <br>
 
@@ -35,7 +35,7 @@
 
 * 개발 환경
 
-<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/development_tool.png"  width="800" height="400"/>
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/develop-tool.png"  width="800" height="400"/>
 
 * WBS
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/GAGOODA_WBS.png" height="200"/>
@@ -87,4 +87,5 @@
 * 교환 환불 처리
 <img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/admin_exchange_refund.gif"  width="800" height="400"/>
 
-
+# 끝인사
+<img src="https://github.com/hykim-king/GAGOODA/blob/main/doc/thank-you.png"  width="800" height="400"/>
