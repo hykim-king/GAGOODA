@@ -1,0 +1,9 @@
+출처: https://server-talk.tistory.com/30
+
+데이터 복원 방법
+
+1. root 유저의 mysql에 GAGOODA 라는 이름을 가진 database를 먼저 생성
+
+2. mysql 서버를 나온 다음, 일반적인 cmd에 다음을 입력: mysql -uroot -p GAGOODA < /GAGOODA/gagooda_backup.sql
+
+3. password에 비밀번호 입력
